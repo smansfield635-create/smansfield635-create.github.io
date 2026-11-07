@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {transformPublishedRenderer,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+import {transformPublishedRenderer,MODES,MODES_MINIMUM,transformPinnedGen3155InlandRenderer,GEN3155_INLAND_MODES} from './h-earth-groundcover-factor-overlay.mjs';
 
 export const DIAGNOSTIC_MODES=Object.freeze(MODES_MINIMUM.map(i=>MODES[i]));
 const MODE_ID_BY_NAME=new Map(MODES.map((name,index)=>[name,index]));
@@ -11,10 +11,11 @@ export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze(Object.fromEntries(DIAGNOST
 export const SEARCH_PROVENANCE=Object.freeze({kind:'PUBLISHED_RENDERER_KNOWN_INLAND_BAND_PLUS_HEALTHY_COAST_CONTROL',exactScreenshotMatchProven:false,operationId:'H_EARTH_GROUNDCOVER_FACTOR_GPU_DIAGNOSTIC_20261026_001',priorStageAttributionRun:40411050366,expectedPublishedRendererSha256:'7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2'});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const MATERIAL_BASELINE_HEAD='60b3c07f0216645119a1b92b16dac82cae739145';
+const gen3155Capture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3155_INLAND_FACTOR_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
-export const HEADS=Object.freeze({baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD});
+export const HEADS=Object.freeze({baseline:gen3155Capture?'bcfb0650077323851f01f51d712c7f8b8ac39220':MATERIAL_BASELINE_HEAD,candidate:gen3155Capture?'7610827598eaadf4fbb92e7ec8b9371c8cd08581':(candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD)});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -28,6 +29,9 @@ export const DIAGNOSTIC_POSES=Object.freeze([POSES.find(p=>p.name==='inland-seam
 // Additive Gen2928 source-bound survey; the original Gen2925 18-frame profile remains unchanged.
 export const SURVEY_POSES=Object.freeze(['inland-seam-near','inland-seam-far','coastal-seam-east','coast-oblique'].map(name=>POSES.find(p=>p.name===name)));
 export const SURVEY_MODES=Object.freeze(['reference-lit','before-groundcover-unlit','after-groundcover-unlit','patch-weight-raw','groundcover-weight-raw']);
+export const GEN3155_INLAND_POSES=Object.freeze(['inland-seam-near','inland-seam-far'].map(name=>POSES.find(p=>p.name===name)));
+export function gen3155ModeId(mode){const id=GEN3155_INLAND_MODES.indexOf(mode);if(id<0)throw Error('GEN3155_MODE_NOT_REGISTERED:'+mode);return id;}
+export function gen3155ValidateSet(views){const labels=['baseline','candidate'];const expected=labels.length*GEN3155_INLAND_POSES.length*GEN3155_INLAND_MODES.length;if(views.length!==expected)throw Error('GEN3155_CAPTURE_INCOMPLETE');for(const label of labels)for(const pose of GEN3155_INLAND_POSES){const group=views.filter(v=>v.label===label&&v.pose?.name===pose.name);if(group.length!==GEN3155_INLAND_MODES.length)throw Error('GEN3155_MODE_SET_INCOMPLETE:'+label+':'+pose.name);const first=group[0];for(const mode of GEN3155_INLAND_MODES){const found=group.filter(v=>v.mode===mode);if(found.length!==1||found[0].diagnosticApplied!==gen3155ModeId(mode))throw Error('GEN3155_MODE_NOT_APPLIED:'+label+':'+pose.name+':'+mode);const v=found[0];if(v.sourceHead!==first.sourceHead||v.rendererHash!==first.rendererHash||v.assetSignature!==first.assetSignature||JSON.stringify(v.lastFrame?.cameraPosition)!==JSON.stringify(first.lastFrame?.cameraPosition)||v.imageWidth!==529||v.imageHeight!==980)throw Error('GEN3155_SOURCE_CAMERA_ASSET_PARITY_FAILED');}}return true;}
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
     if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID');
@@ -315,11 +319,11 @@ export async function run(argv){
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES;
-  const modes=profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES;
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3155_INLAND_FACTOR_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=gen3155Capture?GEN3155_INLAND_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES);
+  const modes=gen3155Capture?GEN3155_INLAND_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:gen3155Capture?'H_EARTH_GEN3142_INLAND_FACTOR_COMPATIBILITY_ADAPTER_20261107_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:gen3155Capture?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:gen3155Capture?{kind:'IMMUTABLE_GEN3142_INLAND_CURVED_BOUNDARY_REPRODUCTION_ONLY',exactAndroidPixelMatchProven:false}:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
@@ -329,7 +333,7 @@ export async function run(argv){
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of ['candidate'].entries()){
+    for(const [index,label] of (gen3155Capture?['baseline','candidate']:['candidate']).entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
@@ -338,11 +342,12 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer]]){
+      const exactInlandRenderer=gen3155Capture?gen3142VerifyRenderer(dir,label):null;
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,gen3155Capture?(source=>instrumentRenderer(transformPinnedGen3155InlandRenderer(source,{variant:label,verifiedBlob:exactInlandRenderer.blob,expectedSha256:exactInlandRenderer.sha256}).source)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
-      receipt.sourceProductSha256=runRecord.instrumentation.find(x=>x.path===RENDERER)?.sourceSha256;
+      receipt.sourceProductSha256=gen3155Capture?null:runRecord.instrumentation.find(x=>x.path===RENDERER)?.sourceSha256;
       persist();
       await page.goto(base+ROOT+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
       await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
@@ -350,10 +355,12 @@ export async function run(argv){
       await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
       await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
       await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled);await page.click('[data-enter]');
+      if(gen3155Capture)await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
-        const hidden=true;await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
+        const modeId=gen3155Capture?gen3155ModeId(mode):MODE_ID_BY_NAME.get(mode);
+        const hidden=true;await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},modeId);
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence})=>{
@@ -376,17 +383,17 @@ export async function run(argv){
           return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__groundcoverFactorModeApplied};
         },{pose,hidden,sequence:++sequence});
         receipt.lastAttempt={label,pose,mode,...view};persist();
-        if(view.diagnosticApplied!==MODE_ID_BY_NAME.get(mode))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
+        if(view.diagnosticApplied!==modeId)throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
         const assets=assetReadiness(view.resources,view.lastFrame.cameraPosition);if(!assets.ready||assets.signature!==signature)throw Error('ASSETS_CHANGED_DURING_CAPTURE');view.assetSignature=assets.signature;
         validateFrame(view,pose,sequence);if(view.lastFrame.frameSequence<=previousFrame)throw Error('FRAME_DID_NOT_ADVANCE');previousFrame=view.lastFrame.frameSequence;
         const name=label+'-'+pose.name+'-'+mode+'.png';const capture=await page.evaluate(()=>{const canvas=document.querySelector('#h-earth-functional-landscape-canvas');const gl=canvas?.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('CAPTURE_CONTEXT_NOT_PRESERVED');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);const dataUrl=canvas.toDataURL('image/png');const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {dataUrl,before,after};});const bytes=decodeCanvasCapture(capture,view.lastFrame);fs.writeFileSync(path.join(out,name),bytes);
         const after=await page.evaluate(()=>H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1));if(after.navigationSequence!==sequence||after.frameSequence!==view.lastFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
-        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId:MODE_ID_BY_NAME.get(mode),sourceHead:HEADS[label],rendererHash:receipt.sourceProductSha256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
+        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId,sourceHead:HEADS[label],rendererHash:receipt.sourceProductSha256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
       }
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
-      await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
+      await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(gen3155Capture)gen3142VerifyRenderer(dir,label);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    validateDiagnosticSet(receipt.views,poses,modes);
+    if(gen3155Capture)gen3155ValidateSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
     receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}

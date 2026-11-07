@@ -196,3 +196,60 @@ test('Gen3147 entry proof follows actual immutable loader internal mode rather t
   assert.ok(comparator.includes("loaderDomMode:loading?.dataset.mode"));
   assert.ok(!comparator.includes("dataset.mode==='entered'"));
 });
+
+
+import crypto from 'node:crypto';
+import {GEN3155_INLAND_MODES,GEN3155_INLAND_BLOBS,transformPinnedGen3155InlandRenderer} from './h-earth-groundcover-factor-overlay.mjs';
+import {GEN3155_INLAND_POSES,gen3155ModeId,gen3155ValidateSet} from './h-earth-ground-material-comparison.v1.mjs';
+test('Gen3155 exact inland poses and closed factor IDs retain historical profiles',()=>{
+ assert.deepEqual(GEN3155_INLAND_POSES.map(p=>[p.name,p.x,p.y,p.z,p.yaw,p.pitch,p.diagnosticObserver]),[
+ ['inland-seam-near',-200,18.361431,-728,0,-14,true],
+ ['inland-seam-far',-200,18.793665,-656,0,-2,true]]);
+ assert.equal(GEN3155_INLAND_MODES.length,10);
+ for(const [i,mode] of GEN3155_INLAND_MODES.entries())assert.equal(gen3155ModeId(mode),i);
+ assert.throws(()=>gen3155ModeId('synthetic-owner-pixel'),/NOT_REGISTERED/);
+ assert.equal(GEN3155_INLAND_BLOBS.baseline,'85ee835060d5106a670077a5f4352b7ad202b49b');
+ assert.equal(GEN3155_INLAND_BLOBS.candidate,'9fe90b5c0e58fb3a121c910cb0110a0846bf07bc');
+});
+test('Gen3155 dual composition adapter preserves distinct weight meaning and unchanged material operations',()=>{
+ const f=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const digest=s=>crypto.createHash('sha256').update(s).digest('hex');
+ const old='      palette=mix(palette,groundcoverTone,groundcoverWeight);';
+ assert.equal(f.split(old).length,2);
+ const b=transformPinnedGen3155InlandRenderer(f,{variant:'baseline',verifiedBlob:GEN3155_INLAND_BLOBS.baseline,expectedSha256:digest(f)});
+ assert.equal(b.productDiskMutation,false);assert.ok(b.source.includes(old));
+ assert.ok(b.source.includes('gen3155CompositeWeight=groundcoverWeight;'));
+ assert.ok(b.source.includes('gen3155Before=palette;'));
+ assert.ok(b.source.includes('globalThis.__groundcoverFactorModeApplied=mode'));
+ const replacement=[
+ '      vec3 groundcoverNativeSoil=palette;',
+ '      float groundcoverCompositeWeight=groundcoverWeight;',
+ '      vec3 groundcoverTonalCurve=groundcoverTone;',
+ '      palette=mix(',
+ '        groundcoverNativeSoil,groundcoverTonalCurve,',
+ '        groundcoverCompositeWeight',
+ '      );'
+ ].join('\n');
+ const candidateShape=f.replace(old,replacement);
+ const c=transformPinnedGen3155InlandRenderer(candidateShape,{variant:'candidate',verifiedBlob:GEN3155_INLAND_BLOBS.candidate,expectedSha256:digest(candidateShape)});
+ assert.ok(c.source.includes('gen3155CompositeWeight=groundcoverCompositeWeight;'));
+ assert.ok(c.source.includes('gen3155OriginalWeight=groundcoverWeight;'));
+ assert.ok(c.source.includes('gen3155Before=groundcoverNativeSoil;'));
+ assert.ok(c.source.includes(replacement));
+ assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'candidate',verifiedBlob:GEN3155_INLAND_BLOBS.candidate,expectedSha256:digest(f)}),/NON_UNIQUE_SOURCE_ANCHOR/);
+ assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'baseline',verifiedBlob:GEN3155_INLAND_BLOBS.baseline,expectedSha256:'0'.repeat(64)}),/SOURCE_SHA256_MISMATCH/);
+ assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'baseline',verifiedBlob:GEN3155_INLAND_BLOBS.candidate,expectedSha256:digest(f)}),/GIT_BLOB_NOT_VERIFIED/);
+});
+test('Gen3155 capture parity requires both exact heads, both inland poses and every factor',()=>{
+ const views=['baseline','candidate'].flatMap(label=>GEN3155_INLAND_POSES.flatMap(pose=>GEN3155_INLAND_MODES.map(mode=>({
+  label,pose,mode,diagnosticApplied:gen3155ModeId(mode),
+  sourceHead:label==='baseline'?'bcfb0650077323851f01f51d712c7f8b8ac39220':'7610827598eaadf4fbb92e7ec8b9371c8cd08581',
+  rendererHash:label,assetSignature:'one-verified-state',
+  lastFrame:{cameraPosition:{x:pose.x,y:pose.y,z:pose.z}},imageWidth:529,imageHeight:980
+ }))));
+ assert.equal(gen3155ValidateSet(views),true);
+ assert.throws(()=>gen3155ValidateSet(views.slice(1)),/CAPTURE_INCOMPLETE/);
+ const changed=views.map(x=>({...x}));
+ changed.find(x=>x.label==='candidate'&&x.mode==='patch-raw').assetSignature='different';
+ assert.throws(()=>gen3155ValidateSet(changed),/PARITY_FAILED/);
+});

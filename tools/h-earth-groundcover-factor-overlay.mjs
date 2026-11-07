@@ -82,3 +82,77 @@ export function verifyFramePairs(views,poseNames,selectedModes=MODES_MINIMUM){
  }
  return true;
 }
+
+/* Gen3155: additive, read-only current-production/Gen3142 inland factor profile.
+ * The legacy Gen2928 factor transform above remains byte-identical.
+ * Callers MUST verify the checkout commit and renderer Git blob first.
+ */
+export const GEN3155_INLAND_MODES=Object.freeze([
+ 'reference-lit','incoming-palette-unlit','groundcover-tone-unlit',
+ 'after-groundcover-unlit','organic-raw','patch-raw','suitability-raw',
+ 'protection-raw','original-weight-raw','effective-composite-weight-raw'
+]);
+export const GEN3155_INLAND_BLOBS=Object.freeze({
+ baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
+ candidate:'9fe90b5c0e58fb3a121c910cb0110a0846bf07bc'
+});
+export function transformPinnedGen3155InlandRenderer(original,{variant,verifiedBlob,expectedSha256}={}){
+ if(!Object.hasOwn(GEN3155_INLAND_BLOBS,variant)||verifiedBlob!==GEN3155_INLAND_BLOBS[variant])throw Error('GEN3155_RENDERER_GIT_BLOB_NOT_VERIFIED');
+ const originalSha256=hash(original);
+ if(!expectedSha256||originalSha256!==expectedSha256)throw Error('GEN3155_RENDERER_SOURCE_SHA256_MISMATCH');
+ const start=original.indexOf('const FS = '),end=original.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<=start)throw Error('GEN3155_FRAGMENT_SCOPE_NOT_FOUND');
+ let fs=original.slice(start,end);
+ fs=once(fs,'out vec4 outColor;','out vec4 outColor;\nuniform int uGen3155InlandMode;');
+ fs=once(fs,'float terrainRoughnessForLighting=0.72;',[
+ 'float terrainRoughnessForLighting=0.72;',
+ '  float gen3155Seen=0.0,gen3155Organic=0.0,gen3155Patch=0.0;',
+ '  float gen3155Suitability=0.0,gen3155Protection=0.0;',
+ '  float gen3155OriginalWeight=0.0,gen3155CompositeWeight=0.0;',
+ '  vec3 gen3155Before=vec3(0.0),gen3155Tone=vec3(0.0),gen3155After=vec3(0.0);'
+ ].join('\n'));
+ const originalBlend='      palette=mix(palette,groundcoverTone,groundcoverWeight);';
+ const candidateBlend=['      palette=mix(','        groundcoverNativeSoil,groundcoverTonalCurve,','        groundcoverCompositeWeight','      );'].join('\n');
+ const blend=variant==='baseline'?originalBlend:candidateBlend;
+ const captured=[
+ '      gen3155Seen=1.0;',
+ '      gen3155Organic=groundcoverOrganic;',
+ '      gen3155Patch=groundcoverPatch;',
+ '      gen3155Suitability=groundcoverSuitability;',
+ '      gen3155Protection=groundcoverProtection;',
+ '      gen3155OriginalWeight=groundcoverWeight;',
+ '      gen3155CompositeWeight='+ (variant==='baseline'?'groundcoverWeight':'groundcoverCompositeWeight')+';',
+ '      gen3155Before='+(variant==='baseline'?'palette':'groundcoverNativeSoil')+';',
+ '      gen3155Tone=groundcoverTone;',
+ blend,
+ '      gen3155After=palette;'
+ ].join('\n');
+ fs=once(fs,blend,captured);
+ const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
+ fs=once(fs,gamma,[
+ gamma,
+ '  if(worldSoilTerrain&&gen3155Seen>0.5&&uGen3155InlandMode>0){',
+ '    int m=uGen3155InlandMode;',
+ '    if(m>=1&&m<=3){',
+ '      vec3 c=m==1?gen3155Before:(m==2?gen3155Tone:gen3155After);',
+ '      lit=pow(clamp(c*1.12,0.0,1.0),vec3(1.0/2.2));',
+ '    }else if(m>=4&&m<=9){',
+ '      float w=m==4?gen3155Organic:(m==5?gen3155Patch:',
+ '        (m==6?gen3155Suitability:(m==7?gen3155Protection:',
+ '        (m==8?gen3155OriginalWeight:gen3155CompositeWeight))));',
+ '      lit=vec3(clamp(w,0.0,1.0));',
+ '    }',
+ '  }'
+ ].join('\n'));
+ let source=original.slice(0,start)+fs+original.slice(end);
+ const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+ source=once(source,draw,[
+ draw,
+ '    {const mode=globalThis.__groundcoverFactorMode??0;',
+ '      if(!Number.isInteger(mode)||mode<0||mode>=10)throw Error("GEN3155_MODE_OUT_OF_RANGE");',
+ "      const loc=gl.getUniformLocation(resources.geometryProgram,'uGen3155InlandMode');",
+ "      if(loc===null)throw Error('GEN3155_INLAND_UNIFORM_MISSING');",
+ '      gl.uniform1i(loc,mode);globalThis.__groundcoverFactorModeApplied=mode;}'
+ ].join('\n'));
+ return Object.freeze({originalSha256,instrumentedSha256:hash(source),source,modeCount:GEN3155_INLAND_MODES.length,productDiskMutation:false,variant,verifiedBlob});
+}

@@ -1207,7 +1207,7 @@ jobs:
         run: |
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
           node --check tools/h-earth-ground-material-comparison.v1.mjs
-          node --test --test-name-pattern='^(?!Gen2928 bounded provisional high-patch blend)' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
       # The unchanged historical assertion validates the Gen2928 shader (245105
       # bytes), not today's 303526-byte Gen3142 baseline. Rebind its test
       # fixture to the exact original Git blob; never weaken its expectation.
@@ -1271,7 +1271,7 @@ jobs:
         working-directory: tooling
         run: |
           node --check tools/h-earth-ground-material-comparison.v1.mjs
-          node --test --test-name-pattern='^(?!Gen2928 bounded provisional high-patch blend)' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
       - name: Install Chromium for actual WebGL2 pixels
         working-directory: tooling
         run: |

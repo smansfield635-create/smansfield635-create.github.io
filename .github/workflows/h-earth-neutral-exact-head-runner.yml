@@ -1700,7 +1700,7 @@ jobs:
       - name: Checkout exact immutable soil-olive candidate source
         uses: actions/checkout@v4
         with:
-          ref: 4f019111f6721768dc54819b017ddf42d1cc1114
+          ref: a3321ca348fb4021fa9576f2d5699ed257c7bc9f
           persist-credentials: false
           sparse-checkout: |
             h-earth-3d/validation/h-earth.groundcover-soil-bridge-20261107.test.mjs
@@ -1712,7 +1712,7 @@ jobs:
       - name: Verify exact source and execute focused native repair tests
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 4f019111f6721768dc54819b017ddf42d1cc1114
+          test "$(git rev-parse HEAD)" = a3321ca348fb4021fa9576f2d5699ed257c7bc9f
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = c73020913c18f6bd513dce7780974d5568e1dbe0
           node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
           node --test h-earth-3d/validation/h-earth.groundcover-soil-bridge-20261107.test.mjs
@@ -1738,7 +1738,7 @@ jobs:
       - name: Checkout exact unmerged chromatic-bridge candidate
         uses: actions/checkout@v4
         with:
-          ref: 4f019111f6721768dc54819b017ddf42d1cc1114
+          ref: a3321ca348fb4021fa9576f2d5699ed257c7bc9f
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1763,7 +1763,7 @@ jobs:
           import {POSES,comparisonState,instrumentRoute,assetReadiness,validateFrame,decodeCanvasCapture,assertCheckout} from './tools/h-earth-ground-material-comparison.v1.mjs';
           const targets=[
            {label:'baseline',dir:'../baseline',head:'bcfb0650077323851f01f51d712c7f8b8ac39220',blob:'85ee835060d5106a670077a5f4352b7ad202b49b'},
-           {label:'candidate',dir:'../candidate',head:'4f019111f6721768dc54819b017ddf42d1cc1114',blob:'c73020913c18f6bd513dce7780974d5568e1dbe0'}];
+           {label:'candidate',dir:'../candidate',head:'a3321ca348fb4021fa9576f2d5699ed257c7bc9f',blob:'c73020913c18f6bd513dce7780974d5568e1dbe0'}];
           const positions=['inland-seam-near','inland-seam-far','coast-oblique'].map(n=>{const p=POSES.find(v=>v.name===n);if(!p)throw Error('POSE_MISSING:'+n);return p;});
           const shader='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
           const route='/showroom/globe/h-earth/';

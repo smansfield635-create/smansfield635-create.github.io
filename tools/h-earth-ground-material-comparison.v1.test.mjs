@@ -127,7 +127,7 @@ function gen3142View(pose,label){
   const owner=pose.owner===true;
   const position=owner?{...gen3142.GEN3142_MATCHED.navigationPosition}:{x:pose.x,y:2.25,z:pose.z};
   const camera=owner?{...gen3142.GEN3142_MATCHED.camera}:{...position};
-  return {label,pose,worldEntered:true,loaderMode:'entered',routeReady:true,
+  return {label,pose,worldEntered:true,loaderMode:'entered',loaderDomMode:'ready',loaderHidden:true,routeReady:true,
     state:{sequence:22001,position,yawDegrees:pose.yaw,pitchDegrees:pose.pitch,verticalFovDegrees:56},
     lastFrame:{navigationSequence:22001,frameSequence:101,cameraPosition:camera},
     packetCamera:{position:camera,viewProjectionMatrix:owner?[...gen3142.GEN3142_MATCHED.matrix]:new Array(16).fill(1)},
@@ -159,7 +159,7 @@ test('Gen3142 exact entered WebGL2 original frame and matching protection contro
 test('Gen3142 fails closed on loader, camera, viewport, projection, WebGL, frames, asset and pair drift',()=>{
   const p=gen3142.GEN3142_MATCHED_POSES[0],control=gen3142.GEN3142_MATCHED_POSES[1];
   for(const change of [
-    v=>v.worldEntered=false,v=>v.loaderMode='ready',v=>v.routeReady=false,
+    v=>v.worldEntered=false,v=>v.loaderMode='ready',v=>v.loaderDomMode='test',v=>v.loaderHidden=false,v=>v.routeReady=false,
     v=>v.state.position.y++,v=>v.packetCamera.position.x++,v=>v.packetCamera.viewProjectionMatrix[12]++,
     v=>v.canvas.height++,v=>v.canvas.cssWidth++,v=>v.glError=1282,
     v=>v.glVersion='WebGL 1.0',v=>v.glslVersion='WebGL GLSL ES 1.00',
@@ -183,4 +183,16 @@ test('Gen3142 workflow profile cannot fall into generic exact-head or historical
   assert.ok(workflow.includes('ref: bcfb0650077323851f01f51d712c7f8b8ac39220'));
   assert.ok(workflow.includes('ref: 7610827598eaadf4fbb92e7ec8b9371c8cd08581'));
   assert.match(workflow,/ground-material-comparison:\n    if: \$\{\{ inputs\.route_query == 'qualification=groundcover-factor-v1' \}\}/);
+});
+
+test('Gen3147 entry proof follows actual immutable loader internal mode rather than stale DOM data-mode',()=>{
+  // The immutable product loader contract was source-verified against both frozen heads.
+  // This native test runs in the workflow's tooling-only sparse checkout.
+  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  assert.ok(comparator.includes("H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered'"));
+  assert.ok(comparator.includes("shell?.hidden===true&&shell?.dataset.mode==='ready'"));
+  assert.ok(comparator.includes("loaderMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode"));
+  assert.ok(comparator.includes("loaderHidden:loading?.hidden===true"));
+  assert.ok(comparator.includes("loaderDomMode:loading?.dataset.mode"));
+  assert.ok(!comparator.includes("dataset.mode==='entered'"));
 });

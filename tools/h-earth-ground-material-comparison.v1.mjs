@@ -140,7 +140,7 @@ export function gen3142VerifyRenderer(dir,label){
   return {blob,sha256:sha(bytes),bytes:bytes.length};
 }
 export function gen3142ValidateView(view,pose){
-  if(view?.worldEntered!==true||view.loaderMode!=='entered'||view.routeReady!==true)throw Error('GEN3142_WORLD_NOT_ENTERED');
+  if(view?.worldEntered!==true||view.loaderMode!=='entered'||view.loaderHidden!==true||view.loaderDomMode!=='ready'||view.routeReady!==true)throw Error('GEN3142_WORLD_NOT_ENTERED');
   if(!view.glVersion?.includes('WebGL 2.0')||!view.glslVersion?.includes('WebGL GLSL ES 3.00')||view.glError!==0||view.contextLost!==false)throw Error('GEN3142_WEBGL2_NOT_HEALTHY');
   const c=view.canvas;
   if(c?.width!==384||c.height!==688||c.cssWidth!==384||c.cssHeight!==688)throw Error('GEN3142_CANVAS_DIMENSION_MISMATCH');
@@ -237,7 +237,7 @@ export async function runGen3142(argv){
       await page.mouse.move(160,240);await page.mouse.down();await page.mouse.move(220,240,{steps:8});await page.mouse.up();
       await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});
       await page.click('[data-enter]');
-      await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'&&document.querySelector('#h-earth-loading-screen')?.dataset.mode==='entered',null,{timeout:120000});
+      await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),shell=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&shell?.hidden===true&&shell?.dataset.mode==='ready'&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
       rr.entryVerified=true;persist();
       await page.evaluate(async()=>{
         const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));
@@ -279,7 +279,7 @@ export async function runGen3142(argv){
             packetCamera:{position:packet.camera.position,viewProjectionMatrix:Array.from(packet.camera.viewProjectionMatrix)},
             canvas:{width:cv.width,height:cv.height,cssWidth:cv.clientWidth,cssHeight:cv.clientHeight},
             assetSignature:asset.signature,assetsReady:asset.ready,worldEntered:root?.dataset.run8eReady==='true',
-            loaderMode:loading?.dataset.mode,routeReady:root?.dataset.run8eReady==='true',
+            loaderMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode,loaderDomMode:loading?.dataset.mode,loaderHidden:loading?.hidden===true,routeReady:root?.dataset.run8eReady==='true',
             glVersion:String(gl.getParameter(gl.VERSION)),glslVersion:String(gl.getParameter(gl.SHADING_LANGUAGE_VERSION)),
             contextLost:gl.isContextLost(),glError,framebufferPresentations:gpu.counters?.gpuFramebufferPresentationCount,
             pixelPatch:{radius,center:pixel,rgba:Array.from(pixels)}};

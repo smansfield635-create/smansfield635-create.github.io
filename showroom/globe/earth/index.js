@@ -29,7 +29,60 @@ function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2);out.fi
 function multiply(out,a,b){const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)r[c*4+row]=a[row]*b[c*4]+a[4+row]*b[c*4+1]+a[8+row]*b[c*4+2]+a[12+row]*b[c*4+3];out.set(r);return out}
 function rotationTiltY(out,tilt,spin){const cx=Math.cos(tilt),sx=Math.sin(tilt),cy=Math.cos(spin),sy=Math.sin(spin);out.set([cy,sx*sy,-cx*sy,0,0,cx,sx,0,sy,-sx*cy,cx*cy,0,0,0,0,1]);return out}
 function translationZ(out,z){out.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,z,1]);return out}
-function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_normal=-normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;uniform vec3 u_light;void main(){vec3 n=normalize(v_normal);vec3 l=normalize(u_light);float ndl=max(dot(n,l),0.0);float sculpt=mix(ndl,smoothstep(.08,.88,ndl),.34);float facing=max(n.z,0.0);float rim=pow(1.0-facing,3.0);float mineral=0.5+0.5*sin((v_position.x*14.0+v_position.y*18.0-v_position.z*12.0)+v_tone*8.0);float grain=0.5+0.5*sin((v_position.x-v_position.y)*37.0+v_position.z*19.0);vec3 low=vec3(0.090,0.047,0.042);vec3 mid=vec3(0.335,0.130,0.088);vec3 high=vec3(0.660,0.315,0.195);float definedTone=clamp((v_tone-.5)*1.26+.5,0.0,1.0);vec3 albedo=mix(low,mid,clamp(definedTone*.96+.10,0.0,1.0));albedo=mix(albedo,high,pow(definedTone,2.0)*.54);albedo*=.89+mineral*.17+grain*.052;float terminator=smoothstep(-.07,.10,dot(n,l));vec3 color=albedo*(.32+sculpt*1.08);color*=.65+terminator*.35;color+=vec3(.36,.10,.06)*rim*.15;color+=vec3(.18,.06,.038)*pow(max(dot(n,normalize(l+vec3(0.0,0.0,1.0))),0.0),20.0)*.20;gl_FragColor=vec4(pow(clamp(color,vec3(0.0),vec3(1.0)),vec3(.95)),1.0);}`;const p=program(vs,fs),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
+function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_body=a_position;v_normal=-normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;
+varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;
+uniform vec3 u_light;uniform mat4 u_model;
+float hash31(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
+float noise3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.0-2.0*f);return mix(mix(mix(hash31(i),hash31(i+vec3(1,0,0)),f.x),mix(hash31(i+vec3(0,1,0)),hash31(i+vec3(1,1,0)),f.x),f.y),mix(mix(hash31(i+vec3(0,0,1)),hash31(i+vec3(1,0,1)),f.x),mix(hash31(i+vec3(0,1,1)),hash31(i+vec3(1,1,1)),f.x),f.y),f.z);}
+void crater(vec3 q,vec3 center,float radius,float depth,inout vec3 g,inout float pit,inout float lip){
+float dc=clamp(dot(q,center),-1.0,1.0);
+if(dc>cos(radius)){
+float t=acos(dc)/radius;
+float z=(t-.88)/.085;
+float e=exp(-z*z);
+float slope=2.0*t*depth-2.0*z*e*depth*.58/.085;
+g-=center*(slope/(radius*sqrt(max(.0001,1.0-dc*dc))));
+pit=max(pit,1.0-smoothstep(.25,.78,t));lip=max(lip,e);
+}
+}
+void main(){
+vec3 q=normalize(v_body);
+vec3 g=.011*cos(q.x*7.3+q.y*2.1)*vec3(7.3,2.1,0.0)+.008*cos(q.y*11.9-q.z*4.7)*vec3(0.0,11.9,-4.7)+.0045*cos((q.x+q.z)*19.1)*vec3(19.1,0.0,19.1);
+float pit=0.0,lip=0.0;
+crater(q,vec3(-0.50381830,0.25190915,0.82626201),0.160000,0.040000,g,pit,lip);
+crater(q,vec3(0.31017064,0.62034128,0.72039633),0.100000,0.033000,g,pit,lip);
+crater(q,vec3(0.58312813,-0.48258879,0.65350566),0.120000,0.030000,g,pit,lip);
+crater(q,vec3(-0.72399297,-0.35194103,0.59327202),0.090000,0.024000,g,pit,lip);
+crater(q,vec3(0.14021751,-0.77119628,0.62096324),0.075000,0.020000,g,pit,lip);
+crater(q,vec3(0.82442252,0.12064720,0.55296633),0.070000,0.018000,g,pit,lip);
+crater(q,vec3(-0.22065189,0.84248902,0.49145193),0.055000,0.016000,g,pit,lip);
+crater(q,vec3(0.43883861,0.13963047,-0.88765083),0.110000,0.031000,g,pit,lip);
+crater(q,vec3(-0.62230681,0.51189754,-0.59219519),0.080000,0.022000,g,pit,lip);
+crater(q,vec3(0.70794991,-0.15953801,-0.68800766),0.060000,0.018000,g,pit,lip);
+crater(q,vec3(-0.18989559,-0.60966478,-0.76957685),0.090000,0.023000,g,pit,lip);
+crater(q,vec3(0.18050613,0.92258687,-0.34095602),0.070000,0.019000,g,pit,lip);
+crater(q,vec3(-0.83292034,0.04014074,-0.55193517),0.055000,0.016000,g,pit,lip);
+crater(q,vec3(0.54236444,0.74324016,-0.39170765),0.050000,0.014000,g,pit,lip);
+g-=q*dot(q,g);
+vec3 localNormal=normalize(q-.34*g);
+vec3 surfaceNormal=normalize((u_model*vec4(localNormal,0.0)).xyz);
+vec3 n=normalize(mix(normalize(v_normal),surfaceNormal,.62));
+vec3 l=normalize(u_light);
+float ndl=max(dot(n,l),0.0);float sculpt=mix(ndl,smoothstep(.08,.88,ndl),.34);
+float facing=max(n.z,0.0);float rim=pow(1.0-facing,3.0);
+float rock=noise3(q*37.0);
+float sediment=.5+.5*sin(q.y*74.0+q.x*21.0+2.0*sin(q.z*17.0));
+vec3 low=vec3(.090,.047,.042);vec3 mid=vec3(.335,.130,.088);vec3 high=vec3(.660,.315,.195);
+float definedTone=clamp((v_tone-.5)*1.26+.5,0.0,1.0);
+vec3 albedo=mix(low,mid,clamp(definedTone*.96+.10,0.0,1.0));
+albedo=mix(albedo,high,pow(definedTone,2.0)*.54);
+albedo*=.91+.19*(rock-.5)+.065*(sediment-.5)-.085*pit+.040*lip;
+float terminator=smoothstep(-.07,.10,dot(n,l));
+vec3 color=albedo*(.32+sculpt*1.08);color*=.65+terminator*.35;
+color+=vec3(.36,.10,.06)*rim*.15;
+color+=vec3(.18,.06,.038)*pow(max(dot(n,normalize(l+vec3(0.0,0.0,1.0))),0.0),20.0)*.20;
+gl_FragColor=vec4(pow(clamp(color,vec3(0.0),vec3(1.0)),vec3(.95)),1.0);
+}`;const p=program(vs,fs),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
 function resize(){if(!canvas||!gl)return;const rect=canvas.getBoundingClientRect(),mobile=matchMedia("(max-width: 640px)").matches,budget=mobile?2000000:2500000,area=Math.max(1,rect.width*rect.height),dpr=Math.min((devicePixelRatio||1)*1.10,2.25,Math.sqrt(budget/area)),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
 function draw(){if(!gl||!resources)return;resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(resources.program);const aspect=canvas.width/Math.max(1,canvas.height),projection=perspective(new Float32Array(16),Math.PI/3.45,aspect,.1,20),view=translationZ(new Float32Array(16),state.cameraZ),model=rotationTiltY(new Float32Array(16),-.18,angle),pv=multiply(new Float32Array(16),projection,view),mvp=multiply(new Float32Array(16),pv,model);gl.bindBuffer(gl.ARRAY_BUFFER,resources.position);gl.enableVertexAttribArray(resources.aPosition);gl.vertexAttribPointer(resources.aPosition,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.normal);gl.enableVertexAttribArray(resources.aNormal);gl.vertexAttribPointer(resources.aNormal,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.tone);gl.enableVertexAttribArray(resources.aTone);gl.vertexAttribPointer(resources.aTone,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.index);gl.uniformMatrix4fv(resources.uMvp,false,mvp);gl.uniformMatrix4fv(resources.uModel,false,model);gl.uniform3f(resources.uLight,.78,.48,.66);gl.drawElements(gl.TRIANGLES,resources.count,gl.UNSIGNED_SHORT,0);state.frameCount++}
 function ease(t){return 1-Math.pow(1-t,3)}

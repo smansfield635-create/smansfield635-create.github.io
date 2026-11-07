@@ -274,7 +274,8 @@ export function createNativeWebGLDevice(canvas, {
     const owned = [];
     try {
       const attributes = definition.attributes.map(attr => {
-        const buffer = createBuffer(gl.ARRAY_BUFFER, attr.data, definition.usage ?? gl.STATIC_DRAW);
+        const buffer = createBuffer(gl.ARRAY_BUFFER, attr.data,
+          attr.dynamic ? gl.DYNAMIC_DRAW : (definition.usage ?? gl.STATIC_DRAW));
         owned.push(buffer);
         return { ...attr, buffer };
       });
@@ -315,12 +316,78 @@ export function createNativeWebGLDevice(canvas, {
       if (!ArrayBuffer.isView(a.data) || a.data instanceof DataView || !a.data.byteLength) throw new TypeError('ATTRIBUTE_TYPED_DATA_REQUIRED');
       if (!Number.isInteger(a.size) || a.size < 1 || a.size > 4) throw new TypeError('ATTRIBUTE_SIZE_INVALID');
       if (a.integer && backend !== 'WEBGL2') throw new Error('INTEGER_ATTRIBUTE_REQUIRES_WEBGL2');
+      // Dynamic attributes are owned, tightly-packed float buffers. Static geometry is unchanged.
+      if (a.dynamic !== undefined && typeof a.dynamic !== 'boolean') throw new TypeError('DYNAMIC_ATTRIBUTE_FLAG_INVALID');
+      if (a.dynamic) {
+        if (!(a.data instanceof Float32Array) || a.integer || (a.type != null && a.type !== gl.FLOAT)) {
+          throw new TypeError('DYNAMIC_ATTRIBUTE_FLOAT32_REQUIRED');
+        }
+        if (a.stride || a.offset) throw new TypeError('DYNAMIC_ATTRIBUTE_INTERLEAVED_UNSUPPORTED');
+        if (a.data.length !== vertexCount * a.size) throw new RangeError('DYNAMIC_ATTRIBUTE_VERTEX_COUNT_MISMATCH');
+        for (const n of a.data) if (!Number.isFinite(n)) throw new TypeError('DYNAMIC_ATTRIBUTE_NONFINITE');
+      }
     }
     if (indices && (!ArrayBuffer.isView(indices) || !indices.length)) throw new TypeError('INDICES_TYPED_DATA_REQUIRED');
-    const definition = { attributes, indices, vertexCount, usage };
+    // Retain private copies so caller mutation cannot corrupt replayed context recovery.
+    const ownedAttributes = attributes.map(a => a.dynamic ? { ...a, data: new Float32Array(a.data) } : a);
+    const definition = { attributes: ownedAttributes, indices, vertexCount, usage };
     const record = { definition, gpu: uploadMesh(definition) };
     meshes.add(record);
     return record;
+  }
+  /**
+   * M1.1: update a device-owned dynamic Float32 vertex attribute in place.
+   * The latest successful upload is the only CPU snapshot used during context recovery.
+   * On an uncertain partial GPU write, fail closed unless the old bytes are restored.
+   */
+  function updateMeshAttribute(mesh, name, data) {
+    assertActive();
+    requireOwned(meshes, mesh, 'MESH');
+    if (typeof name !== 'string' || !name) throw new TypeError('ATTRIBUTE_NAME_REQUIRED');
+    const index = mesh.definition.attributes.findIndex(a => a.name === name);
+    if (index < 0) throw new Error('MESH_ATTRIBUTE_NOT_FOUND');
+    const attribute = mesh.definition.attributes[index];
+    if (!attribute.dynamic) throw new Error('MESH_ATTRIBUTE_NOT_DYNAMIC');
+    if (!(data instanceof Float32Array)) throw new TypeError('DYNAMIC_ATTRIBUTE_FLOAT32_REQUIRED');
+    if (data.length !== attribute.data.length) throw new RangeError('DYNAMIC_ATTRIBUTE_LENGTH_MISMATCH');
+    for (const value of data) if (!Number.isFinite(value)) throw new TypeError('DYNAMIC_ATTRIBUTE_NONFINITE');
+    const next = new Float32Array(data);
+    const buffer = mesh.gpu.attributes[index].buffer;
+    const previousBinding = gl.getParameter(gl.ARRAY_BUFFER_BINDING);
+    let touched = false, primaryError = null;
+    try {
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      touched = true;
+      gl.bufferSubData(gl.ARRAY_BUFFER, 0, next);
+      if (typeof gl.getError === 'function') {
+        const code = gl.getError();
+        if (code !== gl.NO_ERROR) throw new Error('DYNAMIC_ATTRIBUTE_UPLOAD_GL_ERROR:' + code);
+      }
+      // Commit only after GPU upload succeeded; recover() reuses the committed snapshot.
+      attribute.data = next;
+      mesh.gpu.attributes[index].data = next;
+    } catch (error) {
+      primaryError = error;
+      if (touched && !gl.isContextLost?.()) {
+        try {
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+          gl.bufferSubData(gl.ARRAY_BUFFER, 0, attribute.data);
+          if (typeof gl.getError === 'function' && gl.getError() !== gl.NO_ERROR) {
+            throw new Error('DYNAMIC_ATTRIBUTE_ROLLBACK_GL_ERROR');
+          }
+        } catch (_) {
+          restorationError = new Error('DYNAMIC_ATTRIBUTE_UPDATE_UNCERTAIN');
+        }
+      }
+    } finally {
+      try { gl.bindBuffer(gl.ARRAY_BUFFER, previousBinding); }
+      catch (error) {
+        restorationError = new Error('DYNAMIC_ATTRIBUTE_BINDING_RESTORE_FAILED');
+        if (!primaryError) primaryError = error;
+      }
+    }
+    if (primaryError) throw primaryError;
+    return mesh;
   }
   function draw({ program, mesh, mode = gl.TRIANGLES, first = 0, count = null, beforeDraw, afterDraw } = {}) {
     assertActive();
@@ -444,7 +511,7 @@ export function createNativeWebGLDevice(canvas, {
     canvas.removeEventListener?.('webglcontextrestored', onContextRestored, false);
   }
   return Object.freeze({
-    backend, gl, createProgram, createMesh, createTexture2D, createRenderTarget,
+    backend, gl, createProgram, createMesh, updateMeshAttribute, createTexture2D, createRenderTarget,
     bindRenderTarget, resizeRenderTarget, draw, viewport, recover, dispose,
     status() {
       const estimatedTextureBytes = [...textures].reduce((n, t) => n + byteSize(t.definition.width, t.definition.height), 0) +

@@ -1153,7 +1153,19 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // Continuous meadow floor fills eligible bare gaps while retaining
+      // the original organic dark core, soil families and habitat exclusions.
+      float groundcoverMeadowMosaic=
+        (0.19+0.23*macroField+0.08*mesoField+0.07*moistShelter)*
+        (0.70+0.30*groundcoverOrganic);
+      float groundcoverPatchCore=clamp(
+        groundcoverPatch*(1.0-0.25*groundcoverPatchContinuity)/0.75,
+        0.0,1.0
+      );
+      float groundcoverReconstructedWeight=groundcoverWeight+
+        groundcoverSuitability*groundcoverProtection*
+        groundcoverMeadowMosaic*(1.0-groundcoverPatchCore);
+      palette=mix(palette,groundcoverTone,groundcoverReconstructedWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

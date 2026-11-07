@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen3147-owner-frame-matched-gpu-20261106-r2",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7259,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3147-owner-frame-gpu-20261106",
+  "requestCommit": "824924000c3310c7c3e7dfd525f430e2bac9a7c2",
+  "currentMainSha": "14fc9d32f085bcf85f337836c98ccd1ee9ec90d1",
+  "bridgeRunId": "42328387197",
+  "error": "Stale dispatch request: parent 7ca324867f0de26cf00ad16d8233df440d3e6ebf != current main 14fc9d32f085bcf85f337836c98ccd1ee9ec90d1",
+  "failedAt": "2026-11-07T02:16:24.048Z"
+}

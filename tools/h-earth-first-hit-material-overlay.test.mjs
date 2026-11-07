@@ -237,3 +237,47 @@ test('opaque range leaves transparency flag zero and shader guards alpha below o
   assert.match(out.compiledShader,/uMaterialProbeTranslucentPass!=0 \|\| outputAlpha<1\.0/);
 });
 
+
+
+test('mode 7 captures the actual final blend weight for each pinned renderer',()=>{
+  const normal=transform();
+  const baseline=vm.runInNewContext(normal.source+'\ncompiledShader',
+    {globalThis:{__hEarthFirstHitMaterialMode:7},Number});
+  assert.match(baseline,/hEarthProbeGCWeight=groundcoverWeight;/);
+  assert.doesNotMatch(baseline,/hEarthProbeGCWeight=groundcoverCompositeWeight;/);
+
+  // The candidate fixture supplies the same local weight that its actual
+  // groundcover mix uses; no production renderer file or fixture baseline edited.
+  const candidateFixture=template.replace(' float groundcoverWeight=0.4;',
+    ' float groundcoverWeight=0.0;\n float groundcoverCompositeWeight=0.0884;');
+  assert.notEqual(candidateFixture,template);
+  const candidate=transformExactRenderer(candidateFixture,{target:'candidate',allowFixture:true});
+  const candidateShader=vm.runInNewContext(candidate.source+'\ncompiledShader',
+    {globalThis:{__hEarthFirstHitMaterialMode:7},Number});
+  assert.match(candidateShader,/float groundcoverCompositeWeight=0\.0884;/);
+  assert.match(candidateShader,/hEarthProbeGCWeight=groundcoverCompositeWeight;/);
+  assert.doesNotMatch(candidateShader,/hEarthProbeGCWeight=groundcoverWeight;/);
+});
+
+test('Gen3142 transition shoulder reports nonzero effective palette blend when base weight is zero',()=>{
+  const smoothstep=(a,b,value)=>{
+    const x=Math.max(0,Math.min(1,(value-a)/(b-a)));
+    return x*x*(3-2*x);
+  };
+  // Corresponds to the frozen candidate formula with full suitability/protection
+  // and a combined organic+meso field of 0.19, before the base patch threshold.
+  const field=0.19;
+  const patch=smoothstep(0.20,0.66,field);
+  const base=0.88*patch*(1-0.25*smoothstep(0.30,0.85,patch));
+  const transition=smoothstep(0.03,0.66,field);
+  const shoulder=0.55*transition*(1-patch)*(1-patch);
+  const composite=base+(1-base)*shoulder;
+  assert.equal(base,0);
+  assert.ok(composite>0.08&&composite<0.09);
+  const encodedByte=Math.floor(Math.min(1,Math.max(0,composite))*255+0.5);
+  assert.equal(encodedByte,23);
+  const probe=decodeModePixel(7,new Uint8Array([247,encodedByte,255,255]));
+  assert.equal(probe.status,'VALID_PROBED_GEOMETRY');
+  assert.equal(probe.groundcoverWeight,23/255);
+  assert.ok(probe.groundcoverWeight>0);
+});

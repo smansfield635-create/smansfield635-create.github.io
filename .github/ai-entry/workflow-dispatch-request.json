@@ -6,7 +6,6 @@
     "target_sha": "7610827598eaadf4fbb92e7ec8b9371c8cd08581",
     "route_path": "/showroom/globe/h-earth/",
     "route_query": "qualification=gen3142-owner-frame-v1",
-    "exercise_vegetation_residency": false,
-    "apply_timing_shim": false
+    "exercise_vegetation_residency": false
   }
 }

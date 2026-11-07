@@ -32,48 +32,42 @@ function translationZ(out,z){out.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,z,1]);return o
 
 // One-context ZIONTS space: a bounded static galaxy pass, underneath the existing globe.
 function createGalaxyResources(){
-  const vs=`precision mediump float;attribute vec2 a_clip;varying vec2 v_uv;
-void main(){v_uv=.5*(a_clip+vec2(1.0));gl_Position=vec4(a_clip,.9999,1.0);}`;
-  const fs=`precision mediump float;varying vec2 v_uv;
-float gh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
-float star(vec2 uv,float count,float cutoff){
-  vec2 cell=uv*count,id=floor(cell),f=fract(cell);
-  vec2 center=.12+.76*vec2(gh(id+vec2(1.7,8.3)),gh(id+vec2(14.1,3.7)));
-  float seed=gh(id+vec2(8.7,23.4));
-  float strength=smoothstep(cutoff,1.0,seed);
-  float d=length(f-center);
-  return strength*(1.0-smoothstep(.018,.095,d));
-}
-void main(){
-  vec2 uv=v_uv,c=uv-.5;
-  float along=dot(c,vec2(.80,.60));
-  float across=dot(c,vec2(-.60,.80));
-  float bend=across-.12*sin(along*4.0+1.0);
-  float galacticBand=exp(-pow(bend/.205,2.0));
-  float wisps=.56+.44*sin(uv.x*15.0+2.0*sin(uv.y*7.0))*sin(uv.y*11.0-uv.x*4.0);
-  float dust=galacticBand*(.36+.20*wisps);
-  vec3 hue=mix(vec3(.12,.11,.27),vec3(.30,.092,.16),smoothstep(-.38,.34,along));
-  vec3 color=hue*dust;
-  float farStar=star(uv,75.0,.968);
-  float midStar=star(uv,31.0,.972);
-  float brightStar=star(uv,14.0,.990);
-  color+=vec3(.55,.64,.80)*farStar*.29;
-  color+=vec3(.91,.84,.76)*midStar*.46;
-  color+=vec3(1.00,.71,.62)*brightStar*.62;
-  float edge=smoothstep(.0,.15,uv.x)*smoothstep(.0,.15,uv.y)*smoothstep(.0,.15,1.0-uv.x)*smoothstep(.0,.15,1.0-uv.y);
-  float a=.84*edge;
-  gl_FragColor=vec4(color*a,a);
+  const vs=`precision highp float;attribute vec2 a_clip;varying vec2 v_uv;void main(){v_uv=.5*(a_clip+1.0);gl_Position=vec4(a_clip,.9999,1.0);}`;
+  const fs=`precision highp float;varying vec2 v_uv;uniform vec2 u_resolution;
+float h(vec2 p){p=fract(p*vec2(127.13,311.71));p+=dot(p,p+43.17);return fract(p.x*p.y);}
+float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+vec3 stars(vec2 p,float cells,float threshold,float radius,vec3 tint){vec2 t=p*cells,id=floor(t),f=fract(t);float a=h(id+vec2(7.3,13.7)),enabled=smoothstep(threshold,1.0,a);vec2 ofs=.05+.90*vec2(h(id+vec2(17.7,9.3)),h(id+vec2(31.3,3.9)));float px=length(f-ofs)*u_resolution.y/cells;float core=1.0-smoothstep(radius*.25,radius,px);float halo=.15*(1.0-smoothstep(radius,3.5*radius,px));float temperature=h(id+vec2(19.7,11.9));vec3 color=mix(tint,vec3(.99,.91,.76),temperature*.38);return color*enabled*(core+halo);}
+vec3 spiral(vec2 p,vec2 center,float scale,float rot,float squash,vec3 tint){vec2 v=(p-center)/scale;float cs=cos(rot),sn=sin(rot);v=vec2(cs*v.x+sn*v.y,-sn*v.x+cs*v.y);v.y/=squash;float r=length(v),theta=atan(v.y,v.x);float twist=theta-5.3*log(r+.24)+.20*sin(r*7.0+theta*3.0);float arm=pow(.5+.5*cos(2.0*twist),4.0);float disk=exp(-3.1*r),halo=exp(-1.65*r);float core=exp(-19.0*r*r);float lanes=1.0-.35*exp(-pow(sin(2.0*twist+.65)/.34,2.0))*smoothstep(.23,.5,r);return tint*(.30*halo+.95*arm*disk*lanes)+vec3(1.0,.91,.69)*core*.90;}
+vec3 edgeOn(vec2 p,vec2 center,float scale,float rot,vec3 tint){vec2 v=(p-center)/scale;float cs=cos(rot),sn=sin(rot);v=vec2(cs*v.x+sn*v.y,-sn*v.x+cs*v.y);float along=abs(v.x),height=abs(v.y);float bulge=exp(-7.0*dot(v,v));float disk=exp(-along*2.7)*exp(-height*15.0);float haze=exp(-along*2.6)*exp(-height*5.0);float dust=1.0-.55*exp(-height*35.0)*smoothstep(.12,.42,along);return tint*(.54*disk*dust+.13*haze)+vec3(.95,.86,.69)*.67*bulge;}
+vec3 distantGalaxies(vec2 p){vec2 grid=p*8.0,id=floor(grid),f=fract(grid);float seed=h(id+vec2(4.6,9.1));float gate=smoothstep(.967,.985,seed);vec2 center=.14+.72*vec2(h(id+vec2(9.6,7.2)),h(id+vec2(1.7,4.8)));vec2 d=(f-center)*vec2(1.0,1.4);float x=length(d);float core=exp(-x*22.0);float glow=exp(-x*9.0);return gate*(vec3(.70,.79,.88)*.28*glow+vec3(1.0,.86,.62)*.68*core);}
+void main(){vec2 uv=v_uv;vec2 p=(uv-.5)*vec2(u_resolution.x/u_resolution.y,1.0);
+vec3 color=vec3(.002,.003,.006);
+float band=p.y-.23*p.x-.085*sin(p.x*4.2-1.6);float haze=exp(-pow(band/.18,2.0));float clouds=n2(p*9.0+vec2(3.2,1.8))*.70+n2(p*21.0-vec2(2.7,4.2))*.30;
+float darkLane=1.0-.65*exp(-pow((band+.012)/.029,2.0));
+color+=vec3(.19,.14,.115)*haze*(.10+.12*clouds)*darkLane;
+color+=spiral(p,vec2(-.37,.28),.085,.43,.61,vec3(.58,.69,.79))*.82;
+color+=spiral(p,vec2(.39,-.24),.062,-.66,.72,vec3(.86,.71,.55))*.65;
+color+=edgeOn(p,vec2(.37,.29),.090,-.44,vec3(.81,.81,.88))*.85;
+color+=edgeOn(p,vec2(-.37,-.29),.058,.28,vec3(.78,.74,.68))*.46;
+color+=distantGalaxies(p);
+color+=stars(p,96.0,.74,1.18,vec3(.52,.66,.82))*.65;
+color+=stars(p,51.0,.83,1.5,vec3(.76,.83,.98))*.85;
+color+=stars(p,22.0,.87,1.8,vec3(1.0,.96,.88))*1.10;
+float edge=smoothstep(0.0,.085,uv.x)*smoothstep(0.0,.085,uv.y)*smoothstep(0.0,.085,1.0-uv.x)*smoothstep(0.0,.085,1.0-uv.y);
+float alpha=.98*edge;
+gl_FragColor=vec4(min(color,vec3(1.0))*alpha,alpha);
 }`;
   const p=program(vs,fs),buffer=gl.createBuffer();
   if(!buffer){gl.deleteProgram(p);throw new Error("GALAXY_BUFFER_UNAVAILABLE")}
   gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
   gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  return{program:p,buffer,attribute:gl.getAttribLocation(p,"a_clip")};
+  return{program:p,buffer,attribute:gl.getAttribLocation(p,"a_clip"),uResolution:gl.getUniformLocation(p,"u_resolution")};
 }
 function drawGalaxy(galaxy){
   if(!galaxy)return;
   gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);
   gl.useProgram(galaxy.program);
+  gl.uniform2f(galaxy.uResolution,canvas.width,canvas.height);
   gl.bindBuffer(gl.ARRAY_BUFFER,galaxy.buffer);
   gl.enableVertexAttribArray(galaxy.attribute);
   gl.vertexAttribPointer(galaxy.attribute,2,gl.FLOAT,false,0,0);

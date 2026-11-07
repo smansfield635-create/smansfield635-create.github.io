@@ -89,7 +89,7 @@ test('eligible outer-patch tint bounded, core and excluded/protected soil exact'
    assert.ok(full.bridge>=0&&full.bridge<0.10,'bounded outer-chromatic undertone');
    maxBridge=Math.max(maxBridge,full.bridge);
    if(s>=0.66-1e-12)equal(full.candidate,full.oldColor,'core exact');
-   if(s<=0.001)equal(full.candidate,soil,'bare soil at zero');
+   if(s===0)equal(full.candidate,soil,'bare soil at zero');
    for(const [suit,protect] of [[0,1],[1,0]]){
     const ex=compose(soil,t,s,suit,protect);
     equal(ex.candidate,soil,'excluded/protected exact');

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-07T22:25:30Z",
+  "generatedAt": "2026-11-07T23:24:38Z",
   "window": {
-    "start": "2026-10-08T22:25:30Z",
-    "end": "2026-11-07T22:25:30Z"
+    "start": "2026-10-08T23:24:38Z",
+    "end": "2026-11-07T23:24:38Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 584,
-        "visits": 584
+        "pageLoads": 583,
+        "visits": 583
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -108,6 +108,11 @@
         "visits": 1
       },
       {
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
@@ -133,7 +138,7 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/water/",
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -148,17 +153,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/laws/categories/integrity/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/explore/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/categories/integrity/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -206,8 +206,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1443,
-        "visits": 1443
+        "pageLoads": 1442,
+        "visits": 1442
       },
       {
         "value": "diamondgatebridge.com",
@@ -233,8 +233,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1449,
-        "visits": 1392
+        "pageLoads": 1448,
+        "visits": 1391
       },
       {
         "value": "CN",
@@ -265,8 +265,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1265,
-        "visits": 1239
+        "pageLoads": 1264,
+        "visits": 1238
       },
       {
         "value": "mobile",
@@ -282,8 +282,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 805,
-        "visits": 805
+        "pageLoads": 804,
+        "visits": 804
       },
       {
         "value": "Chrome",
@@ -324,8 +324,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 953,
-        "visits": 953
+        "pageLoads": 952,
+        "visits": 952
       },
       {
         "value": "Windows",
@@ -356,8 +356,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 805,
-        "visits": 805
+        "pageLoads": 804,
+        "visits": 804
       },
       {
         "value": "0",
@@ -368,8 +368,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1499,
-        "visits": 1468
+        "pageLoads": 1498,
+        "visits": 1467
       },
       {
         "value": "routing-apis",
@@ -380,8 +380,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1504,
-        "visits": 1467
+        "pageLoads": 1503,
+        "visits": 1466
       },
       {
         "value": "cache",
@@ -397,15 +397,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1535,
-        "visits": 1468
+        "pageLoads": 1534,
+        "visits": 1467
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1535,
-        "visits": 1468
+        "pageLoads": 1534,
+        "visits": 1467
       }
     ]
   }

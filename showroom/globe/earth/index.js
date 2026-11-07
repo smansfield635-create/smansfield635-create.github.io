@@ -23,18 +23,76 @@ function hash3(x,y,z){return fract(Math.sin(x*127.1+y*311.7+z*74.7)*43758.545312
 function norm3(x,y,z){const n=Math.hypot(x,y,z)||1;return[x/n,y/n,z/n]}
 function dot3(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2]}
 const CRATERS=[[-.50,.25,.82,.16,.040],[.31,.62,.72,.10,.033],[.58,-.48,.65,.12,.030],[-.72,-.35,.59,.09,.024],[.14,-.77,.62,.075,.020],[.82,.12,.55,.07,.018],[-.22,.84,.49,.055,.016],[.44,.14,-.89,.11,.031],[-.62,.51,-.59,.08,.022],[.71,-.16,-.69,.06,.018],[-.19,-.61,-.77,.09,.023],[.18,.92,-.34,.07,.019],[-.83,.04,-.55,.055,.016],[.54,.74,-.39,.05,.014]].map(([x,y,z,r,d])=>({c:norm3(x,y,z),r,d}));
-function relief(nx,ny,nz){const broad=Math.sin(nx*7.3+ny*2.1)*.011+Math.sin(ny*11.9-nz*4.7)*.008+Math.sin((nx+nz)*19.1)*.0045;const fine=(hash3(nx*23,ny*29,nz*31)-.5)*.007;let h=broad+fine;const n=[nx,ny,nz];for(const q of CRATERS){const d=Math.acos(Math.max(-1,Math.min(1,dot3(n,q.c))));if(d<q.r){const t=d/q.r;h+=-(1-t*t)*q.d+Math.exp(-Math.pow((t-.88)/.085,2))*q.d*.58}}const scar=Math.abs(Math.sin((nx*2.7+ny*4.1-nz*1.8)*8));if(scar<.028&&ny>-.65)h-=.010*(1-scar/.028);return Math.max(-.062,Math.min(.043,h))}
-function buildSphere(latSegments=72,lonSegments=112){const positions=[],tones=[],indices=[];for(let y=0;y<=latSegments;y++){const v=y/latSegments,theta=v*Math.PI,sy=Math.cos(theta),ring=Math.sin(theta);for(let x=0;x<=lonSegments;x++){const u=x/lonSegments,phi=u*Math.PI*2,nx=ring*Math.cos(phi),ny=sy,nz=ring*Math.sin(phi),h=relief(nx,ny,nz),r=1+h;positions.push(nx*r,ny*r,nz*r);const strata=.5+.5*Math.sin(phi*3.3+theta*8.6+h*205),ridge=.5+.5*Math.sin(phi*10.7-theta*5.1);tones.push(Math.max(0,Math.min(1,.50+h*9.2+(strata-.5)*.24+(ridge-.5)*.07)))}}const row=lonSegments+1;for(let y=0;y<latSegments;y++)for(let x=0;x<lonSegments;x++){const a=y*row+x,b=a+row;indices.push(a,b,a+1,b,b+1,a+1)}const normals=new Float32Array(positions.length);for(let i=0;i<indices.length;i+=3){const ia=indices[i]*3,ib=indices[i+1]*3,ic=indices[i+2]*3,ax=positions[ia],ay=positions[ia+1],az=positions[ia+2],bx=positions[ib],by=positions[ib+1],bz=positions[ib+2],cx=positions[ic],cy=positions[ic+1],cz=positions[ic+2],abx=bx-ax,aby=by-ay,abz=bz-az,acx=cx-ax,acy=cy-ay,acz=cz-az,nx=aby*acz-abz*acy,ny=abz*acx-abx*acz,nz=abx*acy-aby*acx;normals[ia]+=nx;normals[ia+1]+=ny;normals[ia+2]+=nz;normals[ib]+=nx;normals[ib+1]+=ny;normals[ib+2]+=nz;normals[ic]+=nx;normals[ic+1]+=ny;normals[ic+2]+=nz}for(let i=0;i<normals.length;i+=3){const n=norm3(normals[i],normals[i+1],normals[i+2]);normals[i]=n[0];normals[i+1]=n[1];normals[i+2]=n[2]}return{positions:new Float32Array(positions),normals,tones:new Float32Array(tones),indices:new Uint16Array(indices)}}
+// Gen3148: bounded continuous scar, outward normals, nondegenerate single-body U16 mesh.
+function clamp(x,a=0,b=1){return Math.max(a,Math.min(b,x))}
+function smooth(a,b,x){const t=clamp((x-a)/(b-a));return t*t*(3-2*t)}
+const SCAR_U=norm3(.957,0,.291),SCAR_V=norm3(-.0145,.998,-.0478);
+function terrain(nx,ny,nz){
+  const broad=Math.sin(nx*7.3+ny*2.1)*.009+Math.sin(ny*11.9-nz*4.7)*.007+Math.sin((nx+nz)*19.1)*.0038;
+  const grain=Math.sin(nx*83+ny*37)*Math.cos(nz*91-ny*57)*.0018;
+  let base=broad+grain;const n=[nx,ny,nz];
+  for(const q of CRATERS){const d=Math.acos(clamp(dot3(n,q.c),-1,1));if(d<q.r){const t=d/q.r;base+=-(1-t*t)*q.d+Math.exp(-Math.pow((t-.88)/.095,2))*q.d*.57}}
+  const u=dot3(n,SCAR_U),v=dot3(n,SCAR_V);
+  const path=.055*Math.sin(v*7.8+.25)+.025*Math.sin(v*15.4+1.2);
+  const x=u-path,a=Math.atan2(v/.36,x/.275);
+  const outline=1+.085*Math.sin(a*5+1.1)+.05*Math.cos(a*9-.4)+.035*Math.sin(a*13+v*3);
+  const rho=Math.sqrt((x/.275)**2+(v/.36)**2)/outline;
+  const mask=1-smooth(.94,1.21,rho);
+  const floor=1-smooth(.31,.40,rho),tier1=1-smooth(.51,.60,rho),tier2=1-smooth(.70,.80,rho);
+  const wall1=smooth(.31,.40,rho)*(1-smooth(.48,.56,rho));
+  const wall2=smooth(.51,.60,rho)*(1-smooth(.68,.77,rho));
+  const wall3=smooth(.70,.80,rho)*(1-smooth(.88,1.02,rho));
+  const rim=smooth(.80,.91,rho)*(1-smooth(1.03,1.18,rho));
+  const highland=(x<0?1:.25)*smooth(.87,1.02,rho)*(1-smooth(1.17,1.41,rho));
+  const strata=.5+.5*Math.sin(rho*95+v*33+x*17);
+  const talus=wall1*(.006*Math.sin(a*35+rho*22)+.003*Math.sin(a*67-rho*30));
+  const cracked=wall2*.005*Math.sin(a*52+rho*31)+wall3*.005*Math.cos(a*33-rho*21);
+  const brokenRim=1-.55*Math.exp(-Math.pow((a+1.7)/.35,2))-.32*Math.exp(-Math.pow((a-2.1)/.30,2));
+  const impact=-.042*floor-.029*tier1-.017*tier2+.031*rim*brokenRim+.023*highland+talus+cracked;
+  const h=clamp(base+mask*impact,-.095,.074);
+  const lowland=(floor+tier1)*.5,exposed=Math.max(wall1,wall2,wall3);
+  const tone=clamp((1-mask)*(.53+base*3.3)+mask*(.48-.17*lowland+.13*exposed+.20*rim+.16*highland+.06*strata*exposed)+.025*Math.sin(nx*25+ny*15+nz*7),0,1);
+  return {h,tone};
+}
+function buildSphere(latSegments=192,lonSegments=224){
+  const positions=[],tones=[],indices=[];
+  function add(x,y,z){const s=terrain(x,y,z),r=1+s.h;positions.push(x*r,y*r,z*r);tones.push(s.tone)}
+  add(0,1,0);
+  for(let y=1;y<latSegments;y++){
+    const theta=y*Math.PI/latSegments,sy=Math.cos(theta),ring=Math.sin(theta);
+    for(let x=0;x<lonSegments;x++){const phi=x*Math.PI*2/lonSegments;add(ring*Math.cos(phi),sy,ring*Math.sin(phi))}
+  }
+  const south=positions.length/3;add(0,-1,0);
+  const ring=lonSegments;
+  for(let x=0;x<lonSegments;x++){const b=1+x,c=1+(x+1)%lonSegments;indices.push(0,c,b)}
+  for(let y=0;y<latSegments-2;y++)for(let x=0;x<lonSegments;x++){
+    const a=1+y*ring+x,an=1+y*ring+(x+1)%ring,b=a+ring,bn=an+ring;
+    indices.push(a,an,b,b,an,bn);
+  }
+  const last=1+(latSegments-2)*ring;
+  for(let x=0;x<lonSegments;x++)indices.push(south,last+x,last+(x+1)%ring);
+  const normals=new Float32Array(positions.length);
+  for(let i=0;i<indices.length;i+=3){
+    const ia=indices[i]*3,ib=indices[i+1]*3,ic=indices[i+2]*3;
+    const ax=positions[ia],ay=positions[ia+1],az=positions[ia+2];
+    const abx=positions[ib]-ax,aby=positions[ib+1]-ay,abz=positions[ib+2]-az;
+    const acx=positions[ic]-ax,acy=positions[ic+1]-ay,acz=positions[ic+2]-az;
+    const nx=aby*acz-abz*acy,ny=abz*acx-abx*acz,nz=abx*acy-aby*acx;
+    for(const idx of [ia,ib,ic]){normals[idx]+=nx;normals[idx+1]+=ny;normals[idx+2]+=nz}
+  }
+  for(let i=0;i<normals.length;i+=3){const n=norm3(normals[i],normals[i+1],normals[i+2]);normals[i]=n[0];normals[i+1]=n[1];normals[i+2]=n[2]}
+  return{positions:new Float32Array(positions),normals,tones:new Float32Array(tones),indices:new Uint16Array(indices)}
+}
 function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2);out.fill(0);out[0]=f/aspect;out[5]=f;out[10]=(far+near)/(near-far);out[11]=-1;out[14]=2*far*near/(near-far);return out}
 function multiply(out,a,b){const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)r[c*4+row]=a[row]*b[c*4]+a[4+row]*b[c*4+1]+a[8+row]*b[c*4+2]+a[12+row]*b[c*4+3];out.set(r);return out}
 function rotationTiltY(out,tilt,spin){const cx=Math.cos(tilt),sx=Math.sin(tilt),cy=Math.cos(spin),sy=Math.sin(spin);out.set([cy,sx*sy,-cx*sy,0,0,cx,sx,0,sy,-sx*cy,cx*cy,0,0,0,0,1]);return out}
 function translationZ(out,z){out.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,z,1]);return out}
 function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_normal=normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;uniform vec3 u_light;void main(){vec3 n=normalize(v_normal);vec3 l=normalize(u_light);float ndl=max(dot(n,l),0.0);float facing=max(n.z,0.0);float rim=pow(1.0-facing,3.0);float mineral=0.5+0.5*sin((v_position.x*14.0+v_position.y*18.0-v_position.z*12.0)+v_tone*8.0);float grain=0.5+0.5*sin((v_position.x-v_position.y)*37.0+v_position.z*19.0);vec3 low=vec3(0.090,0.047,0.042);vec3 mid=vec3(0.335,0.130,0.088);vec3 high=vec3(0.660,0.315,0.195);vec3 albedo=mix(low,mid,clamp(v_tone*.96+.10,0.0,1.0));albedo=mix(albedo,high,pow(clamp(v_tone,0.0,1.0),2.0)*.54);albedo*=.91+mineral*.13+grain*.038;float terminator=smoothstep(-.13,.17,dot(n,l));vec3 color=albedo*(.27+ndl*.98);color*=.65+terminator*.35;color+=vec3(.36,.10,.06)*rim*.15;color+=vec3(.18,.06,.038)*pow(max(dot(n,normalize(l+vec3(0.0,0.0,1.0))),0.0),20.0)*.20;gl_FragColor=vec4(color,1.0);}`;const p=program(vs,fs),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
-function resize(){if(!canvas||!gl)return;const rect=canvas.getBoundingClientRect(),mobile=matchMedia("(max-width: 640px)").matches,cap=mobile?2:2.25,dpr=Math.min(devicePixelRatio||1,cap),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
+function resize(){if(!canvas||!gl)return;const rect=canvas.getBoundingClientRect(),mobile=matchMedia("(max-width: 640px)").matches,cap=mobile?2:2.25,budget=mobile?900000:1600000,dpr=Math.min(devicePixelRatio||1,cap,Math.sqrt(budget/Math.max(1,rect.width*rect.height))),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
 function draw(){if(!gl||!resources)return;resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(resources.program);const aspect=canvas.width/Math.max(1,canvas.height),projection=perspective(new Float32Array(16),Math.PI/3.45,aspect,.1,20),view=translationZ(new Float32Array(16),state.cameraZ),model=rotationTiltY(new Float32Array(16),-.18,angle),pv=multiply(new Float32Array(16),projection,view),mvp=multiply(new Float32Array(16),pv,model);gl.bindBuffer(gl.ARRAY_BUFFER,resources.position);gl.enableVertexAttribArray(resources.aPosition);gl.vertexAttribPointer(resources.aPosition,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.normal);gl.enableVertexAttribArray(resources.aNormal);gl.vertexAttribPointer(resources.aNormal,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.tone);gl.enableVertexAttribArray(resources.aTone);gl.vertexAttribPointer(resources.aTone,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.index);gl.uniformMatrix4fv(resources.uMvp,false,mvp);gl.uniformMatrix4fv(resources.uModel,false,model);gl.uniform3f(resources.uLight,.78,.48,.66);gl.drawElements(gl.TRIANGLES,resources.count,gl.UNSIGNED_SHORT,0);state.frameCount++}
 function ease(t){return 1-Math.pow(1-t,3)}
 function updateCamera(now){if(!cameraTween)return false;const t=Math.min(1,Math.max(0,(now-cameraTween.start)/cameraTween.duration)),e=ease(t);state.cameraZ=cameraTween.from+(cameraTween.to-cameraTween.from)*e;if(t>=1){const done=cameraTween.done;cameraTween=null;state.cameraZ=done===WITNESS.CLOSE?-2.02:-2.78;setWitnessState(done);if(done===WITNESS.CLOSE){document.querySelector("[data-return-orbit]")?.focus({preventScroll:true})}else{document.querySelector("[data-planet-approach]")?.focus({preventScroll:true})}}return true}
-function tick(now){raf=0;if(!visible)return;const dt=Math.min(.05,Math.max(0,(now-last)/1000||0));last=now;const cameraActive=updateCamera(now);if(gl&&resources){if(!state.reducedMotion)angle=(angle+dt*.042)%(Math.PI*2);draw()}if((!state.reducedMotion&&gl&&resources)||cameraActive||cameraTween)raf=requestAnimationFrame(tick)}
+function tick(now){raf=0;if(!visible)return;const dt=Math.min(.05,Math.max(0,(now-last)/1000||0));last=now;const cameraActive=updateCamera(now);if(gl&&resources){if(!state.reducedMotion&&state.witnessState===WITNESS.ORBIT)angle=(angle+dt*.042)%(Math.PI*2);draw()}if((!state.reducedMotion&&gl&&resources)||cameraActive||cameraTween)raf=requestAnimationFrame(tick)}
 function start(){if(!visible)return;if(raf)cancelAnimationFrame(raf);last=performance.now();if(gl&&resources)draw();if((!state.reducedMotion&&gl&&resources)||cameraTween)raf=requestAnimationFrame(tick)}
 function transitionCamera(to,duration,terminal){if(state.reducedMotion){state.cameraZ=to;cameraTween=null;setWitnessState(terminal);if(gl&&resources)draw();return}cameraTween={from:state.cameraZ,to,start:performance.now(),duration,done:terminal};start()}
 function beginApproach(){if(state.witnessState!==WITNESS.ORBIT)return;setWitnessState(WITNESS.APPROACH);transitionCamera(-2.02,1250,WITNESS.CLOSE)}

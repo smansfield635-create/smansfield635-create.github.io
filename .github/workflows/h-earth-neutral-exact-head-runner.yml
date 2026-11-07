@@ -1717,18 +1717,97 @@ jobs:
           test "$(git rev-parse HEAD)" = d0e030b2026b76c04e4ed753257559e369cd3f28
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 932295ce26e66b2f450323b2ae7037ebe59037eb
           node --test h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
+      - name: One-point authenticated southern base-surface measurement
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = d0e030b2026b76c04e4ed753257559e369cd3f28
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import {gunzipSync} from 'node:zlib';
+          import {createHash} from 'node:crypto';
+          import {applyHEarthVerifiedPlantingPackage} from './showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+          import {buildVegetationVisibleSurface} from './showroom/globe/h-earth/render/vegetation-visible-surface.v1.js';
+          import {inverseHEarthGroundCoverPoint,H_EARTH_GLOBAL_GROUND_COVER} from './showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
+          import {sampleHEarthRun8CSuccessorSurfaceMaterial} from './h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
+          const X=-200,Z=-740;
+          const asset='showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz';
+          const packed=fs.readFileSync(asset);
+          const digest=createHash('sha256').update(packed).digest('hex');
+          assert.equal(packed.byteLength,11736235,'PRODUCTION_PACKED_WORLD_BYTES_DRIFT');
+          assert.equal(digest,'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','PRODUCTION_WORLD_SHA256_DRIFT');
+          const unpacked=gunzipSync(packed);
+          assert.equal(unpacked.byteLength,51163475,'PRODUCTION_WORLD_UNPACKED_BYTES_DRIFT');
+          const verified=JSON.parse(unpacked.toString('utf8'));
+          assert.equal(verified.raw?.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685');
+          assert.equal(verified.canonical?.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2');
+          assert.equal(verified.raw?.revision,1);
+          assert.equal(verified.canonical?.revision,2);
+          const pkg=applyHEarthVerifiedPlantingPackage(verified.raw);
+          const visibleSurface=buildVegetationVisibleSurface(pkg);
+          // Exactly one ground sample and one existing rendered-water sample.
+          const support=visibleSurface.sample(X,Z);
+          const water=visibleSurface.water.sample(X,Z);
+          const authored=support?inverseHEarthGroundCoverPoint(X,support.y,Z):null;
+          const material=authored?sampleHEarthRun8CSuccessorSurfaceMaterial(authored.x,authored.z):null;
+          const finiteSupport=!!support&&Number.isFinite(support.y)&&Number.isFinite(support.slope);
+          const waterClear=finiteSupport&&(!water||support.y>water.y+.01);
+          const nativeWaterAdmit=finiteSupport&&(!water||support.y>water.y+.03);
+          // Same intrinsic material/slope threshold as existing global cover;
+          // estate/route and all 12 physical root contacts are not tested here.
+          const intrinsicMaterialAdmit=finiteSupport&&material?.valid===true&&support.slope<=.35&&(
+            material.surfaceClass==='STONE_AND_SPARSE_SOIL'?material.soilDepth>=.035:
+            ['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)&&material.soilDepth>=.20
+          );
+          const b=H_EARTH_GLOBAL_GROUND_COVER.bounds;
+          const withinCoverBounds=X>=b.minX&&X<=b.maxX&&Z>=b.minZ&&Z<=b.maxZ;
+          const receipt={
+            schema:'H_EARTH_SOUTHERN_POINT_NATIVE_MEASUREMENT_v1',
+            result:'ONE_POINT_SAMPLED',
+            candidateSha:'d0e030b2026b76c04e4ed753257559e369cd3f28',
+            fixturePrecedent:'h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs',
+            samplerSource:'showroom/globe/h-earth/render/vegetation-visible-surface.v1.js',
+            materialSource:'h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js',
+            worldAsset:asset,worldAssetSha256:digest,
+            hydration:'GEN3164_VERIFIED_RAW_PLANTING_PACKAGE',
+            sampledDomain:'CANONICAL_BASE_SURFACE_NO_RUNTIME_REFINEMENT_NO_GEOLOGICAL_BRIDGE',
+            coordinate:{x:X,z:Z},
+            validRenderedTerrainTriangle:finiteSupport&&Number.isInteger(support.triangleId),
+            support,
+            groundElevation:finiteSupport?support.y:null,
+            slope:finiteSupport?support.slope:null,
+            water,waterOverlap:finiteSupport&&!!water&&support.y<=water.y+.01,
+            waterClear:finiteSupport?waterClear:null,
+            nativeFixtureWaterAdmission:finiteSupport?nativeWaterAdmit:null,
+            authoredMaterialCoordinate:authored,
+            material,
+            intrinsicMaterialAdmission:finiteSupport?intrinsicMaterialAdmit:null,
+            existingGlobalCoverBounds:b,
+            withinExistingGlobalCoverBounds:withinCoverBounds,
+            existingGlobalCoverFootprintAdmission:withinCoverBounds,
+            fullVegetationAdmissionEstablished:false,
+            runtimeRefinementTested:false,geologicalExteriorTested:false,
+            liveGpuTested:false,
+            surfaceReceipt:visibleSurface.receipt
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/h-earth-southern-point-native-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log('H_EARTH_SOUTHERN_POINT_NATIVE='+JSON.stringify(receipt));
+          NODE
       - name: Preserve original source-bound site census
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-gen3164-combined-site-preflight-${{ github.run_id }}
-          path: ${{ runner.temp }}/h-earth-combined-native-coverage-receipt.json
+          path: |
+            ${{ runner.temp }}/h-earth-combined-native-coverage-receipt.json
+            ${{ runner.temp }}/h-earth-southern-point-native-receipt.json
           if-no-files-found: warn
           retention-days: 30
 
   combined-inland-matched-webgl2:
     needs: [combined-inland-site-native]
-    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3165-combined-vegetation-native-gpu-20261107' }}
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3165-combined-vegetation-native-gpu-20261107' && github.event.pull_request.head.sha == 'dd981cfee6b6af226064559ca7373bd7aa9d431d' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:

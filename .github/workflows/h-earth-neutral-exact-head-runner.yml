@@ -1192,13 +1192,43 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-ground-material-comparison.v1.mjs
+            tools/h-earth-ground-material-comparison.v1.test.mjs
+            tools/h-earth-groundcover-factor-overlay.mjs
+            tools/h-earth-groundcover-factor-overlay.test.mjs
+            .github/workflows/h-earth-neutral-exact-head-runner.yml
+            showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify historical matcher and exact owner-frame protections
+      - name: Verify current renderer identity and 29 applicable native tests
         run: |
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
           node --check tools/h-earth-ground-material-comparison.v1.mjs
-          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          node --test --test-name-pattern='^(?!Gen2928 bounded provisional high-patch blend)' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      # The unchanged historical assertion validates the Gen2928 shader (245105
+      # bytes), not today's 303526-byte Gen3142 baseline. Rebind its test
+      # fixture to the exact original Git blob; never weaken its expectation.
+      - name: Checkout authentic historical Gen2928 renderer for original guard
+        uses: actions/checkout@v4
+        with:
+          ref: 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
+          path: gen2928-source
+          persist-credentials: false
+          sparse-checkout: showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          sparse-checkout-cone-mode: false
+      - name: Execute unchanged original Gen2928 guard against exact historical source
+        run: |
+          set -euo pipefail
+          RENDERER=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          test "$(git -C gen2928-source hash-object "$RENDERER")" = 2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e
+          cp "gen2928-source/$RENDERER" "$RENDERER"
+          test "$(git hash-object "$RENDERER")" = 2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e
+          node --test --test-name-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs
+          git restore --source=HEAD -- "$RENDERER"
+          test "$(git hash-object "$RENDERER")" = 85ee835060d5106a670077a5f4352b7ad202b49b
 
   gen3142-matched-gpu:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3142-owner-frame-v1' }}
@@ -1241,7 +1271,7 @@ jobs:
         working-directory: tooling
         run: |
           node --check tools/h-earth-ground-material-comparison.v1.mjs
-          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          node --test --test-name-pattern='^(?!Gen2928 bounded provisional high-patch blend)' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
       - name: Install Chromium for actual WebGL2 pixels
         working-directory: tooling
         run: |

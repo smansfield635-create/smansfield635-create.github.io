@@ -11851,6 +11851,50 @@
       "scopeHash": "71b71a7933339f412c551d2a91e89d0a64ac3b1165358dde429810aab405d747",
       "state": "ADMITTED_LOCKED"
     },
+    "71c9bda5bd2a443c16f895b62bead36aa53f6773784983d4316256e552b35727": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0ffe2b4f9c9a811d0ed4b6c6bb438eab366ab362",
+          "lockGeneration": 3151,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:ORIGINAL_APPEARANCE_RESTORATION_20261107",
+          "operationId": "ZIONTS_ORIGINAL_APPEARANCE_RESTORATION_20261107_001",
+          "procedureLocatorDigest": "926bcd66b14cdf9aa942bd84f194bddb98be4c7d532097d703677f5f2cff49ee",
+          "requestDigest": "16a229016a428039f1bcf8b84df8a68f2a4d94ab88b697719465895dae097bd9",
+          "scopeHash": "71c9bda5bd2a443c16f895b62bead36aa53f6773784983d4316256e552b35727"
+        },
+        "bindingDigest": "eafa6d77a5458378759ad36bd759dffb9662fbf8e7db205cf3d068453a69e7e2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a3620b3daa424c2b3eece8a84863b47b590d265b6ce630640a0dc7069aa5ee52",
+          "commentId": 6702546628,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42340810620,
+          "workflowSha": "0ffe2b4f9c9a811d0ed4b6c6bb438eab366ab362"
+        },
+        "lineageAnchorCommitSha": "fc696b9b2864461e9ff795a291f4ca27a04b20a2",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0ffe2b4f9c9a811d0ed4b6c6bb438eab366ab362",
+      "lockGeneration": 3151,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:ORIGINAL_APPEARANCE_RESTORATION_20261107",
+      "operationId": "ZIONTS_ORIGINAL_APPEARANCE_RESTORATION_20261107_001",
+      "procedureLocatorDigest": "926bcd66b14cdf9aa942bd84f194bddb98be4c7d532097d703677f5f2cff49ee",
+      "released": false,
+      "requestDigest": "16a229016a428039f1bcf8b84df8a68f2a4d94ab88b697719465895dae097bd9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "71c9bda5bd2a443c16f895b62bead36aa53f6773784983d4316256e552b35727",
+      "state": "ADMITTED_LOCKED"
+    },
     "71ec6ff7fa1925948a04a51dfd31f1e2bfaab5abb410c0c15743ce71892e96aa": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -27545,7 +27589,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3150,
+  "lockGeneration": 3151,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

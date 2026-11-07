@@ -25,7 +25,12 @@
     "assets/engine/dgb.native-character-gait-coordinator.v1.mjs",
     "assets/engine/dgb.native-character-gait-coordinator.v1.test.mjs",
     "assets/engine/dgb.native-character-morph-gpu-bridge.v1.mjs",
-    "assets/engine/dgb.native-character-morph-gpu-bridge.v1.test.mjs"
+    "assets/engine/dgb.native-character-morph-gpu-bridge.v1.test.mjs",
+    "assets/engine/dgb.native-sculpt-session.v1.mjs",
+    "assets/engine/dgb.native-sculpt-session.v1.test.mjs",
+    "assets/engine/dgb.native-sculpt-browser.v1.mjs",
+    "assets/engine/dgb.native-sculpt-browser.v1.test.mjs",
+    "graphics-engine/sculpt-lab/index.html"
   ],
   "entrypoint": ".github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json",
   "authorityBoundary": [

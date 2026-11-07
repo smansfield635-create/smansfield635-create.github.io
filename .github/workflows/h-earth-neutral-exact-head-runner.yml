@@ -1593,12 +1593,20 @@ jobs:
           ref: ${{ github.sha }}
           path: tooling
           persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-first-hit-gpu-qualification.v1.mjs
+            tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+            tools/h-earth-ground-material-comparison.v1.mjs
+            tools/h-earth-groundcover-factor-overlay.mjs
+          sparse-checkout-cone-mode: false
       - name: Checkout immutable Gen3149 diagnostic
         uses: actions/checkout@v4
         with:
           ref: ba741660459180de632a03f826800548a40e325f
           path: probe
           persist-credentials: false
+          sparse-checkout: tools/h-earth-first-hit-material-overlay.mjs
+          sparse-checkout-cone-mode: false
       - name: Checkout exact published baseline
         uses: actions/checkout@v4
         with:
@@ -1661,6 +1669,10 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-first-hit-gpu-qualification.v1.mjs
+            tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22

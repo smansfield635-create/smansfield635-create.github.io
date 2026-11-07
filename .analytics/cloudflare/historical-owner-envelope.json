@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-07T19:24:26Z",
+  "generatedAt": "2026-11-07T20:24:39Z",
   "window": {
-    "start": "2026-08-09T19:24:26Z",
-    "end": "2026-11-07T19:24:26Z"
+    "start": "2026-08-09T20:24:39Z",
+    "end": "2026-11-07T20:24:39Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,22 @@
       }
     },
     "byPath": {
+      "/laws/": {
+        "pageLoads": 100,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/": {
+        "pageLoads": 140,
+        "visits": 10
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 90,
+        "visits": 0
+      },
       "/": {
         "pageLoads": 940,
         "visits": 680
@@ -38,24 +54,8 @@
         "pageLoads": 110,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 100,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 140,
-        "visits": 10
-      },
       "/evidence/readiness/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 90,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -90,6 +90,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -105,10 +109,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 60,
@@ -126,16 +126,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -190,13 +190,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -312,13 +312,13 @@
       }
     },
     "byReferer": {
-      "www.google.com": {
-        "pageLoads": 630,
-        "visits": 630
-      },
       "diamondgatebridge.com": {
         "pageLoads": 2830,
         "visits": 0
+      },
+      "www.google.com": {
+        "pageLoads": 630,
+        "visits": 630
       },
       "(none)": {
         "pageLoads": 540,

@@ -10675,6 +10675,50 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
+    "66999c7e128cdb49ca3a35f0e0277c64285c74885dc19284e7078cd4e65c706e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "11805431d08c5aec9e7d53c80e569d503897680d",
+          "lockGeneration": 3161,
+          "lockScope": "H_EARTH:SOIL_OLIVE_BRIDGE_MATCHED_GPU_WORKFLOW:20261107",
+          "operationId": "H_EARTH_SOIL_OLIVE_BRIDGE_MATCHED_GPU_WORKFLOW_20261107_001",
+          "procedureLocatorDigest": "f13f0107cf74f5aa9070ebaf9b5c5e18f0aec9f567e7029e6a5ba09ec0d579bc",
+          "requestDigest": "6a060b31315f6b180c1efa9fee4f802a295254c6d8b388eae6c2d76483c83b68",
+          "scopeHash": "66999c7e128cdb49ca3a35f0e0277c64285c74885dc19284e7078cd4e65c706e"
+        },
+        "bindingDigest": "8a916d2c2d233a2ca5a994cedb7b1a236fdb3cf6ad81d6922fbaea2cfcc773ff",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "edfe3cdf54726c61ee7a183ee335d238bf24aa194bb9adee1b61d9ca7746e171",
+          "commentId": 6710768973,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42397259314,
+          "workflowSha": "11805431d08c5aec9e7d53c80e569d503897680d"
+        },
+        "lineageAnchorCommitSha": "cccb5e4e78b836d1b5cd3607bcab9ea3ef290f0e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "11805431d08c5aec9e7d53c80e569d503897680d",
+      "lockGeneration": 3161,
+      "lockScope": "H_EARTH:SOIL_OLIVE_BRIDGE_MATCHED_GPU_WORKFLOW:20261107",
+      "operationId": "H_EARTH_SOIL_OLIVE_BRIDGE_MATCHED_GPU_WORKFLOW_20261107_001",
+      "procedureLocatorDigest": "f13f0107cf74f5aa9070ebaf9b5c5e18f0aec9f567e7029e6a5ba09ec0d579bc",
+      "released": false,
+      "requestDigest": "6a060b31315f6b180c1efa9fee4f802a295254c6d8b388eae6c2d76483c83b68",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "66999c7e128cdb49ca3a35f0e0277c64285c74885dc19284e7078cd4e65c706e",
+      "state": "ADMITTED_LOCKED"
+    },
     "66a64637e67a2f7c62d6893f7b236712c4eac9593deb3bece58f95ca7b1ed0e2": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -27985,7 +28029,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3160,
+  "lockGeneration": 3161,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

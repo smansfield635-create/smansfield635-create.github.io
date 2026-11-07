@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {execFileSync} from 'node:child_process';
-import {transformExactRenderer,gitBlobSha,decodeModePixel,combinePixelReceipts,MODE_MAGIC,TARGETS} from './h-earth-first-hit-material-overlay.mjs';
+import {transformExactRenderer,sourceObjectId,decodeModePixel,combinePixelReceipts,MODE_MAGIC,TARGETS} from './h-earth-first-hit-material-overlay.mjs';
 
 const template = `
 const FS = \`#version 300 es
@@ -69,7 +69,7 @@ test('reject missing and duplicate compiler anchors',()=>{
 test('blob identity matches git hash-object for sample byte content',()=>{
  const value='H-Earth\nsource';
  const git=execFileSync('git',['hash-object','--stdin'],{input:value,encoding:'utf8'}).trim();
- assert.equal(gitBlobSha(value),git);
+ assert.equal(sourceObjectId(value),git);
 });
 
 test('decoders return measured primitive role, class, atlas, weight and position',()=>{
@@ -87,16 +87,104 @@ test('missing geometry marker never invents a hit',()=>{
  assert.equal(combinePixelReceipts([]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
 });
 
-test('combiner requires all seven distinct complete probes',()=>{
- const r=[{mode:1,role:1,primitiveLow:49},{mode:2,primitiveHigh:242,surfaceClass:7},{mode:3,correctedAtlas:2},
- {mode:4,worldCoordinate:12},{mode:5,worldCoordinate:5},{mode:6,worldCoordinate:-465},
- {mode:7,groundcoverBlockEntered:true,groundcoverWeight:0.47}].map(o=>({status:'VALID_PROBED_GEOMETRY',...o}));
- const hit=combinePixelReceipts(r);
- assert.equal(hit.status,'SOURCE_BOUND_GPU_PROBE_COMPLETE_NOT_ANDROID_FIRST_HIT');
- assert.equal(hit.primitiveIndex,62001);
- assert.equal(hit.physicalOwnerImageParity,false);
- assert.equal(combinePixelReceipts(r.slice(1)).status,'PIXEL_FIRST_HIT_UNRESOLVED');
- assert.equal(combinePixelReceipts([...r.slice(0,6),r[5]]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+const pixels=[null,
+  new Uint8Array([241,1,49,255]),new Uint8Array([242,242,7,255]),
+  new Uint8Array([243,2,255,255]),new Uint8Array([244,0,128,255]),
+  new Uint8Array([245,0,128,255]),new Uint8Array([246,0,128,255]),
+  new Uint8Array([247,129,255,255])];
+const capture = (mode,overrides={})=>({
+  target:'published',sourceHead:TARGETS.published.head,
+  rendererObjectId:TARGETS.published.rendererBlob,
+  instrumentedSha256:'a'.repeat(64),webgl2:true,
+  readbackClass:'WEBGL2_READPIXELS_RGBA8',appliedMode:mode,
+  poseId:'same-fixed-owner-pose',assetSignature:'same-resident-assets',
+  drawSignature:'main-scene-draw-call-identity',
+  cameraPosition:[124.4,8.9,-394.8],
+  viewProjectionMatrix:Array.from({length:16},(_,i)=>i===0||i===5||i===10||i===15?1:0),
+  viewport:[384,688],pixel:[201,350],webglErrors:[],...overrides
+});
+const received=(overrides={})=>Array.from({length:7},(_,i)=>{
+  const mode=i+1;
+  return decodeModePixel(mode,pixels[mode],capture(mode,overrides));
+});
+
+test('seven actual typed-array decode results combine with exact same captured provenance',()=>{
+  const r=received(),hit=combinePixelReceipts(r);
+  assert.deepEqual(r.map(x=>x.mode),[1,2,3,4,5,6,7]);
+  assert.equal(hit.status,'SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT');
+  assert.equal(hit.role,1);assert.equal(hit.primitiveIndex,62001);
+  assert.equal(hit.groundcoverBlockEntered,true);
+  assert.equal(hit.physicalOwnerImageParity,false);
+  assert.equal(hit.firstHitGeometryVerified,false);
+  assert.ok(Object.isFrozen(r[0]));assert.ok(Object.isFrozen(r[0].rgba));
+});
+
+test('without claimed provenance seven decoded bytes do not support attribution',()=>{
+  const r=Array.from({length:7},(_,i)=>decodeModePixel(i+1,pixels[i+1]));
+  assert.equal(combinePixelReceipts(r).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+});
+
+test('complete mode set required, including noncanonical seven-ID permutations',()=>{
+  const r=received();
+  assert.equal(combinePixelReceipts(r.slice(1)).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  assert.equal(combinePixelReceipts([...r.slice(0,6),r[5]]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  assert.equal(combinePixelReceipts(r.map((x,i)=>({...x,mode:i}))).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  assert.equal(combinePixelReceipts(r.slice().reverse()).status,'SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT');
+});
+
+test('tampered material fields and bit-flags cannot become a valid compound receipt',()=>{
+  const r=received();
+  assert.equal(combinePixelReceipts(r.map((x,i)=>i===0?{...x,role:231}:x)).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  assert.equal(combinePixelReceipts(r.map((x,i)=>i===1?{...x,primitiveHigh:249}:x)).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  assert.equal(decodeModePixel(3,[243,2,254,255]).status,'PIXEL_INVALID_GROUNDCOVER_FLAG');
+  assert.equal(decodeModePixel(7,[247,129,254,255]).status,'PIXEL_INVALID_GROUNDCOVER_FLAG');
+  assert.equal(decodeModePixel(3,[243,3,255,255]).status,'PIXEL_CORRECTED_ATLAS_INVALID');
+});
+
+test('reject source, instrument, pose, asset, pixel, draw, viewport and camera drift',()=>{
+  const r=received();
+  const changes=[
+    {sourceHead:TARGETS.candidate.head},{instrumentedSha256:'b'.repeat(64)},
+    {poseId:'different'}, {assetSignature:'different'}, {drawSignature:'different'},
+    {pixel:[202,350]},{viewport:[385,688]},{cameraPosition:[120,8.9,-394.8]},
+    {viewProjectionMatrix:Array.from({length:16},()=>1)}
+  ];
+  for(const change of changes){
+    const mutant=decodeModePixel(7,pixels[7],capture(7,change));
+    assert.equal(combinePixelReceipts([...r.slice(0,6),mutant]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  }
+});
+
+test('malformed capture or invalid applied diagnostic mode never grants correspondence',()=>{
+  const invalid=[
+    {appliedMode:2},{readbackClass:'WEBGL2_SCREENSHOT'},{webgl2:false},
+    {webglErrors:['INVALID_ENUM']},{viewport:[0,688]},{pixel:[384,350]},
+    {instrumentedSha256:'wrong'},{rendererObjectId:TARGETS.candidate.rendererBlob},
+    {viewProjectionMatrix:[0]}, {assetSignature:''}
+  ];
+  for(const change of invalid){
+    const r=decodeModePixel(1,pixels[1],capture(1,change));
+    assert.equal(r.provenance,null);
+    assert.equal(combinePixelReceipts([r,...received().slice(1)]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  }
+});
+
+test('GPU coordinates outside precision range are explicit failures, not clipped positions',()=>{
+  for(const mode of [4,5,6]){
+    assert.equal(decodeModePixel(mode,[248,mode,0,255]).status,'PIXEL_COORDINATE_OUT_OF_RANGE');
+    assert.equal(decodeModePixel(mode,[248,mode+1,0,255]).status,'UNATTRIBUTED_PIXEL_NOT_FROM_PROBED_GEOMETRY');
+    assert.equal(decodeModePixel(mode,[240+mode,0,0,255]).status,'PIXEL_COORDINATE_RANGE_AMBIGUOUS');
+    assert.equal(decodeModePixel(mode,[240+mode,255,255,255]).status,'PIXEL_COORDINATE_RANGE_AMBIGUOUS');
+  }
+  const t=transform();assert.match(t.source,/coord > -1024\.0 && coord < 1024\.0/);
+});
+
+test('groundcover entry and weight modes must agree',()=>{
+  const r=received();
+  const noEntry=decodeModePixel(7,[247,0,0,255],capture(7));
+  assert.equal(combinePixelReceipts([...r.slice(0,6),noEntry]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  const nonzero=decodeModePixel(7,[247,129,0,255],capture(7));
+  assert.equal(combinePixelReceipts([...r.slice(0,6),nonzero]).status,'PIXEL_FIRST_HIT_UNRESOLVED');
 });
 
 test('pixel decoders reject malformed readbacks and mode values',()=>{

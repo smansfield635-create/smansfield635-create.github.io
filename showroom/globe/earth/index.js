@@ -29,7 +29,7 @@ function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2);out.fi
 function multiply(out,a,b){const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)r[c*4+row]=a[row]*b[c*4]+a[4+row]*b[c*4+1]+a[8+row]*b[c*4+2]+a[12+row]*b[c*4+3];out.set(r);return out}
 function rotationTiltY(out,tilt,spin){const cx=Math.cos(tilt),sx=Math.sin(tilt),cy=Math.cos(spin),sy=Math.sin(spin);out.set([cy,sx*sy,-cx*sy,0,0,cx,sx,0,sy,-sx*cy,cx*cy,0,0,0,0,1]);return out}
 function translationZ(out,z){out.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,z,1]);return out}
-function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_body=a_position;v_normal=-normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;
+function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const derivativeSupport=!!gl.getExtension("OES_standard_derivatives");const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_body=a_position;v_normal=-normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;
 varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;
 uniform vec3 u_light;uniform mat4 u_model;
 float hash31(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
@@ -71,21 +71,30 @@ vec3 l=normalize(u_light);
 float ndl=max(dot(n,l),0.0);float sculpt=mix(ndl,smoothstep(.08,.88,ndl),.34);
 float facing=max(n.z,0.0);float rim=pow(1.0-facing,3.0);
 float rock=noise3(q*37.0);
-float grainMeso=noise3(q*94.0+vec3(11.1,4.7,2.3))-.5;
-float grainFine=noise3(q*167.0+vec3(5.4,13.2,1.7))-.5;
+vec3 warp=q+.0035*vec3(sin(q.y*17.0+q.z*11.0),sin(q.z*13.0-q.x*9.0),sin(q.x*19.0+q.y*7.0));
+float grainMeso=noise3(warp*94.0+vec3(11.1,4.7,2.3))-.5;
+float grainFine=noise3(warp*167.0+vec3(5.4,13.2,1.7))-.5;
+#ifdef ZIONTS_DERIVATIVES
+float pixelFootprint=max(length(dFdx(q)),length(dFdy(q)));
+float mesoFade=1.0-smoothstep(.30,.90,pixelFootprint*94.0);
+float fineFade=1.0-smoothstep(.22,.72,pixelFootprint*167.0);
+float sedimentFade=1.0-smoothstep(.40,1.15,pixelFootprint*74.0);
+#else
+float mesoFade=.55, fineFade=.20, sedimentFade=.85;
+#endif
 float grainVisibility=smoothstep(.10,.55,facing)*(1.0-.25*pit);
-float sediment=.5+.5*sin(q.y*74.0+q.x*21.0+2.0*sin(q.z*17.0));
+float sediment=.5+.5*sin(warp.y*74.0+warp.x*21.0+2.0*sin(warp.z*17.0));
 vec3 low=vec3(.090,.047,.042);vec3 mid=vec3(.335,.130,.088);vec3 high=vec3(.660,.315,.195);
 float definedTone=clamp((v_tone-.5)*1.26+.5,0.0,1.0);
 vec3 albedo=mix(low,mid,clamp(definedTone*.96+.10,0.0,1.0));
 albedo=mix(albedo,high,pow(definedTone,2.0)*.54);
-albedo*=.91+.19*(rock-.5)+.065*(sediment-.5)+grainVisibility*(.35*grainMeso+.17*grainFine)-.085*pit+.040*lip;
+albedo*=.91+.19*(rock-.5)+.049*sedimentFade*(sediment-.5)+grainVisibility*(.24*mesoFade*grainMeso+.095*fineFade*grainFine)-.085*pit+.040*lip;
 float terminator=smoothstep(-.07,.10,dot(n,l));
 vec3 color=albedo*(.32+sculpt*1.08);color*=.65+terminator*.35;
 color+=vec3(.36,.10,.06)*rim*.15;
 color+=vec3(.18,.06,.038)*pow(max(dot(n,normalize(l+vec3(0.0,0.0,1.0))),0.0),20.0)*.20;
 gl_FragColor=vec4(pow(clamp(color,vec3(0.0),vec3(1.0)),vec3(.95)),1.0);
-}`;const p=program(vs,fs),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
+}`;const fsSource=derivativeSupport?"#extension GL_OES_standard_derivatives : enable\n#define ZIONTS_DERIVATIVES 1\n"+fs:fs;const p=program(vs,fsSource),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
 function resize(){if(!canvas||!gl)return;const rect=canvas.getBoundingClientRect(),mobile=matchMedia("(max-width: 640px)").matches,budget=mobile?2000000:2500000,area=Math.max(1,rect.width*rect.height),dpr=Math.min((devicePixelRatio||1)*1.10,2.25,Math.sqrt(budget/area)),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
 function draw(){if(!gl||!resources)return;resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(resources.program);const aspect=canvas.width/Math.max(1,canvas.height),projection=perspective(new Float32Array(16),Math.PI/3.45,aspect,.1,20),view=translationZ(new Float32Array(16),state.cameraZ),model=rotationTiltY(new Float32Array(16),-.18,angle),pv=multiply(new Float32Array(16),projection,view),mvp=multiply(new Float32Array(16),pv,model);gl.bindBuffer(gl.ARRAY_BUFFER,resources.position);gl.enableVertexAttribArray(resources.aPosition);gl.vertexAttribPointer(resources.aPosition,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.normal);gl.enableVertexAttribArray(resources.aNormal);gl.vertexAttribPointer(resources.aNormal,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.tone);gl.enableVertexAttribArray(resources.aTone);gl.vertexAttribPointer(resources.aTone,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.index);gl.uniformMatrix4fv(resources.uMvp,false,mvp);gl.uniformMatrix4fv(resources.uModel,false,model);gl.uniform3f(resources.uLight,.78,.48,.66);gl.drawElements(gl.TRIANGLES,resources.count,gl.UNSIGNED_SHORT,0);state.frameCount++}
 function ease(t){return 1-Math.pow(1-t,3)}

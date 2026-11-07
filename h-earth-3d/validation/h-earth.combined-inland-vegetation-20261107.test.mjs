@@ -3,7 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {getHEarthRun8ER2ImmutableLiveRenderPackage} from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
+import {gunzipSync} from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {applyHEarthVerifiedPlantingPackage} from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 import {buildVegetationVisibleSurface} from '../../showroom/globe/h-earth/render/vegetation-visible-surface.v1.js';
 import {buildHEarthGlobalGroundCover,H_EARTH_GLOBAL_GROUND_COVER,selectHEarthGlobalGroundCoverDraws} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
 
@@ -18,7 +20,19 @@ let specimen=null;
 async function getSpecimen(){
  if(specimen)return specimen;
  specimen=(async()=>{
-  const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
+  // Reproduce the public browser worker's Gen2666 verified hydration path,
+  // rather than invoking the legacy procedural builder that fails BARK layout.
+  const packed=fs.readFileSync(path.join(root,'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz'));
+  assert.equal(packed.length,11736235,'PRODUCTION_PACKED_WORLD_BYTES_DRIFT');
+  assert.equal(createHash('sha256').update(packed).digest('hex'),'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','PRODUCTION_WORLD_SHA256_DRIFT');
+  const unpacked=gunzipSync(packed);
+  assert.equal(unpacked.byteLength,51163475,'PRODUCTION_WORLD_UNPACKED_BYTES_DRIFT');
+  const verified=JSON.parse(unpacked.toString('utf8'));
+  assert.equal(verified.raw?.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685');
+  assert.equal(verified.canonical?.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2');
+  assert.equal(verified.raw?.revision,1);
+  assert.equal(verified.canonical?.revision,2);
+  const pkg=applyHEarthVerifiedPlantingPackage(verified.raw);
   const actualSurface=buildVegetationVisibleSurface(pkg);
   // Pre-implementation gate verifies all existing global generator geometry,
   // material, rendered-water, root-height, structural and source exclusions.

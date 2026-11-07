@@ -77,7 +77,13 @@ export function transformExactRenderer(original,{target='published',allowFixture
   if(typeof original!=='string'||!Object.hasOwn(TARGETS,target)) throw Error('FIRST_HIT_INPUT_OR_TARGET_INVALID');
   const sourceBlob=sourceObjectId(original);
   if(!allowFixture&&sourceBlob!==TARGETS[target].rendererBlob) throw Error(`FIRST_HIT_RENDERER_BLOB_MISMATCH:${target}:${sourceBlob}`);
-  let modified=once(original,compilationAnchor,body+'\n'+
+  // The published shader blends using groundcoverWeight. Gen3142 blends
+  // using groundcoverCompositeWeight, which can be nonzero when the base weight is 0.
+  // Exact target source-object guards above bind the choice to immutable source.
+  const appliedBlendWeight=target==='candidate'?'groundcoverCompositeWeight':'groundcoverWeight';
+  const boundBody=once(body,'hEarthProbeGCWeight=groundcoverWeight;',
+    `hEarthProbeGCWeight=${appliedBlendWeight};`);
+  let modified=once(original,compilationAnchor,boundBody+'\n'+
     '    resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, heMaterialFirstHitGeometrySource(FS.replace(');
   modified=once(modified,compilationEnd,")), 'GF');");
   modified=once(modified,drawAnchor,drawAnchor+String.raw`

@@ -29,6 +29,59 @@ function perspective(out,fovy,aspect,near,far){const f=1/Math.tan(fovy/2);out.fi
 function multiply(out,a,b){const r=new Float32Array(16);for(let c=0;c<4;c++)for(let row=0;row<4;row++)r[c*4+row]=a[row]*b[c*4]+a[4+row]*b[c*4+1]+a[8+row]*b[c*4+2]+a[12+row]*b[c*4+3];out.set(r);return out}
 function rotationTiltY(out,tilt,spin){const cx=Math.cos(tilt),sx=Math.sin(tilt),cy=Math.cos(spin),sy=Math.sin(spin);out.set([cy,sx*sy,-cx*sy,0,0,cx,sx,0,sy,-sx*cy,cx*cy,0,0,0,0,1]);return out}
 function translationZ(out,z){out.set([1,0,0,0,0,1,0,0,0,0,1,0,0,0,z,1]);return out}
+
+// One-context ZIONTS space: a bounded static galaxy pass, underneath the existing globe.
+function createGalaxyResources(){
+  const vs=`precision mediump float;attribute vec2 a_clip;varying vec2 v_uv;
+void main(){v_uv=.5*(a_clip+vec2(1.0));gl_Position=vec4(a_clip,.9999,1.0);}`;
+  const fs=`precision mediump float;varying vec2 v_uv;
+float gh(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
+float star(vec2 uv,float count,float cutoff){
+  vec2 cell=uv*count,id=floor(cell),f=fract(cell);
+  vec2 center=.12+.76*vec2(gh(id+vec2(1.7,8.3)),gh(id+vec2(14.1,3.7)));
+  float seed=gh(id+vec2(8.7,23.4));
+  float strength=smoothstep(cutoff,1.0,seed);
+  float d=length(f-center);
+  return strength*(1.0-smoothstep(.018,.095,d));
+}
+void main(){
+  vec2 uv=v_uv,c=uv-.5;
+  float along=dot(c,vec2(.80,.60));
+  float across=dot(c,vec2(-.60,.80));
+  float bend=across-.12*sin(along*4.0+1.0);
+  float galacticBand=exp(-pow(bend/.205,2.0));
+  float wisps=.56+.44*sin(uv.x*15.0+2.0*sin(uv.y*7.0))*sin(uv.y*11.0-uv.x*4.0);
+  float dust=galacticBand*(.36+.20*wisps);
+  vec3 hue=mix(vec3(.12,.11,.27),vec3(.30,.092,.16),smoothstep(-.38,.34,along));
+  vec3 color=hue*dust;
+  float farStar=star(uv,75.0,.968);
+  float midStar=star(uv,31.0,.972);
+  float brightStar=star(uv,14.0,.990);
+  color+=vec3(.55,.64,.80)*farStar*.29;
+  color+=vec3(.91,.84,.76)*midStar*.46;
+  color+=vec3(1.00,.71,.62)*brightStar*.62;
+  float edge=smoothstep(.0,.15,uv.x)*smoothstep(.0,.15,uv.y)*smoothstep(.0,.15,1.0-uv.x)*smoothstep(.0,.15,1.0-uv.y);
+  float a=.84*edge;
+  gl_FragColor=vec4(color*a,a);
+}`;
+  const p=program(vs,fs),buffer=gl.createBuffer();
+  if(!buffer){gl.deleteProgram(p);throw new Error("GALAXY_BUFFER_UNAVAILABLE")}
+  gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  return{program:p,buffer,attribute:gl.getAttribLocation(p,"a_clip")};
+}
+function drawGalaxy(galaxy){
+  if(!galaxy)return;
+  gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);
+  gl.useProgram(galaxy.program);
+  gl.bindBuffer(gl.ARRAY_BUFFER,galaxy.buffer);
+  gl.enableVertexAttribArray(galaxy.attribute);
+  gl.vertexAttribPointer(galaxy.attribute,2,gl.FLOAT,false,0,0);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  gl.disableVertexAttribArray(galaxy.attribute);
+  gl.enable(gl.DEPTH_TEST);
+}
+
 function createResources(){gl=canvas.getContext("webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false})||canvas.getContext("experimental-webgl",{alpha:true,antialias:true,depth:true,powerPreference:"high-performance",premultipliedAlpha:true,preserveDrawingBuffer:false});if(!gl)throw new Error("WEBGL_UNAVAILABLE");state.webglVersion=1;state.renderer="webgl1";const derivativeSupport=!!gl.getExtension("OES_standard_derivatives");const vs=`precision highp float;attribute vec3 a_position;attribute vec3 a_normal;attribute float a_tone;uniform mat4 u_mvp;uniform mat4 u_model;varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;void main(){vec4 world=u_model*vec4(a_position,1.0);v_position=world.xyz;v_body=a_position;v_normal=-normalize((u_model*vec4(a_normal,0.0)).xyz);v_tone=a_tone;gl_Position=u_mvp*vec4(a_position,1.0);}`;const fs=`precision highp float;
 varying vec3 v_normal;varying float v_tone;varying vec3 v_position;varying vec3 v_body;
 uniform vec3 u_light;uniform mat4 u_model;
@@ -94,9 +147,9 @@ vec3 color=albedo*(.32+sculpt*1.08);color*=.65+terminator*.35;
 color+=vec3(.36,.10,.06)*rim*.15;
 color+=vec3(.18,.06,.038)*pow(max(dot(n,normalize(l+vec3(0.0,0.0,1.0))),0.0),20.0)*.20;
 gl_FragColor=vec4(pow(clamp(color,vec3(0.0),vec3(1.0)),vec3(.95)),1.0);
-}`;const fsSource=derivativeSupport?"#extension GL_OES_standard_derivatives : enable\n#define ZIONTS_DERIVATIVES 1\n"+fs:fs;const p=program(vs,fsSource),mesh=buildSphere();function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
+}`;const fsSource=derivativeSupport?"#extension GL_OES_standard_derivatives : enable\n#define ZIONTS_DERIVATIVES 1\n"+fs:fs;const p=program(vs,fsSource),mesh=buildSphere();let galaxy=null;try{galaxy=createGalaxyResources()}catch(_galaxyError){galaxy=null;}function buffer(target,data){const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b}const position=buffer(gl.ARRAY_BUFFER,mesh.positions),normal=buffer(gl.ARRAY_BUFFER,mesh.normals),tone=buffer(gl.ARRAY_BUFFER,mesh.tones),index=buffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);return{program:p,galaxy,position,normal,tone,index,count:mesh.indices.length,aPosition:gl.getAttribLocation(p,"a_position"),aNormal:gl.getAttribLocation(p,"a_normal"),aTone:gl.getAttribLocation(p,"a_tone"),uMvp:gl.getUniformLocation(p,"u_mvp"),uModel:gl.getUniformLocation(p,"u_model"),uLight:gl.getUniformLocation(p,"u_light")}}
 function resize(){if(!canvas||!gl)return;const rect=canvas.getBoundingClientRect(),mobile=matchMedia("(max-width: 640px)").matches,budget=mobile?2000000:2500000,area=Math.max(1,rect.width*rect.height),dpr=Math.min((devicePixelRatio||1)*1.10,2.25,Math.sqrt(budget/area)),w=Math.max(2,Math.round(rect.width*dpr)),h=Math.max(2,Math.round(rect.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}}
-function draw(){if(!gl||!resources)return;resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(resources.program);const aspect=canvas.width/Math.max(1,canvas.height),projection=perspective(new Float32Array(16),Math.PI/3.45,aspect,.1,20),view=translationZ(new Float32Array(16),state.cameraZ),model=rotationTiltY(new Float32Array(16),-.18,angle),pv=multiply(new Float32Array(16),projection,view),mvp=multiply(new Float32Array(16),pv,model);gl.bindBuffer(gl.ARRAY_BUFFER,resources.position);gl.enableVertexAttribArray(resources.aPosition);gl.vertexAttribPointer(resources.aPosition,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.normal);gl.enableVertexAttribArray(resources.aNormal);gl.vertexAttribPointer(resources.aNormal,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.tone);gl.enableVertexAttribArray(resources.aTone);gl.vertexAttribPointer(resources.aTone,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.index);gl.uniformMatrix4fv(resources.uMvp,false,mvp);gl.uniformMatrix4fv(resources.uModel,false,model);gl.uniform3f(resources.uLight,.78,.48,.66);gl.drawElements(gl.TRIANGLES,resources.count,gl.UNSIGNED_SHORT,0);state.frameCount++}
+function draw(){if(!gl||!resources)return;resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.BLEND);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawGalaxy(resources.galaxy);gl.useProgram(resources.program);const aspect=canvas.width/Math.max(1,canvas.height),projection=perspective(new Float32Array(16),Math.PI/3.45,aspect,.1,20),view=translationZ(new Float32Array(16),state.cameraZ),model=rotationTiltY(new Float32Array(16),-.18,angle),pv=multiply(new Float32Array(16),projection,view),mvp=multiply(new Float32Array(16),pv,model);gl.bindBuffer(gl.ARRAY_BUFFER,resources.position);gl.enableVertexAttribArray(resources.aPosition);gl.vertexAttribPointer(resources.aPosition,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.normal);gl.enableVertexAttribArray(resources.aNormal);gl.vertexAttribPointer(resources.aNormal,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,resources.tone);gl.enableVertexAttribArray(resources.aTone);gl.vertexAttribPointer(resources.aTone,1,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.index);gl.uniformMatrix4fv(resources.uMvp,false,mvp);gl.uniformMatrix4fv(resources.uModel,false,model);gl.uniform3f(resources.uLight,.78,.48,.66);gl.drawElements(gl.TRIANGLES,resources.count,gl.UNSIGNED_SHORT,0);state.frameCount++}
 function ease(t){return 1-Math.pow(1-t,3)}
 function updateCamera(now){if(!cameraTween)return false;const t=Math.min(1,Math.max(0,(now-cameraTween.start)/cameraTween.duration)),e=ease(t);state.cameraZ=cameraTween.from+(cameraTween.to-cameraTween.from)*e;if(t>=1){const done=cameraTween.done;cameraTween=null;state.cameraZ=done===WITNESS.CLOSE?-2.02:-2.78;setWitnessState(done);if(done===WITNESS.CLOSE){document.querySelector("[data-return-orbit]")?.focus({preventScroll:true})}else{document.querySelector("[data-planet-approach]")?.focus({preventScroll:true})}}return true}
 function tick(now){raf=0;if(!visible)return;const dt=Math.min(.05,Math.max(0,(now-last)/1000||0));last=now;const cameraActive=updateCamera(now);if(gl&&resources){if(!state.reducedMotion)angle=(angle+dt*.042)%(Math.PI*2);draw()}if((!state.reducedMotion&&gl&&resources)||cameraActive||cameraTween)raf=requestAnimationFrame(tick)}

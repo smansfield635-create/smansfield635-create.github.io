@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1177,6 +1177,88 @@ jobs:
         with:
           name: h-earth-gen2711-fast-grass-beach-${{ inputs.target_sha }}
           path: /tmp/h-earth-gen2711-fast
+          if-no-files-found: error
+          retention-days: 30
+
+
+  # Gen3147 PR source qualification is native-only; GPU runs only after
+  # separate reviewed/adopted tooling under the registered dispatch route.
+  gen3142-matched-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3147-matched-gpu-comparator-20261106' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact Gen3147 diagnostic tooling proposal
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify historical matcher and exact owner-frame protections
+        run: |
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+
+  gen3142-matched-gpu:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3142-owner-frame-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Require exact immutable Gen3142 matched camera experiment
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+        run: |
+          test "$TARGET_SHA" = 7610827598eaadf4fbb92e7ec8b9371c8cd08581
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+      - name: Checkout adopted exact-head comparator tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout exact live-baseline product
+        uses: actions/checkout@v4
+        with:
+          ref: bcfb0650077323851f01f51d712c7f8b8ac39220
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact immutable Gen3142 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 7610827598eaadf4fbb92e7ec8b9371c8cd08581
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate original and matched GPU comparator contracts
+        working-directory: tooling
+        run: |
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install Chromium for actual WebGL2 pixels
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture exact owner frame2583 baseline/candidate plus healthy controls
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3142_OWNER_FRAME_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/h-earth-gen3142-matched"
+      - name: Preserve exact matched GPU evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3142-matched-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3142-matched
           if-no-files-found: error
           retention-days: 30
 

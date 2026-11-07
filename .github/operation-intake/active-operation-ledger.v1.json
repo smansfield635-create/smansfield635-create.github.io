@@ -20568,6 +20568,50 @@
       "scopeHash": "be8b40cb283395d0e4e209057b83bc6d57af1cb3f7c90ee5134db4a4bca8650d",
       "state": "ADMITTED_LOCKED"
     },
+    "bedb9b5a9d659a3c090ad1490e6878c942391523f65dd6e9b23975d616de45df": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "69cc9c3452c4a6e1b3b4ab183cb61362f5a8877f",
+          "lockGeneration": 3148,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:PLANET_FIRST_SCAR_RESPONSIVE_RECOVERY_20261106",
+          "operationId": "ZIONTS_PLANET_FIRST_SCAR_RESPONSIVE_RECOVERY_20261106_001",
+          "procedureLocatorDigest": "3b3306ccadd3ed2640b0681a5004a1080c0c0ab3b790b36ce2dfd842d3e6a451",
+          "requestDigest": "ac41389d4bdba4609b8e71a6ae8d16de466478eabc22f311702badc2cf711c37",
+          "scopeHash": "bedb9b5a9d659a3c090ad1490e6878c942391523f65dd6e9b23975d616de45df"
+        },
+        "bindingDigest": "9abd3fc4e8be643cd9eff1dea052436b0e2fd2c0dcdcdc685c1ad3f2108b868c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b2742854ac8e95ecdd95c987d5a6f963eb6127b4153126804dc4445436a932b2",
+          "commentId": 6700821488,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42327885554,
+          "workflowSha": "69cc9c3452c4a6e1b3b4ab183cb61362f5a8877f"
+        },
+        "lineageAnchorCommitSha": "60ac11df1c9461e8c61b03320b1786388317632b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "69cc9c3452c4a6e1b3b4ab183cb61362f5a8877f",
+      "lockGeneration": 3148,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:PLANET_FIRST_SCAR_RESPONSIVE_RECOVERY_20261106",
+      "operationId": "ZIONTS_PLANET_FIRST_SCAR_RESPONSIVE_RECOVERY_20261106_001",
+      "procedureLocatorDigest": "3b3306ccadd3ed2640b0681a5004a1080c0c0ab3b790b36ce2dfd842d3e6a451",
+      "released": false,
+      "requestDigest": "ac41389d4bdba4609b8e71a6ae8d16de466478eabc22f311702badc2cf711c37",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bedb9b5a9d659a3c090ad1490e6878c942391523f65dd6e9b23975d616de45df",
+      "state": "ADMITTED_LOCKED"
+    },
     "bf7503f65660de95e6d18a151ff8bd7008f82e46fdcd7a534adb7e31e99c9637": {
       "governingHead": "7f832b749617b0360ad6bbfafadc37508d328dc3",
       "lockGeneration": 1379,
@@ -27457,7 +27501,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3147,
+  "lockGeneration": 3148,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

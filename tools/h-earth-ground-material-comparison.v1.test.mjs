@@ -119,3 +119,68 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 });
+
+
+// Gen3147: contract-only checks; no product renderer or historical profile mutation.
+const gen3142=await import('./h-earth-ground-material-comparison.v1.mjs');
+function gen3142View(pose,label){
+  const owner=pose.owner===true;
+  const position=owner?{...gen3142.GEN3142_MATCHED.navigationPosition}:{x:pose.x,y:2.25,z:pose.z};
+  const camera=owner?{...gen3142.GEN3142_MATCHED.camera}:{...position};
+  return {label,pose,worldEntered:true,loaderMode:'entered',routeReady:true,
+    state:{sequence:22001,position,yawDegrees:pose.yaw,pitchDegrees:pose.pitch,verticalFovDegrees:56},
+    lastFrame:{navigationSequence:22001,frameSequence:101,cameraPosition:camera},
+    packetCamera:{position:camera,viewProjectionMatrix:owner?[...gen3142.GEN3142_MATCHED.matrix]:new Array(16).fill(1)},
+    canvas:{width:384,height:688,cssWidth:384,cssHeight:688},
+    glVersion:'WebGL 2.0 (OpenGL ES 3.0 Chromium)',glslVersion:'WebGL GLSL ES 3.00',
+    glError:0,contextLost:false,framebufferPresentations:3,
+    pixelPatch:{radius:12,rgba:new Array(25*25*4).fill(42)},assetSignature:'same-healthy-asset-state',
+    image:label+'-'+pose.name+'.png',imageSha256:'sha256-placeholder'};
+}
+test('Gen3142 is immutable camera-locked new profile, old comparator head stays historical',()=>{
+  assert.equal(gen3142.GEN3142_MATCHED.baseline,'bcfb0650077323851f01f51d712c7f8b8ac39220');
+  assert.equal(gen3142.GEN3142_MATCHED.candidate,'7610827598eaadf4fbb92e7ec8b9371c8cd08581');
+  assert.equal(gen3142.GEN3142_MATCHED.rendererBlobs.baseline,'85ee835060d5106a670077a5f4352b7ad202b49b');
+  assert.equal(gen3142.GEN3142_MATCHED.rendererBlobs.candidate,'9fe90b5c0e58fb3a121c910cb0110a0846bf07bc');
+  assert.deepEqual(gen3142.GEN3142_MATCHED.pixel,{x:201,y:337});
+  assert.deepEqual(gen3142.GEN3142_MATCHED.viewport,{width:384,height:688});
+  assert.deepEqual(gen3142.GEN3142_MATCHED_POSES.map(x=>x.name),['owner-frame2583','meadow-control','grove-control','slope-control','coast-control']);
+  assert.equal(gen3142.HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');
+});
+test('Gen3142 exact entered WebGL2 original frame and matching protection controls produce 5 pairs',()=>{
+  const views=gen3142.GEN3142_MATCHED_POSES.flatMap(p=>['baseline','candidate'].map(l=>gen3142View(p,l)));
+  for(const view of views)assert.equal(gen3142.gen3142ValidateView(view,view.pose),true);
+  const comparisons=gen3142.gen3142CompareViews(views);
+  assert.equal(comparisons.length,5);
+  assert.equal(comparisons[0].ownerMarkedPixel,true);
+  assert.equal(comparisons[0].meanAbsoluteRGBA8PatchDifference,0);
+  assert.equal(comparisons[1].ownerMarkedPixel,false);
+});
+test('Gen3142 fails closed on loader, camera, viewport, projection, WebGL, frames, asset and pair drift',()=>{
+  const p=gen3142.GEN3142_MATCHED_POSES[0],control=gen3142.GEN3142_MATCHED_POSES[1];
+  for(const change of [
+    v=>v.worldEntered=false,v=>v.loaderMode='ready',v=>v.routeReady=false,
+    v=>v.state.position.y++,v=>v.packetCamera.position.x++,v=>v.packetCamera.viewProjectionMatrix[12]++,
+    v=>v.canvas.height++,v=>v.canvas.cssWidth++,v=>v.glError=1282,
+    v=>v.glVersion='WebGL 1.0',v=>v.glslVersion='WebGL GLSL ES 1.00',
+    v=>v.lastFrame.navigationSequence++,v=>v.lastFrame.frameSequence=0,
+    v=>v.pixelPatch.rgba.pop(),v=>v.framebufferPresentations=0
+  ]){const v=gen3142View(p,'baseline');change(v);assert.throws(()=>gen3142.gen3142ValidateView(v,p));}
+  const views=gen3142.GEN3142_MATCHED_POSES.flatMap(q=>['baseline','candidate'].map(l=>gen3142View(q,l)));
+  assert.throws(()=>gen3142.gen3142CompareViews(views.slice(1)),/INCOMPLETE/);
+  views.find(v=>v.pose.name===control.name&&v.label==='candidate').assetSignature='changed';
+  assert.throws(()=>gen3142.gen3142CompareViews(views),/ASSET_STATE_MISMATCH/);
+  views.find(v=>v.pose.name===control.name&&v.label==='candidate').assetSignature='same-healthy-asset-state';
+  views.find(v=>v.pose.name===control.name&&v.label==='candidate').packetCamera.viewProjectionMatrix[1] += .01;
+  assert.throws(()=>gen3142.gen3142CompareViews(views),/AB_PROJECTION_MISMATCH/);
+});
+test('Gen3142 workflow profile cannot fall into generic exact-head or historical qualification modes',()=>{
+  const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.match(workflow,/inputs\.route_query != 'qualification=gen3142-owner-frame-v1'/);
+  assert.match(workflow,/gen3142-matched-gpu:/);
+  assert.ok(workflow.includes("inputs.route_query == 'qualification=gen3142-owner-frame-v1'"));
+  assert.ok(workflow.includes("H_EARTH_COMPARISON_PROFILE: GEN3142_OWNER_FRAME_V1"));
+  assert.ok(workflow.includes('ref: bcfb0650077323851f01f51d712c7f8b8ac39220'));
+  assert.ok(workflow.includes('ref: 7610827598eaadf4fbb92e7ec8b9371c8cd08581'));
+  assert.match(workflow,/ground-material-comparison:\n    if: \$\{\{ inputs\.route_query == 'qualification=groundcover-factor-v1' \}\}/);
+});

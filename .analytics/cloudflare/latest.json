@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-11-07T14:23:41Z",
+  "generatedAt": "2026-11-07T15:25:13Z",
   "window": {
-    "start": "2026-08-09T14:23:41Z",
-    "end": "2026-11-07T14:23:41Z"
+    "start": "2026-08-09T15:25:13Z",
+    "end": "2026-11-07T15:25:13Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -288,7 +288,13 @@
           }
         },
         {
-          "count": 10,
+          "count": 30,
+          "dimensions": {
+            "datetimeHour": "2026-08-17T17:00:00Z"
+          }
+        },
+        {
+          "count": 30,
           "dimensions": {
             "datetimeHour": "2026-08-17T18:00:00Z"
           }
@@ -302,11 +308,17 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-08-17T21:00:00Z"
+            "datetimeHour": "2026-08-17T20:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-17T22:00:00Z"
+          }
+        },
+        {
+          "count": 70,
           "dimensions": {
             "datetimeHour": "2026-08-18T01:00:00Z"
           }
@@ -321,6 +333,12 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-08-18T03:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-08-18T04:00:00Z"
           }
         },
         {
@@ -3302,12 +3320,6 @@
         {
           "count": 1,
           "dimensions": {
-            "datetimeHour": "2026-10-30T14:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
             "datetimeHour": "2026-10-30T15:00:00Z"
           }
         },
@@ -4359,6 +4371,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-11-07T13:00:00Z"
+          }
+        },
+        {
+          "count": 6,
+          "dimensions": {
+            "datetimeHour": "2026-11-07T14:00:00Z"
           }
         }
       ]

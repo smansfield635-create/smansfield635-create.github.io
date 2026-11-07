@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-07T03:25:38Z",
+  "generatedAt": "2026-11-07T04:25:10Z",
   "window": {
-    "start": "2026-08-09T03:25:38Z",
-    "end": "2026-11-07T03:25:38Z"
+    "start": "2026-08-09T04:25:10Z",
+    "end": "2026-11-07T04:25:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,10 @@
       }
     },
     "byPath": {
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
       "/laws/": {
         "pageLoads": 100,
         "visits": 0
@@ -33,6 +37,10 @@
       "/showroom/globe/audralia/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/build/intake/": {
         "pageLoads": 10,
@@ -46,16 +54,8 @@
         "pageLoads": 940,
         "visits": 680
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
       "/index.html": {
         "pageLoads": 110,
-        "visits": 0
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/laws/research/methods-and-models/": {
@@ -198,6 +198,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -212,10 +216,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {

@@ -7544,6 +7544,50 @@
       "scopeHash": "49784da7dbcc05734c55b2c1005f30db5ae77541b087181e461d62f739df8387",
       "state": "ADMITTED_LOCKED"
     },
+    "49a18f707c47a023c2c9f762c7b89ada890fb8b7673ea46aa9dda5d54f1db0b8": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b9cdd54ebc8ca7e5db1ab67522dcfc9f073c5097",
+          "lockGeneration": 3159,
+          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:M1_3_REAL_RABBIT_MORPH_GPU_BRIDGE_20261107",
+          "operationId": "DGB_M1_3_REAL_RABBIT_MORPH_GPU_BRIDGE_20261107_001",
+          "procedureLocatorDigest": "f1894c2c24433d54a037291ca15b73cb5053094044c045ece9b3f14f01b7fb82",
+          "requestDigest": "a1fae6a812c7e0a66b699b19f467b529a2dd01a53e9d1965ced923bb90f7cc14",
+          "scopeHash": "49a18f707c47a023c2c9f762c7b89ada890fb8b7673ea46aa9dda5d54f1db0b8"
+        },
+        "bindingDigest": "cb280efd81dab40ad11408e3d1e19ec7f524b1afe62fd5fceaed239dfd26cbdb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7fa52a105e31cafad1216194bef495acc58df4d87c3594b3a2108f65ccc462de",
+          "commentId": 6710593142,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42395934171,
+          "workflowSha": "b9cdd54ebc8ca7e5db1ab67522dcfc9f073c5097"
+        },
+        "lineageAnchorCommitSha": "2c6bc8809fd0ad3ef7f6b9b481230334a4a112dd",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b9cdd54ebc8ca7e5db1ab67522dcfc9f073c5097",
+      "lockGeneration": 3159,
+      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:M1_3_REAL_RABBIT_MORPH_GPU_BRIDGE_20261107",
+      "operationId": "DGB_M1_3_REAL_RABBIT_MORPH_GPU_BRIDGE_20261107_001",
+      "procedureLocatorDigest": "f1894c2c24433d54a037291ca15b73cb5053094044c045ece9b3f14f01b7fb82",
+      "released": false,
+      "requestDigest": "a1fae6a812c7e0a66b699b19f467b529a2dd01a53e9d1965ced923bb90f7cc14",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "49a18f707c47a023c2c9f762c7b89ada890fb8b7673ea46aa9dda5d54f1db0b8",
+      "state": "ADMITTED_LOCKED"
+    },
     "49e1df6d502c59330508bcb3bc45f8fdf894ede082a1ce9275b148fb240a4a82": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -27897,7 +27941,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3158,
+  "lockGeneration": 3159,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

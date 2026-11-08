@@ -122,9 +122,9 @@ export function materialize({sourceDir,outputDir}){
  const largestRegionalGzipBytes=Math.max(...packets.map(p=>p.compressed.length));
  assert(totalRegionalGzipBytes===SOURCE.expectedRegionalGzipBytes&&
   largestRegionalGzipBytes===SOURCE.expectedLargestRegionBytes,'FROZEN_PROOF_SIZE_MISMATCH');
- const regions=packets.map(({region,compressed,sha256})=>({
+ const regions=packets.map(({region,raw,compressed,sha256})=>({
   id:region.id,path:'regions/'+pathForRegion(region.id),
-  compressedBytes:compressed.length,compressedSha256:sha256,
+  compressedBytes:compressed.length,compressedSha256:sha256,rawSha256:hash(raw),
   rawBytes:region.rawBytes,roots:region.roots,tiles:region.tiles
  }));
  const manifest={

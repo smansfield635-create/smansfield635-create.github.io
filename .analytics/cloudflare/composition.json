@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-08T00:46:03Z",
+  "generatedAt": "2026-11-08T01:24:46Z",
   "window": {
-    "start": "2026-10-09T00:46:03Z",
-    "end": "2026-11-08T00:46:03Z"
+    "start": "2026-10-09T01:24:46Z",
+    "end": "2026-11-08T01:24:46Z"
   },
   "dimensions": {
     "requestPath": [
@@ -19,8 +19,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 77,
-        "visits": 67
+        "pageLoads": 87,
+        "visits": 71
       },
       {
         "value": "/products/education/personal-training/",
@@ -69,7 +69,7 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 11,
+        "pageLoads": 12,
         "visits": 11
       },
       {
@@ -108,16 +108,6 @@
         "visits": 1
       },
       {
-        "value": "/showroom/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
@@ -128,9 +118,14 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/water/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/signup",
+        "pageLoads": 1,
+        "visits": 0
       },
       {
         "value": "/characters/",
@@ -138,7 +133,7 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -153,12 +148,22 @@
         "visits": 1
       },
       {
-        "value": "/laws/categories/integrity/",
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/explore/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/categories/integrity/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -173,7 +178,7 @@
         "visits": 1
       },
       {
-        "value": "/frontier/waste/",
+        "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -198,7 +203,7 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -206,12 +211,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1443,
-        "visits": 1443
+        "pageLoads": 1447,
+        "visits": 1447
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 67,
+        "pageLoads": 75,
         "visits": 0
       },
       {
@@ -233,8 +238,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1448,
-        "visits": 1391
+        "pageLoads": 1460,
+        "visits": 1395
       },
       {
         "value": "CN",
@@ -265,8 +270,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1265,
-        "visits": 1239
+        "pageLoads": 1277,
+        "visits": 1243
       },
       {
         "value": "mobile",
@@ -287,8 +292,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 276,
-        "visits": 265
+        "pageLoads": 288,
+        "visits": 269
       },
       {
         "value": "ChromeMobile",
@@ -329,8 +334,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 239,
-        "visits": 213
+        "pageLoads": 252,
+        "visits": 217
       },
       {
         "value": "Android",
@@ -361,15 +366,15 @@
       },
       {
         "value": "0",
-        "pageLoads": 731,
-        "visits": 664
+        "pageLoads": 744,
+        "visits": 668
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1499,
-        "visits": 1468
+        "pageLoads": 1512,
+        "visits": 1472
       },
       {
         "value": "routing-apis",
@@ -380,12 +385,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1504,
-        "visits": 1467
+        "pageLoads": 1516,
+        "visits": 1471
       },
       {
         "value": "cache",
-        "pageLoads": 30,
+        "pageLoads": 31,
         "visits": 0
       },
       {
@@ -397,15 +402,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1535,
-        "visits": 1468
+        "pageLoads": 1548,
+        "visits": 1472
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1535,
-        "visits": 1468
+        "pageLoads": 1548,
+        "visits": 1472
       }
     ]
   }

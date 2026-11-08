@@ -1690,17 +1690,17 @@ jobs:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
 
 
-  # Gen3171 exact Gen3170 source: native-first, then matched WebGL2
+  # Gen3173 exact Gen3172 source: native-first, then matched WebGL2
   # against qualified Gen3164 control; no product code modifications.
   combined-inland-site-native:
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'h-earth/gen3165-combined-vegetation-native-gpu-20261107' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - name: Checkout immutable Gen3170 renderer-activated native candidate
+      - name: Checkout immutable Gen3172 renderer-activated native candidate
         uses: actions/checkout@v4
         with:
-          ref: a14bd81ac0f0440a3a818266b6567a729cd468fa
+          ref: fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b
           persist-credentials: false
           sparse-checkout: |
             h-earth-3d
@@ -1710,18 +1710,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify exact Gen3170 renderer and existing native population
+      - name: Verify exact Gen3172 renderer and existing native population
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = a14bd81ac0f0440a3a818266b6567a729cd468fa
-          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = b2cd4784534b1f98778074e092813df6ad5e0b8d
+          test "$(git rev-parse HEAD)" = fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 19eec736d247857a1ce232e693e583d3047079cf
           node --test h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
-      - name: Preserve Gen3170 native population and southern pilot receipt
+      - name: Preserve Gen3172 native population and southern pilot receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3170-combined-site-preflight-${{ github.run_id }}
+          name: h-earth-gen3172-combined-site-preflight-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/h-earth-combined-native-coverage-receipt.json
             ${{ runner.temp }}/h-earth-southern-pilot-native-receipt.json
@@ -1749,7 +1749,7 @@ jobs:
       - name: Checkout exact activated southern pilot candidate
         uses: actions/checkout@v4
         with:
-          ref: a14bd81ac0f0440a3a818266b6567a729cd468fa
+          ref: fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1760,7 +1760,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Compile exact Gen3170 global-cover vertex shader in WebGL2 before any capture
+      - name: Compile exact Gen3172 global-cover vertex shader in WebGL2 before any capture
         working-directory: tooling
         shell: bash
         run: |
@@ -1789,7 +1789,7 @@ jobs:
             gl.deleteShader(v);return {pass,info};
            },shader);
            if(!check.pass)throw Error('EXACT_GLOBAL_COVER_VS_WEBGL2_COMPILE_FAILED:'+check.info);
-           console.log(JSON.stringify({schema:'H_EARTH_GEN3170_EXACT_GLOBAL_COVER_VS_COMPILE_v1',result:'PASS',candidate:'a14bd81ac0f0440a3a818266b6567a729cd468fa',rendererBlob:'b2cd4784534b1f98778074e092813df6ad5e0b8d',shaderBytes:shader.length}));
+           console.log(JSON.stringify({schema:'H_EARTH_GEN3172_EXACT_GLOBAL_COVER_VS_COMPILE_v1',result:'PASS',candidate:'fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b',rendererBlob:'19eec736d247857a1ce232e693e583d3047079cf',shaderBytes:shader.length}));
           }finally{await browser.close()}
           NODE
       - name: Capture read-only exact camera matched source pairs
@@ -1806,14 +1806,14 @@ jobs:
           import {POSES,comparisonState,instrumentRoute,assetReadiness,validateFrame,decodeCanvasCapture,assertCheckout} from './tools/h-earth-ground-material-comparison.v1.mjs';
           const targets=[
            {label:'control',dir:'../control',head:'d0e030b2026b76c04e4ed753257559e369cd3f28',blob:'932295ce26e66b2f450323b2ae7037ebe59037eb'},
-           {label:'candidate',dir:'../candidate',head:'a14bd81ac0f0440a3a818266b6567a729cd468fa',blob:'b2cd4784534b1f98778074e092813df6ad5e0b8d'}];
+           {label:'candidate',dir:'../candidate',head:'fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b',blob:'19eec736d247857a1ce232e693e583d3047079cf'}];
           const positions=['inland-seam-near','inland-seam-far','coast-oblique'].map(n=>{const p=POSES.find(v=>v.name===n);if(!p)throw Error('POSE_MISSING:'+n);return p;});
           const shader='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
           const route='/showroom/globe/h-earth/';
           const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-          const out=path.join(process.env.RUNNER_TEMP,'h-earth-gen3170-southern-matched');
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-gen3172-southern-matched');
           fs.mkdirSync(out,{recursive:true});
-          const receipt={schema:'H_EARTH_GEN3170_SOUTHERN_MATCHED_WEBGL2_v1',result:'INCOMPLETE',heads:targets.map(t=>t.head),poses:positions.map(p=>p.name),expectedGlobalRecords:{control:17432,candidate:17637},viewport:{width:529,height:980,cssWidth:540,cssHeight:1000},images:[],pairs:[],errors:[],originalAndroidRepairConfirmed:false};
+          const receipt={schema:'H_EARTH_GEN3172_SOUTHERN_MATCHED_WEBGL2_v1',result:'INCOMPLETE',heads:targets.map(t=>t.head),poses:positions.map(p=>p.name),expectedGlobalRecords:{control:17432,candidate:17637},viewport:{width:529,height:980,cssWidth:540,cssHeight:1000},images:[],pairs:[],errors:[],originalAndroidRepairConfirmed:false};
           const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
           let browser=null,server=null;persist();
           try {
@@ -1836,7 +1836,7 @@ jobs:
             const waitStartup=async (predicate,phase,timeoutMs)=>{
              const start=Date.now();
              for(;;){
-              const fatal=record.errors.find(e=>/R3C_SHADER_COMPILE_FAILED|SHADER_COMPILE_FAILED|WEBGL_CONTEXT_LOST/.test(e));
+              const fatal=record.errors.find(e=>/GRATITUDE_RENDERER_STARTUP_FAILURE|R3C_SHADER_COMPILE_FAILED|SHADER_COMPILE_FAILED|WEBGL_CONTEXT_LOST/.test(e));
               if(fatal)throw Error('BROWSER_STARTUP_FATAL:'+t.label+':'+phase+':'+fatal);
               const left=timeoutMs-(Date.now()-start);
               if(left<=0)throw Error('BROWSER_STARTUP_TIMEOUT:'+t.label+':'+phase+':'+record.errors.join('|'));
@@ -1978,7 +1978,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3170-southern-matched-${{ github.run_id }}
-          path: ${{ runner.temp }}/h-earth-gen3170-southern-matched
+          name: h-earth-gen3172-southern-matched-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3172-southern-matched
           if-no-files-found: warn
           retention-days: 30

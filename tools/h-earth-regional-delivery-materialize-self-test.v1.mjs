@@ -26,6 +26,6 @@ const badPackets=packets.map(p=>({...p,region:{...p.region,tiles:p.region.tiles.
 badPackets[0].region.tiles[1].tileIndex=badPackets[0].region.tiles[0].tileIndex;
 assert.throws(()=>reconstructSourceRootBytes(badPackets,6),/DUPLICATE_SOURCE_TILE/);
 const mutated=packets.map(p=>({...p,compressed:Buffer.from(p.compressed)}));
-mutated[0].compressed[5]^=1;
+mutated[0].compressed[mutated[0].compressed.length-8]^=1;
 assert.throws(()=>reconstructSourceRootBytes(mutated,6));
 console.log(JSON.stringify({schema:'H_EARTH_REGIONAL_MATERIALIZER_SELF_TEST_v1',result:'PASS',tiles:tiles.length,roots:6,regions:2,originalOrderReconstructed:true,duplicateRejected:true,corruptionRejected:true}));

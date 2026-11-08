@@ -2229,7 +2229,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
     resources.globalCover=state;if(state.gpuByteLength+(resources.woodlandFineGrass?.gpuByteLength??0)+(resources.woodlandRocks?.gpuByteLength??0)+(resources.largeBoulders?.gpuByteLength??0)+(resources.plantingPilot?.getReceipt().gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw Error(`GLOBAL_COVER_UPLOAD_ERROR:${error}`);
-    state.uploadComplete=true;state.coverageValidated=cover.receipt.habitatCoverageValidated===true&&cover.receipt.surveyedTiles===cover.receipt.expectedTiles&&cover.receipt.expectedTiles===648;
+    state.uploadComplete=true;state.coverageValidated=cover.receipt.habitatCoverageValidated===true&&cover.receipt.surveyedTiles===cover.receipt.expectedTiles&&((cover.receipt.southernPilot?.enabled===false&&cover.receipt.expectedTiles===648)||(cover.receipt.southernPilot?.enabled===true&&cover.receipt.expectedTiles===650));
     if(!state.coverageValidated)throw Error('GLOBAL_COVER_FULL_COVERAGE_NOT_VALIDATED');
     pilotCoverageOwner.commit({uploadComplete:state.uploadComplete,coverageValidated:state.coverageValidated,glError:error});
   }

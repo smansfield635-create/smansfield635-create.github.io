@@ -2103,6 +2103,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         visibleSurface:resources.vegetationVisibleSurface,
         placementExclusion:(x,z)=>z>=COMBINED_INLAND_GRASS.supplementalNorthernLimitZ,
         baselineExclusion:()=>false,
+        southernPilotEnabled: true,
         order:'CAMERA_FIRST',
         priorityOrigin:{x:-200,z:-728},
         onProgress:update=>onProgress({...update,phase:'COMBINED_'+update.phase})

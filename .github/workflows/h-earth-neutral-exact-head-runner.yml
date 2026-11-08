@@ -1688,3 +1688,90 @@ jobs:
           node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
         env:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
+
+
+  # Gen3156: separate admitted workflow-only source/test and production-boundary probe.
+  # This PR-scoped route NEVER evaluates Gen3142 until the owner-visible curved
+  # boundary is reproduced at one of the two frozen inland camera poses.
+  gen3156-inland-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'h-earth/gen3156-inland-factor-workflow-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Check out exact immutable Gen3155 diagnostic adapter
+        uses: actions/checkout@v4
+        with:
+          ref: 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
+          path: tooling
+          persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-ground-material-comparison.v1.mjs
+            tools/h-earth-ground-material-comparison.v1.test.mjs
+            tools/h-earth-groundcover-factor-overlay.mjs
+            tools/h-earth-groundcover-factor-overlay.test.mjs
+            .github/workflows/h-earth-neutral-exact-head-runner.yml
+            showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact Gen3155 source identity and run relevant native tests
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tools/h-earth-ground-material-comparison.v1.test.mjs
+          node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+
+  gen3156-production-inland-reproduction:
+    needs: [gen3156-inland-native]
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3156-inland-factor-workflow-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact immutable Gen3155 diagnostic adapter
+        uses: actions/checkout@v4
+        with:
+          ref: 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
+          path: tooling
+          persist-credentials: false
+      - name: Check out exact production baseline
+        uses: actions/checkout@v4
+        with:
+          ref: bcfb0650077323851f01f51d712c7f8b8ac39220
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact production and tool identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
+          test "$(git -C baseline rev-parse HEAD)" = bcfb0650077323851f01f51d712c7f8b8ac39220
+          test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+      - name: Install existing Chromium and Playwright runner
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture production-only near/far inland after entering world
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3155_INLAND_FACTOR_V1
+          H_EARTH_GEN3155_PHASE: REPRODUCTION_ONLY
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir . --output "${{ runner.temp }}/gen3156-inland-production"
+      - name: Preserve exact image, camera and GPU frame receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3156-inland-reproduction-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3156-inland-production
+          if-no-files-found: warn
+          retention-days: 30

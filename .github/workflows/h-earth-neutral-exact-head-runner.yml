@@ -1690,17 +1690,17 @@ jobs:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
 
 
-  # Gen3175 exact Gen3174 material source: frozen-source gate, then matched WebGL2
-  # against qualified Gen3172 control; no product code modifications.
+  # Gen3177 Gen3176 systemic grass: focused-native-first, then matched WebGL2
+  # against qualified Gen3172 grass control; no product code modifications.
   combined-inland-site-native:
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'h-earth/gen3165-combined-vegetation-native-gpu-20261107' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - name: Checkout immutable Gen3174 material candidate for source freeze
+      - name: Checkout exact Gen3176 systemic grass candidate for native verification
         uses: actions/checkout@v4
         with:
-          ref: ffabc262bf75d2556c1572931e74745c58de62ba
+          ref: e67f344a668b55050b2a7ffc90055368a07af8f8
           persist-credentials: false
           sparse-checkout: |
             h-earth-3d
@@ -1710,30 +1710,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify exact Gen3174 renderer and frozen vegetation source
+      - name: Verify exact Gen3176 generator, renderer, and new rooted-grass native selection
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = ffabc262bf75d2556c1572931e74745c58de62ba
-          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 3bf8924f63433bbdf146027873b73989d12b21aa
-          test "$(git hash-object showroom/globe/h-earth/render/landscape-groundcover.global-v1.js)" = a466bd1df277d06bbdafbb1622908ba615ea64b7
-          test "$(git hash-object h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs)" = 969c4d1f4867015a0dbeaa7f708b256b193119ba
+          test "$(git rev-parse HEAD)" = e67f344a668b55050b2a7ffc90055368a07af8f8
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = b7a24f94b07cc21cc87c1848202afa4df56ab41a
+          test "$(git hash-object showroom/globe/h-earth/render/landscape-groundcover.global-v1.js)" = e9296c35c5f8b52d0c3bd2b52f1b8969350c74ea
+          test "$(git hash-object h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs)" = 4e8527d4e047b3664b792e5bb384b580f8b58ea8
           node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          node --check showroom/globe/h-earth/render/landscape-groundcover.global-v1.js
+          node --check h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
+          node --test --test-name-pattern='Gen3176 systemic grass' h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const receipt={schema:'H_EARTH_GEN3174_MATERIAL_FREEZE_v1',result:'EXACT_SOURCE_FROZEN_PASS',
-           product:'ffabc262bf75d2556c1572931e74745c58de62ba',rendererBlob:'3bf8924f63433bbdf146027873b73989d12b21aa',
-           generatorBlob:'a466bd1df277d06bbdafbb1622908ba615ea64b7',nativeTestBlob:'969c4d1f4867015a0dbeaa7f708b256b193119ba',
+          const receipt={schema:'H_EARTH_GEN3176_MATERIAL_FREEZE_v1',result:'EXACT_SOURCE_FROZEN_PASS',
+           product:'e67f344a668b55050b2a7ffc90055368a07af8f8',rendererBlob:'b7a24f94b07cc21cc87c1848202afa4df56ab41a',
+           generatorBlob:'e9296c35c5f8b52d0c3bd2b52f1b8969350c74ea',nativeTestBlob:'4e8527d4e047b3664b792e5bb384b580f8b58ea8',
            previousNativePassRun:42435671676,previousQualifiedGlobalRecords:17637,previousQualifiedWoodlandRoots:2858738,
-           nativeVegetationTestsReexecuted:false,nativeFirstSourceGate:true};
-          fs.writeFileSync(process.env.RUNNER_TEMP+'/h-earth-gen3174-material-freeze.json',JSON.stringify(receipt,null,2)+'\n');
+           priorSixInvestigationsRerun:false,gen3176DedicatedNativeTestExecuted:true,nativeFirstSourceGate:true};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/h-earth-gen3176-systemic-freeze.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
-      - name: Preserve Gen3174 exact source freeze receipt
+      - name: Preserve Gen3176 exact source and native rooted grass receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3174-material-freeze-${{ github.run_id }}
-          path: ${{ runner.temp }}/h-earth-gen3174-material-freeze.json
+          name: h-earth-gen3176-systemic-native-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/h-earth-gen3176-systemic-freeze.json
+            ${{ runner.temp }}/h-earth-gen3176-systemic-native-receipt.json
           if-no-files-found: warn
           retention-days: 30
 
@@ -1755,10 +1760,10 @@ jobs:
           ref: fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b
           path: control
           persist-credentials: false
-      - name: Checkout exact Gen3174 terrain material candidate
+      - name: Checkout exact Gen3176 systemic grass candidate
         uses: actions/checkout@v4
         with:
-          ref: ffabc262bf75d2556c1572931e74745c58de62ba
+          ref: e67f344a668b55050b2a7ffc90055368a07af8f8
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1769,7 +1774,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Compile exact Gen3174 global-cover vertex shader before material comparison
+      - name: Compile exact Gen3176 global-cover vertex shader before grass comparison
         working-directory: tooling
         shell: bash
         run: |
@@ -1798,7 +1803,7 @@ jobs:
             gl.deleteShader(v);return {pass,info};
            },shader);
            if(!check.pass)throw Error('EXACT_GLOBAL_COVER_VS_WEBGL2_COMPILE_FAILED:'+check.info);
-           console.log(JSON.stringify({schema:'H_EARTH_GEN3174_EXACT_GLOBAL_COVER_VS_COMPILE_v1',result:'PASS',candidate:'ffabc262bf75d2556c1572931e74745c58de62ba',rendererBlob:'3bf8924f63433bbdf146027873b73989d12b21aa',shaderBytes:shader.length}));
+           console.log(JSON.stringify({schema:'H_EARTH_GEN3176_EXACT_GLOBAL_COVER_VS_COMPILE_v1',result:'PASS',candidate:'e67f344a668b55050b2a7ffc90055368a07af8f8',rendererBlob:'b7a24f94b07cc21cc87c1848202afa4df56ab41a',shaderBytes:shader.length}));
           }finally{await browser.close()}
           NODE
       - name: Capture read-only exact camera matched source pairs
@@ -1815,14 +1820,14 @@ jobs:
           import {POSES,comparisonState,instrumentRoute,assetReadiness,validateFrame,decodeCanvasCapture,assertCheckout} from './tools/h-earth-ground-material-comparison.v1.mjs';
           const targets=[
            {label:'control',dir:'../control',head:'fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b',blob:'19eec736d247857a1ce232e693e583d3047079cf'},
-           {label:'candidate',dir:'../candidate',head:'ffabc262bf75d2556c1572931e74745c58de62ba',blob:'3bf8924f63433bbdf146027873b73989d12b21aa'}];
+           {label:'candidate',dir:'../candidate',head:'e67f344a668b55050b2a7ffc90055368a07af8f8',blob:'b7a24f94b07cc21cc87c1848202afa4df56ab41a'}];
           const positions=['inland-seam-near','inland-seam-far','coast-oblique'].map(n=>{const p=POSES.find(v=>v.name===n);if(!p)throw Error('POSE_MISSING:'+n);return p;});
           const shader='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
           const route='/showroom/globe/h-earth/';
           const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-          const out=path.join(process.env.RUNNER_TEMP,'h-earth-gen3174-material-matched');
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-gen3176-systemic-matched');
           fs.mkdirSync(out,{recursive:true});
-          const receipt={schema:'H_EARTH_GEN3174_MATERIAL_MATCHED_WEBGL2_v1',result:'INCOMPLETE',heads:targets.map(t=>t.head),poses:positions.map(p=>p.name),expectedGlobalRecords:{control:17637,candidate:17637},viewport:{width:529,height:980,cssWidth:540,cssHeight:1000},images:[],pairs:[],errors:[],originalAndroidRepairConfirmed:false};
+          const receipt={schema:'H_EARTH_GEN3176_SYSTEMIC_MATCHED_WEBGL2_v1',result:'INCOMPLETE',heads:targets.map(t=>t.head),poses:positions.map(p=>p.name),expectedGlobalRecords:{control:17637,candidate:'GT_17637_MAX_65536'},viewport:{width:529,height:980,cssWidth:540,cssHeight:1000},images:[],pairs:[],errors:[],originalAndroidRepairConfirmed:false};
           const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
           let browser=null,server=null;persist();
           try {
@@ -1950,9 +1955,10 @@ jobs:
              if(view.vegetation.combined?.resident!==true||!view.vegetation.globalPrepared||
               view.vegetation.combined.combinedGpuBytes>view.vegetation.combined.maximumCombinedGpuBytes)
               throw Error('DUAL_RESIDENCY_OR_BUDGET_INVALID:'+t.label+':'+pose.name);
-             const expectedGlobal=17637;
-             if(view.vegetation.globalStored!==expectedGlobal||
-              view.vegetation.combined.globalInstanceCount!==expectedGlobal)
+             const expectedGlobal=t.label==='control'?17637:null;
+             if((expectedGlobal!==null&&view.vegetation.globalStored!==expectedGlobal)||
+              (t.label==='candidate'&&(view.vegetation.globalStored<=17637||view.vegetation.globalStored>65536))||
+              view.vegetation.combined.globalInstanceCount!==view.vegetation.globalStored)
               throw Error('GLOBAL_RECORD_COUNT_INVALID:'+t.label+':'+pose.name+
                ':expected='+expectedGlobal+':actual='+view.vegetation.globalStored);
              if(pose.name.startsWith('inland-')&&
@@ -1987,7 +1993,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3174-material-matched-${{ github.run_id }}
-          path: ${{ runner.temp }}/h-earth-gen3174-material-matched
+          name: h-earth-gen3176-systemic-matched-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3176-systemic-matched
           if-no-files-found: warn
           retention-days: 30

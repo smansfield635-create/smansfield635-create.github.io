@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-08T18:24:22Z",
+  "generatedAt": "2026-11-08T19:24:38Z",
   "window30d": {
-    "start": "2026-10-09T18:24:22Z",
-    "end": "2026-11-08T18:24:22Z"
+    "start": "2026-10-09T19:24:38Z",
+    "end": "2026-11-08T19:24:38Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 24
+      "pageLoads": 21
     },
     {
       "date": "2026-11-01",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 41
+      "pageLoads": 42
     }
   ],
   "summary": {
-    "pageLoads": 1538,
-    "botPageLoads": 802,
-    "nonBotPageLoads": 736
+    "pageLoads": 1536,
+    "botPageLoads": 801,
+    "nonBotPageLoads": 735
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1428,
-      "visits": 1428
+      "pageLoads": 1426,
+      "visits": 1426
     },
     {
       "host": "diamondgatebridge.com",
@@ -181,14 +181,14 @@
       "visits": 61
     },
     {
-      "path": "/nine-summits/universe/",
+      "path": "/products/education/personal-training/course.html",
       "pageLoads": 56,
       "visits": 56
     },
     {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 56,
-      "visits": 56
+      "path": "/nine-summits/universe/",
+      "pageLoads": 54,
+      "visits": 54
     },
     {
       "path": "/about/",

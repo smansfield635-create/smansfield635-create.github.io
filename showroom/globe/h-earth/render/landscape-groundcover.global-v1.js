@@ -7,6 +7,8 @@ import {H_EARTH_PLANETARY_WORLD_FRAME} from './planetary-world-frame.js';
 
 export const H_EARTH_GLOBAL_GROUND_COVER=Object.freeze({id:'H_EARTH_GLOBAL_GROUND_COVER_v1',seed:'GLOBAL_COASTAL_COVER_20261008',bounds:Object.freeze({minX:-384,maxX:384,minZ:-736,maxZ:128}),spacing:2.5,tileMeters:32,maximumInstances:65536,recordFloats:20,maximumGpuBytes:8*1024*1024,planetRadius:H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius});
 export const H_EARTH_GLOBAL_GROUND_COVER_SOUTHERN_PILOT=Object.freeze({minX:-224,maxX:-160,minZ:-768,maxZ:-736});
+// Gen3176: a second real-root lattice; original 17,637 records remain untouched.
+const SYSTEMIC_SPACING=1.6,SYSTEMIC_TILE_LIMIT=96;
 const insideSouthernPilot=(x,z)=>x>=-224&&x<=-160&&z>=-768&&z< -736;
 const P=H_EARTH_GLOBAL_GROUND_COVER,clamp=v=>Math.max(0,Math.min(1,v)),f=Math.fround;
 const smooth=v=>{const t=clamp(v);return t*t*(3-2*t);};
@@ -74,9 +76,10 @@ function templateFor(){
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
 
-export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null,placementExclusion=null,admitGround=visibleSurface?.admitGround,baselineExclusion=null,southernPilotEnabled=false}={}){
+export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null,placementExclusion=null,admitGround=visibleSurface?.admitGround,baselineExclusion=null,southernPilotEnabled=false,systemicExpansionEnabled=false}={}){
   if(typeof admitGround!=='function')throw Error('GLOBAL_COVER_RENDERED_BEACH_PROVIDER_REQUIRED');
   if(typeof southernPilotEnabled!=='boolean')throw Error('GLOBAL_COVER_SOUTHERN_PILOT_FLAG_INVALID');
+  if(typeof systemicExpansionEnabled!=='boolean'||(systemicExpansionEnabled&&!southernPilotEnabled))throw Error('GLOBAL_COVER_SYSTEMIC_EXPANSION_FLAG_INVALID');
   if(!['FORWARD','REVERSE','CHUNKED','CAMERA_FIRST'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
   if(order==='CAMERA_FIRST'&&(!priorityOrigin||![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('GLOBAL_COVER_CAMERA_FIRST_ORIGIN_REQUIRED');
   if(onTile!==null&&typeof onTile!=='function')throw Error('GLOBAL_COVER_TILE_CALLBACK_INVALID');
@@ -230,11 +233,82 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
     }
     if(historical&&!pilotPass)historicalArchiveCount=output.length;
   }
+  // Preserve the complete original population before adding any new grass.
+  const preservedRecordCount=output.length;
+  let systemicCandidates=0,systemicAppended=0,systemicTilesAdded=0;
+  if(systemicExpansionEnabled){
+    // The signed woodland begins at z=-572; only the existing supplemental
+    // south-of--576 jurisdiction may receive additional independent tufts.
+    const originalByTile=new Map(patches.map(tile=>[`${tile.ix}:${tile.iz}`,tile.entries]));
+    const extraTiles=tiles.filter(tile=>tile.minZ< -576&&(tile.southernPilot||tile.minZ+32<=-576))
+      .sort((a,b)=>a.iz-b.iz||a.ix-b.ix);
+    for(const tile of extraTiles){
+      const entries=[],old=originalByTile.get(`${tile.ix}:${tile.iz}`)??[],seeds=[];
+      for(let zi=0;zi<20;zi++)for(let xi=0;xi<20;xi++){
+        const id=`SYSTEMIC:${tile.ix}:${tile.iz}:${xi}:${zi}`;
+        seeds.push({id,rank:hash(id,'rank'),
+          x:f(tile.minX+(xi+.5)*SYSTEMIC_SPACING+(hash(id,'x')-.5)*.40),
+          z:f(tile.minZ+(zi+.5)*SYSTEMIC_SPACING+(hash(id,'z')-.5)*.40)});
+      }
+      seeds.sort((a,b)=>a.rank-b.rank||a.id.localeCompare(b.id));
+      for(const point of seeds){
+        if(entries.length>=SYSTEMIC_TILE_LIMIT)break;
+        systemicCandidates++;
+        const {id,x,z}=point;
+        if(tile.southernPilot?!insideSouthernPilot(x,z):
+          (x<bounds.minX+2||x>bounds.maxX-2||z<bounds.minZ+2||z>bounds.maxZ-2))continue;
+        if(z>=-576||old.some(t=>Math.hypot(t.record[12]-x,t.record[13]-z)<.90)||
+          entries.some(t=>Math.hypot(t.record[12]-x,t.record[13]-z)<.78))continue;
+        const support=sample(x,z);if(!support||!admitGround(x,z,support))continue;
+        const atWater=water.sample(x,z);if(atWater&&support.y<=atWater.y+.01)continue;
+        const authored=inverseHEarthGroundCoverPoint(x,support.y,z);
+        if(!clear(authored.x,authored.z,1.4)||
+          obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.4))continue;
+        const material=materialAt(authored.x,authored.z);
+        if(!eligibleMaterial(material,support.slope))continue;
+        const angle=f(hash(id,'angle')*Math.PI*2),
+          width=f(.90+hash(id,'width')*.65),height=f(.62+hash(id,'height')*.45),
+          record=new Float32Array(20),rootCache=new Map();
+        let valid=true;
+        for(let root=0;root<12;root++){
+          const p=transformHEarthGroundCoverRoot(template,root,x,z,angle,width);
+          if(tile.southernPilot?!insideSouthernPilot(p.x,p.z):
+             (p.x<bounds.minX+2||p.x>bounds.maxX-2||p.z<bounds.minZ+2||p.z>bounds.maxZ-2)){valid=false;break;}
+          if(p.z>=-576){valid=false;break;}
+          const key=`${p.x}:${p.z}`;let hit=rootCache.get(key);
+          if(!hit){
+            const ground=sample(p.x,p.z);if(!ground||!admitGround(p.x,p.z,ground)){valid=false;break;}
+            rootSamples++;const w=water.sample(p.x,p.z);
+            if(w&&ground.y<=w.y+.01){valid=false;break;}
+            const a=inverseHEarthGroundCoverPoint(p.x,ground.y,p.z),m=materialAt(a.x,a.z);
+            materialSamples++;hit={ground,a,m};rootCache.set(key,hit);
+          }
+          if(!eligibleMaterial(hit.m,hit.ground.slope)||!clear(hit.a.x,hit.a.z)||
+            obstacles.some(t=>Math.hypot(p.x-t.x,p.z-t.z)<t.radius)){valid=false;break;}
+          record[root]=hit.ground.y;
+        }
+        if(!valid)continue;
+        record.set([x,z,angle,width,height,field(authored.x,authored.z,12,'palette'),hash(id,'variation'),0],12);
+        entries.push({id,record});
+      }
+      if(entries.length){
+        entries.sort((a,b)=>a.id.localeCompare(b.id));
+        const start=output.length;
+        for(const entry of entries){output.push(entry.record);admitted.push(1);recordIds.push(entry.id);}
+        packedTiles.push({start,count:entries.length,minX:tile.minX-1.8,maxX:tile.minX+33.8,
+          minZ:tile.minZ-1.8,maxZ:tile.minZ+33.8,ecoInstances:0,historicalArchive:false,systemicExpansion:true});
+        systemicAppended+=entries.length;systemicTilesAdded++;
+      }
+      if(now()-budgetStart>=8){onProgress({phase:'SYSTEMIC_GRASS_PLANNING',
+        systemicInstanceCount:systemicAppended,systemicCandidateCount:systemicCandidates});
+        await yieldControl();yields++;budgetStart=now();}
+    }
+  }
   if(output.length>P.maximumInstances)throw Error(`GLOBAL_COVER_POPULATION_BUDGET_EXCEEDED:${output.length}`);
   const records=new Float32Array(output.length*20);output.forEach((r,i)=>records.set(r,i*20));
   const templateGpuBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength,totalGpuBytes=records.byteLength+templateGpuBytes;
   if(totalGpuBytes>P.maximumGpuBytes)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
-  const receipt=Object.freeze({schema:P.id,historicalArchiveCount,appendedReplacementCount:output.length-historicalArchiveCount,admittedPresentationCount:admitted.reduce((a,b)=>a+b,0),suppressedArchiveCount:admitted.slice(0,historicalArchiveCount).filter(x=>!x).length,surveyedTiles:patches.length,expectedTiles:tiles.length,habitatCoverageValidated:patches.length===tiles.length,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,southernPilot:Object.freeze({enabled:southernPilotEnabled,bounds:H_EARTH_GLOBAL_GROUND_COVER_SOUTHERN_PILOT,addedRecords:southernPilotRecordCount,originalRecords:output.length-southernPilotRecordCount}),elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
+  const receipt=Object.freeze({schema:P.id,historicalArchiveCount,appendedReplacementCount:output.length-historicalArchiveCount,admittedPresentationCount:admitted.reduce((a,b)=>a+b,0),suppressedArchiveCount:admitted.slice(0,historicalArchiveCount).filter(x=>!x).length,surveyedTiles:patches.length,expectedTiles:tiles.length,habitatCoverageValidated:patches.length===tiles.length,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,southernPilot:Object.freeze({enabled:southernPilotEnabled,bounds:H_EARTH_GLOBAL_GROUND_COVER_SOUTHERN_PILOT,addedRecords:southernPilotRecordCount,originalRecords:preservedRecordCount-southernPilotRecordCount}),systemicExpansion:Object.freeze({enabled:systemicExpansionEnabled,originalRecordCount:preservedRecordCount,addedRecords:systemicAppended,candidateCount:systemicCandidates,addedTiles:systemicTilesAdded,spacing:SYSTEMIC_SPACING,maximumPerTile:SYSTEMIC_TILE_LIMIT,rootJurisdiction:'Z_LT_NEGATIVE_576'}),elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
   onProgress({phase:'GLOBAL_COVER_COMPLETE',instanceCount:output.length,totalGpuBytes});
   return{records,tiles:packedTiles,template,receipt,recordIds:Object.freeze(recordIds),admittedRecords:Uint8Array.from(admitted)};
 }

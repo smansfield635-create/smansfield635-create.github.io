@@ -1153,7 +1153,27 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // Continuous multitone transition for the attributed inland band class.
+      // Zero coverage retains native soil; established olive cores remain exact.
+      // All intermediate colors inherit existing textured soil and cover grain.
+      vec3 originalGroundcoverMix=mix(palette,groundcoverTone,groundcoverWeight);
+      vec3 groundcoverCoreAnchor=mix(palette,groundcoverTone,0.56);
+      vec3 groundcoverWarmEarth=mix(palette,groundcoverCoreAnchor,0.18)*vec3(1.0,0.985,0.965);
+      vec3 groundcoverOliveBrown=mix(palette,groundcoverCoreAnchor,0.47)*vec3(1.005,0.995,0.95);
+      vec3 groundcoverMutedOlive=mix(palette,groundcoverCoreAnchor,0.74)*vec3(0.99,1.015,0.98);
+      float groundcoverTransition=smoothstep(0.0,0.56,groundcoverWeight);
+      vec3 gradedGroundcover=mix(
+        palette,groundcoverWarmEarth,smoothstep(0.0,0.30,groundcoverTransition)
+      );
+      gradedGroundcover=mix(
+        gradedGroundcover,groundcoverOliveBrown,smoothstep(0.18,0.56,groundcoverTransition)
+      );
+      gradedGroundcover=mix(
+        gradedGroundcover,groundcoverMutedOlive,smoothstep(0.46,0.80,groundcoverTransition)
+      );
+      palette=mix(
+        gradedGroundcover,originalGroundcoverMix,smoothstep(0.70,1.0,groundcoverTransition)
+      );
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

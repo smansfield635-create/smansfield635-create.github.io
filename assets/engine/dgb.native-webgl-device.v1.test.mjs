@@ -2,14 +2,16 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createNativeWebGLDevice } from './dgb.native-webgl-device.v1.mjs';
 
-function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false, fboIncompleteAfter = 0, uploadGlError = false, depthTexture = false } = {}) {
+function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false, fboIncompleteAfter = 0, uploadGlError = false, depthTexture = false, failDynamicUploadOnce = false } = {}) {
   const log = [], handlers = new Map();
   let contextLost = false, id = 0, framebufferChecks = 0;
-  const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4 };
+  const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4, arrayBuffer: null, elementArrayBuffer: null };
+  const buffers = new Map();
+  let dynamicFailures = failDynamicUploadOnce ? 1 : 0;
   const obj = type => ({ type, id: ++id });
   const gl = {
     VERTEX_SHADER: 1, FRAGMENT_SHADER: 2, COMPILE_STATUS: 3, LINK_STATUS: 4,
-    ARRAY_BUFFER: 5, ELEMENT_ARRAY_BUFFER: 6, STATIC_DRAW: 7,
+    ARRAY_BUFFER: 5, ELEMENT_ARRAY_BUFFER: 6, STATIC_DRAW: 7, DYNAMIC_DRAW: 36, ARRAY_BUFFER_BINDING: 37,
     FLOAT: 8, TRIANGLES: 9, UNSIGNED_SHORT: 10, UNSIGNED_BYTE: 11, UNSIGNED_INT: 12,
     TEXTURE_2D: 13, RGBA: 14, TEXTURE_BINDING_2D: 15, UNPACK_ALIGNMENT: 16,
     TEXTURE_WRAP_S: 17, TEXTURE_WRAP_T: 18, TEXTURE_MIN_FILTER: 19, TEXTURE_MAG_FILTER: 20,
@@ -25,7 +27,24 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     attachShader() {}, linkProgram() {}, getProgramParameter() { return !linkFail; },
     getProgramInfoLog() { return 'mock link error'; }, deleteProgram() { log.push('deleteProgram'); },
     createBuffer() { log.push('createBuffer'); return obj('buffer'); },
-    bindBuffer() {}, bufferData() { log.push('bufferData'); }, deleteBuffer() { log.push('deleteBuffer'); },
+    bindBuffer(target, handle) {
+      if (target === this.ARRAY_BUFFER) bindings.arrayBuffer = handle;
+      else if (target === this.ELEMENT_ARRAY_BUFFER) bindings.elementArrayBuffer = handle;
+    },
+    bufferData(target, data) {
+      log.push('bufferData');
+      const handle = target === this.ARRAY_BUFFER ? bindings.arrayBuffer : bindings.elementArrayBuffer;
+      if (handle && ArrayBuffer.isView(data)) buffers.set(handle, data.slice());
+    },
+    bufferSubData(target, offset, data) {
+      log.push('bufferSubData');
+      if (target !== this.ARRAY_BUFFER || !bindings.arrayBuffer) throw Error('MOCK_BUFFER_NOT_BOUND');
+      const current = buffers.get(bindings.arrayBuffer);
+      if (!current || offset % current.BYTES_PER_ELEMENT) throw Error('MOCK_BUFFER_STORAGE_INVALID');
+      current.set(data, offset / current.BYTES_PER_ELEMENT);
+      if (dynamicFailures > 0) { dynamicFailures--; throw Error('SIMULATED_PARTIAL_GPU_UPLOAD'); }
+    },
+    deleteBuffer(handle) { log.push('deleteBuffer'); buffers.delete(handle); },
     getExtension(n) { return (n === 'OES_element_index_uint' && uint32) || (n === 'WEBGL_depth_texture' && depthTexture) ? {} : null; },
     getParameter(p) {
       if (p === this.MAX_TEXTURE_SIZE || p === this.MAX_RENDERBUFFER_SIZE) return 1024;
@@ -33,6 +52,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
       if (p === this.FRAMEBUFFER_BINDING) return bindings.framebuffer;
       if (p === this.RENDERBUFFER_BINDING) return bindings.renderbuffer;
       if (p === this.UNPACK_ALIGNMENT) return bindings.unpack;
+      if (p === this.ARRAY_BUFFER_BINDING) return bindings.arrayBuffer;
       return null;
     },
     createTexture() { log.push('createTexture'); return textureFail ? null : obj('texture'); },
@@ -71,7 +91,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     removeEventListener(name) { handlers.delete(name); },
     trigger(name) { contextLost = name === 'webglcontextlost'; handlers.get(name)?.({preventDefault(){log.push('preventDefault')}}); }
   };
-  return { canvas, gl, log };
+  return { canvas, gl, log, buffers };
 }
 const shader = { vertexSource:'attribute vec3 a_position; void main(){gl_Position=vec4(a_position,1.0);}', fragmentSource:'void main(){gl_FragColor=vec4(1.0);}' };
 const positions = new Float32Array([-1,-1,0, 1,-1,0, 0,1,0]);
@@ -404,4 +424,80 @@ test('E8 malformed depth-texture requests do not mutate GPU state and defaults r
   assert.equal(device.status().estimatedRenderbufferBytes,4*4*2);
   device.dispose();
   assert.equal(log.filter(x=>x==='deleteRenderbuffer').length,1);
+});
+
+test('M1.1 dynamic mesh updates one GPU buffer in place, preserves ownership and caller isolation on WebGL1 and WebGL2', () => {
+  for (const webgl2 of [false, true]) {
+    const {canvas,gl,log,buffers} = fakeCanvas({webgl2});
+    const device = createNativeWebGLDevice(canvas,{backend:webgl2?'WEBGL2':'WEBGL1'});
+    const original = new Float32Array([-1,-1,0, 1,-1,0, 0,1,0]);
+    const mesh = device.createMesh({attributes:[{name:'a_position',data:original,size:3,dynamic:true}],
+      indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const buffer=mesh.gpu.attributes[0].buffer, before=log.filter(x=>x==='createBuffer').length;
+    original[0]=999; // the caller never owns the retained dynamic snapshot
+    assert.equal(mesh.definition.attributes[0].data[0],-1);
+    const moving = new Float32Array([-0.5,-1,0, 1,-1,0, 0,1,0]);
+    assert.equal(device.updateMeshAttribute(mesh,'a_position',moving),mesh);
+    moving[0]=333;
+    assert.equal(mesh.definition.attributes[0].data[0],-0.5);
+    assert.equal(mesh.gpu.attributes[0].buffer,buffer);
+    assert.equal(log.filter(x=>x==='createBuffer').length,before);
+    assert.equal(log.filter(x=>x==='bufferSubData').length,1);
+    assert.equal(buffers.get(buffer)[0],-0.5);
+    assert.equal(device.status().meshes,1);
+    for(let i=0;i<8;i++)device.updateMeshAttribute(mesh,'a_position',new Float32Array([i/10,-1,0,1,-1,0,0,1,0]));
+    assert.equal(log.filter(x=>x==='createBuffer').length,before);
+    assert.equal(device.status().meshes,1);
+    device.dispose();
+  }
+});
+
+test('M1.1 restores latest successful dynamic geometry after real device context recreation path', () => {
+  const {canvas,buffers,log}=fakeCanvas();
+  const device=createNativeWebGLDevice(canvas);
+  const mesh=device.createMesh({attributes:[{name:'a_position',data:positions,size:3,dynamic:true}],vertexCount:3});
+  device.updateMeshAttribute(mesh,'a_position',new Float32Array([0.25,0.5,0,1,-1,0,0,1,0]));
+  const originalBuffer=mesh.gpu.attributes[0].buffer;
+  canvas.trigger('webglcontextlost');
+  assert.throws(()=>device.updateMeshAttribute(mesh,'a_position',positions),/GRAPHICS_CONTEXT_LOST/);
+  canvas.trigger('webglcontextrestored');
+  assert.equal(device.status().lost,false);
+  const newBuffer=mesh.gpu.attributes[0].buffer;
+  assert.notEqual(originalBuffer,newBuffer);
+  assert.deepEqual(Array.from(buffers.get(newBuffer)),[0.25,0.5,0,1,-1,0,0,1,0]);
+  assert(log.filter(x=>x==='createBuffer').length>=2);
+  device.dispose();
+});
+
+test('M1.1 dynamic attribute schema and update input reject invalid types, lengths and ownership', () => {
+  const {canvas}=fakeCanvas();
+  const device=createNativeWebGLDevice(canvas),other=createNativeWebGLDevice(fakeCanvas().canvas);
+  const mesh=device.createMesh({attributes:[{name:'a_position',data:positions,size:3,dynamic:true}],vertexCount:3});
+  const staticMesh=device.createMesh({attributes:[attrib],vertexCount:3});
+  assert.throws(()=>device.updateMeshAttribute(mesh,'nope',positions),/MESH_ATTRIBUTE_NOT_FOUND/);
+  assert.throws(()=>device.updateMeshAttribute(staticMesh,'a_position',positions),/MESH_ATTRIBUTE_NOT_DYNAMIC/);
+  assert.throws(()=>other.updateMeshAttribute(mesh,'a_position',positions),/MESH_NOT_OWNED_BY_DEVICE/);
+  assert.throws(()=>device.updateMeshAttribute(mesh,'a_position',Array.from(positions)),/DYNAMIC_ATTRIBUTE_FLOAT32_REQUIRED/);
+  assert.throws(()=>device.updateMeshAttribute(mesh,'a_position',new Float32Array([0,1,2])),/DYNAMIC_ATTRIBUTE_LENGTH_MISMATCH/);
+  const bad=new Float32Array(positions);bad[0]=NaN;
+  assert.throws(()=>device.updateMeshAttribute(mesh,'a_position',bad),/DYNAMIC_ATTRIBUTE_NONFINITE/);
+  assert.throws(()=>device.createMesh({attributes:[{name:'a_position',data:new Uint16Array(9),size:3,dynamic:true}],vertexCount:3}),/DYNAMIC_ATTRIBUTE_FLOAT32_REQUIRED/);
+  assert.throws(()=>device.createMesh({attributes:[{name:'a_position',data:new Float32Array(6),size:3,dynamic:true}],vertexCount:3}),/DYNAMIC_ATTRIBUTE_VERTEX_COUNT_MISMATCH/);
+  assert.throws(()=>device.createMesh({attributes:[{name:'a_position',data:positions,size:3,dynamic:true,stride:12}],vertexCount:3}),/DYNAMIC_ATTRIBUTE_INTERLEAVED_UNSUPPORTED/);
+  device.dispose();other.dispose();
+});
+
+test('M1.1 failed partial GPU update rolls back old bytes and does not commit corrupted CPU state', () => {
+  const {canvas,log,buffers,gl}=fakeCanvas({failDynamicUploadOnce:true});
+  const device=createNativeWebGLDevice(canvas);
+  const mesh=device.createMesh({attributes:[{name:'a_position',data:positions,size:3,dynamic:true}],vertexCount:3});
+  const original=Array.from(mesh.definition.attributes[0].data);
+  const oldBinding=gl.getParameter(gl.ARRAY_BUFFER_BINDING);
+  assert.throws(()=>device.updateMeshAttribute(mesh,'a_position',new Float32Array([0,0,0,1,-1,0,0,1,0])),/SIMULATED_PARTIAL_GPU_UPLOAD/);
+  assert.deepEqual(Array.from(mesh.definition.attributes[0].data),original);
+  assert.deepEqual(Array.from(buffers.get(mesh.gpu.attributes[0].buffer)),original);
+  assert.equal(gl.getParameter(gl.ARRAY_BUFFER_BINDING),oldBinding);
+  assert.equal(log.filter(x=>x==='bufferSubData').length,2);
+  assert.equal(device.status().restorationError,null);
+  device.dispose();
 });

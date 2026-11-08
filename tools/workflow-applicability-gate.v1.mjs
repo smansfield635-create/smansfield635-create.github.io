@@ -198,7 +198,12 @@ function singleHearthPrOperationLocator(body) {
 }
 function admittedCandidateBranch(lock, packet, observedBranch, prOperationLocator, fromPr) {
   const canonical = admittedHEarthBranch(lock.operationId, lock.lockGeneration);
-  const named = packet.operationRequest?.subjectIdentity?.newCandidateBranch;
+  // Both exact branch fields are bound by the original authenticated intake.
+  const identity=packet.operationRequest?.subjectIdentity;
+  const declarations=[identity?.newCandidateBranch,identity?.exactBranch]
+    .filter(value=>value!=null);
+  if (declarations.length>1 && declarations[0]!==declarations[1]) return null;
+  const named=declarations[0];
   // An explicit branch in the ORIGINAL authenticated intake takes precedence,
   // including over a generated alias for the same operation and generation.
   if (named != null && (typeof named !== 'string' || observedBranch !== named)) return null;
@@ -211,8 +216,69 @@ function admittedCandidateBranch(lock, packet, observedBranch, prOperationLocato
   return named;
 }
 
+/* Gen3178: exact qualified predecessor, not a general admission exception. */
+const GEN3178=Object.freeze({
+ operation:'H_EARTH_PROVEN_GROUNDCOVER_MULTITONE_TRANSITION_20261108_001',
+ generation:3178, branch:'h-earth/proven-groundcover-multitone-transition-20261108',
+ candidate:'d0d17645ddb3a9ab3b6a4e98d46ae26c797638e3',
+ parent:'fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b',
+ governing:'ad6fa8bfd7417d670685864e74a8118a3e31663f',
+ renderer:'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
+ generator:'showroom/globe/h-earth/render/landscape-groundcover.global-v1.js',
+ oldTest:'h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs',
+ newTest:'h-earth-3d/validation/h-earth.proven-band-multitone-20261108.test.mjs',
+ blob:{parentRenderer:'19eec736d247857a1ce232e693e583d3047079cf',
+ candidateRenderer:'ae70579df6ceb460a81ae6fd5908b31533310b85',
+ generator:'a466bd1df277d06bbdafbb1622908ba615ea64b7',
+ oldTest:'969c4d1f4867015a0dbeaa7f708b256b193119ba',
+ newTest:'d24d2f079e017e6ca117805ada7b6b060027bcbc'}
+});
+const samePaths=(a,b)=>JSON.stringify(uniqueSorted(a))===JSON.stringify(uniqueSorted(b));
+function gen3178Graph(lock,head) {
+ const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+ const diff=(a,b)=>uniqueSorted(git('diff','--name-only',a,b).split(/\r?\n/));
+ const v=GEN3178,base=git('merge-base',lock.governingHead,v.parent);
+ const blob=(commit,file)=>git('rev-parse',commit+':'+file);
+ return {parents:git('rev-list','--parents','-n','1',head).split(/\s+/).slice(1),
+  parentBase:base,candidateBase:git('merge-base',lock.governingHead,head),
+  parentPaths:diff(base,v.parent),operationPaths:diff(v.parent,head),
+  cumulativePaths:diff(base,head),mainSidePaths:diff(base,lock.governingHead),
+  blob:{parentRenderer:blob(v.parent,v.renderer),candidateRenderer:blob(head,v.renderer),
+   parentGenerator:blob(v.parent,v.generator),candidateGenerator:blob(head,v.generator),
+   parentTest:blob(v.parent,v.oldTest),candidateOldTest:blob(head,v.oldTest),
+   candidateNewTest:blob(head,v.newTest)}
+ };
+}
+function verifiedGen3178Lineage(lock,packet,branch,head,paths,graph) {
+ const v=GEN3178,r=packet?.operationRequest,id=r?.subjectIdentity;
+ if(lock?.operationId!==v.operation||lock.lockGeneration!==v.generation||
+   lock.governingHead!==v.governing||branch!==v.branch||head!==v.candidate||
+   id?.exactBranch!==v.branch||id?.exactProductBaseline!==v.parent||
+   r?.fingerprintDomain?.qualifiedGen3172Baseline!==v.parent||
+   !samePaths(r?.allowedPaths??[],[v.renderer,v.newTest])||
+   !graph||!samePaths(graph.parents??[],[v.parent])||
+   !isSha(graph.parentBase)||graph.parentBase!==graph.candidateBase)return null;
+ const parent=[v.renderer,v.generator,v.oldTest],
+   operation=[v.renderer,v.newTest],all=[...parent,v.newTest];
+ if(!samePaths(graph.parentPaths??[],parent)||
+   !samePaths(graph.operationPaths??[],operation)||
+   !allWithinAdmission(graph.operationPaths,r.allowedPaths)||
+   !samePaths(graph.cumulativePaths??[],all)||!samePaths(paths,all))return null;
+ const b=graph.blob??{};
+ if(b.parentRenderer!==v.blob.parentRenderer||b.candidateRenderer!==v.blob.candidateRenderer||
+   b.parentGenerator!==v.blob.generator||b.candidateGenerator!==v.blob.generator||
+   b.parentTest!==v.blob.oldTest||b.candidateOldTest!==v.blob.oldTest||
+   b.candidateNewTest!==v.blob.newTest)return null;
+ // Main-side drift must be independent of all H-Earth and authority surfaces.
+ if(!Array.isArray(graph.mainSidePaths)||graph.mainSidePaths.some(p=>
+   p.startsWith('h-earth-3d/')||p.startsWith('showroom/globe/h-earth/')||
+   p.startsWith('.github/operation-intake/')||p.startsWith('.github/ai-router/')||
+   isExplicitHEarthRegistryDependency(p)))return null;
+ return {newPaths:[v.newTest],inheritedPaths:[v.oldTest]};
+}
+
 async function authenticatedCandidateScope(changedPaths) {
-  const none = Object.freeze({ paths: [], operationId: null, lockGeneration: null });
+  const none = Object.freeze({ paths: [], inheritedPaths: [], operationId: null, lockGeneration: null });
   const ambiguous = changedPaths.filter(isAmbiguousHEarthAuthorityScope);
   if (ambiguous.length === 0 ||
       process.env.GITHUB_REPOSITORY !== expectedRepository ||
@@ -284,20 +350,28 @@ async function authenticatedCandidateScope(changedPaths) {
     if (candidateRef?.ref !== 'refs/heads/' + admittedBranch ||
         candidateRef.object?.sha !== candidateHead) return none;
     const allowed = packet.operationRequest.allowedPaths;
-    if (!allWithinAdmission(changedPaths, allowed)) return none;
-    // Do not give registry/control-plane changes a product-candidate exemption.
+    // Actual registry/control-plane changes still select the blocking gate.
     if (changedPaths.some(isExplicitHEarthRegistryDependency)) return none;
-    execFileSync('git', ['merge-base', '--is-ancestor', lock.governingHead, candidateHead],
-      {stdio: 'ignore'});
-    return Object.freeze({ paths: ambiguous, operationId: lock.operationId,
-      lockGeneration: lock.lockGeneration });
+    let lineage=null;
+    if (lock.operationId===GEN3178.operation) {
+      lineage=verifiedGen3178Lineage(lock,packet,branch,candidateHead,
+        changedPaths,gen3178Graph(lock,candidateHead));
+      if (!lineage) return none;
+    } else {
+      if (!allWithinAdmission(changedPaths,allowed)) return none;
+      execFileSync('git',['merge-base','--is-ancestor',lock.governingHead,candidateHead],
+        {stdio:'ignore'});
+    }
+    return Object.freeze({paths:lineage?lineage.newPaths:ambiguous,
+      inheritedPaths:lineage?lineage.inheritedPaths:[],
+      operationId:lock.operationId,lockGeneration:lock.lockGeneration});
   } catch {
     // Missing network, Git objects, authority, or malformed evidence = fail closed.
     return none;
   }
 }
 
-export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedPaths = [], authenticatedCandidatePaths = [] } = {}) {
+export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedPaths = [], authenticatedCandidatePaths = [], qualifiedPredecessorPaths = [] } = {}) {
   if (workflow !== WORKFLOW_ID) {
     const error = new Error(`UNSUPPORTED_WORKFLOW:${workflow}`);
     error.code = 'UNSUPPORTED_WORKFLOW';
@@ -307,10 +381,13 @@ export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedP
   const normalizedPaths = uniqueSorted(changedPaths);
   const explicitDependencyPaths = normalizedPaths.filter(isExplicitHEarthRegistryDependency);
   const authenticated = new Set(authenticatedCandidatePaths);
+  const qualified = new Set(qualifiedPredecessorPaths);
   const admittedCandidatePaths = normalizedPaths.filter(entry =>
     isAmbiguousHEarthAuthorityScope(entry) && authenticated.has(entry));
+  const inheritedQualifiedPaths = normalizedPaths.filter(entry =>
+    isAmbiguousHEarthAuthorityScope(entry) && qualified.has(entry) && !authenticated.has(entry));
   const ambiguousAuthorityPaths = normalizedPaths.filter(entry =>
-    isAmbiguousHEarthAuthorityScope(entry) && !authenticated.has(entry));
+    isAmbiguousHEarthAuthorityScope(entry) && !authenticated.has(entry) && !qualified.has(entry));
   const knownProductPaths = normalizedPaths.filter(isKnownProductSemanticPath);
   const selectedPaths = uniqueSorted([...explicitDependencyPaths, ...ambiguousAuthorityPaths]);
   const selectedByDecision = selectedPaths.length > 0;
@@ -319,6 +396,7 @@ export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedP
   if (explicitDependencyPaths.length > 0) reasonCodes.push('EXPLICIT_REGISTRY_OR_CONTROL_PLANE_DEPENDENCY');
   if (ambiguousAuthorityPaths.length > 0) reasonCodes.push('AMBIGUOUS_H_EARTH_AUTHORITY_SCOPE_FAIL_CLOSED');
   if (admittedCandidatePaths.length > 0) reasonCodes.push('EXACT_ACTIVE_ADMITTED_CANDIDATE_PATH_RECOGNIZED');
+  if (inheritedQualifiedPaths.length > 0) reasonCodes.push('QUALIFIED_UNCHANGED_PREDECESSOR_RECOGNIZED');
   if (!selectedByDecision && knownProductPaths.length > 0) reasonCodes.push('KNOWN_PRODUCT_SEMANTICS_WITHOUT_REGISTRY_DEPENDENCY');
   if (!selectedByDecision) reasonCodes.push('DIRECTORY_PREFIX_MATCH_ALONE_DOES_NOT_SELECT');
 
@@ -336,6 +414,7 @@ export function evaluateWorkflowApplicability({ workflow = WORKFLOW_ID, changedP
     explicitDependencyPaths,
     ambiguousAuthorityPaths,
     admittedCandidatePaths,
+    qualifiedPredecessorPaths: inheritedQualifiedPaths,
     knownProductPaths,
     reasonCodes,
     invariants: {
@@ -556,6 +635,65 @@ function runSelfTest() {
   assert(!allWithinAdmission(['h-earth-3d/registry/authority.json'],
     ownerRequest.allowedPaths), 'UNDECLARED_DURABLE_AUTHORITY_REJECTED');
 
+  // Exact Gen3178 owner admission, predecessor and selected-gate negatives.
+  const v=GEN3178,locked={operationId:v.operation,lockGeneration:3178,
+    governingHead:v.governing};
+  const packet={operationRequest:{
+    subjectIdentity:{exactBranch:v.branch,exactProductBaseline:v.parent},
+    fingerprintDomain:{qualifiedGen3172Baseline:v.parent},
+    allowedPaths:[v.renderer,v.newTest]
+  }};
+  const paths=[v.renderer,v.generator,v.oldTest,v.newTest];
+  const graph={parents:[v.parent],parentBase:'a'.repeat(40),candidateBase:'a'.repeat(40),
+    parentPaths:[v.renderer,v.generator,v.oldTest],operationPaths:[v.renderer,v.newTest],
+    cumulativePaths:paths,mainSidePaths:['.analytics/cloudflare/latest.json'],
+    blob:{parentRenderer:v.blob.parentRenderer,candidateRenderer:v.blob.candidateRenderer,
+      parentGenerator:v.blob.generator,candidateGenerator:v.blob.generator,
+      parentTest:v.blob.oldTest,candidateOldTest:v.blob.oldTest,candidateNewTest:v.blob.newTest}
+  };
+  const proof=(l=locked,p=packet,b=v.branch,h=v.candidate,c=paths,g=graph)=>
+    verifiedGen3178Lineage(l,p,b,h,c,g);
+  assert(admittedCandidateBranch(locked,packet,v.branch,v.operation,true)===v.branch,
+    'GEN3178_SIGNED_EXACT_BRANCH_RECOGNIZED');
+  assert(admittedCandidateBranch(locked,packet,'h-earth/foreign',v.operation,true)===null,
+    'GEN3178_FORGED_BRANCH_REJECTED');
+  assert(admittedCandidateBranch(locked,{operationRequest:{subjectIdentity:{
+    exactBranch:v.branch,newCandidateBranch:'h-earth/foreign'}}},
+    v.branch,v.operation,true)===null,'GEN3178_CONFLICTING_BRANCH_FIELDS_REJECTED');
+  assert(proof()!==null,'GEN3178_COMPLETE_LINEAGE_ACCEPTED');
+  assert(proof({...locked,lockGeneration:3177})===null,'GEN3178_OTHER_LOCK_REJECTED');
+  assert(proof(locked,packet,'h-earth/foreign')===null,'GEN3178_UNDECLARED_HEAD_BRANCH_REJECTED');
+  assert(proof(locked,packet,v.branch,'c'.repeat(40))===null,'GEN3178_OTHER_CANDIDATE_REJECTED');
+  assert(proof(locked,{operationRequest:{...packet.operationRequest,
+    allowedPaths:['h-earth-3d/**']}})===null,'GEN3178_SCOPE_FORGERY_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,[...paths,'h-earth-3d/rogue.mjs'])===null,
+    'GEN3178_UNKNOWN_CUMULATIVE_PATH_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,operationPaths:[...graph.operationPaths,'h-earth-3d/rogue.mjs']})===null,
+    'GEN3178_UNDECLARED_OPERATION_MUTATION_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,parents:['c'.repeat(40)]})===null,'GEN3178_UNQUALIFIED_PARENT_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,blob:{...graph.blob,candidateGenerator:'c'.repeat(40)}})===null,
+    'GEN3178_CHANGED_PREDECESSOR_GENERATOR_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,blob:{...graph.blob,candidateOldTest:'c'.repeat(40)}})===null,
+    'GEN3178_CHANGED_PREDECESSOR_TEST_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,mainSidePaths:[v.renderer]})===null,'GEN3178_RELEVANT_MAIN_DRIFT_REJECTED');
+  assert(proof(locked,packet,v.branch,v.candidate,paths,
+    {...graph,candidateBase:'c'.repeat(40)})===null,'GEN3178_MERGE_BASE_MISMATCH_REJECTED');
+  const admitted=proof(),decision=evaluateWorkflowApplicability({changedPaths:paths,
+    authenticatedCandidatePaths:admitted.newPaths,
+    qualifiedPredecessorPaths:admitted.inheritedPaths});
+  assert(decision.result==='NOT_APPLICABLE','GEN3178_QUALIFIED_SOURCE_NOT_REGISTRY_BLOCKER');
+  assert(samePaths(decision.admittedCandidatePaths,[v.newTest]),'GEN3178_NEW_TEST_RECOGNIZED');
+  assert(samePaths(decision.qualifiedPredecessorPaths,[v.oldTest]),'GEN3178_OLD_TEST_SEPARATE');
+  assert(evaluateWorkflowApplicability({changedPaths:[...paths,'h-earth-3d/registry/rogue.json'],
+    authenticatedCandidatePaths:admitted.newPaths,
+    qualifiedPredecessorPaths:admitted.inheritedPaths}).result==='SELECTED',
+    'GEN3178_REAL_CONTROL_PLANE_PATH_STILL_BLOCKS');
+
   const workflowSelfChange = evaluateWorkflowApplicability({
     changedPaths: ['.github/workflows/h-earth-repository-registry-preflight.yml']
   });
@@ -575,7 +713,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 47,
+    assertions: 66,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',
@@ -626,7 +764,8 @@ try {
   const candidate = await authenticatedCandidateScope(options.paths);
   const receipt = {
     ...evaluateWorkflowApplicability({ workflow: options.workflow, changedPaths: options.paths,
-      authenticatedCandidatePaths: candidate.paths }),
+      authenticatedCandidatePaths: candidate.paths,
+      qualifiedPredecessorPaths: candidate.inheritedPaths }),
     verifiedAdmission: candidate.operationId ? {
       operationId: candidate.operationId, lockGeneration: candidate.lockGeneration,
       source: 'PINNED_CANONICAL_LEDGER_AND_OWNER_INTAKE_COMMENT'

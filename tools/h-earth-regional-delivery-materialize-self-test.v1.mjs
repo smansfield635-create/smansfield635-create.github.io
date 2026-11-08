@@ -7,7 +7,7 @@ const tiles=[
  {id:'-35:-49',minX:-140,minZ:-196,count:2,baselineCount:1},
  {id:'10:-75',minX:40,minZ:-300,count:1,baselineCount:1},
  {id:'-34:-49',minX:-136,minZ:-196,count:2,baselineCount:2},
- {id:'-35:-48',minX:-140,minZ:-192,count:1,baselineCount:0}
+ {id:'-35:-50',minX:-140,minZ:-200,count:1,baselineCount:0}
 ];
 const layout=groupSourceTiles(tiles);
 assert.equal(layout.sourceRoots,6);

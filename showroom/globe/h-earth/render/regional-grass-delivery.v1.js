@@ -5,6 +5,14 @@ const SOURCE_ROOTS=2858738;
 const SOURCE_RAW_SHA256='bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97';
 const SOURCE_MANIFEST_SHA256='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
 const REGION_SIDE=32,LOCAL_RADIUS=24,FULL_RADIUS=64;
+const authenticatedPlans=new WeakSet();
+function freezeIndex(value){
+ if(value&&typeof value==='object'&&!Object.isFrozen(value)){
+  for(const child of Object.values(value))freezeIndex(child);
+  Object.freeze(value);
+ }
+ return value;
+}
 const fail=code=>{throw Error('H_EARTH_REGIONAL_DELIVERY_'+code);};
 const digest=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 const dist2=(x,z,region)=>{
@@ -105,20 +113,22 @@ export async function loadRegionalGrassIndex({manifestUrl,manifestSha256,fetchIm
  if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
  const bytes=new Uint8Array(await response.arrayBuffer());
  if(await digest(bytes)!==manifestSha256)fail('MANIFEST_INTEGRITY');
- const index=validateIndex(JSON.parse(new TextDecoder().decode(bytes)));
+ const index=freezeIndex(validateIndex(JSON.parse(new TextDecoder().decode(bytes))));
  const habitatCompressed=await fetchExact(new URL(index.habitat.path,manifestUrl),{
   fetchImpl,signal,byteLength:index.habitat.compressedBytes,sha256:index.habitat.compressedSha256
  });
  const habitatPixels=await ungzip(habitatCompressed,{rawBytes:index.habitat.rawBytes,sha256:index.habitat.rawSha256});
- return Object.freeze({index,manifestUrl,habitat:Object.freeze({
+ const trusted=Object.freeze({index,manifestUrl,habitat:Object.freeze({
   ...index.sourceManifest.habitat,pixels:habitatPixels
  })});
+ authenticatedPlans.add(trusted);
+ return trusted;
 }
 // A verified region is emitted exactly once to its sole GPU owner.
 // No rendering or WebGL call occurs inside the streaming scheduler.
 export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,onRegion,onProgress=()=>{},
  onFatal=()=>{},maxInflight=2}={}){
- if(!trusted?.index||!trusted?.manifestUrl||typeof onRegion!=='function'||
+ if(!authenticatedPlans.has(trusted)||typeof onRegion!=='function'||
   !Number.isInteger(maxInflight)||maxInflight<1||maxInflight>4)fail('STREAM_ARGUMENTS');
  const regions=trusted.index.regions;
  const loaded=new Set(),inflight=new Map();
@@ -136,7 +146,7 @@ export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,on
    const next=ranked.find(item=>!loaded.has(item.region.id)&&!inflight.has(item.region.id));
    if(!next)break;
    const r=next.region,ctrl=new AbortController();
-   inflight.set(r.id,ctrl);
+   inflight.set(r.id,{controller:ctrl,stage:'fetching'});
    (async()=>{
     try{
      const compressed=await fetchExact(new URL(r.path,trusted.manifestUrl),{
@@ -145,6 +155,7 @@ export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,on
      const raw=await ungzip(compressed,{rawBytes:r.rawBytes,sha256:r.rawSha256});
      if(ctrl.signal.aborted||disposed)return;
      const decoded=decodeRegion(r,raw);
+     inflight.get(r.id).stage='installing';
      await onRegion(decoded);
      if(ctrl.signal.aborted||disposed)return;
      if(loaded.has(r.id))fail('REGION_DUPLICATE_INSTALL');
@@ -152,7 +163,7 @@ export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,on
      if(installedRoots>SOURCE_ROOTS)fail('REGION_TOTAL_OVERFLOW');
     }catch(error){
      if(ctrl.signal.aborted||disposed)return;
-     failed=true;for(const other of inflight.values())other.abort();
+     failed=true;for(const other of inflight.values())if(other.stage==='fetching')other.controller.abort();
      try{onFatal({reason:String(error?.message??error),regionId:r.id,regionalFallbackRequired:true});}catch{/* A fallback observer cannot reactivate a failed stream. */}
     }finally{
      inflight.delete(r.id);report();if(!disposed&&!failed)queueMicrotask(pump);
@@ -166,14 +177,14 @@ export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,on
   camera={x:nextCamera.x,z:nextCamera.z};
   const ranked=prioritizeRegionalPackets(regions,camera);
   const closestPending=ranked.find(x=>!loaded.has(x.region.id)&&!inflight.has(x.region.id));
-  if(closestPending)for(const [id,controller] of inflight){
+  if(closestPending)for(const [id,entry] of inflight){
    const region=regions.find(x=>x.id===id);
-   if(dist2(camera.x,camera.z,region)>96**2&&
-    dist2(camera.x,camera.z,region)>closestPending.distanceSquared)controller.abort();
+   if(entry.stage==='fetching'&&dist2(camera.x,camera.z,region)>96**2&&
+    dist2(camera.x,camera.z,region)>closestPending.distanceSquared)entry.controller.abort();
   }
   pump();report();return state();
  }
  return Object.freeze({updateCamera,getStatus:state,dispose(){
-  disposed=true;for(const ctrl of inflight.values())ctrl.abort();report();
+  disposed=true;for(const entry of inflight.values())if(entry.stage==='fetching')entry.controller.abort();report();
  }});
 }

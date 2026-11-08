@@ -1153,7 +1153,53 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // H_EARTH_GEN3178_MULTITONE_BEGIN
+      // One coherent soil-to-olive chromatic shoulder, reusing resident fields.
+      // Saturated olive core, zero-eligibility native soil and original masks
+      // remain exact; no new texture, geometry, lighting or grass resources.
+      vec3 groundcoverNativeSoil=palette;
+      float groundcoverTransitionSignal=
+        groundcoverOrganic*0.78+mesoField*0.22;
+      float groundcoverTransitionWarp=0.06*(macroField-0.5)*
+        (1.0-groundcoverPatch);
+      float groundcoverTransition=smoothstep(
+        0.03,0.66,groundcoverTransitionSignal+groundcoverTransitionWarp
+      );
+      float groundcoverTransitionBridge=
+        4.0*groundcoverTransition*(1.0-groundcoverTransition);
+      float groundcoverEligibility=
+        groundcoverSuitability*groundcoverProtection;
+      float groundcoverExtendedWeight=0.66*
+        (groundcoverTransition+
+         0.70*groundcoverTransition*(1.0-groundcoverTransition))*
+        groundcoverEligibility;
+      float groundcoverCompositeWeight=mix(
+        groundcoverWeight,groundcoverExtendedWeight,
+        0.95*groundcoverTransitionBridge
+      );
+      vec3 groundcoverWarmEarth=mix(
+        groundcoverTone,groundcoverNativeSoil,0.40
+      )*vec3(1.10,0.985,0.865);
+      vec3 groundcoverMossEarth=mix(
+        groundcoverTone,groundcoverNativeSoil,0.24
+      )*vec3(0.89,1.18,0.885);
+      vec3 groundcoverMutedOlive=mix(
+        groundcoverTone,groundcoverNativeSoil,0.08
+      )*vec3(0.91,1.085,0.935);
+      float groundcoverOutside=1.0-groundcoverTransition;
+      vec3 groundcoverMultitone=
+        groundcoverOutside*groundcoverOutside*groundcoverOutside*
+          groundcoverWarmEarth+
+        3.0*groundcoverOutside*groundcoverOutside*groundcoverTransition*
+          groundcoverMossEarth+
+        3.0*groundcoverOutside*groundcoverTransition*groundcoverTransition*
+          groundcoverMutedOlive+
+        groundcoverTransition*groundcoverTransition*groundcoverTransition*
+          groundcoverTone;
+      palette=mix(
+        groundcoverNativeSoil,groundcoverMultitone,groundcoverCompositeWeight
+      );
+      // H_EARTH_GEN3178_MULTITONE_END
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

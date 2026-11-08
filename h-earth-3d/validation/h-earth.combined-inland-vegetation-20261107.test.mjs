@@ -221,3 +221,101 @@ test('Gen3167 southern pilot: append only real native-admitted roots beyond orig
  if(process.env.RUNNER_TEMP)fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'h-earth-southern-pilot-native-receipt.json'),JSON.stringify(receipt,null,2)+'\n');
  console.log('H_EARTH_SOUTHERN_PILOT_NATIVE='+JSON.stringify(receipt));
 });
+
+
+test('Gen3176 systemic grass: preserve 17,637 originals and increase actual selected southern cover',async()=>{
+ const {pkg,visibleSurface}=await getSpecimen();
+ const opts={
+  visibleSurface,placementExclusion:(x,z)=>z>=EXCLUSION_Z,
+  baselineExclusion:()=>false,order:'CAMERA_FIRST',
+  priorityOrigin:{x:-200,z:-728},onProgress:()=>{},southernPilotEnabled:true
+ };
+ const baseline=await buildHEarthGlobalGroundCover(pkg,opts);
+ const candidate=await buildHEarthGlobalGroundCover(pkg,{...opts,systemicExpansionEnabled:true});
+ const again=await buildHEarthGlobalGroundCover(pkg,{...opts,systemicExpansionEnabled:true});
+ const oldN=baseline.receipt.instanceCount,added=candidate.receipt.instanceCount-oldN;
+ assert.equal(oldN,17637,'GEN3172_EXACT_17637_RECORD_COUNT_CHANGED');
+ assert.equal(baseline.receipt.southernPilot.addedRecords,205,'GEN3172_EXACT_SOUTHERN_205_CHANGED');
+ assert.equal(candidate.receipt.southernPilot.addedRecords,205,'GEN3172_SOUTHERN_PILOT_NOT_PRESERVED');
+ assert.equal(candidate.receipt.systemicExpansion.enabled,true,'SYSTEMIC_OPT_IN_NOT_RECORDED');
+ assert.equal(candidate.receipt.systemicExpansion.originalRecordCount,oldN,'SYSTEMIC_ORIGINAL_COUNT_MISMATCH');
+ assert.equal(candidate.receipt.systemicExpansion.addedRecords,added,'SYSTEMIC_EXTRA_COUNT_MISMATCH');
+ assert.ok(added>=1000,'INSUFFICIENT_SYSTEMIC_GEOMETRY_ADDED:'+added);
+ assert.deepEqual(candidate.records.subarray(0,baseline.records.length),baseline.records,'GEN3172_ORIGINAL_FLOAT32_PREFIX_CHANGED');
+ assert.deepEqual(candidate.recordIds.slice(0,oldN),baseline.recordIds,'GEN3172_ORIGINAL_GRASS_IDS_CHANGED');
+ assert.deepEqual(candidate.admittedRecords.subarray(0,oldN),baseline.admittedRecords,'GEN3172_ORIGINAL_ADMISSIONS_CHANGED');
+ assert.deepEqual(candidate.records,again.records,'SYSTEMIC_POPULATION_NOT_DETERMINISTIC');
+ assert.deepEqual(candidate.recordIds,again.recordIds,'SYSTEMIC_IDS_NOT_DETERMINISTIC');
+ assert.deepEqual(candidate.admittedRecords,again.admittedRecords,'SYSTEMIC_ADMISSION_NOT_DETERMINISTIC');
+ assert.ok(candidate.receipt.instanceCount<=MAX_GLOBAL_INSTANCES,'SYSTEMIC_MAX_GLOBAL_INSTANCES_EXCEEDED');
+ assert.ok(candidate.receipt.totalGpuBytes<=MAX_GLOBAL_BYTES,'SYSTEMIC_MAX_GLOBAL_GPU_BYTES_EXCEEDED');
+ assert.ok(manifest.rootCount*16+candidate.receipt.totalGpuBytes<MAX_TOTAL,'SYSTEMIC_COMBINED_GPU_BYTES_EXCEEDED');
+ assert.equal(manifest.rootCount,2858738);
+ const obstacles=pkg.landscapeCoverFootprints??[];
+ const insidePilot=(x,z)=>x>=-224&&x<=-160&&z>=-768&&z< -736;
+ let contacts=0,minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;
+ const sampledTiles=new Set(),sampledSourceClasses=new Set();
+ for(let i=oldN;i<candidate.receipt.instanceCount;i++){
+  const record=candidate.records.subarray(i*20,i*20+20),id=candidate.recordIds[i];
+  assert.ok(id.startsWith('SYSTEMIC:'),'SYSTEMIC_UNEXPECTED_GENERATOR:'+id);
+  assert.equal(candidate.admittedRecords[i],1,'SYSTEMIC_NOT_PRESENTATION_ADMITTED:'+id);
+  const [x,z,angle,width]=[record[12],record[13],record[14],record[15]];
+  assert.ok(z<EXCLUSION_Z,'SYSTEMIC_WOODLAND_JURISDICTION_COLLISION:'+id);
+  minX=Math.min(minX,x);maxX=Math.max(maxX,x);minZ=Math.min(minZ,z);maxZ=Math.max(maxZ,z);
+  const parsed=id.split(':'),tx=Number(parsed[1]),tz=Number(parsed[2]);
+  sampledTiles.add(tx+':'+tz);
+  for(let root=0;root<12;root++){
+   const p=transformHEarthGroundCoverRoot(candidate.template,root,x,z,angle,width);
+   assert.ok(p.z<EXCLUSION_Z,'SYSTEMIC_ROOT_WOODLAND_OVERLAP:'+id+':'+root);
+   if(tz===-1)assert.ok(insidePilot(p.x,p.z),'SYSTEMIC_PILOT_ROOT_OUTSIDE_EXISTING_PILOT:'+id+':'+root);
+   const support=visibleSurface.sample(p.x,p.z);
+   assert.ok(support&&Number.isFinite(support.y),'SYSTEMIC_ROOT_UNSUPPORTED:'+id+':'+root);
+   assert.equal(Math.fround(support.y),record[root],'SYSTEMIC_ROOT_HEIGHT_NOT_NATIVE_GROUNDED:'+id+':'+root);
+   const water=visibleSurface.water.sample(p.x,p.z);
+   if(water)assert.ok(support.y>water.y+.03,'SYSTEMIC_ROOT_WATER_OVERLAP:'+id+':'+root);
+   const a=inverseHEarthGroundCoverPoint(p.x,support.y,p.z),material=materialAt(a.x,a.z);
+   const permitted=material?.valid===true&&support.slope<=.35&&(
+    material.surfaceClass==='STONE_AND_SPARSE_SOIL'?material.soilDepth>=.035:
+    ['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)&&material.soilDepth>=.20);
+   assert.ok(permitted,'SYSTEMIC_ROOT_MATERIAL_EXCLUDED:'+id+':'+root);
+   assert.ok(obstacles.every(t=>Math.hypot(p.x-t.x,p.z-t.z)>=t.radius),'SYSTEMIC_ROOT_PROTECTED_OBSTACLE:'+id+':'+root);
+   sampledSourceClasses.add(material.surfaceClass);
+   contacts++;
+  }
+ }
+ assert.equal(contacts,added*12,'SYSTEMIC_ROOT_CONTACT_COUNT');
+ assert.ok(sampledTiles.size>=12,'SYSTEMIC_DISTRIBUTION_TOO_LOCAL:'+sampledTiles.size);
+ const sites=INLAND_SITES.map(site=>{
+  const observer={x:site.x,y:20,z:site.z};
+  const prior=selectHEarthGlobalGroundCoverDraws(baseline,observer);
+  const next=selectHEarthGlobalGroundCoverDraws(candidate,observer);
+  let original24=0,candidate24=0;
+  for(let i=0;i<baseline.records.length;i+=20)if(Math.hypot(baseline.records[i+12]-site.x,baseline.records[i+13]-site.z)<=24)original24++;
+  for(let i=0;i<candidate.records.length;i+=20)if(Math.hypot(candidate.records[i+12]-site.x,candidate.records[i+13]-site.z)<=24)candidate24++;
+  assert.ok(candidate24>=original24+12,'SYSTEMIC_DENSITY_NOT_INCREASED_NEAR_SITE:'+site.id+':'+original24+':'+candidate24);
+  assert.ok(next.visibleInstanceCount>=prior.visibleInstanceCount+64,'SYSTEMIC_SELECTION_NOT_VISIBLE:'+site.id+':'+prior.visibleInstanceCount+':'+next.visibleInstanceCount);
+  assert.ok(next.visibleInstanceCount<=4096&&next.draws.length<=64,'SYSTEMIC_FRAME_VISIBILITY_LIMIT');
+  return {...site,oldPhysicalWithin24m:original24,newPhysicalWithin24m:candidate24,
+   oldSelected:prior.visibleInstanceCount,newSelected:next.visibleInstanceCount,
+   oldDraws:prior.draws.length,newDraws:next.draws.length};
+ });
+ const oldHash=createHash('sha256').update(Buffer.from(baseline.records.buffer,baseline.records.byteOffset,baseline.records.byteLength)).digest('hex');
+ const prefixHash=createHash('sha256').update(Buffer.from(candidate.records.buffer,candidate.records.byteOffset,baseline.records.byteLength)).digest('hex');
+ assert.equal(oldHash,prefixHash,'GEN3172_ORIGINAL_RECORD_BYTES_HASH_CHANGED');
+ const renderer=fs.readFileSync(path.join(root,'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
+ assert.ok(renderer.includes('systemicExpansionEnabled: true'),'RENDERER_SYSTEMIC_OPT_IN_MISSING');
+ assert.ok(renderer.includes('palette=mix(palette,groundcoverTone,groundcoverWeight);'),'MATERIAL_SHADER_NOT_GEN3172_BASELINE');
+ const receipt={schema:'H_EARTH_GEN3176_SYSTEMIC_GRASS_NATIVE_RECEIPT_v1',
+  result:'SYSTEMIC_GRASS_NATIVE_PASS',sourceParent:'fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b',
+  oldRecords:oldN,newRecords:added,combinedRecords:candidate.receipt.instanceCount,
+  oldRecordHash:oldHash,preservedPrefixHash:prefixHash,originalGrassRecordsPreserved:true,
+  originalWoodlandRoots:manifest.rootCount,originalSouthernPilotRecords:205,
+  addedGrassRootContactsVerified:contacts,systemicTileCount:sampledTiles.size,
+  bounds:{minX,maxX,minZ,maxZ},surfaceClasses:[...sampledSourceClasses].sort(),
+  sites,globalGpuBytes:candidate.receipt.totalGpuBytes,globalGpuLimit:MAX_GLOBAL_BYTES,
+  combinedBudgetEstimate:manifest.rootCount*16+candidate.receipt.totalGpuBytes,combinedLimit:MAX_TOTAL,
+  nativeDeterminismTwice:true,originalMaterialShaderUnchanged:true,
+  ownerAndroidPhotoCameraReproduced:false,browserGpuExecuted:false,releaseAuthorized:false};
+ if(process.env.RUNNER_TEMP)fs.writeFileSync(path.join(process.env.RUNNER_TEMP,'h-earth-gen3176-systemic-native-receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+ console.log('H_EARTH_GEN3176_SYSTEMIC_GRASS_NATIVE='+JSON.stringify(receipt));
+});

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-08T10:23:59Z",
+  "generatedAt": "2026-11-08T11:23:52Z",
   "window": {
-    "start": "2026-10-09T10:23:59Z",
-    "end": "2026-11-08T10:23:59Z"
+    "start": "2026-10-09T11:23:52Z",
+    "end": "2026-11-08T11:23:52Z"
   },
   "dimensions": {
     "requestPath": [
@@ -118,7 +118,27 @@
         "visits": 1
       },
       {
-        "value": "/frontier/waste/",
+        "value": "/laws/categories/integrity/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/test/reverse-audit/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/test/result-and-record/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -143,22 +163,12 @@
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/reverse-audit/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/water/",
+        "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -168,12 +178,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/categories/integrity/",
+        "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -203,22 +213,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/research/evidence-and-sources/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/campaigns/rob/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1453,
-        "visits": 1378
+        "pageLoads": 1454,
+        "visits": 1379
       },
       {
         "value": "CN",
@@ -272,12 +272,12 @@
         "visits": 10
       },
       {
-        "value": "MX",
-        "pageLoads": 2,
-        "visits": 2
+        "value": "SG",
+        "pageLoads": 1,
+        "visits": 1
       },
       {
-        "value": "SG",
+        "value": "MX",
         "pageLoads": 1,
         "visits": 1
       }

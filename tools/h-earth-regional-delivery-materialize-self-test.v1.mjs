@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import {prioritizeRegionalPackets} from '../showroom/globe/h-earth/render/regional-grass-delivery.v1.js';
 import {groupSourceTiles,buildRegionBuffers,reconstructSourceRootBytes} from './h-earth-regional-delivery-materialize.v1.mjs';
 
 const tiles=[
@@ -28,4 +29,12 @@ assert.throws(()=>reconstructSourceRootBytes(badPackets,6),/DUPLICATE_SOURCE_TIL
 const mutated=packets.map(p=>({...p,compressed:Buffer.from(p.compressed)}));
 mutated[0].compressed[mutated[0].compressed.length-8]^=1;
 assert.throws(()=>reconstructSourceRootBytes(mutated,6));
-console.log(JSON.stringify({schema:'H_EARTH_REGIONAL_MATERIALIZER_SELF_TEST_v1',result:'PASS',tiles:tiles.length,roots:6,regions:2,originalOrderReconstructed:true,duplicateRejected:true,corruptionRejected:true}));
+
+const candidates=[{id:'0:0'},{id:'-5:-7'},{id:'1:-10'}];
+const nearFourTrees=prioritizeRegionalPackets(candidates,{x:-139.4,z:-194.5});
+assert.equal(nearFourTrees[0].region.id,'-5:-7');
+const nearCavern=prioritizeRegionalPackets(candidates,{x:40,z:-300});
+assert.equal(nearCavern[0].region.id,'1:-10');
+assert.throws(()=>prioritizeRegionalPackets(candidates,{x:NaN,z:-300}),/CAMERA_INVALID/);
+
+console.log(JSON.stringify({schema:'H_EARTH_REGIONAL_MATERIALIZER_SELF_TEST_v1',result:'PASS',tiles:tiles.length,roots:6,regions:2,originalOrderReconstructed:true,duplicateRejected:true,corruptionRejected:true,cameraPriorityReordered:true}));

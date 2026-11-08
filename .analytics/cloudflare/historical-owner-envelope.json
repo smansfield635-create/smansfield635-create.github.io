@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-08T04:25:42Z",
+  "generatedAt": "2026-11-08T05:24:52Z",
   "window": {
-    "start": "2026-08-10T04:25:42Z",
-    "end": "2026-11-08T04:25:42Z"
+    "start": "2026-08-10T05:24:52Z",
+    "end": "2026-11-08T05:24:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,6 +30,14 @@
         "pageLoads": 60,
         "visits": 10
       },
+      "/index.html": {
+        "pageLoads": 110,
+        "visits": 0
+      },
+      "/": {
+        "pageLoads": 940,
+        "visits": 680
+      },
       "/laws/": {
         "pageLoads": 100,
         "visits": 0
@@ -48,14 +56,6 @@
       },
       "/evidence/": {
         "pageLoads": 90,
-        "visits": 0
-      },
-      "/": {
-        "pageLoads": 940,
-        "visits": 680
-      },
-      "/index.html": {
-        "pageLoads": 110,
         "visits": 0
       },
       "/laws/research/methods-and-models/": {

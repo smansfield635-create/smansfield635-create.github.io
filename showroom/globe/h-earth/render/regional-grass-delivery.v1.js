@@ -153,7 +153,7 @@ export function createRegionalGrassStream({trusted,fetchImpl=globalThis.fetch,on
     }catch(error){
      if(ctrl.signal.aborted||disposed)return;
      failed=true;for(const other of inflight.values())other.abort();
-     onFatal({reason:String(error?.message??error),regionId:r.id,regionalFallbackRequired:true});
+     try{onFatal({reason:String(error?.message??error),regionId:r.id,regionalFallbackRequired:true});}catch{/* A fallback observer cannot reactivate a failed stream. */}
     }finally{
      inflight.delete(r.id);report();if(!disposed&&!failed)queueMicrotask(pump);
     }

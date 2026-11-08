@@ -29,7 +29,7 @@ const pathForRegion=id=>'grass-region.'+id.replace(':','.')+'.v1.bin.gz';
 export function groupSourceTiles(tiles,{stride=52,regionSideMeters=32}={}){
  assert(Array.isArray(tiles)&&tiles.length>0,'TILES_INVALID');
  const grouped=new Map(),ids=new Set();let first=0;
- for(const [tileIndex,tile] of tiles.entries()){
+ for(const [tileIndex,t] of tiles.entries()){
   assert(typeof t.id==='string'&&!ids.has(t.id),'TILE_ID_DUPLICATE');
   ids.add(t.id);
   assert(Number.isInteger(t.count)&&t.count>0&&Number.isInteger(t.baselineCount)&&t.baselineCount>=0&&t.baselineCount<=t.count,'TILE_COUNT_INVALID');

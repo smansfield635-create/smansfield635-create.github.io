@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-08T08:25:09Z",
+  "generatedAt": "2026-11-08T09:24:37Z",
   "window": {
-    "start": "2026-10-09T08:25:09Z",
-    "end": "2026-11-08T08:25:09Z"
+    "start": "2026-10-09T09:24:37Z",
+    "end": "2026-11-08T09:24:37Z"
   },
   "dimensions": {
     "requestPath": [
@@ -143,7 +143,7 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/rob/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -154,11 +154,6 @@
       },
       {
         "value": "/laws/test/reverse-audit/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -219,6 +214,11 @@
       },
       {
         "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
       }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-08T08:25:09Z",
+  "generatedAt": "2026-11-08T09:24:37Z",
   "window": {
-    "start": "2026-08-10T08:25:09Z",
-    "end": "2026-11-08T08:25:09Z"
+    "start": "2026-08-10T09:24:37Z",
+    "end": "2026-11-08T09:24:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3860,
-    "visits": 1150,
+    "pageLoads": 4010,
+    "visits": 1180,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3860,
-        "visits": 1150
+        "pageLoads": 4010,
+        "visits": 1180
       }
     },
     "byPath": {
@@ -36,10 +36,10 @@
       },
       "/": {
         "pageLoads": 940,
-        "visits": 650
+        "visits": 680
       },
       "/laws/": {
-        "pageLoads": 80,
+        "pageLoads": 100,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
@@ -70,12 +70,8 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/products/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 10
       },
       "/developer/": {
@@ -83,12 +79,20 @@
         "visits": 20
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 60,
+      "/showroom/": {
+        "pageLoads": 40,
         "visits": 10
+      },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -102,10 +106,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/showroom/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
@@ -116,6 +116,10 @@
       },
       "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 60,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -178,10 +182,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/integrity/consistency/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
@@ -211,14 +211,10 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 20,
-        "visits": 10
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -243,10 +239,6 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/build/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -279,7 +271,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 150,
+        "pageLoads": 260,
         "visits": 70
       },
       "/products/archcoin/allocation/": {
@@ -287,12 +279,12 @@
         "visits": 0
       },
       "/analytics-owner-device/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 30
       },
-      "/products/archcoin/": {
+      "/meet-sean-mansfield/": {
         "pageLoads": 10,
-        "visits": 10
+        "visits": 0
       },
       "/home/": {
         "pageLoads": 10,
@@ -321,16 +313,20 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2710,
+        "pageLoads": 2830,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 610,
-        "visits": 610
+        "pageLoads": 630,
+        "visits": 630
       },
       "(none)": {
         "pageLoads": 540,
         "visits": 540
+      },
+      "raw.githack.com": {
+        "pageLoads": 10,
+        "visits": 10
       }
     }
   }

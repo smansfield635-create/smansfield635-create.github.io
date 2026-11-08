@@ -1,5 +1,6 @@
 import {fetchStartupAsset} from './precomputed-oasis-soil.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
+import {loadRegionalGrassIndex,createRegionalGrassStream} from './regional-grass-delivery.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
 const MANIFEST_SHA256='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
@@ -101,4 +102,22 @@ export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldCont
  const result={...presentation,loading:{manifestMilliseconds,downloadMilliseconds,verificationMilliseconds,decompressionMilliseconds,decodeMilliseconds:performance.now()-decodeStarted,milliseconds:performance.now()-started,compressedBytes:manifest.compressedBytes,rawBytes:bytes.byteLength,source:'PRECOMPUTED_EXACT_ACCEPTED_PLANTING'}};
  if(decoded)packedPlans.set(result,decoded.plan);
  return result;
+}
+
+/** Authenticated regional path. The existing complete-population loader above
+ * remains the unchanged default and explicit fallback until asset adoption. */
+export async function prepareRegionalPrecomputedGrass({manifestUrl,manifestSha256,
+ fetchImpl=globalThis.fetch,signal,onRegion,onProgress=()=>{},onFatal=()=>{},maxInflight=2}={}){
+ if(!manifestUrl||typeof onRegion!=='function')fail('REGIONAL_CONFIGURATION_INCOMPLETE');
+ const trusted=await loadRegionalGrassIndex({
+  manifestUrl:new URL(manifestUrl,import.meta.url),manifestSha256,fetchImpl,signal
+ });
+ const stream=createRegionalGrassStream({trusted,fetchImpl,onRegion,onProgress,onFatal,maxInflight});
+ return Object.freeze({
+  schema:'H_EARTH_REGIONAL_GRASS_STAGED_STREAM_v1',
+  acceptedSourceRoots:trusted.index.sourceRoots,
+  receipt:trusted.index.sourceManifest.receipt,
+  habitat:trusted.habitat,
+  stream
+ });
 }

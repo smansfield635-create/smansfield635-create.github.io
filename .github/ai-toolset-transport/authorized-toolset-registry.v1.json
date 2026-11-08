@@ -2538,6 +2538,120 @@
       "continuationRule": "ONLY_AFTER_NATIVE_EIGHT_PATH_PREFLIGHT_ROUTER_AND_NINTH_PATH_REFUSAL_PASS_WITH_SEPARATE_WEST_REVIEW",
       "terminationRule": "READ_ONLY_QUALIFICATION_TERMINATES_AFTER_RECEIPT_RETURN_NO_MUTATION_MERGE_OR_RELEASE_AUTHORITY",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_REGIONAL_PACKET_READONLY_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "H_EARTH_REGIONAL_VERIFIER_READONLY_QUALIFICATION_BINDING_20261108_001",
+      "operationClass": "H_EARTH_REGIONAL_PACKET_FIXED_BINARY_READONLY_QUALIFICATION",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_GEN3181_REGIONAL_PACKET_PROOF_ADAPTER_V1",
+      "exactToolingHead": "1b04c57a7efc521d763ee337a6fe9eb98c39d875",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport",
+          "h-earth-3d/evidence/regional-loading-v1"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/h-earth-regional-packet-qualification-adapter.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_REGIONAL_PACKET_BINARY_QUALIFICATION_INPUT_v1",
+        "required": [
+          "executionHolder"
+        ],
+        "allowed": [
+          "executionHolder"
+        ],
+        "properties": {
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "H_EARTH_REGIONAL_PACKET_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "executionHolder",
+          "sourceHead",
+          "frozenVegetationHead",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "showroom/",
+        "h-earth-3d/",
+        "assets/",
+        ".github/",
+        "tools/"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+      "successDisposition": "RETURN_AUTHENTIC_H_EARTH_REGIONAL_PACKET_BINARY_PROOF_RECEIPT_ONLY",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_FIRST_BINARY_PROOF_FAILURE",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_BINDING_FAILURE",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "CONTINUE_TO_DELIVERY_IMPLEMENTATION_ONLY_AFTER_VERIFIED_FULL_ROOT_RECONSTRUCTION_AND_REGION_SIZE_CAMERA_COVERAGE_PROOF",
+      "terminationRule": "READ_ONLY_QUALIFICATION_TERMINATES_AFTER_RECEIPT_NO_PRODUCT_MUTATION_MERGE_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

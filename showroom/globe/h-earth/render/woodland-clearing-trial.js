@@ -65,9 +65,9 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   const canopy=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);
   const clump=.58*clearingCoverField(x,z,3.0,'CLUMPS')+.42*clearingCoverField(x,z,7.3,'GLADES');
   const exposure=clearingCoverField(x,z,5.1,'DRY_SOIL');
-  const cover=Math.max(.16,Math.min(.96,.66+1.7*(clump-.5)-.20*canopy-.24*(exposure-.5)));
+  const cover=Math.max(.52,Math.min(.98,.86+.85*(clump-.5)-.11*canopy-.16*(exposure-.5)));
   if(!eligible(x,z,.65)||hash(id,'clump-admission')>cover||hash(id,'clear-grass-edge-selection')>=clearingGrassInteriorWeight(x,z,id))continue;
-  const start=grass.vertices.length,roots=[],blades=4+Math.floor(hash(id,'blade-count')*5),axis=hash(id,'clump-axis')*Math.PI*2;
+  const start=grass.vertices.length,roots=[],blades=6+Math.floor(hash(id,'blade-count')*4),axis=hash(id,'clump-axis')*Math.PI*2;
   for(let k=0;k<blades;k++){
    const a=axis+k*2.399+(hash(id,`angle${k}`)-.5)*.45,offset=.035+.20*hash(id,`offset${k}`),r=root(x+Math.cos(a)*offset,z+Math.sin(a)*offset);
    if(!r)throw Error('CLEARING_GRASS_ROOT_MISSING');
@@ -90,7 +90,7 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   manifest.push({id,kind:'ROCK',x,y:g.y,z,stoneVertexStart:start,stoneVertexCount:stone.vertices.length-start,crownRadius:r,footprintClear:true,support:{minimumBurial:.10,downwardShift:0,minimumMeasuredBurial:.10,witnesses:[{x,z,surfaceY:g.y,meshY:g.y-.10,groundTriangle:g.triangle,burial:.10}]},recipe:'CLEARING_SMALL_IRREGULAR_ROCK'});addedRocks.push(id);
  }
  for(let j=0;j<20;j++){
-  const id=`CLEARING_UNDERSTORY_${j}`,x=B.minX+2+hash(id,'x')*28,z=B.minZ+2+hash(id,'z')*28;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);if(!eligible(x,z,.65)||hash(id,'understory-admission')>.35+.55*shade)continue;
+  const id=`CLEARING_UNDERSTORY_${j}`,x=B.minX+2+hash(id,'x')*28,z=B.minZ+2+hash(id,'z')*28;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);if(!eligible(x,z,.65)||hash(id,'understory-admission')>.77+.21*shade)continue;
   const start=grass.vertices.length,r=root(x,z),roots=[],leafOrigins=[],stem=[];
   for(let k=0;k<2;k++)for(let n=0;n<4;n++){const a=n*Math.PI/2;stem.push(vertex(grass,[r[0]+Math.cos(a)*.06,r[1]+k*.23,r[2]+Math.sin(a)*.06],[94,75,43,255],1,[n/4,k]));}
   for(let n=0;n<4;n++){const v=grass.vertices[stem[n]],g=ground(v.x,v.z);if(!g)throw Error('CLEARING_UNDERSTORY_ROOT_MISSING');v.y=g.y-.022;roots.push({x:v.x,y:v.y,z:v.z,vertexIndex:stem[n]});}
@@ -102,7 +102,7 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   manifest.push({id,kind:'GRASS',x,y:r[1],z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:36,rootPoints:roots,leafOrigins,crownRadius:.65,footprintClear:true,recipe:'CLEARING_LOW_LEAFY_UNDERSTORY',habitatPatch:'WOODLAND_CLEARING_2629'});addedShrubs.push(id);
  }
  for(let j=0;j<72;j++){
-  const id=`CLEARING_LITTER_${j}`,x=B.minX+1+hash(id,'x')*30,z=B.minZ+1+hash(id,'z')*30;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);const exposure=clearingCoverField(x,z,5.1,'DRY_SOIL');if(!eligible(x,z,.32)||hash(id,'litter-admission')>.28+.52*shade+.21*exposure)continue;
+  const id=`CLEARING_LITTER_${j}`,x=B.minX+1+hash(id,'x')*30,z=B.minZ+1+hash(id,'z')*30;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);const exposure=clearingCoverField(x,z,5.1,'DRY_SOIL');if(!eligible(x,z,.32)||hash(id,'litter-admission')>.66+.22*shade+.09*exposure)continue;
   const g=ground(x,z),a=hash(id,'angle')*Math.PI*2,start=grass.vertices.length;
   blade(grass,[x,g.y+.012,z],[Math.cos(a),.04,Math.sin(a)],.13+.12*hash(id,'length'),.043,.009,[112,93,54,255],2);
   const contacts=[];

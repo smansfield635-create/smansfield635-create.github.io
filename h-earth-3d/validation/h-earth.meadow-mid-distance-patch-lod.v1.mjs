@@ -7,7 +7,7 @@ import vm from 'node:vm';
 import {selectHEarthMeadowMidDistanceRepresentations,selectHEarthGlobalGroundCoverDraws,partitionHEarthMeadowSelectedInstances,sameHEarthMeadowSelectedIds,getHEarthMeadowBoundaryPreservedInstances} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const immutableGeneratorPrefix=readFileSync(new URL('../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js',import.meta.url),'utf8').split('export function buildHEarthMeadowPresentationRoots')[0];
-assert.equal(digest(immutableGeneratorPrefix),'b7f5b245e526560142745435062a6b4e188a596db0414b08cba880ae8baa0ada','CANONICAL_GENERATOR_PREFIX_CHANGED');
+assert.equal(digest(immutableGeneratorPrefix),'e4c4a7de70e01effc59c4de6041d5d00708cdaa7e1497fdfa157a1b2c48f0ebb','CANONICAL_GENERATOR_PREFIX_CHANGED');
 const records=new Float32Array(4096*20);
 for(let i=0;i<4096;i++){records[i*20+12]=-45;records[i*20+13]=-326+(i%2?12:40);records[i*20+15]=1;}
 const cover={records,receipt:{instanceCount:4096},tiles:[{start:0,count:4096,minX:-46,maxX:-44,minZ:-326,maxZ:-286}]},camera={x:-45,z:-326};

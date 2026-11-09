@@ -5,6 +5,17 @@ const SOURCE_ROOTS=2858738;
 const SOURCE_RAW_SHA256='bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97';
 const SOURCE_MANIFEST_SHA256='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
 const REGION_SIDE=32,LOCAL_RADIUS=24,FULL_RADIUS=64;
+// A network stall must settle into the authenticated global fallback, not
+// occupy a regional fetch slot forever. The same deadline includes body read.
+const REQUEST_TIMEOUT_MS=30000;
+function boundedSignal(external,timeoutMs=REQUEST_TIMEOUT_MS){
+ const controller=new AbortController();let timedOut=false;
+ const forwardAbort=()=>controller.abort(external?.reason);
+ if(external?.aborted)forwardAbort();else external?.addEventListener('abort',forwardAbort,{once:true});
+ const timer=setTimeout(()=>{timedOut=true;controller.abort();},timeoutMs);
+ return{signal:controller.signal,timedOut:()=>timedOut,
+  release(){clearTimeout(timer);external?.removeEventListener('abort',forwardAbort);}};
+}
 const authenticatedPlans=new WeakSet();
 function freezeIndex(value){
  if(value&&typeof value==='object'&&!Object.isFrozen(value)){
@@ -29,8 +40,9 @@ export function prioritizeRegionalPackets(regions,camera){
 }
 async function fetchExact(url,{fetchImpl=globalThis.fetch,signal,byteLength,sha256,attempts=2}){
  for(let trial=0;trial<attempts;trial++){
+  const deadline=boundedSignal(signal);
   try{
-   const response=await fetchImpl(url,{signal});
+   const response=await fetchImpl(url,{signal:deadline.signal});
    if(!response.ok){
     const error=new Error('HTTP_'+response.status);
     error.retryable=[408,429,500,502,503,504].includes(response.status);
@@ -38,13 +50,15 @@ async function fetchExact(url,{fetchImpl=globalThis.fetch,signal,byteLength,sha2
     throw error;
    }
    const bytes=new Uint8Array(await response.arrayBuffer());
+   if(deadline.timedOut())fail('FETCH_TIMEOUT');
    if(bytes.length!==byteLength||await digest(bytes)!==sha256)fail('COMPRESSED_INTEGRITY');
    return bytes;
   }catch(error){
    if(signal?.aborted)throw error;
+   if(deadline.timedOut())fail('FETCH_TIMEOUT');
    if(trial===0&&(error instanceof TypeError||error?.retryable===true))continue;
    throw error;
-  }
+  }finally{deadline.release();}
  }
  fail('UNREACHABLE_TRANSPORT');
 }
@@ -109,9 +123,17 @@ function decodeRegion(r,raw){
 // authenticate a new planting source or permit product promotion.
 export async function loadRegionalGrassIndex({manifestUrl,manifestSha256,fetchImpl=globalThis.fetch,signal}={}){
  if(!manifestUrl||!/^[a-f0-9]{64}$/.test(manifestSha256??''))fail('PINNED_MANIFEST_REQUIRED');
- const response=await fetchImpl(manifestUrl,{signal});
- if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
- const bytes=new Uint8Array(await response.arrayBuffer());
+ const deadline=boundedSignal(signal);
+ let bytes;
+ try{
+  const response=await fetchImpl(manifestUrl,{signal:deadline.signal});
+  if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
+  bytes=new Uint8Array(await response.arrayBuffer());
+  if(deadline.timedOut())fail('MANIFEST_TIMEOUT');
+ }catch(error){
+  if(deadline.timedOut())fail('MANIFEST_TIMEOUT');
+  throw error;
+ }finally{deadline.release();}
  if(await digest(bytes)!==manifestSha256)fail('MANIFEST_INTEGRITY');
  const index=freezeIndex(validateIndex(JSON.parse(new TextDecoder().decode(bytes))));
  const habitatCompressed=await fetchExact(new URL(index.habitat.path,manifestUrl),{

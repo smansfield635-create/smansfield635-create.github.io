@@ -1928,7 +1928,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
           node tools/repository-ai-entry-router.mjs --self-test
-          node --test tools/ai-room-transport/successor-compatibility-validator.v1.test.mjs
+          node tools/ai-room-transport/successor-compatibility-self-test.v1.mjs
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import assert from 'node:assert/strict';

@@ -1861,7 +1861,7 @@ jobs:
               assert(start>=0&&end>start,'CONTROLLED_FAILURE_SOURCE_MARKER_MISSING');
               const replacement="const task=Promise.reject(new Error('GEN3187_CONTROLLED_BACKGROUND_VEGETATION_FAILURE'));";
               injected=true;
-              await r.fulfill({response,body:source.slice(0,start)+replacement+source.slice(end+13)});
+              await r.fulfill({response,body:source.slice(0,start)+replacement+source.slice(end+'        }});'.length)});
             });
             await failPage.goto(base+'/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
             await failPage.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().vegetationBackground?.phase==='FAILED',null,{timeout:420000,polling:100});
@@ -1907,3 +1907,43 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+  # Gen3188 tooling validation on the candidate PR itself; source-only CI.
+  # Does not qualify Gen3187 browser behavior or establish adoption authority.
+  gen3188-tooling-native:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3188-exact-head-browser-tooling-20261108' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact tooling candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate repository router and exact workflow profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          node tools/repository-ai-entry-router.mjs --self-test
+          node --test tools/ai-room-transport/successor-compatibility-validator.v1.test.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const router=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const workflow=fs.readFileSync('.github/workflows/h-earth-neutral-exact-head-runner.yml','utf8');
+          const path='.github/workflows/h-earth-neutral-exact-head-runner.yml';
+          const owners=router.projects.filter(p=>p.ownedExactPaths?.includes(path)).map(p=>p.projectId);
+          assert.deepEqual(owners,['H_EARTH']);
+          assert.equal(workflow.split('  gen3188-tooling-native:').length,2);
+          assert.equal(workflow.split('  gen3187-terrain-first:').length,2);
+          assert(workflow.includes("inputs.route_query != 'qualification=gen3187-terrain-first-v1'"));
+          assert(workflow.includes("inputs.route_query == 'qualification=gen3187-terrain-first-v1'"));
+          assert(workflow.includes('7a2595ce83c68a865bc40460c343e01f918e7da0'));
+          assert(workflow.includes('edd3c2047d3d062eb8d60325410af8ae8f3a6fa5'));
+          assert(workflow.includes("node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only"));
+          assert(workflow.includes('  gen3150-material-first-hit:'));
+          console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
+          NODE

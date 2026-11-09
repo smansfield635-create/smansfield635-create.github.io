@@ -409,7 +409,7 @@ jobs:
               assert.ok(route.indexOf('present(intake.getNavigationState());')<route.indexOf('interactiveReady=true;'),'CONTROLS_BEFORE_TERRAIN_SUBMISSION');
               assert.ok(route.indexOf('loader.enableControls(intake.getNavigationState());')<route.indexOf('requestAnimationFrame(()=>setTimeout(startBackgroundVegetation,0));'),'VEGETATION_BLOCKS_CONTROLS');
               for(const marker of ['function enableControls(state){','function observeInput(proposal,state){','function observePresentation(state,frame){','nextAnimationFrameOpportunityMilliseconds','button.disabled=false']) assert.ok(loader.includes(marker),'GEN3187_LOADER_MARKER_MISSING:'+marker);
-              NODE
+          NODE
               jq -n --arg target "$EXACT_TARGET_SHA" '{schema:"H_EARTH_GEN3187_SOURCE_APPLICABILITY_v1",result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",candidateHead:$target,historicalGen2694Validator:"INAPPLICABLE_TO_EXACT_GEN3187",routeBlob:"c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1",historicalValidationPreserved:true,browserExecuted:false,physicalDeviceAcceptance:false,releaseAuthorized:false}' > /tmp/h-earth-exact-evidence/modern-source-binding.json
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json

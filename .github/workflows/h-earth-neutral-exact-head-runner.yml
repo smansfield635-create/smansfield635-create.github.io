@@ -545,7 +545,7 @@ jobs:
              const root=doc.querySelector('#h-earth-functional-landscape-route');
              const c=doc.querySelector('#h-earth-functional-landscape-canvas');
              const enter=doc.querySelector('#h-earth-loading-screen [data-enter]');
-             return {at:performance.now(),sourceFound:!!api,ready:root?.dataset.run8eReady,worldFrameReady:root?.dataset.worldFirstFrameReady,error:root?.dataset.run8eError,vegetationState:root?.dataset.vegetationState,canvasWidth:c?.width,canvasHeight:c?.height,canvasPointerEvents:c?getComputedStyle(c).pointerEvents:null,enterDisabled:enter?.disabled,input,background:gpu?.vegetationBackground??null,routeTiming:gpu?.timing,frames:(gpu?.frameRecords||[]).slice(-12),counter:gpu?.counters,intake:api?.getIntakeReceipt?.()?.currentNavigationState??null,diagnostic:api?.getReceipt?.()?.singleOwnerVegetationQualification??null};
+             return {at:performance.now(),sourceFound:!!api,ready:root?.dataset.run8eReady,worldFrameReady:root?.dataset.worldFirstFrameReady,error:root?.dataset.run8eError,vegetationState:root?.dataset.vegetationState,canvasWidth:c?.width,canvasHeight:c?.height,canvasPointerEvents:c?getComputedStyle(c).pointerEvents:null,enterDisabled:enter?.disabled,input,background:gpu?.vegetationBackground??null,routeTiming:gpu?.timing,frames:(gpu?.frameRecords||[]).slice(-64),counter:gpu?.counters,intake:api?.getIntakeReceipt?.()?.currentNavigationState??null,diagnostic:api?.getReceipt?.()?.singleOwnerVegetationQualification??null};
            });
            const snap=async label=>{const v=await observe();proof.samples.push({label,v});return v};
            const wait=async(label,pred,timeout=300000)=>{const start=Date.now();while(Date.now()-start<timeout){const v=await observe();if(v.error==='true')throw Error(label+':ROUTE_ERROR:'+JSON.stringify(v));if(pred(v))return await snap(label);await sleep(250)}throw Error(label+':TIMEOUT:'+JSON.stringify(await observe()))};
@@ -562,7 +562,7 @@ jobs:
            page.on('response',r=>{if(r.status()>=400)proof.httpFailures.push({url:r.url(),status:r.status()})});
            if(opts.failure)await page.route('**/assets/precomputed-grass.v1.json*',async route=>{proof.fixtureIntercepted=true;await route.fulfill({status:503,contentType:'application/json',body:'{"error":"GEN3187_CONTROLLED_FAILURE"}'})});
            try{
-             const url=opts.diagnostic?base+'vegetation-prototype.html':base;
+             const url=opts.diagnostic?base+'vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees':base;
              proof.url=url;
              await page.goto(url,{waitUntil:'domcontentloaded',timeout:90000});
              if(opts.diagnostic){
@@ -622,16 +622,20 @@ jobs:
              try{await snap('failure-final-state')}catch{}
              try{await screenshot('failure')}catch{}
            }finally{
-             const expectedConsole=opts.failure?proof.consoleErrors.filter(s=>s.includes('H_EARTH_BACKGROUND_VEGETATION_FAILED')):[];
+             const expectedConsole=opts.failure?proof.consoleErrors.filter(s=>s.includes('H_EARTH_BACKGROUND_VEGETATION_FAILED')||s.includes('GRATITUDE_RENDERER_STARTUP_FAILURE')||s.includes('Failed to load resource: the server responded with a status of 503')):[];
              const unexpectedConsole=proof.consoleErrors.filter(s=>!expectedConsole.includes(s));
+   const expectedRequestFailures=opts.failure?proof.requestFailures.filter(x=>x.url.includes('/render/assets/precomputed-grass.v1.json?sha=')&&x.error?.errorText==='net::ERR_ABORTED'):[];
+   const unexpectedRequests=proof.requestFailures.filter(x=>!expectedRequestFailures.includes(x));
              const expectedHttp=opts.failure?proof.httpFailures.filter(x=>x.status===503&&x.url.includes('precomputed-grass.v1.json')):[];
              const unexpectedHttp=proof.httpFailures.filter(x=>!expectedHttp.includes(x));
              proof.expectedConsoleErrors=expectedConsole;
+   proof.expectedRequestFailures=expectedRequestFailures;
              proof.expectedHttpErrors=expectedHttp;
              proof.unexpectedConsoleErrors=unexpectedConsole;
+   proof.unexpectedRequestFailures=unexpectedRequests;
              proof.unexpectedHttpErrors=unexpectedHttp;
-             if(proof.pageErrors.length||proof.requestFailures.length||unexpectedConsole.length||unexpectedHttp.length){
-               proof.result='FAIL_CLOSED';record.errors.push({scenario:name,firstFailure:'UNEXPECTED_BROWSER_OR_NETWORK_ERROR',pageErrors:proof.pageErrors,requestFailures:proof.requestFailures,unexpectedConsole,unexpectedHttp});
+             if(proof.pageErrors.length||unexpectedRequests.length||unexpectedConsole.length||unexpectedHttp.length){
+               proof.result='FAIL_CLOSED';record.errors.push({scenario:name,firstFailure:'UNEXPECTED_BROWSER_OR_NETWORK_ERROR',pageErrors:proof.pageErrors,unexpectedRequests,unexpectedConsole,unexpectedHttp});
              }
              proof.completedAt=new Date().toISOString();
              await context.close();

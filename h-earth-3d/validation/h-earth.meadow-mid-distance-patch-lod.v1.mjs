@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import vm from 'node:vm';
-import {selectHEarthMeadowMidDistanceRepresentations,selectHEarthGlobalGroundCoverDraws,partitionHEarthMeadowSelectedInstances,sameHEarthMeadowSelectedIds,getHEarthMeadowBoundaryPreservedInstances} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
+import {selectHEarthMeadowMidDistanceRepresentations,selectHEarthGlobalGroundCoverDraws,partitionHEarthMeadowSelectedInstances,sameHEarthMeadowSelectedIds,getHEarthMeadowBoundaryPreservedInstances} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?rev=gen3200-scoped-runtime-clearing-20261109-v1';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const immutableGeneratorPrefix=readFileSync(new URL('../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js',import.meta.url),'utf8').split('export function buildHEarthMeadowPresentationRoots')[0];
 assert.equal(digest(immutableGeneratorPrefix),'e4c4a7de70e01effc59c4de6041d5d00708cdaa7e1497fdfa157a1b2c48f0ebb','CANONICAL_GENERATOR_PREFIX_CHANGED');

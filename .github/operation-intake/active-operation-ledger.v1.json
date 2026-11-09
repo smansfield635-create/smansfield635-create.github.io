@@ -15349,6 +15349,50 @@
       "scopeHash": "851cf6a5f1740f2f02695effe729b8166674fba36df7a0914a98bc8c1f58c9cf",
       "state": "ADMITTED_LOCKED"
     },
+    "854cd48a00803f31145d6aed5b787e2a641f7646f8c8a23be06c4655c219bc43": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d08fe2da638f3fe045202a7a4d46f8e59d5c72e8",
+          "lockGeneration": 3200,
+          "lockScope": "H_EARTH:WOODLAND_CLEARING:RUNTIME_GROUNDCOVER_PRESENTATION:20261109:V1",
+          "operationId": "H_EARTH_RUNTIME_CLEARING_GROUNDCOVER_20261109_001",
+          "procedureLocatorDigest": "fd8b30225f3aecb84561b70bafe1e1058ae36dafceb28aa67b8fcde0675b6fcc",
+          "requestDigest": "41da19036c2722229e4c4acaadd9bb6a1d5102340b877d0e8062c4f40ea0d74a",
+          "scopeHash": "854cd48a00803f31145d6aed5b787e2a641f7646f8c8a23be06c4655c219bc43"
+        },
+        "bindingDigest": "f3ca73d219357bd7b09d4e522fb204e93d3f5f8789e21b7943c5e16e45929827",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e916e02306a88c20cfa3f306e565decfac855ac3e969f607eafe97d5241a8677",
+          "commentId": 6754374518,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42721495212,
+          "workflowSha": "d08fe2da638f3fe045202a7a4d46f8e59d5c72e8"
+        },
+        "lineageAnchorCommitSha": "529d8ea4179f84aa7261eba532e793a47f8ec141",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d08fe2da638f3fe045202a7a4d46f8e59d5c72e8",
+      "lockGeneration": 3200,
+      "lockScope": "H_EARTH:WOODLAND_CLEARING:RUNTIME_GROUNDCOVER_PRESENTATION:20261109:V1",
+      "operationId": "H_EARTH_RUNTIME_CLEARING_GROUNDCOVER_20261109_001",
+      "procedureLocatorDigest": "fd8b30225f3aecb84561b70bafe1e1058ae36dafceb28aa67b8fcde0675b6fcc",
+      "released": false,
+      "requestDigest": "41da19036c2722229e4c4acaadd9bb6a1d5102340b877d0e8062c4f40ea0d74a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "854cd48a00803f31145d6aed5b787e2a641f7646f8c8a23be06c4655c219bc43",
+      "state": "ADMITTED_LOCKED"
+    },
     "858e4ae75d0f74722bc34a122711309729eafbfd69183c5f8e81a57255b76dd6": {
       "governingHead": "7917ecb7b07a32e8a653a6e1534397b232cccd6b",
       "lockGeneration": 1472,
@@ -29613,7 +29657,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3199,
+  "lockGeneration": 3200,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

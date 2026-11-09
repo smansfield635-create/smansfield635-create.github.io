@@ -504,6 +504,153 @@ jobs:
           node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
           node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
 
+
+      - name: Gen3187 exact-candidate real Chromium acceptance capture
+        if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen3188-neutral-exact-head-chromium-tooling-20261108') || (github.event_name == 'workflow_dispatch' && inputs.target_sha == '7a2595ce83c68a865bc40460c343e01f918e7da0') }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '7a2595ce83c68a865bc40460c343e01f918e7da0'
+          mkdir -p /tmp/h-earth-exact-evidence
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory . >/tmp/h-earth-exact-server.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          ready=false
+          for i in $(seq 1 80); do if curl -fsS 'http://127.0.0.1:4173/showroom/globe/h-earth/' >/dev/null; then ready=true; break; fi; sleep 0.25; done
+          test "$ready" = true
+          cat > h-earth-gen3187-browser-qualification.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          const out='/tmp/h-earth-exact-evidence', candidate='7a2595ce83c68a865bc40460c343e01f918e7da0';
+          await fs.mkdir(out,{recursive:true});
+          const record={schema:'H_EARTH_GEN3187_EXACT_HEAD_BROWSER_QUALIFICATION_v1',productSha:candidate,status:'STARTED',tooling:'GEN3188_EXISTING_NEUTRAL_EXACT_HEAD_RUNNER',productionMutation:false,sourceSubstitutions:false,physicalAndroidAcceptance:false,independentExperienceAnchorAcceptance:false,scenarios:{},errors:[]};
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const base='http://127.0.0.1:4173/showroom/globe/h-earth/';
+          const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+          async function execute(name,opts={}){
+           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
+           const page=await context.newPage();
+           const proof={result:'IN_PROGRESS',startedAt:new Date().toISOString(),checks:[],samples:[],screenshots:[],pageErrors:[],consoleErrors:[],requestFailures:[],httpFailures:[],fixtureIntercepted:false};
+           record.scenarios[name]=proof;
+           const check=(value,code)=>{if(!value)throw Error(code);proof.checks.push(code)};
+           const observe=()=>page.evaluate(()=>{
+             const doc=document;
+             const owners=[window,...[...doc.querySelectorAll('iframe')].map(e=>{try{return e.contentWindow}catch{return null}}).filter(Boolean)];
+             const win=owners.find(w=>w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)||window;
+             const api=win.H_EARTH_RUN8E_PUBLIC_ROUTE;
+             const gpu=api?.getLiveGpuReceipt?.()??null;
+             const input=gpu?.inputPresentationReadiness??null;
+             const root=doc.querySelector('#h-earth-functional-landscape-route');
+             const c=doc.querySelector('#h-earth-functional-landscape-canvas');
+             const enter=doc.querySelector('#h-earth-loading-screen [data-enter]');
+             return {at:performance.now(),sourceFound:!!api,ready:root?.dataset.run8eReady,worldFrameReady:root?.dataset.worldFirstFrameReady,error:root?.dataset.run8eError,vegetationState:root?.dataset.vegetationState,canvasWidth:c?.width,canvasHeight:c?.height,canvasPointerEvents:c?getComputedStyle(c).pointerEvents:null,enterDisabled:enter?.disabled,input,background:gpu?.vegetationBackground??null,routeTiming:gpu?.timing,frames:(gpu?.frameRecords||[]).slice(-12),counter:gpu?.counters,intake:api?.getIntakeReceipt?.()?.currentNavigationState??null,diagnostic:api?.getReceipt?.()?.singleOwnerVegetationQualification??null};
+           });
+           const snap=async label=>{const v=await observe();proof.samples.push({label,v});return v};
+           const wait=async(label,pred,timeout=300000)=>{const start=Date.now();while(Date.now()-start<timeout){const v=await observe();if(v.error==='true')throw Error(label+':ROUTE_ERROR:'+JSON.stringify(v));if(pred(v))return await snap(label);await sleep(250)}throw Error(label+':TIMEOUT:'+JSON.stringify(await observe()))};
+           const screenshot=async label=>{const v={label};const raw=await page.screenshot({path:out+'/'+name+'-'+label+'.png',fullPage:true,timeout:30000});v.file=name+'-'+label+'.png';v.sha256=hash(raw);v.size=raw.length;const c=page.locator('#h-earth-functional-landscape-canvas');if(await c.count()){const b=await c.screenshot({path:out+'/'+name+'-'+label+'-canvas.png',timeout:30000});v.canvas=name+'-'+label+'-canvas.png';v.canvasHash=hash(b)}proof.screenshots.push(v);return v};
+           const drag=async()=>{const c=page.locator('#h-earth-functional-landscape-canvas'),b=await c.boundingBox();if(!b||b.width<300||b.height<150)throw Error('NATIVE_CANVAS_NOT_USABLE');const x=b.x+b.width*.5,y=b.y+b.height*.5;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+Math.min(170,b.width*.2),y+30,{steps:24});await page.mouse.up();await sleep(500)};
+           const report=async label=>{
+             const v=await page.evaluate(()=>{const b=document.querySelector('[data-copy-loading-report]'),t=document.querySelector('[data-loading-report-text]');if(!b||!t)return null;b.click();return t.value});
+             proof[label]={available:v!==null,bytes:v?.length??0,containsBackground:v?.includes('backgroundVegetation')??false,text:v?.slice(0,9000)};
+             check(v?.includes('backgroundVegetation'),label.toUpperCase()+'_BACKGROUND_REPORT_VISIBLE');
+           };
+           page.on('pageerror',e=>proof.pageErrors.push(e.message));
+           page.on('console',m=>{if(m.type()==='error')proof.consoleErrors.push(m.text())});
+           page.on('requestfailed',r=>proof.requestFailures.push({url:r.url(),error:r.failure()}));
+           page.on('response',r=>{if(r.status()>=400)proof.httpFailures.push({url:r.url(),status:r.status()})});
+           if(opts.failure)await page.route('**/assets/precomputed-grass.v1.json*',async route=>{proof.fixtureIntercepted=true;await route.fulfill({status:503,contentType:'application/json',body:'{"error":"GEN3187_CONTROLLED_FAILURE"}'})});
+           try{
+             const url=opts.diagnostic?base+'vegetation-prototype.html':base;
+             proof.url=url;
+             await page.goto(url,{waitUntil:'domcontentloaded',timeout:90000});
+             if(opts.diagnostic){
+               const end=await wait('diagnostic-replay-complete',v=>v.diagnostic?.result==='CAPTURED_POPULATED_CONTINUITY'&&v.ready==='true',480000);
+               const obs=end.diagnostic?.observations||[];
+               check(obs.filter(x=>/^FORWARD_/.test(x.label)).length===8,'DIAGNOSTIC_EIGHT_FORWARD');
+               check(obs.filter(x=>/^RETURN_/.test(x.label)).length===8,'DIAGNOSTIC_EIGHT_RETURN');
+               check(end.diagnostic.returnDistanceMeters<.01,'DIAGNOSTIC_EXACT_RETURN');
+               check(end.diagnostic.installedControlIdentityStable===true,'DIAGNOSTIC_CONTROL_IDENTITY_PRESERVED');
+               await screenshot('complete');
+             } else {
+               const first=await wait('terrain-first-controls',v=>v.input?.mode==='test'&&v.worldFrameReady==='true'&&v.counter?.gpuFramebufferPresentationCount>0,240000);
+               check(first.canvasPointerEvents==='auto','PUBLIC_CONTROLS_ENABLED');
+               check(first.enterDisabled===true,'ENTER_LOCKED_BEFORE_USER_CHANGE');
+               check(first.routeTiming?.firstFrameMilliseconds!=null,'CPU_TERRAIN_FRAME_SUBMITTED');
+               check(first.input.controlsEnabledMilliseconds!=null,'CONTROLS_TIME_RECORDED');
+               check(first.background?.phase!=='OWNER_PREPARED','FIRST_CONTROLS_BEFORE_GLOBAL_GRASS');
+               check(first.counter?.worldRebuildCount===0,'WORLD_IDENTITY_NO_REBUILD');
+               const firstImage=await screenshot('first-controls');
+               await drag();
+               const changed=await wait('changed-view-entry-ready',v=>v.input?.mode==='ready'&&v.enterDisabled===false,120000);
+               check(changed.intake?.sequence>first.intake?.sequence,'GESTURE_CHANGED_ACTUAL_NAVIGATION_SEQUENCE');
+               check(changed.intake?.yawDegrees!==first.intake?.yawDegrees||JSON.stringify(changed.intake?.position)!==JSON.stringify(first.intake?.position),'GESTURE_CHANGED_ACTUAL_CAMERA');
+               const l=changed.input;
+               check(l.firstInputCameraChangeMilliseconds!=null&&l.firstInputPoseRenderedMilliseconds!=null&&l.nextAnimationFrameOpportunityMilliseconds!=null,'THREE_INPUT_TIMINGS_PRESENT');
+               check(l.firstInputCameraChangeMilliseconds<=l.firstInputPoseRenderedMilliseconds&&l.firstInputPoseRenderedMilliseconds<=l.nextAnimationFrameOpportunityMilliseconds,'RENDERED_CHANGED_FRAME_PRECEDES_ENTRY');
+               check(l.firstInputPresentedFrame?.navigationSequence===l.renderedInputPose?.navigationSequence,'PRESENTED_FRAME_MATCHES_CHANGED_CAMERA');
+               check(changed.frames.some(f=>f.navigationSequence===l.renderedInputPose?.navigationSequence),'GPU_RECEIPT_CONTAINS_CHANGED_FRAME');
+               const laterImage=await screenshot('rendered-before-entry');
+               check(firstImage.canvasHash&&laterImage.canvasHash&&firstImage.canvasHash!==laterImage.canvasHash,'CHANGED_VIEW_CANVAS_PIXEL_HASH_DIFFERS');
+               await page.locator('#h-earth-loading-screen [data-enter]').click({timeout:15000});
+               const entered=await wait('entered-world',v=>v.input?.mode==='entered'&&v.ready==='true',30000);
+               check(entered.input.loaderDismissedMilliseconds>=l.nextAnimationFrameOpportunityMilliseconds,'ENTER_AFTER_CHANGED_FRAME_OPPORTUNITY');
+               await screenshot('entered-world');
+               if(opts.failure){
+                 const failed=await wait('controlled-vegetation-failure',v=>v.background?.phase==='FAILED',180000);
+                 check(proof.fixtureIntercepted,'CONTROLLED_NETWORK_FAILURE_INJECTED');
+                 check(Boolean(failed.background?.error),'BACKGROUND_FAILURE_RECORDED');
+                 check(failed.input?.mode==='entered'&&failed.ready==='true'&&failed.canvasPointerEvents==='auto','FAILURE_DOES_NOT_REVOKE_NAVIGATION');
+                 check(failed.counter?.gpuFramebufferPresentationCount>first.counter.gpuFramebufferPresentationCount,'GPU_SUBMISSION_CONTINUES');
+                 await report('failureReport');
+                 await screenshot('failure-navigation-survives');
+               }else{
+                 const complete=await wait('background-vegetation-prepared',v=>v.background?.phase==='OWNER_PREPARED',600000);
+                 check(Boolean(complete.background?.ownerReceipt),'ORIGINAL_VEGETATION_OWNER_PREPARED');
+                 check(Boolean(complete.background?.lastProgress),'BACKGROUND_VEGETATION_PROGRESS_TRUTHFUL');
+                 check(complete.background?.error==null&&complete.canvasPointerEvents==='auto'&&complete.ready==='true','CONTROLS_PERSIST_AFTER_BACKGROUND_COMPLETION');
+                 await report('completionReport');
+                 await screenshot('grass-prepared');
+               }
+             }
+             proof.result='PASS_BROWSER_RUNTIME_ONLY';
+           }catch(error){
+             proof.result='FAIL_CLOSED';
+             proof.firstFailure=String(error.stack||error);
+             record.errors.push({scenario:name,firstFailure:proof.firstFailure});
+             try{await snap('failure-final-state')}catch{}
+             try{await screenshot('failure')}catch{}
+           }finally{
+             const expectedConsole=opts.failure?proof.consoleErrors.filter(s=>s.includes('H_EARTH_BACKGROUND_VEGETATION_FAILED')):[];
+             const unexpectedConsole=proof.consoleErrors.filter(s=>!expectedConsole.includes(s));
+             const expectedHttp=opts.failure?proof.httpFailures.filter(x=>x.status===503&&x.url.includes('precomputed-grass.v1.json')):[];
+             const unexpectedHttp=proof.httpFailures.filter(x=>!expectedHttp.includes(x));
+             proof.expectedConsoleErrors=expectedConsole;
+             proof.expectedHttpErrors=expectedHttp;
+             proof.unexpectedConsoleErrors=unexpectedConsole;
+             proof.unexpectedHttpErrors=unexpectedHttp;
+             if(proof.pageErrors.length||proof.requestFailures.length||unexpectedConsole.length||unexpectedHttp.length){
+               proof.result='FAIL_CLOSED';record.errors.push({scenario:name,firstFailure:'UNEXPECTED_BROWSER_OR_NETWORK_ERROR',pageErrors:proof.pageErrors,requestFailures:proof.requestFailures,unexpectedConsole,unexpectedHttp});
+             }
+             proof.completedAt=new Date().toISOString();
+             await context.close();
+           }
+          }
+          try{
+           await execute('normal-public');
+           await execute('controlled-background-failure',{failure:true});
+           await execute('strict-diagnostic-replay',{diagnostic:true});
+          }finally{await browser.close()}
+          record.status=record.errors.length||Object.values(record.scenarios).some(s=>s.result!=='PASS_BROWSER_RUNTIME_ONLY')?'FAIL_CLOSED':'PASS_CHROMIUM_RUNTIME_ANCHOR_AND_ANDROID_PENDING';
+          record.claimCeiling='Actual hosted Chromium screen and software WebGL CPU submission only; does not establish real scanout, physical Android speedup, independent Experience Anchor approval, merge, release or deployment';
+          await fs.writeFile(out+'/gen3187-browser-qualification.json',JSON.stringify(record,null,2)+'\n');
+          console.log(JSON.stringify({result:record.status,errors:record.errors,scenarios:Object.fromEntries(Object.entries(record.scenarios).map(([k,v])=>[k,{result:v.result,checks:v.checks.length,screenshots:v.screenshots.length,firstFailure:v.firstFailure}]))},null,2));
+          if(record.status==='FAIL_CLOSED')process.exitCode=1;
+          NODE
+          node --check h-earth-gen3187-browser-qualification.mjs
+          node h-earth-gen3187-browser-qualification.mjs
+
       - name: Execute actual H-Earth route unchanged
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha != '7a2595ce83c68a865bc40460c343e01f918e7da0' }}
         env:

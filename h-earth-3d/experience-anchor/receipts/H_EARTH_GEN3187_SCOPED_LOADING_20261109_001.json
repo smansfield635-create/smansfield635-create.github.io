@@ -1,0 +1,61 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_SCOPED_PERFORMANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "ownerAuthorizationCommentId": 6744667321,
+  "reviewedAgainstAnchor": true,
+  "disposition": "SCOPED_ACCEPTED_WITH_LIMITATIONS",
+  "fullElevenInvariantPassClaimed": false,
+  "originalVideoPlaybackClaimed": false,
+  "androidPerformanceMeasured": false,
+  "experienceFile": {
+    "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "gitBlob": "c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1",
+    "sha256": "e9fbf9e0ec12992935243bec9aef0dd0f6216ff59f4b435c2c2b70b070647cb2"
+  },
+  "evidence": {
+    "chromiumRunId": 42570259969,
+    "artifactId": 13652229709,
+    "archiveSha256": "1f58b866c6f60d10bf558d57a073ec82f78788e5bb71fba585295e66d53e4794"
+  },
+  "checks": {
+    "FIRST_TERRAIN_FRAME": true,
+    "USER_DRIVEN_CHANGED_CAMERA_BEFORE_ENTER": true,
+    "BACKGROUND_VEGETATION_WHILE_NAVIGATION_AVAILABLE": true,
+    "NAVIGATION_SURVIVES_BACKGROUND_PREPARATION_FAILURE": true,
+    "NO_DEMONSTRATED_MATERIAL_GEOGRAPHIC_OR_VISUAL_DISCONTINUITY": true
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+    "NO_CONTINUOUS_VEGETATION_TRANSITION_RECORDING",
+    "PHYSICAL_ANDROID_PERFORMANCE_UNMEASURED",
+    "POST_FAULT_GESTURE_NOT_SEPARATELY_CAPTURED"
+  ],
+  "visualEvidence": [
+    "github-actions-artifact://42570259969/13652229709/terrain-first.png#sha256=36da52c23cd349d8c18ccf273dc48e9f9af71e1daeea1ef90ed986731ca4b9ff",
+    "github-actions-artifact://42570259969/13652229709/changed-camera.png#sha256=502d00a0badcd98e140edd3409483fdf1a6a229468f3257f593ad059ab246113",
+    "github-actions-artifact://42570259969/13652229709/vegetation-finished.png#sha256=308293303503afb9f2293d665b5a44ed6d977e096db0930c5f1bc3ed3b21cb7a"
+  ],
+  "interactionEvidence": [
+    "github-actions-artifact://42570259969/13652229709/changed-camera.png#sha256=502d00a0badcd98e140edd3409483fdf1a6a229468f3257f593ad059ab246113",
+    "github-actions-artifact://42570259969/13652229709/vegetation-fault-injected.png#sha256=a9e8cf308d4bb62b22fa90b7e4feec76f0f7cbcf344f215127df865b6eb61e15"
+  ],
+  "continuityEvidence": [
+    "github-actions-artifact://42570259969/13652229709/vegetation-finished.png#sha256=308293303503afb9f2293d665b5a44ed6d977e096db0930c5f1bc3ed3b21cb7a",
+    "github-actions-artifact://42570259969/13652229709/strict-diagnostic-replay.png#sha256=472c5e2f4bf3a4acce4542a03df45da85d836090e2100ed810b731c91fe191dc"
+  ],
+  "evidenceReview": {
+    "issue": 6426,
+    "commentId": 6747146056,
+    "scope": "BOUNDED_SCOPED_ACCEPTANCE_WITH_LIMITATIONS",
+    "distinctIndependentUserIdentityClaimed": false
+  },
+  "checkQualifications": {
+    "FIRST_TERRAIN_FRAME": "Native Chromium frame submitted; first terrain visible before vegetation completion, not physical Android display timing.",
+    "USER_DRIVEN_CHANGED_CAMERA_BEFORE_ENTER": "Observed mouse gesture, changed yaw and submitted changed camera frame precede Enter.",
+    "BACKGROUND_VEGETATION_WHILE_NAVIGATION_AVAILABLE": "Controls remained active in PREPARING state; subsequent OWNER_PREPARED is not proof of complete physical vegetation display.",
+    "NAVIGATION_SURVIVES_BACKGROUND_PREPARATION_FAILURE": "Nonterminal background fault retained controls and terrain; a distinct post-fault pointer traversal was not captured.",
+    "NO_DEMONSTRATED_MATERIAL_GEOGRAPHIC_OR_VISUAL_DISCONTINUITY": "Matched-camera screenshots preserve visible terrain, horizon and rocks across sampled states; continuity between images, original video equivalence and global-world continuity were not measured."
+  },
+  "scopeBoundary": "ONLY_EXACT_GEN3187_EARLY_NAVIGATION; NO_FULL_ELEVEN_INVARIANT_CLAIM; NO_PRODUCT_MERGE_OR_PUBLICATION_AUTHORITY"
+}

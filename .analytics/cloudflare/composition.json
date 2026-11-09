@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-09T08:30:26Z",
+  "generatedAt": "2026-11-09T09:28:20Z",
   "window": {
-    "start": "2026-10-10T08:30:26Z",
-    "end": "2026-11-09T08:30:26Z"
+    "start": "2026-10-10T09:28:20Z",
+    "end": "2026-11-09T09:28:20Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 542,
-        "visits": 542
+        "pageLoads": 543,
+        "visits": 543
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -133,12 +133,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -153,7 +153,7 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/rob/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -164,11 +164,6 @@
       },
       {
         "value": "/laws/test/reverse-audit/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -218,17 +213,22 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
+        "value": "/explore/frontier/energy/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/research/evidence-and-sources/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -246,8 +246,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1388,
-        "visits": 1388
+        "pageLoads": 1389,
+        "visits": 1389
       },
       {
         "value": "diamondgatebridge.com",
@@ -273,8 +273,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1429,
-        "visits": 1337
+        "pageLoads": 1430,
+        "visits": 1338
       },
       {
         "value": "CN",
@@ -305,8 +305,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1243,
-        "visits": 1184
+        "pageLoads": 1244,
+        "visits": 1185
       },
       {
         "value": "mobile",
@@ -322,8 +322,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 765,
-        "visits": 765
+        "pageLoads": 766,
+        "visits": 766
       },
       {
         "value": "Chrome",
@@ -364,8 +364,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 911,
-        "visits": 911
+        "pageLoads": 912,
+        "visits": 912
       },
       {
         "value": "Windows",
@@ -396,8 +396,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 765,
-        "visits": 765
+        "pageLoads": 766,
+        "visits": 766
       },
       {
         "value": "0",
@@ -408,8 +408,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1477,
-        "visits": 1413
+        "pageLoads": 1478,
+        "visits": 1414
       },
       {
         "value": "routing-apis",
@@ -420,8 +420,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1478,
-        "visits": 1411
+        "pageLoads": 1479,
+        "visits": 1412
       },
       {
         "value": "cache",
@@ -437,15 +437,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1515,
-        "visits": 1413
+        "pageLoads": 1516,
+        "visits": 1414
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1515,
-        "visits": 1413
+        "pageLoads": 1516,
+        "visits": 1414
       }
     ]
   }

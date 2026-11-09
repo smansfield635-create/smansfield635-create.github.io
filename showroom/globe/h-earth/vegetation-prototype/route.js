@@ -29,6 +29,7 @@ const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds))
 const control=Object.freeze({x:-139.40267987050615,z:-194.5,radius:2});
 let renderer=null,intake=null,presenter=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
 let diagnosticTourMoving=false,terminalFailure=null;
+let vegetationPhase='NOT_STARTED',vegetationFailure=null,vegetationProgress=null;
 const spatialFrameBridge=createHEarthCopyReportFrameBridge({sourceIdentity:{sourceBaseline,buildIdentifier:'gen2873-prepared-binding-repair-v1'}});
 let spatialSelection=null;
 const loadingMetrics=createLoadingMetrics({now:()=>performance.now()-started});
@@ -131,6 +132,7 @@ async function diagnosticTravel(x,z,expectedIds){
 function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_v1',sourceBaseline,resources:resources(),
   counters:{renderFrameCallCount,gpuFramebufferPresentationCount,rendererInitializationCount:renderer?1:0,worldRebuildCount:0},
   frameRecords:copy(frames),singleOwnerVegetationQualification:replay,timing:{...timing},preparation,
+   vegetationBackground:{phase:vegetationPhase,error:vegetationFailure,lastProgress:vegetationProgress,ownerReceipt:owner()},
   inputPresentationReadiness:loader?.getReceipt()??null,frameScheduling:presenter?.getReceipt()??null,
   canonicalPackageMutated:false,physicalDeviceAcceptance:false,publicationAuthorized:false};}
 // Collect only when the owner requests a report, never on the frame path.
@@ -208,6 +210,7 @@ try{
   assertRouteActive();
   present(intake.getNavigationState());
   assert(typeof renderer.prepareReplacementVegetation==='function','REPLACEMENT_OWNER_MISSING');
+  if(diagnosticReplay){
   preparation=await renderer.prepareReplacementVegetation({onProgress:progress('vegetation','Preparing the shared vegetation records…')});
   present(intake.getNavigationState());
   const entry=snapshot('BEFORE_MOVE'),entryOwner=entry.vegetation,controlIds=ids(entryOwner);
@@ -256,7 +259,52 @@ try{
     cpuSubmissionScope:'CPU_RENDER_AND_PRESENT_CALL_DURATION_NOT_GPU_EXECUTION_TIME',timing:{...timing}};
   }
   assertRouteActive();
-  if(diagnosticReplay){markReady();}else{interactiveReady=true;canvas.style.pointerEvents='auto';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype='controls-test';loader.enableControls(intake.getNavigationState());loadingMetrics.controlsReady(resources(),intake.getNavigationState().position);status.textContent='Test controls on the landscape to unlock Enter Gratitude';}
+  markReady();
+  }else{
+    // Terrain was already submitted. Preserve an independent user-input
+    // changed-frame confirmation while grass is still being prepared.
+    assertRouteActive();
+    interactiveReady=true;
+    canvas.style.pointerEvents='auto';
+    root.dataset.worldFirstFrameReady='true';
+    root.dataset.singleOwnerPrototype='controls-test';
+    root.dataset.vegetationState='pending';
+    loader.enableControls(intake.getNavigationState());
+    loadingMetrics.controlsReady(resources(),intake.getNavigationState().position);
+    status.textContent='Test controls on the landscape to unlock Enter Gratitude';
+    vegetationPhase='WAITING_FOR_BACKGROUND_START';
+    const failBackgroundVegetation=error=>{
+      if(terminalFailure)return;
+      vegetationPhase='FAILED';vegetationFailure=String(error?.message??error);
+      root.dataset.vegetationState='failed';assetMetricsDirty=true;
+      // A vegetation failure is not grounds to revoke working terrain controls.
+      status.textContent='Vegetation unavailable; landscape controls remain available';
+      console.error('H_EARTH_BACKGROUND_VEGETATION_FAILED',error);
+    };
+    const startBackgroundVegetation=()=>{
+      if(terminalFailure)return;
+      vegetationPhase='PREPARING';root.dataset.vegetationState='loading';
+      try{
+        const task=renderer.prepareReplacementVegetation({onProgress:update=>{
+          if(terminalFailure)return;
+          vegetationProgress={...update};
+          // Copy-report retains grass progress without overwriting the
+          // controls test or enabling Enter before a changed view renders.
+          assetMetricsDirty=true;
+        }});
+        Promise.resolve(task).then(result=>{
+          if(terminalFailure)return;
+          preparation=result;vegetationPhase='OWNER_PREPARED';
+          root.dataset.vegetationState='prepared';assetMetricsDirty=true;
+          // The renderer receipt, not this status, proves actual source residency.
+          presenter?.request(intake.getNavigationState());
+        },failBackgroundVegetation);
+      }catch(error){failBackgroundVegetation(error);}
+    };
+    // Give the initial interactive terrain frame a paint opportunity before
+    // the preserved global-grass preparation occupies the main thread.
+    requestAnimationFrame(()=>setTimeout(startBackgroundVegetation,0));
+  }
 }catch(error){
   replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:'FAILED',message:error.message,sourceBaseline,observations:copy(observations),timing:{...timing},physicalDeviceAcceptance:false,publicationAuthorized:false};
   failRoute(error);

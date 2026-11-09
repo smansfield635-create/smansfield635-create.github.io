@@ -54,5 +54,39 @@
     "createsMergeAuthority": false,
     "createsCanonicalWorldAuthority": false,
     "controlsAcceptanceOfExperienceChangingUpgrades": true
+  },
+  "scopedPerformanceRelease": {
+    "schema": "H_EARTH_EXACT_GEN3187_SCOPED_PERFORMANCE_RELEASE_v1",
+    "status": "OWNER_AUTHORIZED_EXACT_CANDIDATE_ONLY",
+    "scopeId": "H_EARTH_GEN3187_EARLY_NAVIGATION_BOUNDED_ACCEPTANCE_20261109",
+    "ownerAuthorization": {
+      "issue": 6426,
+      "commentId": 6744667321
+    },
+    "routePath": "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "originalProductCommit": "7a2595ce83c68a865bc40460c343e01f918e7da0",
+    "routeGitBlob": "c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1",
+    "evidence": {
+      "chromiumRunId": 42570259969,
+      "artifactId": 13652229709,
+      "archiveSha256": "1f58b866c6f60d10bf558d57a073ec82f78788e5bb71fba585295e66d53e4794"
+    },
+    "receiptSchema": "H_EARTH_EXPERIENCE_ANCHOR_SCOPED_PERFORMANCE_RECEIPT_v1",
+    "disposition": "SCOPED_ACCEPTED_WITH_LIMITATIONS",
+    "mandatoryChecks": [
+      "FIRST_TERRAIN_FRAME",
+      "USER_DRIVEN_CHANGED_CAMERA_BEFORE_ENTER",
+      "BACKGROUND_VEGETATION_WHILE_NAVIGATION_AVAILABLE",
+      "NAVIGATION_SURVIVES_BACKGROUND_PREPARATION_FAILURE",
+      "NO_DEMONSTRATED_MATERIAL_GEOGRAPHIC_OR_VISUAL_DISCONTINUITY"
+    ],
+    "requiredExplicitLimitations": [
+      "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+      "NO_CONTINUOUS_VEGETATION_TRANSITION_RECORDING",
+      "PHYSICAL_ANDROID_PERFORMANCE_UNMEASURED"
+    ],
+    "fullAnchorRequiredForAllOtherExperienceChanges": true,
+    "cannotDeclareAllInvariantsIndependentlyReproven": true,
+    "noMergeDeploymentOrPublicationAuthorityCreated": true
   }
 }

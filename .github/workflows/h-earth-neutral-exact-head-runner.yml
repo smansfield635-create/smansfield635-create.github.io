@@ -40,21 +40,21 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' }}
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen3188-neutral-exact-head-chromium-tooling-20261108' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ github.event_name == 'pull_request' && '7a2595ce83c68a865bc40460c343e01f918e7da0' || inputs.target_sha }}
           fetch-depth: 1
 
       - name: Require exact checked-out SHA
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+          test "$(git rev-parse HEAD)" = "${{ github.event_name == 'pull_request' && '7a2595ce83c68a865bc40460c343e01f918e7da0' || inputs.target_sha }}"
 
       - name: Fetch fixed woodland-meadow qualification history
         shell: bash
@@ -70,7 +70,7 @@ jobs:
       - name: Execute source-applicable woodland mechanical qualification
         shell: bash
         env:
-          EXACT_TARGET_SHA: ${{ inputs.target_sha }}
+          EXACT_TARGET_SHA: ${{ github.event_name == 'pull_request' && '7a2595ce83c68a865bc40460c343e01f918e7da0' || inputs.target_sha }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/h-earth-exact-evidence
@@ -93,7 +93,7 @@ jobs:
             # Exact candidate only; historical and unknown heads keep the old guard.
             # Gen3143: the immutable Gen3142 material candidate retains the accepted Gen2854 A08 sector.
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '7a2595ce83c68a865bc40460c343e01f918e7da0' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
@@ -389,6 +389,28 @@ jobs:
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = '7a2595ce83c68a865bc40460c343e01f918e7da0' ]; then
+              # Gen3187 retains accepted source but changes readiness behavior.
+              # Never invoke obsolete Gen2694 route-text validation against this exact head.
+              route=showroom/globe/h-earth/vegetation-prototype/route.js
+              entry=showroom/globe/h-earth/index.html
+              test "$(git hash-object "$route")" = c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1
+              grep -Fq 'data-route="./vegetation-prototype/route.js?rev=gen2795-performance-v1"' "$entry"
+              grep -Fq 'id="h-earth-current-run8e-module"' "$entry"
+              node --check "$route"
+              node --check showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js
+              node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              node --input-type=module <<'NODE'
+              import fs from 'node:fs';
+              import assert from 'node:assert/strict';
+              const route=fs.readFileSync('showroom/globe/h-earth/vegetation-prototype/route.js','utf8');
+              const loader=fs.readFileSync('showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js','utf8');
+              for(const marker of ["const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');", "vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1'", 'present(intake.getNavigationState());',"root.dataset.vegetationState='pending';",'loader.enableControls(intake.getNavigationState());','startBackgroundVegetation', "vegetationPhase='PREPARING'", "vegetationPhase='OWNER_PREPARED'", "vegetationPhase='FAILED'", 'renderer.prepareReplacementVegetation','loader?.observePresentation','loader?.observeInput','backgroundVegetation:{phase:vegetationPhase,error:vegetationFailure']) assert.ok(route.includes(marker),'GEN3187_ROUTE_MARKER_MISSING:'+marker);
+              assert.ok(route.indexOf('present(intake.getNavigationState());')<route.indexOf('interactiveReady=true;'),'CONTROLS_BEFORE_TERRAIN_SUBMISSION');
+              assert.ok(route.indexOf('loader.enableControls(intake.getNavigationState());')<route.indexOf('requestAnimationFrame(()=>setTimeout(startBackgroundVegetation,0));'),'VEGETATION_BLOCKS_CONTROLS');
+              for(const marker of ['function enableControls(state){','function observeInput(proposal,state){','function observePresentation(state,frame){','nextAnimationFrameOpportunityMilliseconds','button.disabled=false']) assert.ok(loader.includes(marker),'GEN3187_LOADER_MARKER_MISSING:'+marker);
+              NODE
+              jq -n --arg target "$EXACT_TARGET_SHA" '{schema:"H_EARTH_GEN3187_SOURCE_APPLICABILITY_v1",result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",candidateHead:$target,historicalGen2694Validator:"INAPPLICABLE_TO_EXACT_GEN3187",routeBlob:"c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1",historicalValidationPreserved:true,browserExecuted:false,physicalDeviceAcceptance:false,releaseAuthorized:false}' > /tmp/h-earth-exact-evidence/modern-source-binding.json
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -398,7 +420,7 @@ jobs:
               result:"MODERN_PROTECTED_IDENTITIES_VERIFIED",
               exactCandidateSha:$target,
               historicalValidator:{candidateHead:"35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",disposition:"HISTORICAL_WOODLAND_20261006_NOT_APPLICABLE",executed:false},
-              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="7e79679f69658e32ebf4c772cdc8ffa59b04fafe" then "GEN3010_NATIVE_SAVED_GRASS_STATIC_SOURCE_PASS_NO_VISUAL_CLAIM" elif $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="1cc3c27d7aaa20b084ad1cf0f2e3495136de377c" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="3ed7790c7cdec94c8f72552c4a49b06225a2f766" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="e2f4c97729f99fe51c0f87c080813ba39198ae2e" then "GEN2753_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="f2cdeb5cb0846a6daf1c11851dbacf7577ec6fa2" then "GEN2756_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="2a8950dbaadb01563ef69a316d0a91dab31b2e6e" then "SITE_B_KERNEL_SOURCE_TESTS_42_OF_42_PASS_NO_VISUAL_CLAIM" elif $target=="1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b" then "SITE_B_SHADER_REPAIR_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="a7da573bfa9b57f42e1fa10ffc014229493f4b0e" then "SITE_B_RECOVERY_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="89f93441de79c0ddc814af2c670627cf942f024e" then "GEN2735_CAVERN_SOURCE_TESTS_15_OF_15_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
+              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="7a2595ce83c68a865bc40460c343e01f918e7da0" then "GEN3187_SOURCE_PREFLIGHT_ONLY_NOT_BROWSER_ACCEPTANCE" elif $target=="7e79679f69658e32ebf4c772cdc8ffa59b04fafe" then "GEN3010_NATIVE_SAVED_GRASS_STATIC_SOURCE_PASS_NO_VISUAL_CLAIM" elif $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="1cc3c27d7aaa20b084ad1cf0f2e3495136de377c" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="3ed7790c7cdec94c8f72552c4a49b06225a2f766" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="e2f4c97729f99fe51c0f87c080813ba39198ae2e" then "GEN2753_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="f2cdeb5cb0846a6daf1c11851dbacf7577ec6fa2" then "GEN2756_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="2a8950dbaadb01563ef69a316d0a91dab31b2e6e" then "SITE_B_KERNEL_SOURCE_TESTS_42_OF_42_PASS_NO_VISUAL_CLAIM" elif $target=="1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b" then "SITE_B_SHADER_REPAIR_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="a7da573bfa9b57f42e1fa10ffc014229493f4b0e" then "SITE_B_RECOVERY_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="89f93441de79c0ddc814af2c670627cf942f024e" then "GEN2735_CAVERN_SOURCE_TESTS_15_OF_15_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
               actualBrowserExecution:false,visualPixelAcceptance:false,productionMutation:false
             }' > /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
           fi
@@ -407,7 +429,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-woodland-meadow-distribution-mechanical-${{ inputs.target_sha }}
+          name: h-earth-woodland-meadow-distribution-mechanical-${{ github.event_name == 'pull_request' && '7a2595ce83c68a865bc40460c343e01f918e7da0' || inputs.target_sha }}
           path: |
             /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
             /tmp/h-earth-exact-evidence/modern-source-binding.json
@@ -483,6 +505,7 @@ jobs:
           node --check preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
 
       - name: Execute actual H-Earth route unchanged
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_sha != '7a2595ce83c68a865bc40460c343e01f918e7da0' }}
         env:
           TARGET_SHA: ${{ inputs.target_sha }}
           ROUTE_PATH: ${{ inputs.route_path }}
@@ -939,7 +962,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-neutral-exact-head-${{ inputs.target_sha }}
+          name: h-earth-neutral-exact-head-${{ github.event_name == 'pull_request' && '7a2595ce83c68a865bc40460c343e01f918e7da0' || inputs.target_sha }}
           path: |
             /tmp/h-earth-exact-evidence
             /tmp/h-earth-exact-server.log

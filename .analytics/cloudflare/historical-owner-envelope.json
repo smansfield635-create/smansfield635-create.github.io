@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-09T19:23:59Z",
+  "generatedAt": "2026-11-09T20:23:59Z",
   "window": {
-    "start": "2026-08-11T19:23:59Z",
-    "end": "2026-11-09T19:23:59Z"
+    "start": "2026-08-11T20:23:59Z",
+    "end": "2026-11-09T20:23:59Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,38 +17,22 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4010,
-    "visits": 1180,
+    "pageLoads": 3982,
+    "visits": 1231,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4010,
-        "visits": 1180
+        "pageLoads": 3982,
+        "visits": 1231
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 940,
-        "visits": 680
-      },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/index.html": {
-        "pageLoads": 110,
-        "visits": 0
-      },
       "/laws/": {
         "pageLoads": 100,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 140,
+        "pageLoads": 150,
         "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/intake/": {
         "pageLoads": 10,
@@ -58,8 +42,24 @@
         "pageLoads": 90,
         "visits": 0
       },
+      "/": {
+        "pageLoads": 961,
+        "visits": 701
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/index.html": {
+        "pageLoads": 120,
+        "visits": 0
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
+        "pageLoads": 360,
         "visits": 0
       },
       "/laws/research/methods-and-models/": {
@@ -90,6 +90,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -106,12 +110,8 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 60,
+        "pageLoads": 51,
         "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
@@ -126,16 +126,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -187,11 +187,11 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 230,
         "visits": 20
       },
       "/characters/": {
-        "pageLoads": 60,
+        "pageLoads": 70,
         "visits": 30
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -287,19 +287,19 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 20,
+        "visits": 20
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 170,
+        "visits": 140
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -312,19 +312,23 @@
       }
     },
     "byReferer": {
-      "www.google.com": {
-        "pageLoads": 630,
-        "visits": 630
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 2830,
+        "pageLoads": 2751,
         "visits": 0
       },
+      "www.google.com": {
+        "pageLoads": 670,
+        "visits": 670
+      },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 541,
+        "visits": 541
       },
       "raw.githack.com": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "com.google.android.googlequicksearchbox": {
         "pageLoads": 10,
         "visits": 10
       }

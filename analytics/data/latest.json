@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-09T19:23:59Z",
+  "generatedAt": "2026-11-09T20:23:59Z",
   "window30d": {
-    "start": "2026-10-10T19:23:59Z",
-    "end": "2026-11-09T19:23:59Z"
+    "start": "2026-10-10T20:23:59Z",
+    "end": "2026-11-09T20:23:59Z"
   },
   "daily": [
     {
@@ -12,7 +12,7 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-10-13",
@@ -20,19 +20,19 @@
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 100
+      "pageLoads": 90
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 80
+      "pageLoads": 90
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 50
+      "pageLoads": 60
     },
     {
       "date": "2026-10-18",
@@ -40,23 +40,23 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 60
-    },
-    {
-      "date": "2026-10-21",
-      "pageLoads": 70
-    },
-    {
-      "date": "2026-10-22",
       "pageLoads": 30
     },
     {
+      "date": "2026-10-21",
+      "pageLoads": 80
+    },
+    {
+      "date": "2026-10-22",
+      "pageLoads": 10
+    },
+    {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 110
     },
     {
       "date": "2026-10-24",
@@ -68,11 +68,11 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-28",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 6
+      "pageLoads": 4
     },
     {
       "date": "2026-11-02",
@@ -124,56 +124,56 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 21
+      "pageLoads": 26
     }
   ],
   "summary": {
-    "pageLoads": 1483,
-    "botPageLoads": 744,
-    "nonBotPageLoads": 739
+    "pageLoads": 1466,
+    "botPageLoads": 745,
+    "nonBotPageLoads": 721
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1277,
-      "visits": 1277
+      "pageLoads": 1400,
+      "visits": 1400
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 102,
+      "pageLoads": 103,
       "visits": 0
     },
     {
-      "host": "www.google.com",
-      "pageLoads": 12,
-      "visits": 12
+      "host": "bing.com",
+      "pageLoads": 32,
+      "visits": 32
     },
     {
-      "host": "www.facebook.com",
+      "host": "github.com",
       "pageLoads": 10,
       "visits": 10
     },
     {
-      "host": "bing.com",
-      "pageLoads": 2,
-      "visits": 2
+      "host": "www.google.com",
+      "pageLoads": 1,
+      "visits": 1
     }
   ],
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 521,
-      "visits": 521
+      "pageLoads": 581,
+      "visits": 581
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 347,
-      "visits": 290
+      "pageLoads": 380,
+      "visits": 332
     },
     {
       "path": "/",
-      "pageLoads": 87,
-      "visits": 64
+      "pageLoads": 88,
+      "visits": 65
     },
     {
       "path": "/products/education/personal-training/",
@@ -186,11 +186,6 @@
       "visits": 56
     },
     {
-      "path": "/about/",
-      "pageLoads": 41,
-      "visits": 41
-    },
-    {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 40,
       "visits": 40
@@ -199,6 +194,11 @@
       "path": "/nine-summits/universe/",
       "pageLoads": 39,
       "visits": 39
+    },
+    {
+      "path": "/meet-sean-mansfield/",
+      "pageLoads": 23,
+      "visits": 15
     }
   ],
   "ownerMeasurement": {

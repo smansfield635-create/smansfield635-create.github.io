@@ -59,6 +59,82 @@ const isExperiencePath=p=>{
 };
 
 const experienceChanges=changed.filter(isExperiencePath).sort();
+
+//
+// Owner-authorized, exact-source Gen3187 early-navigation application only.
+// Does not loosen the controlling 11-invariant gate for any other upgrade.
+// The owner-directed scoped receipt is a separate category, never a full Anchor PASS.
+const scoped=anchor.scopedPerformanceRelease;
+if(scoped){
+  if(scoped.schema!=='H_EARTH_EXACT_GEN3187_SCOPED_PERFORMANCE_RELEASE_v1'||
+    scoped.status!=='OWNER_AUTHORIZED_EXACT_CANDIDATE_ONLY'||
+    scoped.ownerAuthorization?.issue!==6426||
+    scoped.ownerAuthorization?.commentId!==6744667321||
+    scoped.originalProductCommit!=='7a2595ce83c68a865bc40460c343e01f918e7da0'||
+    scoped.routePath!=='showroom/globe/h-earth/vegetation-prototype/route.js'||
+    scoped.routeGitBlob!=='c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1'||
+    scoped.receiptSchema!=='H_EARTH_EXPERIENCE_ANCHOR_SCOPED_PERFORMANCE_RECEIPT_v1'||
+    scoped.disposition!=='SCOPED_ACCEPTED_WITH_LIMITATIONS'||
+    scoped.evidence?.chromiumRunId!==42570259969||
+    scoped.evidence?.artifactId!==13652229709||
+    scoped.evidence?.archiveSha256!=='1f58b866c6f60d10bf558d57a073ec82f78788e5bb71fba585295e66d53e4794'||
+    scoped.fullAnchorRequiredForAllOtherExperienceChanges!==true||
+    scoped.cannotDeclareAllInvariantsIndependentlyReproven!==true||
+    scoped.noMergeDeploymentOrPublicationAuthorityCreated!==true)fail('SCOPED_POLICY_DRIFT');
+}
+if(scoped&&experienceChanges.length===1&&experienceChanges[0]===scoped.routePath){
+  const candidateReceipts=changed.filter(p=>p.startsWith(RECEIPT_PREFIX)&&p.endsWith('.json'));
+  if(candidateReceipts.length===1){
+    const scopedReceipt=readJson(candidateReceipts[0]);
+    if(scopedReceipt.schema===scoped.receiptSchema){
+      const approvedPaths=new Set([scoped.routePath,candidateReceipts[0]]);
+      if(changed.some(p=>!approvedPaths.has(p)))fail('SCOPED_UNRELATED_PATH_CHANGED');
+      let blob;
+      try{blob=execFileSync('git',['hash-object',scoped.routePath],{encoding:'utf8'}).trim();}
+      catch{fail('SCOPED_ROUTE_BLOB_UNAVAILABLE');}
+      if(blob!==scoped.routeGitBlob)fail('SCOPED_ROUTE_BLOB_DRIFT');
+      try{execFileSync('git',['merge-base','--is-ancestor',scoped.originalProductCommit,head]);}
+      catch{fail('SCOPED_ORIGINAL_CANDIDATE_ANCESTRY_MISSING');}
+      if(scopedReceipt.anchorId!==anchor.anchorId||
+         scopedReceipt.anchorSha256!==anchor.sourceVideo.sha256||
+         scopedReceipt.ownerAuthorizationCommentId!==scoped.ownerAuthorization.commentId||
+         scopedReceipt.disposition!==scoped.disposition||
+         scopedReceipt.reviewedAgainstAnchor!==true||
+         scopedReceipt.fullElevenInvariantPassClaimed!==false||
+         scopedReceipt.originalVideoPlaybackClaimed!==false||
+         scopedReceipt.androidPerformanceMeasured!==false||
+         scopedReceipt.evidence?.chromiumRunId!==scoped.evidence.chromiumRunId||
+         scopedReceipt.evidence?.artifactId!==scoped.evidence.artifactId||
+         scopedReceipt.evidence?.archiveSha256!==scoped.evidence.archiveSha256)fail('SCOPED_RECEIPT_IDENTITY_OR_CLAIM_INVALID');
+      const f=scopedReceipt.experienceFile;
+      if(f?.path!==scoped.routePath||
+         f?.gitBlob!==blob||
+         f?.sha256!==sha256(fs.readFileSync(path.join(ROOT,scoped.routePath))))fail('SCOPED_EXPERIENCE_SOURCE_MISMATCH');
+      for(const key of scoped.mandatoryChecks||[]){
+        if(scopedReceipt.checks?.[key]!==true)fail('SCOPED_CHECK_NOT_SUPPORTED:'+key);
+      }
+      for(const limitation of scoped.requiredExplicitLimitations||[]){
+        if(!Array.isArray(scopedReceipt.limitations)||!scopedReceipt.limitations.includes(limitation))fail('SCOPED_LIMITATION_NOT_DISCLOSED:'+limitation);
+      }
+      for(const type of ['visualEvidence','interactionEvidence','continuityEvidence']){
+        if(!Array.isArray(scopedReceipt[type])||scopedReceipt[type].length===0||
+           scopedReceipt[type].some(v=>typeof v!=='string'||!v.trim()))fail('SCOPED_EVIDENCE_MISSING:'+type);
+      }
+      console.log(JSON.stringify({
+        schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',
+        result:'PASS',reason:'EXACT_GEN3187_SCOPED_PERFORMANCE_ACCEPTANCE_ONLY',
+        fullAnchorElevenInvariantPassClaimed:false,
+        anchorId:anchor.anchorId,anchorSha256:anchor.sourceVideo.sha256,
+        scopedProductCommit:scoped.originalProductCommit,routeGitBlob:blob,
+        receipt:candidateReceipts[0],originalVideoPlaybackClaimed:false,
+        physicalAndroidPerformanceMeasured:false,
+        sameWorldHardLawRetained:true
+      },null,2));
+      process.exit(0);
+    }
+  }
+}
+
 if(experienceChanges.length===0){
   console.log(JSON.stringify({schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',result:'PASS',reason:'NO_EXPERIENCE_SURFACE_CHANGE',anchorSha256:anchor.sourceVideo.sha256,changedPathCount:changed.length,nonExperienceHEarthShowroomPrefixes:NON_EXPERIENCE_H_EARTH_SHOWROOM_PREFIXES,nonExperienceAudraliaPrefixes:NON_EXPERIENCE_AUDRALIA_PREFIXES},null,2));
   process.exit(0);

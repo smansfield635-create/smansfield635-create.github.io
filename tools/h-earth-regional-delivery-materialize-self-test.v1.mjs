@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {createIncrementalSingleOwnerVegetation} from '../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
 import {prioritizeRegionalPackets} from '../showroom/globe/h-earth/render/regional-grass-delivery.v1.js';
 import {groupSourceTiles,buildRegionBuffers,reconstructSourceRootBytes} from './h-earth-regional-delivery-materialize.v1.mjs';
 
@@ -37,4 +40,86 @@ const nearCavern=prioritizeRegionalPackets(candidates,{x:40,z:-300});
 assert.equal(nearCavern[0].region.id,'1:-10');
 assert.throws(()=>prioritizeRegionalPackets(candidates,{x:NaN,z:-300}),/CAMERA_INVALID/);
 
-console.log(JSON.stringify({schema:'H_EARTH_REGIONAL_MATERIALIZER_SELF_TEST_v1',result:'PASS',tiles:tiles.length,roots:6,regions:2,originalOrderReconstructed:true,duplicateRejected:true,corruptionRejected:true,cameraPriorityReordered:true}));
+
+// Gen3186: execute true Node parser on both production integration files.
+// The owner import above also validates native ESM linkage, not only grammar.
+const authoringPaths=[
+ '../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',
+ '../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'
+];
+for(const relative of authoringPaths){
+ const file=fileURLToPath(new URL(relative,import.meta.url));
+ const checked=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});
+ assert.equal(checked.status,0,'NATIVE_SOURCE_SYNTAX_FAILED:'+relative+':'+(checked.stderr??'').slice(0,1600));
+}
+
+// Simulated GL is deliberately not a substitute for an actual WebGL driver.
+// It is a regression sentinel for the authenticated owner’s source offsets,
+// single allocation, duplicate protection and resident-only submission.
+function mockOwnerGL(){
+ const calls={allocatedBytes:0,uploadedBytes:0,uploads:[],drawCalls:0,deletes:0};
+ const gl={VERTEX_SHADER:1,FRAGMENT_SHADER:2,COMPILE_STATUS:3,LINK_STATUS:4,
+  ARRAY_BUFFER:5,STATIC_DRAW:6,BUFFER_SIZE:7,NO_ERROR:0,FLOAT:8,TRIANGLES:9,
+  createShader:()=>({}),createProgram:()=>({}),createVertexArray:()=>({}),createBuffer:()=>({}),
+  shaderSource:()=>{},compileShader:()=>{},attachShader:()=>{},linkProgram:()=>{},
+  getShaderParameter:()=>true,getProgramParameter:()=>true,
+  getShaderInfoLog:()=>'',getProgramInfoLog:()=>'',isContextLost:()=>false,
+  getBufferParameter:()=>calls.allocatedBytes,getError:()=>0,
+  getUniformLocation:()=>0,bindVertexArray:()=>{},bindBuffer:()=>{},
+  enableVertexAttribArray:()=>{},vertexAttribPointer:()=>{},vertexAttribDivisor:()=>{},
+  useProgram:()=>{},uniform1f:()=>{},uniform1i:()=>{},uniform3f:()=>{},
+  uniform3fv:()=>{},uniformMatrix4fv:()=>{},
+  bufferData:(_target,bytes)=>{calls.allocatedBytes=bytes;},
+  bufferSubData:(_target,offset,packed)=>{
+   calls.uploads.push({offset,length:packed.byteLength});calls.uploadedBytes+=packed.byteLength;
+  },
+  drawArraysInstanced:()=>{calls.drawCalls++;},
+  deleteShader:()=>{calls.deletes++;},deleteBuffer:()=>{calls.deletes++;},
+  deleteVertexArray:()=>{calls.deletes++;},deleteProgram:()=>{calls.deletes++}
+ };
+ return{gl,calls};
+}
+const {gl:fakeGL,calls:gpu}=mockOwnerGL();
+const fakeEnvironment={sunDirection:{x:1,y:1,z:0},sunColor:[1,1,1],
+ groundHazeColor:[.5,.5,.5],sunIntensity:1,fogStartDistance:10,fogFalloff:.1,
+ maximumFogFactor:.8};
+const owner=createIncrementalSingleOwnerVegetation(fakeGL,{
+ environment:fakeEnvironment,planetRadius:500,
+ habitat:{pixels:new Uint8Array(576*192),receipt:{schema:'TEST_HABITAT'}}
+});
+const initial=owner.getReceipt();
+assert.equal(initial.installedSourceRoots,0);
+assert.equal(initial.sourceComplete,false);
+assert.equal(initial.acceptedSourceRoots,2858738);
+assert.equal(initial.gpuOwners,1);
+assert.equal(initial.gpuBuffers,1);
+assert.equal(initial.gpuAllocatedBytes,initial.gpuCapacityRoots*16);
+assert.equal(initial.gpuUploadedBytes,initial.oasisRoots*16);
+const originalTile={id:'test:tile0',first:0,count:1,baselineCount:1,minX:0,minZ:0,
+ packed:new Float32Array([.5,0,.5,0])};
+const packet={id:'0:0',roots:1,tiles:[originalTile]};
+const installed=await owner.installRegion(packet);
+assert.equal(installed.installedSourceRoots,1);
+assert.equal(installed.sourceComplete,false);
+assert.equal(gpu.uploads.at(-1).offset,0);
+assert.equal(gpu.uploads.at(-1).length,16);
+await assert.rejects(owner.installRegion(packet),/REGION_INVALID_OR_DUPLICATE/);
+await assert.rejects(owner.installRegion({
+ id:'1:0',roots:1,tiles:[{...originalTile,id:'test:tile1',minX:32,
+  packed:new Float32Array([32.5,0,.5,0])}]
+}),/SOURCE_OFFSET_OVERLAP/);
+await assert.rejects(owner.installRegion({
+ id:'1:0',roots:1,tiles:[{...originalTile,id:'test:tile2',first:1,minX:0}]
+}),/SOURCE_TILE_INVALID/);
+await assert.rejects(owner.finalizeEntrance({}),/ENTRANCE_REQUIRES_COMPLETE_SOURCE/);
+const priorUploads=gpu.uploads.length;
+const draw=owner.draw({camera:{position:{x:0,y:0,z:0},
+ viewProjectionMatrix:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}});
+assert(draw.visibleCoarseRoots>=1,'RESIDENT_SOURCE_ROOT_MISSING_FROM_DRAW');
+assert.equal(draw.perFrameUploadBytes,0);
+assert.equal(gpu.uploads.length,priorUploads,'DRAW_MUST_NOT_UPLOAD');
+owner.dispose();owner.dispose();
+assert.equal(owner.getReceipt().disposed,true);
+assert.equal(gpu.deletes,5,'SINGLE_OWNER_RESOURCES_DELETED_ONCE');
+
+console.log(JSON.stringify({schema:'H_EARTH_REGIONAL_MATERIALIZER_SELF_TEST_v1',result:'PASS',tiles:tiles.length,roots:6,regions:2,originalOrderReconstructed:true,duplicateRejected:true,corruptionRejected:true,cameraPriorityReordered:true,nativeOwnerAndRendererSyntax:true,nativeOwnerESMImport:true,simulatedGpuOwnerControls:true}));

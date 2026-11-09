@@ -1937,8 +1937,8 @@ jobs:
           const path='.github/workflows/h-earth-neutral-exact-head-runner.yml';
           const owners=router.projects.filter(p=>p.ownedExactPaths?.includes(path)).map(p=>p.projectId);
           assert.deepEqual(owners,['H_EARTH']);
-          assert.equal(workflow.split('  gen3188-tooling-native:').length,2);
-          assert.equal(workflow.split('  gen3187-terrain-first:').length,2);
+          assert.equal(workflow.match(/^  gen3188-tooling-native:$/gm)?.length,1);
+          assert.equal(workflow.match(/^  gen3187-terrain-first:$/gm)?.length,1);
           assert(workflow.includes("inputs.route_query != 'qualification=gen3187-terrain-first-v1'"));
           assert(workflow.includes("inputs.route_query == 'qualification=gen3187-terrain-first-v1'"));
           assert(workflow.includes('7a2595ce83c68a865bc40460c343e01f918e7da0'));

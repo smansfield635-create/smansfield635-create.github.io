@@ -2018,7 +2018,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   let regionalStream=null,regionalCamera=null,regionalQueuedCamera=null,regionalStatus=null;
   let regionalFallbackReason=null,regionalFallbackTask=null,regionalEntranceTask=null;
   let regionalProgressObserver=()=>{};
-  const regionalTimings={firstFrameMs:null,firstObservedMovementMs:null,
+  const regionalTimings={firstFrameSubmittedMs:null,firstObservedMovementMs:null,
     local24ReadyMs:null,radius64ReadyMs:null,worldCompleteMs:null,entranceCompleteMs:null};
   const restoreGrassHabitat=habitat=>{
     if(!resources.woodlandHabitat||!resources.habitatMaterialPresentation)throw Error('REGIONAL_HABITAT_UNINITIALIZED');
@@ -2146,13 +2146,24 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       }
       const generationMs=performance.now()-generationStarted;
       const gpuStarted=performance.now();
-      resources.singleOwnerVegetation=usingRegional?
-        createIncrementalSingleOwnerVegetation(gl,{environment:resources.environment,
-          planetRadius,habitat:presentation.habitat,yieldControl:yieldToBrowserPaint}):
-        await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,
-          planetRadius,yieldControl:yieldToBrowserPaint,onProgress,
-          entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,
-            geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
+      const createGlobalOwner=value=>createSingleOwnerVegetation(gl,value,{
+        environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,
+        entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,
+          geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
+      try{
+        resources.singleOwnerVegetation=usingRegional?
+          createIncrementalSingleOwnerVegetation(gl,{environment:resources.environment,
+            planetRadius,habitat:presentation.habitat,yieldControl:yieldToBrowserPaint}):
+          await createGlobalOwner(presentation);
+      }catch(error){
+        if(!usingRegional)throw error;
+        presentation.stream?.dispose();
+        regionalFallbackReason='REGIONAL_OWNER_INITIALIZATION:'+String(error?.message??error);
+        onProgress({phase:'REGIONAL_GLOBAL_FALLBACK',reason:regionalFallbackReason});
+        usingRegional=false;
+        presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
+        resources.singleOwnerVegetation=await createGlobalOwner(presentation);
+      }
       // A regional source is incomplete until all original offsets are present.
       const installedHabitat=usingRegional?
         resources.singleOwnerVegetation.getHabitat():resources.singleOwnerVegetation.habitat;
@@ -3225,7 +3236,6 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
-    if(regionalTimings.firstFrameMs===null)regionalTimings.firstFrameMs=performance.now();
     const cameraXZ={x:packet.camera.position.x,z:packet.camera.position.z};
     if(regionalCamera&&regionalTimings.firstObservedMovementMs===null&&
       Math.hypot(cameraXZ.x-regionalCamera.x,cameraXZ.z-regionalCamera.z)>0.05)
@@ -3293,6 +3303,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
+    if(regionalTimings.firstFrameSubmittedMs===null)regionalTimings.firstFrameSubmittedMs=performance.now();
     if(vegetationTrace){const observedAt=performance.now();if(observedAt-lastVegetationTraceFrameAt>=250){lastVegetationTraceFrameAt=observedAt;
       observeVegetation('FRAME_SUBMITTED',()=>({camera:{position:packet.camera.position,viewProjectionMatrix:packet.camera.viewProjectionMatrix,verticalFovDegrees:packet.camera.verticalFovDegrees},viewport:{width,height},installationRevision:vegetationInstallRevision,selectionRevision:vegetationSelectionRevision,
         fine:diagnosticDraw(resources.woodlandFineGrass),global:diagnosticDraw(resources.globalCover),preview:diagnosticDraw(resources.localCoverPreview),

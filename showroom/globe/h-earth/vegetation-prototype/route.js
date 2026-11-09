@@ -144,6 +144,10 @@ loader?.setReportProvider?.(()=>{
     reportFormatNote:'Top-level reportVersion identifies the copy-report format. details.buildIdentifier identifies this runtime repair.',
     clockNote:'Resource start times are navigation-relative; route times are elapsed since route start; loader elapsed uses its own start. Phase values are durations. Do not subtract timestamps from different origins.',
     loadingMetrics:loadingMetrics.snapshot(resource,intake?.getNavigationState()?.position),
+    // Copy-report includes the independent background vegetation lifecycle.
+    // A prepared owner is not equivalent to a measured rendered-world completion.
+    backgroundVegetation:{phase:vegetationPhase,error:vegetationFailure,
+      lastProgress:vegetationProgress,ownerReceipt:vegetation},
     downloads:summarizeTransfers(transfers,{bufferFullEvents:resourceBufferFullEvents}),
     comparisonContext:{deviceClassHint:/Mobile/.test(navigator.userAgent)?'phone-like':'tablet-or-desktop',classificationIsHeuristic:true,renderViewport:viewport,hardwareConcurrency:navigator.hardwareConcurrency??null,deviceMemoryGiB:navigator.deviceMemory??null,visibilityState:document.visibilityState,baselineAutomaticallyComparable:false},
     importedPlants:{originalJacaranda:resource?.jacaranda??null,collection:resource?.treeCollection??null},

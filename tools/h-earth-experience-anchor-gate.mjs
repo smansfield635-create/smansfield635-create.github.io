@@ -65,6 +65,17 @@ const experienceChanges=changed.filter(isExperiencePath).sort();
 // Does not loosen the controlling 11-invariant gate for any other upgrade.
 // The owner-directed scoped receipt is a separate category, never a full Anchor PASS.
 const scoped=anchor.scopedPerformanceRelease;
+
+// Exact Chromium artifact member identities independently read and SHA-256
+// verified against archive 1f58b866c6f60d10bf558d57a073ec82f78788e5bb71fba585295e66d53e4794.
+// These content-addressed references reject arbitrary nonempty evidence strings.
+// A verified reference is not itself human/independent visual acceptance.
+const REQUIRED_SCOPED_CHECKS=Object.freeze(["FIRST_TERRAIN_FRAME","USER_DRIVEN_CHANGED_CAMERA_BEFORE_ENTER","BACKGROUND_VEGETATION_WHILE_NAVIGATION_AVAILABLE","NAVIGATION_SURVIVES_BACKGROUND_PREPARATION_FAILURE","NO_DEMONSTRATED_MATERIAL_GEOGRAPHIC_OR_VISUAL_DISCONTINUITY"]);
+const REQUIRED_SCOPED_LIMITATIONS=Object.freeze(["ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED","NO_CONTINUOUS_VEGETATION_TRANSITION_RECORDING","PHYSICAL_ANDROID_PERFORMANCE_UNMEASURED"]);
+const PINNED_CHROMIUM_MEMBERS=Object.freeze({"receipt.json":"bc820c41fffbf2a58b9f5689c5cafa207e88a25c142091bf4f349e58ea58c2c3","terrain-first.png":"36da52c23cd349d8c18ccf273dc48e9f9af71e1daeea1ef90ed986731ca4b9ff","changed-camera.png":"502d00a0badcd98e140edd3409483fdf1a6a229468f3257f593ad059ab246113","vegetation-finished.png":"308293303503afb9f2293d665b5a44ed6d977e096db0930c5f1bc3ed3b21cb7a","vegetation-fault-injected.png":"a9e8cf308d4bb62b22fa90b7e4feec76f0f7cbcf344f215127df865b6eb61e15","strict-diagnostic-replay.png":"472c5e2f4bf3a4acce4542a03df45da85d836090e2100ed810b731c91fe191dc"});
+const REQUIRED_SCOPED_EVIDENCE=Object.freeze({"visualEvidence":["terrain-first.png","changed-camera.png","vegetation-finished.png"],"interactionEvidence":["changed-camera.png","vegetation-fault-injected.png"],"continuityEvidence":["vegetation-finished.png","strict-diagnostic-replay.png"]});
+const scopedArtifactReference=name=>'github-actions-artifact://42570259969/13652229709/'+name+'#sha256='+PINNED_CHROMIUM_MEMBERS[name];
+const exactList=(found,required)=>Array.isArray(found)&&found.length===required.length&&required.every((x,i)=>found[i]===x);
 if(scoped){
   if(scoped.schema!=='H_EARTH_EXACT_GEN3187_SCOPED_PERFORMANCE_RELEASE_v1'||
     scoped.status!=='OWNER_AUTHORIZED_EXACT_CANDIDATE_ONLY'||
@@ -80,7 +91,9 @@ if(scoped){
     scoped.evidence?.archiveSha256!=='1f58b866c6f60d10bf558d57a073ec82f78788e5bb71fba585295e66d53e4794'||
     scoped.fullAnchorRequiredForAllOtherExperienceChanges!==true||
     scoped.cannotDeclareAllInvariantsIndependentlyReproven!==true||
-    scoped.noMergeDeploymentOrPublicationAuthorityCreated!==true)fail('SCOPED_POLICY_DRIFT');
+    scoped.noMergeDeploymentOrPublicationAuthorityCreated!==true||
+    !exactList(scoped.mandatoryChecks,REQUIRED_SCOPED_CHECKS)||
+    !exactList(scoped.requiredExplicitLimitations,REQUIRED_SCOPED_LIMITATIONS))fail('SCOPED_POLICY_DRIFT');
 }
 if(scoped&&experienceChanges.length===1&&experienceChanges[0]===scoped.routePath){
   const candidateReceipts=changed.filter(p=>p.startsWith(RECEIPT_PREFIX)&&p.endsWith('.json'));
@@ -116,9 +129,8 @@ if(scoped&&experienceChanges.length===1&&experienceChanges[0]===scoped.routePath
       for(const limitation of scoped.requiredExplicitLimitations||[]){
         if(!Array.isArray(scopedReceipt.limitations)||!scopedReceipt.limitations.includes(limitation))fail('SCOPED_LIMITATION_NOT_DISCLOSED:'+limitation);
       }
-      for(const type of ['visualEvidence','interactionEvidence','continuityEvidence']){
-        if(!Array.isArray(scopedReceipt[type])||scopedReceipt[type].length===0||
-           scopedReceipt[type].some(v=>typeof v!=='string'||!v.trim()))fail('SCOPED_EVIDENCE_MISSING:'+type);
+      for(const [type,members] of Object.entries(REQUIRED_SCOPED_EVIDENCE)){
+        if(!exactList(scopedReceipt[type],members.map(scopedArtifactReference)))fail('SCOPED_EVIDENCE_IDENTITY_INVALID:'+type);
       }
       console.log(JSON.stringify({
         schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',

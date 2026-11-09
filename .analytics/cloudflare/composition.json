@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-09T13:24:34Z",
+  "generatedAt": "2026-11-09T14:25:53Z",
   "window": {
-    "start": "2026-10-10T13:24:34Z",
-    "end": "2026-11-09T13:24:34Z"
+    "start": "2026-10-10T14:25:53Z",
+    "end": "2026-11-09T14:25:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -153,12 +153,12 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -413,8 +413,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1468,
-        "visits": 1404
+        "pageLoads": 1429,
+        "visits": 1372
       },
       {
         "value": "routing-apis",

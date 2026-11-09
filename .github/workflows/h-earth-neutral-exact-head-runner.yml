@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1688,3 +1688,222 @@ jobs:
           node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
         env:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
+
+  # Gen3188: candidate-specific exact-head Chromium qualification. Archived
+  # profiles and their assertions remain untouched; no product source mutation.
+  gen3187-terrain-first:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3187-terrain-first-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Checkout immutable Gen3187
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact identity, historic world and route behavioral contract
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          SHIM: ${{ inputs.apply_timing_shim }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$TARGET_SHA" = 7a2595ce83c68a865bc40460c343e01f918e7da0
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$ROUTE_PATH" = '/showroom/globe/h-earth/'
+          test "$EXERCISE" = false
+          test "$SHIM" = false
+          test "$(git hash-object showroom/globe/h-earth/vegetation-prototype/route.js)" = c83cacfde1c01f59c0c1b2abf225ecadc4b4b5e1
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          test "$(git hash-object showroom/globe/h-earth/render/woodland-rock-presentation.v1.js)" = 77e7038d27862a39c31676d1d9a1ee9a84d5f267
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          printf '%s  %s\n' '48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a' 'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz' | sha256sum --check --status
+          node --check showroom/globe/h-earth/vegetation-prototype/route.js
+          node --check showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js
+          node --check showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const source=fs.readFileSync('showroom/globe/h-earth/vegetation-prototype/route.js','utf8');
+          const entry=fs.readFileSync('showroom/globe/h-earth/index.html','utf8');
+          assert(entry.includes('data-route="./vegetation-prototype/route.js?rev=gen2795-performance-v1"'));
+          assert(entry.includes('src="./vegetation-prototype/bootstrap.v1.js?rev=gen2815-fast-start-v1"'));
+          for(const binding of ['if(diagnosticReplay){','preparation=await renderer.prepareReplacementVegetation(',
+            'loader.enableControls(intake.getNavigationState());',"vegetationPhase='WAITING_FOR_BACKGROUND_START'",
+            'requestAnimationFrame(()=>setTimeout(startBackgroundVegetation,0))',
+            "vegetationPhase='FAILED'","vegetationPhase='OWNER_PREPARED'",
+            'presenter?.request(intake.getNavigationState());','backgroundVegetation:{phase:vegetationPhase']) {
+            assert(source.includes(binding),'MISSING_GEN3187_CONTRACT:'+binding);
+          }
+          assert(source.indexOf('present(intake.getNavigationState());')<source.indexOf('interactiveReady=true;'));
+          assert(source.indexOf('loader.enableControls(intake.getNavigationState());')<source.indexOf('const startBackgroundVegetation=()=>{'));
+          console.log('GEN3187_EXACT_SOURCE_BINDING_PASS_NOT_BROWSER_ACCEPTANCE');
+          NODE
+      - name: Install existing first-party Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Exercise exact candidate terrain, controls, background, failure and replay
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3187"
+          python3 -m http.server 4173 --directory . > "$RUNNER_TEMP/h-earth-gen3187/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null && break
+            sleep 1
+          done
+          cat > .h-earth-gen3187-browser.mjs <<'NODE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import {chromium} from 'playwright';
+          const out=process.env.RUNNER_TEMP+'/h-earth-gen3187';
+          const base='http://127.0.0.1:4173';
+          const verdict={schema:'H_EARTH_GEN3187_TERRAIN_FIRST_BROWSER_v1',
+            candidate:'7a2595ce83c68a865bc40460c343e01f918e7da0',
+            realChromium:false,physicalAndroidAccepted:false,hardwareDisplayPresentationVerified:false,
+            experienceAnchorAccepted:false,productionMutation:false,releaseAuthorized:false,
+            normal:null,controlledFailure:null,strictReplay:null,result:'NOT_EXECUTED',errors:[]};
+          const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+          verdict.realChromium=true;
+          const assert=(yes,error)=>{if(!yes)throw Error(error);};
+          const pose=r=>JSON.stringify([r?.position?.x,r?.position?.z,r?.yawDegrees,r?.pitchDegrees,r?.verticalFovDegrees]);
+          const watch=page=>{
+            const evidence={page:[],console:[],network:[],http:[]};
+            page.on('pageerror',e=>evidence.page.push(e.message));
+            page.on('console',m=>{if(m.type()==='error')evidence.console.push(m.text());});
+            page.on('requestfailed',r=>evidence.network.push({url:r.url(),error:r.failure()}));
+            page.on('response',r=>{if(r.status()>=400)evidence.http.push({url:r.url(),status:r.status()});});
+            return evidence;
+          };
+          const snapshot=page=>page.evaluate(()=>{
+            const root=document.getElementById('h-earth-functional-landscape-route');
+            const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+            const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+            const gpu=api?.getLiveGpuReceipt?.(),loading=window.H_EARTH_STARTUP_LOADER;
+            const l=loading?.getReceipt?.();
+            return {at:performance.now(),rootState:{ready:root?.dataset.run8eReady,firstFrame:root?.dataset.worldFirstFrameReady,
+                vegetation:root?.dataset.vegetationState,pointerEvents:canvas?.style.pointerEvents},
+              webgl2:Boolean(canvas?.getContext('webgl2')),nav:api?.getIntakeReceipt?.()?.currentNavigationState,
+              loader:l,copyReport:loading?.getLoadingReport?.(),
+              enterDisabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled,
+              gpu:{counters:gpu?.counters,frames:gpu?.frameRecords?.slice(-4),timing:gpu?.timing,
+                vegetation:gpu?.vegetationBackground,prepared:Boolean(gpu?.preparation),
+                owner:gpu?.resources?.singleOwnerVegetation,
+                renderer:gpu?.resources?.rendererStartupTiming}};});
+          const screen=async(page,label)=>{
+            const bytes=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:out+'/'+label+'.png',timeout:90000});
+            return {file:label+'.png',sha256:crypto.createHash('sha256').update(bytes).digest('hex')};
+          };
+          const gesture=async page=>{
+            const b=await page.locator('#h-earth-functional-landscape-canvas').boundingBox();
+            assert(b,'CANVAS_UNAVAILABLE');
+            await page.mouse.move(b.x+b.width*.5,b.y+b.height*.5);
+            await page.mouse.down();
+            await page.mouse.move(b.x+b.width*.65,b.y+b.height*.54,{steps:12});
+            await page.mouse.up();
+          };
+          try{
+            const ctx=await browser.newContext({viewport:{width:1280,height:800}});
+            const page=await ctx.newPage(),logs=watch(page);
+            await page.goto(base+'/showroom/globe/h-earth/?qualification=gen3187-terrain-first-v1',{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForFunction(()=>window.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='test'
+              && window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().counters?.gpuFramebufferPresentationCount>=1,
+              null,{timeout:420000,polling:100});
+            const first=await snapshot(page),initialPixels=await screen(page,'terrain-first');
+            assert(first.webgl2&&first.rootState.firstFrame==='true'&&first.rootState.pointerEvents==='auto','TERRAIN_CONTROLS_NOT_AVAILABLE');
+            assert(first.gpu.timing?.firstFrameMilliseconds!==null&&Number.isFinite(first.loader.controlsEnabledMilliseconds),'FIRST_CONTROLS_TIMING_MISSING');
+            assert(first.enterDisabled&&first.loader.firstInputCameraChangeMilliseconds===null,'PREMATURE_ENTER');
+            assert(first.gpu.vegetation?.phase!=='OWNER_PREPARED'&&!first.gpu.prepared,'FIRST_CONTROLS_BLOCKED_ON_BACKGROUND');
+            await gesture(page);
+            await page.waitForFunction(()=>{
+              const r=window.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+              return r?.mode==='ready'&&r.firstInputPoseRenderedMilliseconds!==null
+                && r.nextAnimationFrameOpportunityMilliseconds!==null;
+            },null,{timeout:120000,polling:100});
+            const changed=await snapshot(page),changedPixels=await screen(page,'changed-camera');
+            assert(pose(first.nav)!==pose(changed.nav)&&changed.enterDisabled===false,'GESTURE_AND_ENTRY_FAILURE');
+            assert(changed.loader.firstInputPoseRenderedMilliseconds>=changed.loader.firstInputCameraChangeMilliseconds
+              && changed.loader.nextAnimationFrameOpportunityMilliseconds>=changed.loader.firstInputPoseRenderedMilliseconds
+              && changed.loader.renderedInputPose?.navigationSequence===changed.loader.firstInputPresentedFrame?.navigationSequence,
+              'RENDERED_CHANGED_VIEW_NOT_PROVEN');
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            await page.waitForFunction(()=>window.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered',null,{timeout:30000});
+            await page.waitForFunction(()=>{
+              const p=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().vegetationBackground?.phase;
+              return p==='OWNER_PREPARED'||p==='FAILED';
+            },null,{timeout:780000,polling:500});
+            const finished=await snapshot(page),finalPixels=await screen(page,'vegetation-finished');
+            assert(finished.gpu.vegetation?.phase==='OWNER_PREPARED'&&finished.gpu.vegetation?.ownerReceipt
+              && finished.gpu.vegetation?.lastProgress&&finished.loader.mode==='entered','BACKGROUND_PREPARATION_NOT_VERIFIED');
+            assert(finished.gpu.counters?.worldRebuildCount===0,'WORLD_REBUILT');
+            assert(!logs.page.length&&!logs.console.length&&!logs.network.length&&!logs.http.length,'NORMAL_BROWSER_ERRORS');
+            verdict.normal={first,initialPixels,changed,changedPixels,finished,finalPixels,logs,
+              firstControlsLoaderMs:first.loader.controlsEnabledMilliseconds,
+              firstTerrainRouteMs:first.gpu.timing.firstFrameMilliseconds,
+              vegetationCompleteObservedAtPerformanceNow:finished.at,changedCameraBeforeEnter:true};
+            await ctx.close();
+            const failCtx=await browser.newContext({viewport:{width:1280,height:800}});
+            const failPage=await failCtx.newPage(),failLogs=watch(failPage);
+            let injected=false;
+            await failPage.route('**/vegetation-prototype/route.js*',async r=>{
+              const response=await r.fetch(),source=await response.text();
+              const start=source.indexOf('const task=renderer.prepareReplacementVegetation({onProgress:update=>{');
+              const end=source.indexOf('        }});',start);
+              assert(start>=0&&end>start,'CONTROLLED_FAILURE_SOURCE_MARKER_MISSING');
+              const replacement="const task=Promise.reject(new Error('GEN3187_CONTROLLED_BACKGROUND_VEGETATION_FAILURE'));";
+              injected=true;
+              await r.fulfill({response,body:source.slice(0,start)+replacement+source.slice(end+13)});
+            });
+            await failPage.goto(base+'/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
+            await failPage.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().vegetationBackground?.phase==='FAILED',null,{timeout:420000,polling:100});
+            const failure=await snapshot(failPage),failurePixels=await screen(failPage,'vegetation-fault-injected');
+            assert(injected&&failure.gpu.vegetation.error?.includes('GEN3187_CONTROLLED_BACKGROUND_VEGETATION_FAILURE'),'EXPECTED_FAULT_NOT_RECORDED');
+            assert(failure.rootState.pointerEvents==='auto'&&failure.rootState.firstFrame==='true'
+              && ['test','ready'].includes(failure.loader.mode),'BACKGROUND_FAULT_REVOKED_CONTROLS');
+            assert(!failLogs.page.length&&!failLogs.network.length&&!failLogs.http.length
+              && failLogs.console.every(x=>x.includes('H_EARTH_BACKGROUND_VEGETATION_FAILED')),'FAULT_HAS_UNEXPECTED_ERRORS');
+            verdict.controlledFailure={failure,failurePixels,logs:failLogs,injected,originalGitBytesUnchanged:true,interceptedBrowserResponseOnly:true};
+            await failCtx.close();
+            const replayCtx=await browser.newContext({viewport:{width:1280,height:800}});
+            const replayPage=await replayCtx.newPage(),replayLogs=watch(replayPage);
+            await replayPage.goto(base+'/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
+            await replayPage.waitForFunction(()=>{
+              const p=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.().singleOwnerVegetationQualification;
+              return p?.result==='CAPTURED_POPULATED_CONTINUITY'||p?.result==='FAILED';
+            },null,{timeout:780000,polling:500});
+            const replay=await replayPage.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.().singleOwnerVegetationQualification??null);
+            const replayPixels=await screen(replayPage,'strict-diagnostic-replay');
+            assert(replay?.result==='CAPTURED_POPULATED_CONTINUITY'&&replay.observations?.length>=18,'STRICT_REPLAY_REGRESSION');
+            assert(!replayLogs.page.length&&!replayLogs.console.length&&!replayLogs.network.length&&!replayLogs.http.length,'REPLAY_BROWSER_ERRORS');
+            verdict.strictReplay={replay,replayPixels,logs:replayLogs};
+            await replayCtx.close();
+            verdict.result='BROWSER_BEHAVIOR_VERIFIED_EXPERIENCE_ANCHOR_PENDING';
+          }catch(error){
+            verdict.result='FAILED';
+            verdict.errors.push(error?.stack??String(error));
+            process.exitCode=1;
+          }finally{
+            await fs.writeFile(out+'/receipt.json',JSON.stringify(verdict,null,2)+'\n');
+            await browser.close();
+          }
+          NODE
+          node --check .h-earth-gen3187-browser.mjs
+          timeout 3150s node .h-earth-gen3187-browser.mjs
+      - name: Preserve native Chromium receipts, visuals and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3187-terrain-first-${{ inputs.target_sha }}
+          path: ${{ runner.temp }}/h-earth-gen3187
+          if-no-files-found: warn
+          retention-days: 30
+

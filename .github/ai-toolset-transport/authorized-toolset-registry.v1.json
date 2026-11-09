@@ -2652,6 +2652,124 @@
       "continuationRule": "CONTINUE_TO_DELIVERY_IMPLEMENTATION_ONLY_AFTER_VERIFIED_FULL_ROOT_RECONSTRUCTION_AND_REGION_SIZE_CAMERA_COVERAGE_PROOF",
       "terminationRule": "READ_ONLY_QUALIFICATION_TERMINATES_AFTER_RECEIPT_NO_PRODUCT_MUTATION_MERGE_RELEASE_OR_DEPLOYMENT_AUTHORITY",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_GEN3178_FROZEN_NATIVE_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "CONTROL_PLANE_H_EARTH_GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION_20261109_001",
+      "operationClass": "H_EARTH_GEN3178_FROZEN_NATIVE_READ_ONLY_QUALIFICATION",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_GEN3178_FROZEN_NATIVE_QUALIFIER_V1",
+      "exactToolingHead": "cb351c53339f5bb6c015128f57fba9a9d67c5523",
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/h-earth-gen3178-native-qualification.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_GEN3178_NATIVE_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "d0d17645ddb3a9ab3b6a4e98d46ae26c797638e3"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "H_EARTH_GEN3178_NATIVE_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "candidateHead",
+          "baseHead",
+          "executionHolder",
+          "evidence",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "showroom/",
+        "h-earth-3d/",
+        "assets/",
+        ".github/",
+        "tools/"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WORKFLOW_MUTATION",
+        "SHADER_OR_RENDERER_MUTATION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_AUTHENTIC_GEN3178_FOUR_CASE_NATIVE_QUALIFICATION_ONLY",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_EXACT_QUALIFICATION_FAILURE",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_BINDING_FAILURE",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "ONLY_AFTER_EXACT_GEN3178_SOURCE_NATIVE_FOUR_CASE_PASS_WITH_SEPARATE_VISUAL_REVIEW",
+      "terminationRule": "READ_ONLY_QUALIFICATION_TERMINATES_AFTER_RECEIPT_NO_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

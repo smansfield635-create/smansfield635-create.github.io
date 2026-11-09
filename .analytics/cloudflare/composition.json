@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-09T16:26:18Z",
+  "generatedAt": "2026-11-09T17:23:47Z",
   "window": {
-    "start": "2026-10-10T16:26:18Z",
-    "end": "2026-11-09T16:26:18Z"
+    "start": "2026-10-10T17:23:47Z",
+    "end": "2026-11-09T17:23:47Z"
   },
   "dimensions": {
     "requestPath": [
@@ -133,6 +133,11 @@
         "visits": 1
       },
       {
+        "value": "/laws/core-invariants/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
@@ -148,12 +153,22 @@
         "visits": 1
       },
       {
+        "value": "/laws/hybrid-collapse/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/reverse-audit/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/explore/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -168,12 +183,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -184,11 +199,6 @@
       },
       {
         "value": "/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -209,16 +219,6 @@
       },
       {
         "value": "/characters/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/hybrid-collapse/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -327,8 +327,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 744,
-        "visits": 744
+        "pageLoads": 714,
+        "visits": 714
       },
       {
         "value": "Chrome",
@@ -346,14 +346,14 @@
         "visits": 92
       },
       {
-        "value": "Unknown",
-        "pageLoads": 58,
-        "visits": 48
-      },
-      {
         "value": "Firefox",
         "pageLoads": 51,
         "visits": 49
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 38,
+        "visits": 38
       },
       {
         "value": "MobileSafari",

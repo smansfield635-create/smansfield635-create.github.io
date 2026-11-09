@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-09T00:45:41Z",
+  "generatedAt": "2026-11-09T01:24:08Z",
   "window30d": {
-    "start": "2026-10-10T00:45:41Z",
-    "end": "2026-11-09T00:45:41Z"
+    "start": "2026-10-10T01:24:08Z",
+    "end": "2026-11-09T01:24:08Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 34
+      "pageLoads": 30
     },
     {
       "date": "2026-11-02",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 0
+      "pageLoads": 1
     }
   ],
   "summary": {
-    "pageLoads": 1540,
-    "botPageLoads": 787,
-    "nonBotPageLoads": 753
+    "pageLoads": 1537,
+    "botPageLoads": 786,
+    "nonBotPageLoads": 751
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1415,
-      "visits": 1415
+      "pageLoads": 1412,
+      "visits": 1412
     },
     {
       "host": "diamondgatebridge.com",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 47,
-      "visits": 47
+      "pageLoads": 44,
+      "visits": 44
     },
     {
       "path": "/about/",

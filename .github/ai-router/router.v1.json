@@ -137,7 +137,8 @@
         ".github/workflows/h-earth-repository-preflight-execution-binding-validation.yml",
         "tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs",
         ".github/workflows/h-earth-repository-preflight-remote-execution.yml",
-        ".github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml"
+        ".github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml"
       ],
       "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
       "priority": 100

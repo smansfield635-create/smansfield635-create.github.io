@@ -553,7 +553,7 @@ async function gen3200Capture(){
   const RECEIPT={schema:'H_EARTH_GEN3200_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
     baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
     browserExecuted:false,publicationPerformed:false,productMutationPerformed:false,
-    exploratoryNotFinalKeep:true,images:[],errors:[]};
+    exploratoryNotFinalKeep:true,images:[],provisional:[],progress:[],errors:[]};
   const WORKTREES=[],SERVERS=[];let BROWSER;
   await fs.mkdir(OUTPUT,{recursive:true});
   try{
@@ -569,6 +569,7 @@ async function gen3200Capture(){
     BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
     RECEIPT.browserExecuted=true;
     for(const [label,port,head] of [['baseline',4173,BASE],['candidate',4174,CAND]]){
+      let labelFailed=false;
       const directory=STAGE+'-'+label;
       const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
       SERVERS.push(server);
@@ -583,6 +584,7 @@ async function gen3200Capture(){
         page.on('pageerror',e=>errors.push(String(e?.message||e)));
         page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
         page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+        try {
         await page.route('**/functional-landscape/navigation.js*',async route=>{
           const response=await route.fetch(),source=await response.text();
           const coast="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
@@ -612,11 +614,31 @@ async function gen3200Capture(){
               complete:residency.complete,droppedPlacementCount:residency.droppedPlacementCount,worldRebuildCount:residency.worldRebuildCount}:null,
             woodlandReady:r?.woodlandFineGrassReady===true,
             groundCover:g?{prepared:g.prepared,visibleInstanceCount:g.visibleInstanceCount,drawCallCount:g.drawCallCount}:null,
-            firstFailure:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage??null};
+            firstFailure:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage??null,
+            vegetationState:root?.dataset.vegetationResidency??null,
+            globalGpuResident:root?.dataset.globalGroundcoverGpuResident??null,
+            woodlandGpuResident:root?.dataset.woodlandGrassGpuResident??null,
+            progressText:document.getElementById('h-earth-vegetation-progress')?.textContent?.slice(0,240)??null,
+            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null};
         });
-        let state,ready=false;
-        for(let i=0;i<180;i++){
+        let state,ready=false,provisionalImageCaptured=false;
+        for(let i=0;i<420;i++){
           state=await observe();
+          if(i%30===0)RECEIPT.progress.push({label,device,waitSeconds:i,
+            frames:state.frames,ready:state.ready,vegetationState:state.vegetationState,
+            globalGpuResident:state.globalGpuResident,woodlandGpuResident:state.woodlandGpuResident,
+            progressText:state.progressText,loaderText:state.loaderText,
+            groundCover:state.groundCover,firstFailure:state.firstFailure});
+          if(!provisionalImageCaptured&&state.webgl&&state.frames>0&&state.canvasWidth>=100&&state.canvasHeight>=100){
+            const filename=label+'-'+device+'-first-real-webgl-NOT-MATURE.png';
+            const bytes=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+filename});
+            if(bytes.length>=1024){
+              RECEIPT.provisional.push({label,device,head,filename,imageBytes:bytes.length,imageSha256:HASH(bytes),
+                actualWebglPresentationCount:state.frames,vegetationMaturity:'NOT_PROVEN',
+                sourceStateAtCapture:state});
+              provisionalImageCaptured=true;
+            }
+          }
           if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
           if(state.error||state.firstFailure||errors.length||failures.length)break;
           await DELAY(1000);
@@ -646,7 +668,7 @@ async function gen3200Capture(){
           let actual,match=false;
           for(let i=0;i<120;i++){
             actual=await observe();const n=actual.nav;
-            if(n?.sequence>before.nav?.sequence&&n?.accepted===true&&n.action==='GOTO_WAYPOINT'&&n.terrainSupported===true&&
+            if(n?.sequence>before.nav?.sequence&&n?.accepted===true&&n.action?.startsWith('GOTO_WAYPOINT')&&n.terrainSupported===true&&
               Math.hypot(n.position?.x-target.x,n.position?.z-target.z)<.04&&Math.abs(n.pitchDegrees-target.pitch)<.05&&actual.frames>before.frames){match=true;break}
             if(actual.error||actual.firstFailure||errors.length||failures.length)break;
             await DELAY(250);
@@ -662,8 +684,16 @@ async function gen3200Capture(){
         }
         RECEIPT[label][device]={viewport,fixtureHashes,errors,failedRequests:failures};
         await context.close();
+        }catch(e){
+          RECEIPT.errors.push('CAPTURE_CASE_FAILED:'+label+':'+device+':'+String(e?.stack||e));
+          try{await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-failure-page.png',fullPage:true})}catch{}
+          await context.close().catch(()=>{});
+          labelFailed=true;
+          break;
+        }
       }
       server.kill('SIGTERM');
+      if(labelFailed)continue;
       if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
     }
     if(RECEIPT.images.length!==12||RECEIPT.images.filter(v=>v.label==='baseline').length!==6||

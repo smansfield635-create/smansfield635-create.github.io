@@ -392,5 +392,140 @@ export async function run(argv){
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;
 }
-if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});
+
+/** Gen3214: separately admitted read-only first-party exact Gen3172 vs Gen3178 WebGL material capture.
+ * Legacy source comparison profiles above remain byte-exact; this does not patch a shader.
+ */
+async function runGen3214MaterialVisual(){
+  const baseline='fd2c38ccc78bdb90c99a9d03d7cd14dea21bb28b';
+  const candidate='d0d17645ddb3a9ab3b6a4e98d46ae26c797638e3';
+  const expectedBlobs={baseline:'19eec736d247857a1ce232e693e583d3047079cf',candidate:'ae70579df6ceb460a81ae6fd5908b31533310b85'};
+  const output='/tmp/gen3178-material-webgl',stage='/tmp/gen3178-webgl-'+process.pid;
+  const poses=['inland-seam-near','inland-seam-far','coast-oblique','foothill-west'].map(n=>POSES.find(p=>p.name===n));
+  const receipts={schema:'H_EARTH_GEN3214_REAL_GEN3178_MATERIAL_WEBGL_CAPTURE_v1',result:'FAIL_CLOSED',baselineHead:baseline,candidateHead:candidate,
+    originalRendererBlobs:expectedBlobs,historicalSourceAttributionRun:40411050366,ownerOldPhonePoseCorrespondence:'NOT_VERIFIED',
+    generation:3214,firstPartyWebGL:true,productFilesChanged:false,published:false,ownerAcceptance:false,views:[],runs:[],errors:[]};
+  const getHash=x=>crypto.createHash('sha256').update(x).digest('hex');
+  const sleep=t=>new Promise(resolve=>setTimeout(resolve,t));
+  const git=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
+  const dirs=[],servers=[];let browser=null;
+  fs.mkdirSync(output,{recursive:true});
+  const persist=()=>fs.writeFileSync(path.join(output,'receipt.json'),JSON.stringify(receipts,null,2)+'\n');
+  persist();
+  try {
+    for(const [label,head] of [['baseline',baseline],['candidate',candidate]]){
+      git(['fetch','--no-tags','--depth=1','origin',head]);
+      const directory=stage+'-'+label;
+      git(['worktree','add','--no-checkout','--detach',directory,head]);dirs.push(directory);
+      git(['sparse-checkout','set','--cone','showroom/globe','h-earth-3d','assets'],directory);
+      git(['checkout','--force',head],directory);
+      if(git(['rev-parse','HEAD'],directory)!==head||git(['status','--porcelain'],directory))throw Error('GEN3214_IMMUTABLE_SPARSE_CHECKOUT_INVALID:'+label);
+      const blob=git(['rev-parse',head+':'+RENDERER.slice(1)],directory);
+      if(blob!==expectedBlobs[label])throw Error('GEN3214_EXACT_RENDERER_BLOB_MISMATCH:'+label+':'+blob);
+      const renderSource=fs.readFileSync(path.join(directory,RENDERER.slice(1)));
+      if(getHash(renderSource).length!==64)throw Error('GEN3214_RENDERER_BYTES_INVALID');
+      receipts.runs.push({label,head,directoryVerified:true,rendererGitBlob:blob,rendererSha256:getHash(renderSource),routeGitBlob:git(['rev-parse',head+':'+ROUTE.slice(1)],directory),errors:[]});
+      persist();
+    }
+    const chromium=(await import('playwright')).chromium;
+    browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+    for(const [label,head,port] of [['baseline',baseline,19471],['candidate',candidate,19472]]){
+      const directory=stage+'-'+label,log=receipts.runs.find(r=>r.label===label);
+      const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
+      servers.push(server);
+      const site='http://127.0.0.1:'+port;
+      let serving=false;
+      for(let i=0;i<80;i++){try{if((await fetch(site+ROOT)).ok){serving=true;break;}}catch{}await sleep(250);}
+      if(!serving)throw Error('GEN3214_FIRST_PARTY_SERVER_NOT_READY:'+label);
+      const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1,isMobile:false});
+      const page=await context.newPage();page.setDefaultTimeout(40000);
+      page.on('pageerror',e=>log.errors.push('PAGE:'+e.message));
+      page.on('requestfailed',e=>log.errors.push('REQUEST:'+e.url()+':'+e.failure()?.errorText));
+      page.on('console',m=>{if(m.type()==='error')log.errors.push('CONSOLE:'+m.text());});
+      await page.addInitScript({content:'globalThis.__groundComparisonState='+comparisonState.toString()+';globalThis.__groundAssetReadiness='+assetReadiness.toString()+';'});
+      const routeOriginal=fs.readFileSync(path.join(directory,ROUTE.slice(1)),'utf8');
+      await page.route(url=>url.pathname===ROUTE,intercept=>intercept.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(routeOriginal)}));
+      await page.goto(site+ROOT+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
+      await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
+      if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('GEN3214_WORLD_STARTUP_FAILED:'+label);
+      await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
+      await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
+      await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});
+      await page.click('[data-enter]');
+      await page.waitForFunction(()=>{let root=document.querySelector('#h-earth-functional-landscape-route'),load=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&load?.hidden===true&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:180000});
+      log.entered=true;persist();
+      await page.evaluate(async()=>{
+        const urls=[...new Set(performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)))];
+        if(urls.length!==1)throw Error('GEN3214_NAV_SOURCE_AMBIGUOUS:'+JSON.stringify(urls));
+        const url=urls[0];let source=await(await fetch(url)).text();
+        source=source.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));
+        source+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
+        globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([source],{type:'text/javascript'})));
+      });
+      let seq=321400;
+      for(const pose of poses){
+        if(!pose)throw Error('GEN3214_SOURCE_CAMERA_MISSING');
+        let stable=0,lastSig=null,settled=null;
+        for(let i=0;i<150;i++){
+          settled=await page.evaluate(async({pose,sequence})=>{
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3214_SOURCE_CAMERA_SETTLE');
+            globalThis.__HEarthAuditPresent(state);
+            await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+            const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+            const cv=document.querySelector('#h-earth-functional-landscape-canvas');
+            const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:sequence});
+            return {assets:globalThis.__groundAssetReadiness(gpu.resources,packet.camera.position),frame:gpu.frameRecords.at(-1)};
+          },{pose,sequence:seq+1});
+          stable=settled.frame?.navigationSequence===seq+1&&settled.assets.ready&&settled.assets.signature===lastSig?stable+1:0;
+          lastSig=settled.assets.signature;
+          if(stable>=2)break;
+          await sleep(250);
+        }
+        if(stable<2)throw Error('GEN3214_MATURE_SOURCE_CAMERA_ASSETS_NOT_READY:'+label+':'+pose.name);
+        const evidence=await page.evaluate(async({pose,sequence})=>{
+          const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3214_MATCHED_MATERIAL_REAL_WEBGL');
+          for(let k=0;k<12;k++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);}
+          const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+          const cv=document.querySelector('#h-earth-functional-landscape-canvas'),gl=cv.getContext('webgl2');
+          const pkt=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:sequence});
+          return {state,frame:gpu.frameRecords.at(-1),canvas:{width:cv.width,height:cv.height,cssWidth:cv.clientWidth,cssHeight:cv.clientHeight},
+            frameCamera:pkt.camera.position,viewProjectionMatrix:Array.from(pkt.camera.viewProjectionMatrix),
+            gpuVersion:gl?String(gl.getParameter(gl.VERSION)):null,contextLost:gl?.isContextLost()??true,
+            drawPresentations:gpu.counters?.gpuFramebufferPresentationCount??null,glError:gl?.getError()??null,
+            entered:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered',
+            sourceObserver:pose.diagnosticObserver===true};
+        },{pose,sequence:++seq});
+        if(evidence.entered!==true||!evidence.gpuVersion?.includes('WebGL 2.0')||evidence.contextLost||evidence.glError!==0||evidence.frame?.navigationSequence!==seq||evidence.state?.sequence!==seq)throw Error('GEN3214_REAL_WEBGL_FRAME_INVALID:'+label+':'+pose.name);
+        if(evidence.state.position.x!==pose.x||evidence.state.position.z!==pose.z||evidence.state.yawDegrees!==pose.yaw)throw Error('GEN3214_CAMERA_MISMATCH:'+label+':'+pose.name);
+        const file=label+'-'+pose.name+'.png';
+        const image=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:path.join(output,file)});
+        if(image.length<1024||image[0]!==137||image[1]!==80||image[2]!==78||image[3]!==71)throw Error('GEN3214_PNG_INVALID:'+label+':'+pose.name);
+        receipts.views.push({label,pose,sourceHead:head,rendererGitBlob:expectedBlobs[label],image:file,imageBytes:image.length,imageSha256:getHash(image),
+          ...evidence,originalOwnerCameraMatch:'NOT_PROVEN',observationalCameraOnly:pose.diagnosticObserver===true,sourceWorldAndGrassUnmodified:true});
+        persist();
+      }
+      await context.close();server.kill('SIGTERM');
+      if(log.errors.length)throw Error('GEN3214_BROWSER_LOG_FAILURE:'+label+':'+JSON.stringify(log.errors.slice(0,5)));
+      if(git(['status','--porcelain'],directory))throw Error('GEN3214_PRODUCT_CHECKOUT_MUTATED:'+label);
+    }
+    if(receipts.views.length!==poses.length*2)throw Error('GEN3214_MATCHED_MATERIAL_PNG_SET_INCOMPLETE');
+    for(const pose of poses){
+      const pair=receipts.views.filter(v=>v.pose.name===pose.name);
+      if(pair.length!==2||pair[0].canvas.width!==pair[1].canvas.width||pair[0].canvas.height!==pair[1].canvas.height||
+        pair[0].state.position.x!==pair[1].state.position.x||pair[0].state.position.y!==pair[1].state.position.y||
+        pair[0].state.position.z!==pair[1].state.position.z||pair[0].state.yawDegrees!==pair[1].state.yawDegrees||
+        pair[0].state.pitchDegrees!==pair[1].state.pitchDegrees)throw Error('GEN3214_PAIR_CAMERA_NOT_MATCHED:'+pose.name);
+    }
+    receipts.result='ACTUAL_MATCHED_WEBGL2_IMAGES_OWNER_REVIEW_PENDING';
+  }catch(e){
+    receipts.errors.push(String(e?.stack||e));throw e;
+  }finally{
+    persist();
+    if(browser)await browser.close().catch(()=>{});
+    for(const server of servers)server.kill('SIGTERM');
+    for(const dir of dirs.reverse())try{git(['worktree','remove','--force',dir])}catch{}
+  }
+}
+
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))(process.argv.includes('--gen3214-material')?runGen3214MaterialVisual():run(process.argv.slice(2))).catch(e=>{console.error(e);process.exitCode=1;});
 

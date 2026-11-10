@@ -186,3 +186,185 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  }catch(error){cleanup();throw error;}
 }
 
+
+
+/** Gen3186 authenticated regional GPU owner.
+ * The regional stream, not this public method, authenticates each packet.
+ * Source tile FIRST offsets are immutable original-global record offsets.
+ * A single capacity-bounded GPU buffer exists; only verified regions upload.
+ * Legacy createSingleOwnerVegetation remains the independent global fallback. */
+export function createIncrementalSingleOwnerVegetation(gl,{environment,planetRadius,habitat,
+ yieldControl=async()=>{},maximumUploadBytesPerYield=262144}={}){
+ const sourceRoots=2858738,sourceRegions=182;
+ if(!environment||!Number.isFinite(planetRadius)||habitat?.pixels?.length!==576*192||
+    !Number.isInteger(maximumUploadBytesPerYield)||maximumUploadBytesPerYield<16384||
+    maximumUploadBytesPerYield>524288)throw Error('REGIONAL_OWNER_INPUT_INVALID');
+ const bankTiles=oasisBankTiles(sourceRoots),bankRoots=bankTiles.reduce((n,t)=>n+t.count,0);
+ const capacity=allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots;
+ if(sourceRoots+bankRoots>capacity)throw Error('REGIONAL_OWNER_CAPACITY');
+ const buffers=[],shaders=[];let program=null,vao=null,rootBuffer=null,disposed=false;
+ let installedSourceRoots=0,installedSourceRegions=0,entranceRoots=0,entranceFinalized=false;
+ let uploadedBytes=0,uploadCount=0,perFrameUploadBytes=0,lastDraw=null;
+ const installedRegions=new Set(),installedTiles=new Set(),sourceStarts=new Map();
+ const sourceTiles=[],renderTiles=[],visibility=[];
+ let installedHabitat=habitat,entranceReceipt=null;
+ const error=(code,stage)=>Error('REGIONAL_OWNER_'+code+':'+stage);
+ function assertLive(stage){if(disposed||gl.isContextLost?.()===true)throw error('CONTEXT_UNAVAILABLE',stage);}
+ function cleanup(){
+  if(rootBuffer)gl.deleteBuffer(rootBuffer);
+  if(vao)gl.deleteVertexArray(vao);
+  if(program)gl.deleteProgram(program);
+  for(const shader of shaders)gl.deleteShader(shader);
+ }
+ function compile(type,text){
+  const s=gl.createShader(type);if(!s)throw error('SHADER_CREATE',type);
+  shaders.push(s);gl.shaderSource(s,text);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw error('SHADER_COMPILE',gl.getShaderInfoLog(s));
+  return s;
+ }
+ function insertResident(tiles){
+  renderTiles.push(...tiles);
+  renderTiles.sort((a,b)=>a.first-b.first);
+  visibility.push(...boundGrassTiles(tiles));
+  visibility.sort((a,b)=>a.tile.first-b.tile.first);
+ }
+ function upload(tiles){
+  assertLive('UPLOAD');
+  gl.bindBuffer(gl.ARRAY_BUFFER,rootBuffer);
+  for(const tile of tiles){
+   if(tile.first+tile.count>capacity)throw error('CAPACITY_EXCEEDED','UPLOAD');
+   gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);
+   uploadCount++;uploadedBytes+=tile.packed.byteLength;
+  }
+  if(gl.getError()!==gl.NO_ERROR)throw error('UPLOAD_GL_ERROR','UPLOAD');
+ }
+ try{
+  assertLive('CREATE');
+  program=gl.createProgram();if(!program)throw error('PROGRAM_CREATE','CREATE');
+  gl.attachShader(program,compile(gl.VERTEX_SHADER,VS));
+  gl.attachShader(program,compile(gl.FRAGMENT_SHADER,FS));
+  gl.linkProgram(program);
+  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw error('PROGRAM_LINK',gl.getProgramInfoLog(program));
+  vao=gl.createVertexArray();rootBuffer=gl.createBuffer();
+  if(!vao||!rootBuffer)throw error('BUFFER_CREATE','CREATE');
+  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,rootBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER,capacity*16,gl.STATIC_DRAW);
+  if(gl.getBufferParameter(gl.ARRAY_BUFFER,gl.BUFFER_SIZE)!==capacity*16||gl.getError()!==gl.NO_ERROR)
+   throw error('BUFFER_CAPACITY','CREATE');
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
+  const keys=['uViewProjection','uCamera','uRadius','uFine','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'];
+  const u=Object.fromEntries(keys.map(k=>[k,gl.getUniformLocation(program,k)]));
+  const rgb=v=>{const a=Array.isArray(v)?v.slice(0,3):[v.r,v.g,v.b];return a.map(x=>x/(a.some(q=>q>1)?255:1));};
+  gl.useProgram(program);
+  gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,environment.sunDirection.x,environment.sunDirection.y,environment.sunDirection.z);
+  gl.uniform3fv(u.uSunColor,rgb(environment.sunColor));gl.uniform3fv(u.uHaze,rgb(environment.groundHazeColor));
+  gl.uniform1f(u.uSunIntensity,environment.sunIntensity);gl.uniform1f(u.uFogStart,environment.fogStartDistance);
+  gl.uniform1f(u.uFogFalloff,environment.fogFalloff);gl.uniform1f(u.uMaxFog,environment.maximumFogFactor);
+  upload(bankTiles);insertResident(bankTiles);
+  // Bind back to the renderer's own main geometry pass before returning.
+  gl.bindVertexArray(null);gl.bindBuffer(gl.ARRAY_BUFFER,null);
+  function getReceipt(){
+   return Object.freeze({schema:'H_EARTH_SINGLE_OWNER_REGIONAL_v1',
+    acceptedSourceRoots:sourceRoots,installedSourceRoots,sourceRegionCount:sourceRegions,
+    installedSourceRegions,sourceComplete:installedSourceRoots===sourceRoots&&installedSourceRegions===sourceRegions,
+    partialSourceNeverClaimedComplete:true,installedTileCount:installedTiles.size,
+    oasisRoots:bankRoots,entranceRoots,entranceFinalized,
+    installedRootCount:installedSourceRoots+bankRoots+entranceRoots,
+    originalSourceOffsetsPreserved:true,gpuOwners:1,gpuBuffers:1,
+    gpuCapacityRoots:capacity,gpuAllocatedBytes:capacity*16,
+    gpuUploadedBytes:uploadedBytes,gpuUploadCount:uploadCount,
+    perFrameUploadBytes,habitat:installedHabitat.receipt??null,
+    entranceGrass:entranceReceipt,disposed,lastDraw});
+  }
+  async function installRegion(region){
+   assertLive('INSTALL');
+   if(typeof region?.id!=='string'||installedRegions.has(region.id)||!Number.isInteger(region.roots)||
+      !Array.isArray(region.tiles)||region.tiles.length===0)throw error('REGION_INVALID_OR_DUPLICATE','INSTALL');
+   const seenInRegion=new Set();let count=0;
+   const staged=[];
+   for(const tile of region.tiles){
+    if(typeof tile.id!=='string'||installedTiles.has(tile.id)||seenInRegion.has(tile.id)||
+       !Number.isInteger(tile.first)||tile.first<0||!Number.isInteger(tile.count)||tile.count<1||tile.count>1600||
+       !Number.isInteger(tile.baselineCount)||tile.baselineCount<0||tile.baselineCount>tile.count||
+       tile.first+tile.count>sourceRoots||!(tile.packed instanceof Float32Array)||
+       tile.packed.length!==tile.count*4||!tile.packed.every(Number.isFinite)||
+       Math.floor(tile.minX/32)+':'+Math.floor(tile.minZ/32)!==region.id)
+     throw error('SOURCE_TILE_INVALID','INSTALL');
+    for(const [first,length] of sourceStarts){
+     if(tile.first<first+length&&first<tile.first+tile.count)throw error('SOURCE_OFFSET_OVERLAP','INSTALL');
+    }
+    for(const t of staged)if(tile.first<t.first+t.count&&t.first<tile.first+tile.count)
+     throw error('SOURCE_OFFSET_OVERLAP','INSTALL');
+    count+=tile.count;seenInRegion.add(tile.id);staged.push(tile);
+   }
+   if(count!==region.roots||installedSourceRoots+count>sourceRoots)throw error('REGION_ROOT_COUNT','INSTALL');
+   let pending=0;
+   for(const tile of staged){
+    upload([tile]);pending+=tile.packed.byteLength;
+    if(pending>=maximumUploadBytesPerYield){pending=0;await yieldControl();assertLive('INSTALL_RESUME');}
+   }
+   for(const tile of staged){installedTiles.add(tile.id);sourceStarts.set(tile.first,tile.count);}
+   sourceTiles.push(...staged);insertResident(staged);
+   installedRegions.add(region.id);installedSourceRoots+=count;installedSourceRegions++;
+   if(installedSourceRoots===sourceRoots){
+    if(installedSourceRegions!==sourceRegions||installedTiles.size!==8198)throw error('WORLD_REGION_COUNT','INSTALL');
+    let first=0;
+    for(const t of [...sourceTiles].sort((a,b)=>a.first-b.first)){
+     if(t.first!==first)throw error('SOURCE_OFFSET_GAP','INSTALL');first+=t.count;
+    }
+    if(first!==sourceRoots)throw error('SOURCE_END_MISMATCH','INSTALL');
+   }
+   return getReceipt();
+  }
+  async function finalizeEntrance({visibleSurface,geology,palms=[],yieldControl:entranceYield=yieldControl}={}){
+   assertLive('ENTRANCE');
+   if(entranceFinalized||installedSourceRoots!==sourceRoots||installedSourceRegions!==sourceRegions)
+    throw error('ENTRANCE_REQUIRES_COMPLETE_SOURCE','ENTRANCE');
+   const ordered=[...sourceTiles].sort((a,b)=>a.first-b.first);
+   const baseTiles=Object.freeze([...ordered,...bankTiles]);
+   const addition=await buildCavernEntranceGrass({existingTiles:runtimePlantingBaselineTiles(baseTiles),
+     visibleSurface,geology,palms,yieldControl:entranceYield});
+   const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+sourceRoots+bankRoots}));
+   const count=extra.reduce((n,t)=>n+t.count,0);
+   assertOasisBankBudget(sourceRoots+count,bankRoots,allocation);
+   if(sourceRoots+bankRoots+count>capacity)throw error('ENTRANCE_CAPACITY','ENTRANCE');
+   const floor=createEntranceFloorSupport(geology);
+   const nextHabitat=buildCavernGrassSoilHabitat(installedHabitat,baseTiles,addition,{eligibleAt:(x,z)=>{
+    const hit=floor.sample(x,z)??visibleSurface.sample(x,z);if(!hit||hit.slope>1.35)return false;
+    const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
+    return !water||water.y<=local.y+.04;
+   }});
+   let pending=0;
+   for(const tile of extra){upload([tile]);pending+=tile.packed.byteLength;
+    if(pending>=maximumUploadBytesPerYield){pending=0;await entranceYield();assertLive('ENTRANCE_RESUME');}}
+   insertResident(extra);entranceRoots=count;entranceReceipt=addition.receipt;
+   installedHabitat=nextHabitat;entranceFinalized=true;
+   return Object.freeze({habitat:installedHabitat,receipt:getReceipt()});
+  }
+  function draw(packet){
+   assertLive('DRAW');
+   const start=performance.now(),cam=packet.camera.position,frustum=grassFrustumPlanes(packet.camera.viewProjectionMatrix);
+   const visible=selectVisibleGrassTiles(visibility,frustum.planes),fine=selectFineTiles(visible,cam);
+   gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,rootBuffer);
+   gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,cam.x,cam.y,cam.z);
+   let coarse=0,detail=0,calls=0;
+   gl.uniform1i(u.uFine,0);
+   for(const range of mergeGrassRanges(visible)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);
+    coarse+=range.count;calls++;
+   }
+   gl.uniform1i(u.uFine,1);
+   for(const range of mergeGrassRanges(fine)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);
+    detail+=range.count;calls++;
+   }
+   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-start,
+    visibleCoarseRoots:coarse,selectedFineRoots:detail,drawCallCount:calls,
+    submittedTriangles:(coarse+detail)*2,coarseTiles:visible.length,fineTiles:fine.length,
+    perFrameUploadBytes:0};
+   return {...lastDraw};
+  }
+  return Object.freeze({installRegion,finalizeEntrance,draw,getReceipt,
+   getHabitat:()=>installedHabitat,dispose(){if(disposed)return;disposed=true;cleanup();}});
+ }catch(e){cleanup();throw e;}
+}

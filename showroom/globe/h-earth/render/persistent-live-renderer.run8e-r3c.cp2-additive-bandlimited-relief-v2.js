@@ -102,11 +102,11 @@ import {buildCavernUnderstoryPlacement} from './cavern-understory-placement.v1.j
 import {buildCavernEntranceIvy} from './cavern-entrance-ivy.v1.js';
 import {buildCavernPalmPlacement} from './cavern-palm-placement.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
-import {loadPrecomputedGrass} from './precomputed-grass.v1.js';
+import {loadPrecomputedGrass,prepareRegionalPrecomputedGrass} from './precomputed-grass.v1.js';
 import {loadPrecomputedOasisSoil} from './precomputed-oasis-soil.v1.js';
 import {buildHabitatMaterialPresentation,HABITAT_MATERIAL_PROTECTION_GLSL} from './habitat-material-presentation.v1.js';
 import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
-import {createSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
+import {createSingleOwnerVegetation,createIncrementalSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
 import {RENDERED_BEACH_GLSL,createRenderedBeachProvider,createPilotCoverageOwner} from './rendered-beach-signal.v1.js?rev=gen2782-rendered-landscape-v1';
 import {buildPlantingPilotLayout,isPlantingPilotPoint,createUniformGroundAdmission} from './landscape-planting-pilot.v1.js?rev=gen2780-stable-planting-v1';
 import {createPlantingPilotRenderer} from './planting-pilot-renderer.v1.js?rev=gen2780-stable-planting-v1';
@@ -1633,8 +1633,8 @@ export function buildCavernShadowMatrix(positions,sun){
   return new Float32Array([right[0]/extent[0],up[0]/extent[1],-light[0]/extent[2],0,right[1]/extent[0],up[1]/extent[1],-light[1]/extent[2],0,right[2]/extent[0],up[2]/extent[1],-light[2]/extent[2],0,-c[0]/extent[0],-c[1]/extent[1],c[2]/extent[2],1]);
 }
 
-export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null, onAssetSettled = ()=>{}, vegetationTraceEnabled = false, vegetationStrategy = null } = {}) {
-  if(vegetationStrategy!==null&&vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1')throw Error('VEGETATION_STRATEGY_INVALID');
+export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null, onAssetSettled = ()=>{}, vegetationTraceEnabled = false, vegetationStrategy = null, regionalGrass = null } = {}) {
+  if(vegetationStrategy!==null&&vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1'&&vegetationStrategy!=='SINGLE_OWNER_REGIONAL_V1')throw Error('VEGETATION_STRATEGY_INVALID');
   if(vegetationStrategy&&!deferVegetation)throw Error('PROTOTYPE_REQUIRES_DEFERRED_BASE');
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
@@ -2014,9 +2014,77 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     return vegetationPreparation;
   }
 
+  // Gen3186: guarded opt-in only. No public regional manifest has been adopted.
+  let regionalStream=null,regionalCamera=null,regionalQueuedCamera=null,regionalStatus=null;
+  let regionalFallbackReason=null,regionalFallbackTask=null,regionalEntranceTask=null;
+  let regionalProgressObserver=()=>{};
+  const regionalTimings={firstFrameSubmittedMs:null,firstObservedMovementMs:null,
+    local24ReadyMs:null,radius64ReadyMs:null,worldCompleteMs:null,entranceCompleteMs:null};
+  const restoreGrassHabitat=habitat=>{
+    if(!resources.woodlandHabitat||!resources.habitatMaterialPresentation)throw Error('REGIONAL_HABITAT_UNINITIALIZED');
+    const put=(unit,texture,pixels)=>{
+      gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,texture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+      gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,habitat.width,habitat.height,gl.RED,gl.UNSIGNED_BYTE,pixels);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+    };
+    put(10,resources.woodlandHabitat.texture,habitat.pixels);
+    counters.woodlandHabitatTextureUploadCount++;counters.woodlandHabitatUploadedBytes+=habitat.pixels.length;
+    resources.woodlandHabitat.receipt=habitat.receipt;
+    const material=buildHabitatMaterialPresentation(habitat);
+    put(12,resources.habitatMaterialPresentation.texture,material.pixels);
+    counters.habitatMaterialTextureUploadCount++;counters.habitatMaterialUploadedBytes+=material.pixels.length;
+    resources.habitatMaterialPresentation.receipt=material.receipt;
+    gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
+    if(gl.getError()!==gl.NO_ERROR)throw Error('REGIONAL_HABITAT_GL_ERROR');
+  };
+  const globalFallback=reason=>{
+    if(regionalFallbackTask)return regionalFallbackTask;
+    regionalFallbackReason=String(reason??'REGIONAL_UNSPECIFIED');
+    regionalProgressObserver({phase:'REGIONAL_GLOBAL_FALLBACK',reason:regionalFallbackReason,regionalSpeedupClaim:false});
+    regionalStream?.dispose();regionalStream=null;resources.regionalGrassStream=null;
+    regionalFallbackTask=(async()=>{
+      resources.singleOwnerVegetation?.dispose();resources.singleOwnerVegetation=null;
+      const presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress:regionalProgressObserver});
+      const owner=await createSingleOwnerVegetation(gl,presentation,{
+        environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress:regionalProgressObserver,
+        entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,
+          palms:resources.cavernPalms?.placements??[]}
+      });
+      resources.singleOwnerVegetation=owner;restoreGrassHabitat(owner.habitat);
+      resources.singleOwnerTiming={...resources.singleOwnerTiming,regionalFallbackReason,loading:presentation.loading,
+        regionalSpeedupClaim:false};
+      regionalProgressObserver({phase:'GLOBAL_FALLBACK_RESIDENT',reason:regionalFallbackReason});
+      return owner.getReceipt();
+    })().catch(e=>{
+      resources.regionalFallbackError=String(e?.message??e);
+      regionalProgressObserver({phase:'GLOBAL_FALLBACK_FAILED',error:resources.regionalFallbackError});
+      throw e;
+    });
+    regionalFallbackTask.catch(()=>{});
+    return regionalFallbackTask;
+  };
+  const reportRegional=status=>{
+    regionalStatus=status;const now=performance.now();
+    if(status.localReady&&regionalTimings.local24ReadyMs===null)regionalTimings.local24ReadyMs=now;
+    if(status.radius64Ready&&regionalTimings.radius64ReadyMs===null)regionalTimings.radius64ReadyMs=now;
+    if(status.worldComplete&&regionalTimings.worldCompleteMs===null)regionalTimings.worldCompleteMs=now;
+    regionalProgressObserver({phase:'REGIONAL_STREAM_RESIDENCY',...status});
+    if(status.worldComplete&&!regionalEntranceTask&&!regionalFallbackReason){
+      regionalEntranceTask=(async()=>{
+        // The preserved cavern recipe needs the complete original baseline.
+        const final=await resources.singleOwnerVegetation.finalizeEntrance({
+          visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,
+          palms:resources.cavernPalms?.placements??[],yieldControl:yieldToBrowserPaint});
+        if(regionalFallbackReason)return;
+        restoreGrassHabitat(final.habitat);regionalTimings.entranceCompleteMs=performance.now();
+        regionalProgressObserver({phase:'REGIONAL_CAVERN_HABITAT_FINALIZED'});
+      })().catch(e=>{void globalFallback('CAVERN_FINALIZATION:'+String(e?.message??e));});
+    }
+  };
   let replacementPreparation=null;
   function prepareReplacementVegetation({onProgress=()=>{}}={}){
-    if(vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1')throw Error('REPLACEMENT_STRATEGY_NOT_SELECTED');
+    if(vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1'&&vegetationStrategy!=='SINGLE_OWNER_REGIONAL_V1')throw Error('REPLACEMENT_STRATEGY_NOT_SELECTED');
     if(!initialized)throw Error('REPLACEMENT_REQUIRES_INITIALIZED_BASE');
     if(replacementPreparation)return replacementPreparation;
     replacementPreparation=(async()=>{
@@ -2027,7 +2095,23 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const settle=promise=>promise.then(value=>({value}),error=>({error}));
       const soilStarted=performance.now();let soilMaskMilliseconds=0;
       const soilPromise=settle(loadPrecomputedOasisSoil(pilotPackage).then(value=>{soilMaskMilliseconds=performance.now()-soilStarted;return value;}));
-      const grassPromise=settle(loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress}));
+      regionalProgressObserver=onProgress;
+      const regionalSelected=vegetationStrategy==='SINGLE_OWNER_REGIONAL_V1';
+      const regionalPinned=regionalSelected&&typeof regionalGrass?.manifestUrl==='string'&&
+        /^[a-f0-9]{64}$/.test(regionalGrass.manifestSha256??'');
+      if(regionalSelected&&!regionalPinned){
+        regionalFallbackReason='REGIONAL_ASSETS_NOT_AUTHORIZED_OR_PINNED';
+        onProgress({phase:'REGIONAL_GLOBAL_FALLBACK',reason:regionalFallbackReason});
+      }
+      const grassPromise=settle(regionalPinned?prepareRegionalPrecomputedGrass({
+        manifestUrl:regionalGrass.manifestUrl,manifestSha256:regionalGrass.manifestSha256,
+        onRegion:region=>{
+          if(!resources.singleOwnerVegetation)throw Error('REGIONAL_OWNER_NOT_READY');
+          return resources.singleOwnerVegetation.installRegion(region);
+        },onProgress:reportRegional,onFatal:f=>{
+          void globalFallback('VERIFIED_PACKET_FAILURE:'+f.regionId+':'+f.reason);
+        },maxInflight:2
+      }):loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress}));
       const admissionStarted=performance.now();
       // Terrain no longer has a rectangular protected-material branch.
       const protectedReferenceAt=()=>false;
@@ -2050,12 +2134,39 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const {pixels,...summary}=mask;resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
-      const grassResult=await grassPromise;if(grassResult.error)throw grassResult.error;const presentation=grassResult.value;
+      const grassResult=await grassPromise;
+      let usingRegional=regionalPinned&&!grassResult.error;
+      let presentation=grassResult.value;
+      if(grassResult.error){
+        if(!regionalPinned)throw grassResult.error;
+        regionalFallbackReason='REGIONAL_MANIFEST_OR_HABITAT:'+String(grassResult.error?.message??grassResult.error);
+        onProgress({phase:'REGIONAL_GLOBAL_FALLBACK',reason:regionalFallbackReason});
+        presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
+        usingRegional=false;
+      }
       const generationMs=performance.now()-generationStarted;
       const gpuStarted=performance.now();
-      resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
-      // The admitted entrance roots and their soil coverage are finalized together.
-      const installedHabitat=resources.singleOwnerVegetation.habitat;
+      const createGlobalOwner=value=>createSingleOwnerVegetation(gl,value,{
+        environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,
+        entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,
+          geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
+      try{
+        resources.singleOwnerVegetation=usingRegional?
+          createIncrementalSingleOwnerVegetation(gl,{environment:resources.environment,
+            planetRadius,habitat:presentation.habitat,yieldControl:yieldToBrowserPaint}):
+          await createGlobalOwner(presentation);
+      }catch(error){
+        if(!usingRegional)throw error;
+        presentation.stream?.dispose();
+        regionalFallbackReason='REGIONAL_OWNER_INITIALIZATION:'+String(error?.message??error);
+        onProgress({phase:'REGIONAL_GLOBAL_FALLBACK',reason:regionalFallbackReason});
+        usingRegional=false;
+        presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
+        resources.singleOwnerVegetation=await createGlobalOwner(presentation);
+      }
+      // A regional source is incomplete until all original offsets are present.
+      const installedHabitat=usingRegional?
+        resources.singleOwnerVegetation.getHabitat():resources.singleOwnerVegetation.habitat;
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
       gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,installedHabitat.width,installedHabitat.height,0,gl.RED,gl.UNSIGNED_BYTE,installedHabitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -2072,10 +2183,20 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uHabitatMaterialPresentation'),12);
 
 
-      resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:performance.now()-gpuStarted,soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
+      resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:performance.now()-gpuStarted,
+        soilMaskMilliseconds,generationMs,loading:usingRegional?
+        {source:'AUTHENTICATED_REGIONAL',manifestSha256:regionalGrass.manifestSha256}:presentation.loading,
+        preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true,
+        ...(regionalFallbackReason?{regionalFallbackReason,regionalSpeedupClaim:false}:{})};
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('REPLACEMENT_UPLOAD_GL_ERROR:'+error);
-      onProgress({phase:'SINGLE_POPULATION_RESIDENT'});return resources.singleOwnerVegetation.getReceipt();
+      if(usingRegional){
+        regionalStream=presentation.stream;resources.regionalGrassStream=regionalStream;
+        if(regionalCamera)regionalStream.updateCamera(regionalCamera);
+        onProgress({phase:'REGIONAL_OWNER_READY',loadedOriginalRoots:0,worldComplete:false});
+      }else onProgress({phase:'SINGLE_POPULATION_RESIDENT',
+        ...(regionalFallbackReason?{fallbackReason:regionalFallbackReason}:{})});
+      return resources.singleOwnerVegetation.getReceipt();
     })();return replacementPreparation;
   }
 
@@ -3115,6 +3236,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
+    const cameraXZ={x:packet.camera.position.x,z:packet.camera.position.z};
+    if(regionalCamera&&regionalTimings.firstObservedMovementMs===null&&
+      Math.hypot(cameraXZ.x-regionalCamera.x,cameraXZ.z-regionalCamera.z)>0.05)
+      regionalTimings.firstObservedMovementMs=performance.now();
+    regionalCamera=cameraXZ;
+    if(regionalStream&&!regionalFallbackReason&&
+      (!regionalQueuedCamera||Math.hypot(cameraXZ.x-regionalQueuedCamera.x,
+       cameraXZ.z-regionalQueuedCamera.z)>1)){
+      regionalQueuedCamera=cameraXZ;regionalStream.updateCamera(cameraXZ);
+    }
     updateCollectionShadow(packet);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -3172,6 +3303,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
+    if(regionalTimings.firstFrameSubmittedMs===null)regionalTimings.firstFrameSubmittedMs=performance.now();
     if(vegetationTrace){const observedAt=performance.now();if(observedAt-lastVegetationTraceFrameAt>=250){lastVegetationTraceFrameAt=observedAt;
       observeVegetation('FRAME_SUBMITTED',()=>({camera:{position:packet.camera.position,viewProjectionMatrix:packet.camera.viewProjectionMatrix,verticalFovDegrees:packet.camera.verticalFovDegrees},viewport:{width,height},installationRevision:vegetationInstallRevision,selectionRevision:vegetationSelectionRevision,
         fine:diagnosticDraw(resources.woodlandFineGrass),global:diagnosticDraw(resources.globalCover),preview:diagnosticDraw(resources.localCoverPreview),
@@ -3275,6 +3407,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         }:resources.rendererStartupTiming.geological
       }:null,
       singleOwnerVegetation:resources.singleOwnerVegetation?{...resources.singleOwnerVegetation.getReceipt(),timing:resources.singleOwnerTiming}:null,
+      regionalGrass:{selected:vegetationStrategy==='SINGLE_OWNER_REGIONAL_V1',
+        activated:regionalStream!==null&&!regionalFallbackReason,
+        local24Ready:regionalStatus?.localReady===true,
+        radius64Ready:regionalStatus?.radius64Ready===true,
+        worldComplete:regionalStatus?.worldComplete===true,
+        cavernFinalized:regionalTimings.entranceCompleteMs!==null,
+        status:regionalStatus,fallbackReason:regionalFallbackReason,
+        fallbackError:resources.regionalFallbackError??null,
+        timing:{...regionalTimings},firstObservedMovementIsNotInputLatency:true,
+        physicalAndroidSpeedupVerified:false},
 // SHORELINE_SOIL_BEGIN receipt
       shorelineSoilCoverage:{...resources.shorelineSoilCoverage},
       landscapeFloor:{treeCount:landscapeFloorFootprints.length,floorContentDigest:renderPackage.landscapeFloorContentDigest,source:'ACCEPTED_CLUSTER_A_MANIFEST',worldSpace:'PROJECTED_WORLD_XZ',terrainGeometryChanged:false,castShadowClaim:false},
@@ -3341,7 +3483,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{regionalStream?.dispose();resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     disposeCorrectedMaterial,
     getVegetationTrace,getVegetationProbe,
     initialize:observeStartupFailure("initialize",initialize), activateInitialRefinement, prepareReplacementVegetation:observeStartupFailure("prepareReplacementVegetation",prepareReplacementVegetation), prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt

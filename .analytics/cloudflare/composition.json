@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-10T06:32:18Z",
+  "generatedAt": "2026-11-10T07:24:15Z",
   "window": {
-    "start": "2026-10-11T06:32:18Z",
-    "end": "2026-11-10T06:32:18Z"
+    "start": "2026-10-11T07:24:15Z",
+    "end": "2026-11-10T07:24:15Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 538,
-        "visits": 538
+        "pageLoads": 537,
+        "visits": 537
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 436,
-        "visits": 372
+        "pageLoads": 437,
+        "visits": 373
       },
       {
         "value": "/",
@@ -118,12 +118,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -208,12 +208,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -322,13 +322,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 753,
-        "visits": 752
+        "pageLoads": 752,
+        "visits": 751
       },
       {
         "value": "Chrome",
-        "pageLoads": 288,
-        "visits": 241
+        "pageLoads": 289,
+        "visits": 242
       },
       {
         "value": "ChromeMobile",
@@ -369,13 +369,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 891,
-        "visits": 890
+        "pageLoads": 890,
+        "visits": 889
       },
       {
         "value": "Windows",
-        "pageLoads": 256,
-        "visits": 194
+        "pageLoads": 257,
+        "visits": 195
       },
       {
         "value": "Android",
@@ -401,13 +401,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 753,
-        "visits": 752
+        "pageLoads": 752,
+        "visits": 751
       },
       {
         "value": "0",
-        "pageLoads": 706,
-        "visits": 598
+        "pageLoads": 707,
+        "visits": 599
       }
     ],
     "navigationType": [

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-10T18:25:43Z",
+  "generatedAt": "2026-11-10T19:24:18Z",
   "window30d": {
-    "start": "2026-10-11T18:25:43Z",
-    "end": "2026-11-10T18:25:43Z"
+    "start": "2026-10-11T19:24:18Z",
+    "end": "2026-11-10T19:24:18Z"
   },
   "daily": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 40
+      "pageLoads": 70
     },
     {
       "date": "2026-10-19",
@@ -48,11 +48,11 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 110
     },
     {
       "date": "2026-10-24",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 28
+      "pageLoads": 27
     },
     {
       "date": "2026-11-03",
@@ -128,20 +128,25 @@
     }
   ],
   "summary": {
-    "pageLoads": 1451,
-    "botPageLoads": 751,
-    "nonBotPageLoads": 700
+    "pageLoads": 1420,
+    "botPageLoads": 780,
+    "nonBotPageLoads": 640
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1315,
-      "visits": 1315
+      "pageLoads": 1214,
+      "visits": 1214
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 109,
+      "pageLoads": 99,
       "visits": 0
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 26,
+      "visits": 26
     },
     {
       "host": "www.google.com",
@@ -154,26 +159,26 @@
       "visits": 10
     },
     {
-      "host": "bing.com",
-      "pageLoads": 6,
-      "visits": 6
+      "host": "github.com",
+      "pageLoads": 10,
+      "visits": 10
     }
   ],
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 536,
-      "visits": 536
+      "pageLoads": 485,
+      "visits": 485
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 427,
-      "visits": 363
+      "pageLoads": 417,
+      "visits": 353
     },
     {
       "path": "/",
-      "pageLoads": 88,
-      "visits": 65
+      "pageLoads": 98,
+      "visits": 75
     },
     {
       "path": "/products/education/personal-training/",
@@ -191,14 +196,14 @@
       "visits": 41
     },
     {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 40,
-      "visits": 40
-    },
-    {
       "path": "/nine-summits/universe/",
       "pageLoads": 39,
       "visits": 39
+    },
+    {
+      "path": "/release-proof/",
+      "pageLoads": 30,
+      "visits": 30
     }
   ],
   "ownerMeasurement": {

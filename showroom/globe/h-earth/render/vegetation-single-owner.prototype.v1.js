@@ -7,6 +7,7 @@ import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {HILLSIDE_SHORELINE_GLSL} from './hillside-shoreline-field.v1.js';
 import {boundGrassTiles,grassFrustumPlanes,selectVisibleGrassTiles,mergeGrassRanges} from './grass-visibility.v2.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation,GRASS_CONTINUITY_CONNECTOR} from './grass-continuity-supplement.v1.js';
+import {habitatHash} from './woodland-habitat-field.v1.js';
 import {uploadInSlices} from './performance-scheduling.v1.js';
 /** Only authenticated original prefixes influence the unchanged runtime planting recipe.
  * Offline continuity additions remain installed but must not suppress saved runtime planting. */
@@ -28,6 +29,8 @@ export async function buildLiveWoodlandSeamBridge({
     typeof visibleSurface?.admitGround!=='function'||typeof geology?.sampleWaterAt!=='function'||
     !Number.isSafeInteger(maximumAddedRoots)||maximumAddedRoots<0)throw Error('WOODLAND_SEAM_INPUT_INVALID');
  const max=Math.min(maximumAddedRoots,12000);
+ // Reuse the established immutable world-space integer hash for all distribution jitter.
+ const hash=(x,z)=>habitatHash(x,z,3207)/4294967296;
  const path=[[-141,-226],...GRASS_CONTINUITY_CONNECTOR];
  const bounds=Object.freeze({minX:-167,maxX:17,minZ:-314,maxZ:-205});
  const count=new Map(),physical=new Map(),occupied=new Map(),tileKey=(x,z)=>Math.floor(x/4)*4+':'+Math.floor(z/4)*4;

@@ -55,17 +55,18 @@ export async function buildLiveWoodlandSeamBridge({
   return (h(0,0)*(1-a)+h(1,0)*a)*(1-b)+(h(0,1)*(1-a)+h(1,1)*a)*b;
  };
  const spineDistance=(x,z)=>{
-  let best=Infinity;
+  let best=Infinity,segment=0;
   for(let j=1;j<path.length;j++){
    const [ax,az]=path[j-1],[bx,bz]=path[j],dx=bx-ax,dz=bz-az;
    const t=clamp(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz));
-   best=Math.min(best,Math.hypot(x-ax-t*dx,z-az-t*dz));
+   const d=Math.hypot(x-ax-t*dx,z-az-t*dz);
+   if(d<best){best=d;segment=j-1;}
   }
-  return best;
+  return {distance:best,segment};
  };
  const proposed=[];
  for(let cz=bounds.minZ;cz<bounds.maxZ;cz++)for(let cx=bounds.minX;cx<bounds.maxX;cx++){
-  const x=cx+.5,z=cz+.5,d=spineDistance(x,z);
+  const x=cx+.5,z=cz+.5,{distance:d,segment}=spineDistance(x,z);
   if(d>13)continue;
   const width=4.3+2.1*field(x,z,13,81)+2*field(x,z,27,94);
   const coverage=1-smooth((d-.35*width)/Math.max(1,1.8*width));
@@ -76,13 +77,18 @@ export async function buildLiveWoodlandSeamBridge({
   if(target<=before)continue;
   const edge=Math.min(cx-bounds.minX,bounds.maxX-cx,cz-bounds.minZ,bounds.maxZ-cz);
   if(edge<2)continue;
-  proposed.push({cx,cz,target,priority:feather+.07*hash(cx+117,cz-57),before});
+  proposed.push({cx,cz,target,segment,priority:feather+.07*hash(cx+117,cz-57),before});
  }
- proposed.sort((a,b)=>b.priority-a.priority||a.cz-b.cz||a.cx-b.cx);
+ // Interleave every accepted connection segment before spending the bounded
+ // root budget; a dense patch at one end must not starve the other regions.
+ const groups=Array.from({length:path.length-1},()=>[]);
+ for(const cell of proposed)groups[cell.segment].push(cell);
+ for(const group of groups)group.sort((a,b)=>b.priority-a.priority||a.cz-b.cz||a.cx-b.cx);
+ const order=[];for(let i=0;i<Math.max(...groups.map(g=>g.length));i++)for(const group of groups)if(group[i])order.push(group[i]);
  let added=0,cellsFilled=0,candidates=0;
  const rejected={terrain:0,slope:0,groundAdmission:0,water:0,duplicate:0,tileCapacity:0};
  const tiles=new Map();
- for(const cell of proposed){
+ for(const cell of order){
   if(added>=max)break;
   const {cx,cz,target}=cell;
   const localKey=cx+':'+cz;let have=count.get(localKey)??0,cellAdded=0;

@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "c0f8699a463a4dc1e0825dd6475dc463269cb1fd",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "dcac7b44ff34fb9fc8cde3d428dc2ff4321a3611",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3202,
+    "lockScope": "CONTROL_PLANE:H_EARTH:GEN3200_FIXED_NATIVE_QUALIFIER_REGISTRATION:20261109:ONE",
+    "observedBranchHead": "a54fb2d63a7e4db051e6f305d012db1403ac8e49",
+    "observedLedgerBlobSha": "410fac0cc639f47f2ccfa1fef055649e7e56ead7",
+    "operationId": "CONTROL_PLANE_H_EARTH_GEN3200_FIXED_NATIVE_QUALIFIER_REGISTRATION_20261109_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "e6cfb5d416868259bdc52762340303371c2bc1f4b447220173acca18f3a7421f"
+  },
+  "operationId": "CONTROL_PLANE_H_EARTH_GEN3200_FIXED_NATIVE_QUALIFIER_REGISTRATION_20261109_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "5a4df5f47ca80398bfbd2718bac877fc4501f2617851f611b36ab10a0cef806a",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "e649f41a4e3cd12a234a5ca19a0194793dc4117b573f4317d967c52853ce52ce",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

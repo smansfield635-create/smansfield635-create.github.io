@@ -6,6 +6,9 @@ import crypto from 'node:crypto';
 import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
+// Gen3210, separate admitted single sparse exact-candidate WebGL capture. No product edits.
+if(process.argv.includes('--gen3210-single-owner')){await gen3210Capture();process.exit(0);}
+
 const productHeads=new Set([
   '783c6347f768565e794418ff02a0201e69e0730d',
   '192404eda2fae556c452083309061c82901a933f'
@@ -536,4 +539,196 @@ if(process.argv.includes('--self-test')){
   console.log('H_EARTH_GEN2_VISUAL_QUALIFICATION_EVIDENCE '+JSON.stringify(receipt));
   if(receipt.result!=='PASS')process.exitCode=1;
  }
+}
+
+
+async function gen3210Capture(){
+  const BASE='320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',CAND='31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+  const OUTPUT='/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
+  const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
+  const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
+  const TARGETS=[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
+  const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
+    baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
+    browserExecuted:false,publicationPerformed:false,productMutationPerformed:false,baselineArtifactId:13793222990,baselineImagesFromRun:42877561418,baselineImagesNotRegenerated:true,sparseProductStage:true,
+    exploratoryNotFinalKeep:true,images:[],provisional:[],progress:[],errors:[]};
+  const WORKTREES=[],SERVERS=[];let BROWSER;
+  await fs.mkdir(OUTPUT,{recursive:true});
+  try{
+    if(!/^[0-9a-f]{40}$/.test(RECEIPT.inspectionHead))throw Error('INSPECTION_COMMIT_INVALID');
+    for(const [label,head] of [['candidate',CAND]]){
+      GIT(['fetch','--no-tags','--depth=1','origin',head]);
+      const dir=STAGE+'-'+label;
+      // Reuse established sparse-checkout: never materialize a second 498k-file world.
+      GIT(['worktree','add','--no-checkout','--detach',dir,head]);WORKTREES.push(dir);
+      GIT(['sparse-checkout','set','--cone','showroom/globe','h-earth-3d','assets'],dir);
+      GIT(['checkout','--force',head],dir);
+      if(!await fs.stat(dir+'/showroom/globe/h-earth/index.html').then(x=>x.isFile()).catch(()=>false))throw Error('SPARSE_PUBLIC_WORLD_ENTRY_MISSING');
+      if(GIT(['rev-parse','HEAD'],dir)!==head||GIT(['status','--porcelain'],dir))throw Error('EXACT_READONLY_WORKTREE_INVALID:'+label);
+      const world=await fs.readFile(dir+'/showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
+      if(HASH(world)!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_WORLD_MISMATCH:'+label);
+      RECEIPT[label]={sourceHead:head,worldSha256:HASH(world),sourceClean:true};
+    }
+    BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+    RECEIPT.browserExecuted=true;
+    for(const [label,port,head] of [['candidate',4174,CAND]]){
+      let labelFailed=false;
+      const directory=STAGE+'-'+label;
+      const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
+      SERVERS.push(server);
+      let serving=false;
+      for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:'+port+'/showroom/globe/h-earth/')).ok){serving=true;break}}catch{}await DELAY(250)}
+      if(!serving)throw Error('LOCAL_FIRST_PARTY_SERVER_NOT_READY:'+label);
+      for(const device of ['phone']){
+        const viewport=device==='phone'?{width:412,height:915}:{width:1280,height:720};
+        const views=device==='phone'?TARGETS:[TARGETS[4]];
+        const context=await BROWSER.newContext({viewport,deviceScaleFactor:device==='phone'?2:1,isMobile:device==='phone',hasTouch:device==='phone'});
+        const page=await context.newPage(),errors=[],failures=[],fixtureHashes=[];
+        page.on('pageerror',e=>errors.push(String(e?.message||e)));
+        page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
+        page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+        try {
+        await page.route('**/functional-landscape/navigation.js*',async route=>{
+          const response=await route.fetch(),source=await response.text();
+          const coast="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
+          const marker='export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){';
+          if(source.split(coast).length!==2||source.split(marker).length!==2)throw Error('HISTORICAL_NAVIGATION_FIXTURE_DRIFT:'+label);
+          const waypoints=TARGETS.map(t=>"QUALIFIER_"+t.id+":{waypointId:'QUALIFIER_"+t.id+"',position:{x:"+t.x+",z:"+t.z+"},yawDegrees:"+t.yaw+",pitchDegrees:"+t.pitch+"}").join(',');
+          const modified=source.replace(coast,coast+','+waypoints)
+           .replace(marker,marker+"if(globalThis.__hEarthQualifierWaypoint){intent={action:'GOTO_WAYPOINT',waypointId:globalThis.__hEarthQualifierWaypoint};delete globalThis.__hEarthQualifierWaypoint;}");
+          fixtureHashes.push({original:HASH(source),intercepted:HASH(modified),waypoints:TARGETS.length});
+          await route.fulfill({response,body:modified});
+        });
+        await page.goto('http://127.0.0.1:'+port+'/showroom/globe/h-earth/?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:90000});
+        const observe=()=>page.evaluate(()=>{
+          const root=document.getElementById('h-earth-functional-landscape-route');
+          const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+          const route=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+          const gpu=route?.getLiveGpuReceipt?.(),resources=gpu?.resources,nav=route?.getIntakeReceipt?.()?.currentNavigationState;
+          const owner=resources?.singleOwnerVegetation,background=gpu?.vegetationBackground;
+          return {ready:root?.dataset.run8eReady==='true',error:root?.dataset.run8eError==='true',
+            canvasWidth:canvas?.width??0,canvasHeight:canvas?.height??0,
+            webgl:resources?.context?.created===true&&resources?.context?.lost===false,
+            frames:gpu?.counters?.gpuFramebufferPresentationCount??0,
+            nav:nav?{position:nav.position,sequence:nav.sequence,accepted:nav.accepted,action:nav.action,pitchDegrees:nav.pitchDegrees,yawDegrees:nav.yawDegrees,terrainSupported:nav.terrainSupported}:null,
+            owner:owner?{originalRootCount:owner.originalRootCount,installedRootCount:owner.installedRootCount,
+              rootOwnerCount:owner.rootOwnerCount,gpuAllocationVerified:owner.gpuAllocationVerified,
+              gpuUploadCount:owner.gpuUploadCount,drawCallCount:owner.drawCallCount,
+              selectedFineRoots:owner.selectedFineRoots,visibleCoarseRoots:owner.visibleCoarseRoots,
+              woodlandSeamBridge:owner.woodlandSeamBridge??null}:null,
+            backgroundPhase:background?.phase??null,backgroundError:background?.error??null,
+            firstFailure:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage??null,
+            vegetationState:root?.dataset.vegetationState??null,
+            globalGpuResident:root?.dataset.globalGroundcoverGpuResident??null,
+            woodlandGpuResident:root?.dataset.woodlandGrassGpuResident??null,
+            progressText:document.getElementById('h-earth-vegetation-progress')?.textContent?.slice(0,240)??null,
+            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null,
+            startupMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,
+            enterEnabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled===false};
+        });
+        let state,ready=false,provisionalImageCaptured=false,controlGestureSent=false,entryClicked=false;
+        for(let i=0;i<420;i++){
+          state=await observe();
+          if(i%30===0)RECEIPT.progress.push({label,device,waitSeconds:i,
+            frames:state.frames,ready:state.ready,vegetationState:state.vegetationState,
+            backgroundPhase:state.backgroundPhase,ownerBridgeRoots:state.owner?.woodlandSeamBridge?.addedRoots??null,
+            progressText:state.progressText,loaderText:state.loaderText,
+            ownerRoots:state.owner?.installedRootCount??null,firstFailure:state.firstFailure});
+          if(!provisionalImageCaptured&&state.webgl&&state.frames>0&&state.canvasWidth>=100&&state.canvasHeight>=100){
+            const filename=label+'-'+device+'-first-real-webgl-NOT-MATURE.png';
+            const bytes=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+filename});
+            if(bytes.length>=1024){
+              RECEIPT.provisional.push({label,device,head,filename,imageBytes:bytes.length,imageSha256:HASH(bytes),
+                actualWebglPresentationCount:state.frames,vegetationMaturity:'NOT_PROVEN',
+                sourceStateAtCapture:state});
+              provisionalImageCaptured=true;
+            }
+          }
+          // The real entrance intentionally keeps run8eReady=false until a changed
+          // canvas view has rendered and its Enter Gratitude control was clicked.
+          // Perform the existing user interaction, never fabricate READY or bypass it.
+          if(state.startupMode==='test'&&!controlGestureSent){
+            const accepted=await page.evaluate(()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              return c?.dispatchEvent(new WheelEvent('wheel',{deltaY:-280,bubbles:true,cancelable:true}))??false;
+            });
+            controlGestureSent=true;
+            RECEIPT.progress.push({label,device,stage:'ACTUAL_CONTROL_GESTURE_SENT',gesture:'wheel',eventDispatchReturned:accepted});
+          }
+          if(state.startupMode==='ready'&&state.enterEnabled&&!entryClicked){
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            entryClicked=true;
+            RECEIPT.progress.push({label,device,stage:'EXISTING_GRATITUDE_ENTRANCE_CLICKED'});
+          }
+          if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
+          if(state.error||state.firstFailure||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(!ready)throw Error('ACTUAL_WEBGL_NOT_RENDERED:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,4),failures:failures.slice(0,4)}));
+        const early=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+label+'-'+device+'-early.png'});
+        if(early.length<1024)throw Error('ACTUAL_EARLY_CANVAS_EMPTY:'+label);
+        let mature=false;
+        for(let i=0;i<540;i++){
+          state=await observe();const o=state.owner;
+          if(state.vegetationState==='prepared'&&state.backgroundPhase==='OWNER_PREPARED'&&
+             o?.installedRootCount>0&&o?.rootOwnerCount===1&&o?.gpuAllocationVerified===true&&
+             o?.gpuUploadCount>0&&state.frames>0&&
+             (label==='baseline'||o.woodlandSeamBridge?.addedRoots>0)){
+            if(o.drawCallCount>0&&o.selectedFineRoots>0){mature=true;break}
+            if(i%8===0){await page.locator('#h-earth-functional-landscape-canvas').hover();await page.mouse.wheel(0,1)}
+          }
+          if(state.error||state.firstFailure||state.backgroundError||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(!mature){
+          await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-incomplete-residency.png',fullPage:true});
+          throw Error('MATURE_VEGETATION_NOT_PROVEN:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,3),failures:failures.slice(0,3)}));
+        }
+        const canvas=page.locator('#h-earth-functional-landscape-canvas');
+        for(const target of views){
+          const before=await observe();
+          await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id},target.id);
+          await canvas.hover();await page.mouse.wheel(0,1);
+          let actual,match=false;
+          for(let i=0;i<120;i++){
+            actual=await observe();const n=actual.nav;
+            if(n?.sequence>before.nav?.sequence&&n?.accepted===true&&n.action?.startsWith('GOTO_WAYPOINT')&&n.terrainSupported===true&&
+              Math.hypot(n.position?.x-target.x,n.position?.z-target.z)<.04&&Math.abs(n.pitchDegrees-target.pitch)<.05&&actual.frames>before.frames){match=true;break}
+            if(actual.error||actual.firstFailure||errors.length||failures.length)break;
+            await DELAY(250);
+          }
+          if(!match)throw Error('GEN3210_MATCHED_CAMERA_NOT_REACHED:'+label+':'+device+':'+target.id+':'+JSON.stringify(actual));
+          if(actual.vegetationState!=='prepared'||actual.backgroundPhase!=='OWNER_PREPARED'||!actual.owner?.gpuAllocationVerified||actual.owner.drawCallCount<=0||(label==='candidate'&&!(actual.owner.woodlandSeamBridge?.addedRoots>0)))throw Error('GEN3210_SINGLE_OWNER_GPU_RESIDENCY_REGRESSION:'+label+':'+target.id);
+          const filename=label+'-'+target.id+'-'+device+'-mature-webgl.png';
+          const bytes=await canvas.screenshot({path:OUTPUT+'/'+filename});
+          if(bytes.length<1024)throw Error('EMPTY_WEBGL_CAPTURE:'+filename);
+          RECEIPT.images.push({label,head,device,view:target.id,target,actualCamera:actual.nav,
+            filename,imageSha256:HASH(bytes),imageBytes:bytes.length,
+            singleOwner:actual.owner,preparationPhase:actual.backgroundPhase,ownerDisposition:'PENDING',photographedSeamLocationUnverified:true});
+        }
+        RECEIPT[label][device]={viewport,fixtureHashes,errors,failedRequests:failures};
+        await context.close();
+        }catch(e){
+          RECEIPT.errors.push('CAPTURE_CASE_FAILED:'+label+':'+device+':'+String(e?.stack||e));
+          try{await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-failure-page.png',fullPage:true})}catch{}
+          await context.close().catch(()=>{});
+          labelFailed=true;
+          break;
+        }
+      }
+      server.kill('SIGTERM');
+      if(labelFailed)continue;
+      if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
+    }
+    if(RECEIPT.images.length!==4||RECEIPT.images.filter(v=>v.label==='candidate').length!==4)
+      throw Error('GEN3210_EXACT_CANDIDATE_IMAGE_SET_INCOMPLETE');
+    RECEIPT.result='CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
+  }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}
+  finally{
+    await fs.writeFile(OUTPUT+'/receipt.json',JSON.stringify(RECEIPT,null,2)+'\n');
+    if(BROWSER)await BROWSER.close().catch(()=>{});
+    for(const server of SERVERS)server.kill('SIGTERM');
+    for(const dir of WORKTREES.reverse())try{GIT(['worktree','remove','--force',dir])}catch{}
+  }
 }

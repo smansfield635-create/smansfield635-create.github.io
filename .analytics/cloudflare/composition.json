@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-10T09:25:49Z",
+  "generatedAt": "2026-11-10T10:25:40Z",
   "window": {
-    "start": "2026-10-11T09:25:49Z",
-    "end": "2026-11-10T09:25:49Z"
+    "start": "2026-10-11T10:25:40Z",
+    "end": "2026-11-10T10:25:40Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 527,
-        "visits": 527
+        "pageLoads": 537,
+        "visits": 537
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 437,
-        "visits": 373
+        "pageLoads": 417,
+        "visits": 363
       },
       {
         "value": "/",
@@ -34,8 +34,8 @@
       },
       {
         "value": "/about/",
-        "pageLoads": 41,
-        "visits": 41
+        "pageLoads": 51,
+        "visits": 51
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -71,6 +71,11 @@
         "value": "/showroom/globe/earth/",
         "pageLoads": 11,
         "visits": 11
+      },
+      {
+        "value": "/showroom/globe/h-earth/**",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/showroom/globe/audralia/diagnostic/",
@@ -118,12 +123,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -203,12 +208,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -241,12 +246,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1313,
-        "visits": 1313
+        "pageLoads": 1303,
+        "visits": 1303
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 109,
+        "pageLoads": 119,
         "visits": 0
       },
       {
@@ -268,8 +273,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1363,
-        "visits": 1264
+        "pageLoads": 1403,
+        "visits": 1304
       },
       {
         "value": "CN",
@@ -283,7 +288,12 @@
       },
       {
         "value": "BR",
-        "pageLoads": 20,
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "ID",
+        "pageLoads": 10,
         "visits": 10
       },
       {
@@ -305,18 +315,18 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1209,
-        "visits": 1146
+        "pageLoads": 1229,
+        "visits": 1166
       },
       {
         "value": "mobile",
-        "pageLoads": 217,
-        "visits": 183
+        "pageLoads": 197,
+        "visits": 163
       },
       {
         "value": "tablet",
-        "pageLoads": 23,
-        "visits": 11
+        "pageLoads": 33,
+        "visits": 1
       }
     ],
     "userAgentBrowser": [

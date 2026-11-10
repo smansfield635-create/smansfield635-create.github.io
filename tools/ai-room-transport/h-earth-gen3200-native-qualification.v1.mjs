@@ -72,7 +72,7 @@ export function qualify(a){
       '/AI_ENTRYPOINT.json','/showroom/globe/h-earth/render/',
       '/showroom/globe/h-earth/functional-landscape/',
       '/showroom/globe/h-earth/vegetation-prototype/',
-      '/h-earth-3d/validation/','/h-earth-3d/environment/','/h-earth-3d/terrain/'
+      '/h-earth-3d/'
     ].join('\n')+'\n');
     // Fetch only immutable Gen3200 and its exact governed baseline, not moving main.
     git(work,['fetch','--no-tags','--depth=16','--filter=blob:none','origin',HEAD],180000);

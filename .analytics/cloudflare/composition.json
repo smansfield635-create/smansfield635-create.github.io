@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-10T14:24:20Z",
+  "generatedAt": "2026-11-10T15:23:55Z",
   "window": {
-    "start": "2026-10-11T14:24:20Z",
-    "end": "2026-11-10T14:24:20Z"
+    "start": "2026-10-11T15:23:55Z",
+    "end": "2026-11-10T15:23:55Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 537,
-        "visits": 537
+        "pageLoads": 547,
+        "visits": 547
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -19,8 +19,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 88,
-        "visits": 65
+        "pageLoads": 68,
+        "visits": 45
       },
       {
         "value": "/products/education/personal-training/",
@@ -48,6 +48,11 @@
         "visits": 39
       },
       {
+        "value": "/products/education/",
+        "pageLoads": 30,
+        "visits": 30
+      },
+      {
         "value": "/meet-sean-mansfield/",
         "pageLoads": 23,
         "visits": 15
@@ -63,14 +68,14 @@
         "visits": 20
       },
       {
-        "value": "/products/education/",
-        "pageLoads": 20,
-        "visits": 20
-      },
-      {
         "value": "/showroom/globe/earth/",
         "pageLoads": 11,
         "visits": 11
+      },
+      {
+        "value": "/showroom/globe/h-earth/**",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/showroom/globe/audralia/diagnostic/",
@@ -78,7 +83,7 @@
         "visits": 10
       },
       {
-        "value": "/showroom/globe/",
+        "value": "/governance-bridge/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -118,12 +123,37 @@
         "visits": 1
       },
       {
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/manual/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/reverse-audit/",
         "pageLoads": 1,
         "visits": 1
       },
       {
+        "value": "/explore/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/lattice/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/result-and-record/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -138,12 +168,17 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/rob/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -163,27 +198,7 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/rob/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/wave/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -204,16 +219,6 @@
       },
       {
         "value": "/showroom/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/lattice/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -241,35 +246,30 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1323,
-        "visits": 1323
+        "pageLoads": 1313,
+        "visits": 1313
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 109,
+        "pageLoads": 99,
         "visits": 0
+      },
+      {
+        "value": "bing.com",
+        "pageLoads": 16,
+        "visits": 16
       },
       {
         "value": "www.google.com",
         "pageLoads": 11,
         "visits": 11
-      },
-      {
-        "value": "www.facebook.com",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "bing.com",
-        "pageLoads": 6,
-        "visits": 6
       }
     ],
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1373,
-        "visits": 1274
+        "pageLoads": 1314,
+        "visits": 1233
       },
       {
         "value": "CN",
@@ -278,8 +278,8 @@
       },
       {
         "value": "CA",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 22,
+        "visits": 22
       },
       {
         "value": "BR",
@@ -310,8 +310,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 217,
-        "visits": 183
+        "pageLoads": 187,
+        "visits": 163
       },
       {
         "value": "tablet",
@@ -322,13 +322,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 752,
-        "visits": 751
+        "pageLoads": 782,
+        "visits": 781
       },
       {
         "value": "Chrome",
         "pageLoads": 289,
-        "visits": 242
+        "visits": 232
       },
       {
         "value": "ChromeMobile",
@@ -337,8 +337,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 106,
-        "visits": 82
+        "pageLoads": 126,
+        "visits": 102
       },
       {
         "value": "Unknown",
@@ -369,13 +369,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 890,
-        "visits": 889
+        "pageLoads": 870,
+        "visits": 869
       },
       {
         "value": "Windows",
-        "pageLoads": 257,
-        "visits": 195
+        "pageLoads": 267,
+        "visits": 205
       },
       {
         "value": "Android",
@@ -383,14 +383,14 @@
         "visits": 139
       },
       {
-        "value": "Unknown",
-        "pageLoads": 58,
-        "visits": 48
+        "value": "MacOSX",
+        "pageLoads": 64,
+        "visits": 64
       },
       {
-        "value": "MacOSX",
-        "pageLoads": 54,
-        "visits": 54
+        "value": "Unknown",
+        "pageLoads": 38,
+        "visits": 38
       },
       {
         "value": "iOS",
@@ -401,20 +401,20 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 752,
-        "visits": 751
+        "pageLoads": 732,
+        "visits": 731
       },
       {
         "value": "0",
-        "pageLoads": 707,
-        "visits": 599
+        "pageLoads": 687,
+        "visits": 579
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1415,
-        "visits": 1350
+        "pageLoads": 1335,
+        "visits": 1270
       },
       {
         "value": "routing-apis",
@@ -430,8 +430,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1423,
-        "visits": 1349
+        "pageLoads": 1443,
+        "visits": 1369
       },
       {
         "value": "cache",
@@ -449,8 +449,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1459,
-        "visits": 1350
+        "pageLoads": 1419,
+        "visits": 1320
       }
     ]
   }

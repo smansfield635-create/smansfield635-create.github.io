@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-10T14:24:20Z",
+  "generatedAt": "2026-11-10T15:23:55Z",
   "window": {
-    "start": "2026-08-12T14:24:20Z",
-    "end": "2026-11-10T14:24:20Z"
+    "start": "2026-08-12T15:23:55Z",
+    "end": "2026-11-10T15:23:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4013,
-    "visits": 1181,
+    "pageLoads": 3933,
+    "visits": 1171,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4013,
-        "visits": 1181
+        "pageLoads": 3933,
+        "visits": 1171
       }
     },
     "byPath": {
@@ -35,15 +35,15 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 941,
-        "visits": 681
+        "pageLoads": 921,
+        "visits": 671
       },
       "/laws/": {
-        "pageLoads": 100,
+        "pageLoads": 130,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 140,
+        "pageLoads": 150,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -59,7 +59,7 @@
         "visits": 0
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -119,7 +119,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 62,
+        "pageLoads": 72,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -170,15 +170,11 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/laws/categories/integrity/accountability/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/test/reverse-audit/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/reality/evidence.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -187,8 +183,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 50,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -199,24 +195,16 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 210,
         "visits": 20
       },
-      "/door/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/nine-summits-of-love/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 30,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -236,6 +224,10 @@
       },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/door/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/story/timeline/": {
@@ -266,13 +258,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -313,7 +305,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2832,
+        "pageLoads": 2762,
         "visits": 0
       },
       "www.google.com": {
@@ -321,8 +313,8 @@
         "visits": 630
       },
       "(none)": {
-        "pageLoads": 541,
-        "visits": 541
+        "pageLoads": 531,
+        "visits": 531
       },
       "raw.githack.com": {
         "pageLoads": 10,

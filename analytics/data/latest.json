@@ -1,14 +1,14 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-10T14:24:20Z",
+  "generatedAt": "2026-11-10T15:23:55Z",
   "window30d": {
-    "start": "2026-10-11T14:24:20Z",
-    "end": "2026-11-10T14:24:20Z"
+    "start": "2026-10-11T15:23:55Z",
+    "end": "2026-11-10T15:23:55Z"
   },
   "daily": [
     {
       "date": "2026-10-12",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-13",
@@ -20,7 +20,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 90
+      "pageLoads": 100
     },
     {
       "date": "2026-10-16",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 32
+      "pageLoads": 31
     },
     {
       "date": "2026-11-03",
@@ -124,46 +124,41 @@
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 15
+      "pageLoads": 16
     }
   ],
   "summary": {
-    "pageLoads": 1459,
-    "botPageLoads": 752,
-    "nonBotPageLoads": 707
+    "pageLoads": 1419,
+    "botPageLoads": 732,
+    "nonBotPageLoads": 687
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1323,
-      "visits": 1323
+      "pageLoads": 1313,
+      "visits": 1313
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 109,
+      "pageLoads": 99,
       "visits": 0
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 16,
+      "visits": 16
     },
     {
       "host": "www.google.com",
       "pageLoads": 11,
       "visits": 11
-    },
-    {
-      "host": "www.facebook.com",
-      "pageLoads": 10,
-      "visits": 10
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 6,
-      "visits": 6
     }
   ],
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 537,
-      "visits": 537
+      "pageLoads": 547,
+      "visits": 547
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -172,8 +167,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 88,
-      "visits": 65
+      "pageLoads": 68,
+      "visits": 45
     },
     {
       "path": "/products/education/personal-training/",

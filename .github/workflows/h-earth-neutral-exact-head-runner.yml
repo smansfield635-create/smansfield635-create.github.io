@@ -1947,3 +1947,41 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  gen3214-material-webgl:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3214-material-visual-20261110' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact admitted first-party visual tooling (sparse)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            tools
+            .github/workflows
+      - name: Verify immutable first-party visual inspection head
+        shell: bash
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install established first-party Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Capture Gen3172 vs exact Gen3178 WebGL2 ground material
+        run: |
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node tools/h-earth-ground-material-comparison.v1.mjs --gen3214-material
+      - name: Preserve authentic full-frame PNG and receipt evidence even on failure
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen3214-gen3178-matched-real-webgl2
+          path: /tmp/gen3178-material-webgl
+          if-no-files-found: error
+          retention-days: 30

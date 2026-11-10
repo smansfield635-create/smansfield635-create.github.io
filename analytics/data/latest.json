@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-10T02:27:49Z",
+  "generatedAt": "2026-11-10T03:25:59Z",
   "window30d": {
-    "start": "2026-10-11T02:27:49Z",
-    "end": "2026-11-10T02:27:49Z"
+    "start": "2026-10-11T03:25:59Z",
+    "end": "2026-11-10T03:25:59Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 25
+      "pageLoads": 23
     },
     {
       "date": "2026-11-03",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 2
+      "pageLoads": 3
     }
   ],
   "summary": {
-    "pageLoads": 1469,
+    "pageLoads": 1468,
     "botPageLoads": 743,
-    "nonBotPageLoads": 726
+    "nonBotPageLoads": 725
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1333,
-      "visits": 1333
+      "pageLoads": 1332,
+      "visits": 1332
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,8 +172,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 88,
-      "visits": 65
+      "pageLoads": 87,
+      "visits": 64
     },
     {
       "path": "/products/education/personal-training/",

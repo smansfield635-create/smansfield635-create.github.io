@@ -19,6 +19,14 @@ const clearingGrassInteriorWeight=(x,z,id)=>{
   return t*t*(3-2*t);
 };
 
+// Continuous, deterministic multiscale cover; no rectangular four-meter density cells.
+const clearingCoverField=(x,z,scale,channel)=>{
+ const sx=x/scale,sz=z/scale,ix=Math.floor(sx),iz=Math.floor(sz);
+ const fx=sx-ix,fz=sz-iz,u=fx*fx*(3-2*fx),v=fz*fz*(3-2*fz);
+ const n=(dx,dz)=>hash(`CLEARING_FIELD_${channel}_${ix+dx}_${iz+dz}`,'value');
+ const a=n(0,0)*(1-u)+n(1,0)*u,b=n(0,1)*(1-u)+n(1,1)*u;
+ return a*(1-v)+b*v;
+};
 const prepare=m=>{if(!m.clearingAttributes)m.clearingAttributes=[];while(m.clearingAttributes.length<m.vertices.length)m.clearingAttributes.push([0,0,0]);};
 const vertex=(m,p,c,type=0,uv=[0,0])=>{prepare(m);const i=m.vertices.length;m.vertices.push({x:p[0],y:p[1],z:p[2]});m.colors.push(c);m.clearingAttributes.push([...uv,type]);return i;};
 const face=(m,a,b,c)=>m.indices.push(a,b,c);
@@ -53,17 +61,23 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
  const trees=manifest.filter(p=>p.kind==='TREE');
  const root=(x,z)=>{const g=ground(x,z);return g?[x,g.y-.022,z]:null;};
  for(let iz=0;iz<34;iz++)for(let ix=0;ix<34;ix++){
-  const id=`CLEARING_GRASS_${ix}_${iz}`,x=B.minX+1+ix*.90+(hash(id,'x')-.5)*.40,z=B.minZ+1+iz*.90+(hash(id,'z')-.5)*.40;
+  const id=`CLEARING_GRASS_${ix}_${iz}`,x=B.minX+1+ix*.90+(hash(id,'x')-.5)*.66,z=B.minZ+1+iz*.90+(hash(id,'z')-.5)*.66;
   const canopy=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);
-  const pocket=hash(`FIELD_${Math.floor(x/4)}_${Math.floor(z/4)}`,'density');
-  if(!eligible(x,z,.65)||pocket>.87+.10*canopy||hash(id,'clear-grass-edge-selection')>=clearingGrassInteriorWeight(x,z,id))continue;
-  const start=grass.vertices.length,roots=[];
-  for(let k=0;k<8;k++){
-   const a=hash(id,`angle${k}`)*Math.PI*2,offset=.06+.12*hash(id,`offset${k}`),r=root(x+Math.cos(a)*offset,z+Math.sin(a)*offset);if(!r)throw Error('CLEARING_GRASS_ROOT_MISSING');
-   const dry=hash(id,'dry')<.24;const tint=hash(id,`tint${k}`),c=dry?[125+Math.round(tint*24),113+Math.round(tint*21),57+Math.round(tint*15),255]:[61+Math.round(tint*36),84+Math.round(tint*30),35+Math.round(tint*20),255];
-   roots.push({x:r[0],y:r[1],z:r[2],vertexIndex:grass.vertices.length});blade(grass,r,[Math.cos(a)*(.22+.30*hash(id,`lean${k}`)),1,Math.sin(a)*(.22+.30*hash(id,`lean${k}`))],.38+.45*hash(id,`height${k}`),.060+.040*hash(id,`width${k}`),.013,c);
+  const clump=.58*clearingCoverField(x,z,3.0,'CLUMPS')+.42*clearingCoverField(x,z,7.3,'GLADES');
+  const exposure=clearingCoverField(x,z,5.1,'DRY_SOIL');
+  const cover=Math.max(.52,Math.min(.98,.86+.85*(clump-.5)-.11*canopy-.16*(exposure-.5)));
+  if(!eligible(x,z,.65)||hash(id,'clump-admission')>cover||hash(id,'clear-grass-edge-selection')>=clearingGrassInteriorWeight(x,z,id))continue;
+  const start=grass.vertices.length,roots=[],blades=6+Math.floor(hash(id,'blade-count')*4),axis=hash(id,'clump-axis')*Math.PI*2;
+  for(let k=0;k<blades;k++){
+   const a=axis+k*2.399+(hash(id,`angle${k}`)-.5)*.45,offset=.035+.20*hash(id,`offset${k}`),r=root(x+Math.cos(a)*offset,z+Math.sin(a)*offset);
+   if(!r)throw Error('CLEARING_GRASS_ROOT_MISSING');
+   const dry=hash(id,'dry')<.12+.27*exposure-.07*canopy,tint=hash(id,`tint${k}`),shade=Math.round(canopy*12);
+   const color=dry?[118+Math.round(tint*24),105+Math.round(tint*23),54+Math.round(tint*17),255]:[58+Math.round(tint*37)-shade,80+Math.round(tint*33)-shade,31+Math.round(tint*18),255];
+   const lean=.12+.30*hash(id,`lean${k}`);
+   roots.push({x:r[0],y:r[1],z:r[2],vertexIndex:grass.vertices.length});
+   blade(grass,r,[Math.cos(a)*lean,1,Math.sin(a)*lean],.29+.48*hash(id,`height${k}`),.035+.040*hash(id,`width${k}`),.013,color);
   }
-  manifest.push({id,kind:'GRASS',x,y:ground(x,z).y,z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:8,rootPoints:roots,crownRadius:.65,footprintClear:true,recipe:'CLEARING_BROAD_PATCHED_FOLDED_GRASS_2631_v1',habitatPatch:'WOODLAND_CLEARING_2629'});addedGrass.push(id);
+  manifest.push({id,kind:'GRASS',x,y:ground(x,z).y,z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:blades,rootPoints:roots,crownRadius:.65,footprintClear:true,recipe:'CLEARING_IRREGULAR_MULTITONE_CLUMPS_20261109_V1',habitatPatch:'WOODLAND_CLEARING_2629'});addedGrass.push(id);
  }
  // Small rock clusters and low broad-leaf plants leave the existing walking
  // capsule open. Their roots are sampled from the same accepted NEAR surface.
@@ -76,7 +90,7 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   manifest.push({id,kind:'ROCK',x,y:g.y,z,stoneVertexStart:start,stoneVertexCount:stone.vertices.length-start,crownRadius:r,footprintClear:true,support:{minimumBurial:.10,downwardShift:0,minimumMeasuredBurial:.10,witnesses:[{x,z,surfaceY:g.y,meshY:g.y-.10,groundTriangle:g.triangle,burial:.10}]},recipe:'CLEARING_SMALL_IRREGULAR_ROCK'});addedRocks.push(id);
  }
  for(let j=0;j<20;j++){
-  const id=`CLEARING_UNDERSTORY_${j}`,x=B.minX+2+hash(id,'x')*28,z=B.minZ+2+hash(id,'z')*28;if(!eligible(x,z,.65))continue;
+  const id=`CLEARING_UNDERSTORY_${j}`,x=B.minX+2+hash(id,'x')*28,z=B.minZ+2+hash(id,'z')*28;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);if(!eligible(x,z,.65)||hash(id,'understory-admission')>.77+.21*shade)continue;
   const start=grass.vertices.length,r=root(x,z),roots=[],leafOrigins=[],stem=[];
   for(let k=0;k<2;k++)for(let n=0;n<4;n++){const a=n*Math.PI/2;stem.push(vertex(grass,[r[0]+Math.cos(a)*.06,r[1]+k*.23,r[2]+Math.sin(a)*.06],[94,75,43,255],1,[n/4,k]));}
   for(let n=0;n<4;n++){const v=grass.vertices[stem[n]],g=ground(v.x,v.z);if(!g)throw Error('CLEARING_UNDERSTORY_ROOT_MISSING');v.y=g.y-.022;roots.push({x:v.x,y:v.y,z:v.z,vertexIndex:stem[n]});}
@@ -88,7 +102,7 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   manifest.push({id,kind:'GRASS',x,y:r[1],z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:36,rootPoints:roots,leafOrigins,crownRadius:.65,footprintClear:true,recipe:'CLEARING_LOW_LEAFY_UNDERSTORY',habitatPatch:'WOODLAND_CLEARING_2629'});addedShrubs.push(id);
  }
  for(let j=0;j<72;j++){
-  const id=`CLEARING_LITTER_${j}`,x=B.minX+1+hash(id,'x')*30,z=B.minZ+1+hash(id,'z')*30;if(!eligible(x,z,.32))continue;
+  const id=`CLEARING_LITTER_${j}`,x=B.minX+1+hash(id,'x')*30,z=B.minZ+1+hash(id,'z')*30;const shade=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);const exposure=clearingCoverField(x,z,5.1,'DRY_SOIL');if(!eligible(x,z,.32)||hash(id,'litter-admission')>.66+.22*shade+.09*exposure)continue;
   const g=ground(x,z),a=hash(id,'angle')*Math.PI*2,start=grass.vertices.length;
   blade(grass,[x,g.y+.012,z],[Math.cos(a),.04,Math.sin(a)],.13+.12*hash(id,'length'),.043,.009,[112,93,54,255],2);
   const contacts=[];

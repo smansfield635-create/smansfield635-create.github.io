@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-10T11:24:17Z",
+  "generatedAt": "2026-11-10T12:28:53Z",
   "window30d": {
-    "start": "2026-10-11T11:24:17Z",
-    "end": "2026-11-10T11:24:17Z"
+    "start": "2026-10-11T12:28:53Z",
+    "end": "2026-11-10T12:28:53Z"
   },
   "daily": [
     {
       "date": "2026-10-12",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-14",
@@ -20,11 +20,11 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 90
+      "pageLoads": 100
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 90
+      "pageLoads": 80
     },
     {
       "date": "2026-10-17",
@@ -48,15 +48,15 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 100
     },
     {
       "date": "2026-10-24",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-25",
@@ -68,11 +68,11 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 10
+      "pageLoads": 20
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-10-29",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 35
+      "pageLoads": 34
     },
     {
       "date": "2026-11-03",
@@ -124,12 +124,12 @@
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 12
+      "pageLoads": 13
     }
   ],
   "summary": {
-    "pageLoads": 1459,
-    "botPageLoads": 752,
+    "pageLoads": 1449,
+    "botPageLoads": 742,
     "nonBotPageLoads": 707
   },
   "referrers": [
@@ -162,8 +162,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 537,
-      "visits": 537
+      "pageLoads": 527,
+      "visits": 527
     },
     {
       "path": "/showroom/globe/h-earth/",

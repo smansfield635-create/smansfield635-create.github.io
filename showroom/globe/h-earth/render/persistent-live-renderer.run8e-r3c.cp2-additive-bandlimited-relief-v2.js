@@ -1129,7 +1129,7 @@ void main(){
       float groundcoverDomainZ=(0.6*world.x+0.8*world.y)*0.018-11.0+0.65*(macroField-0.5);
       float groundcoverOrganic=noise2(vec2(groundcoverDomainX,groundcoverDomainZ));
       float groundcoverPatch=smoothstep(
-        0.20,0.66,groundcoverOrganic*0.78+mesoField*0.22
+        0.20,0.66,groundcoverOrganic*0.78+(mesoField*0.40+macroField*0.60)*0.22
       );
       float groundcoverSuitability=
         smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*

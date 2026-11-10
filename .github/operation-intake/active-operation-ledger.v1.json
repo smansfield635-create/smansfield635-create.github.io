@@ -26061,6 +26061,50 @@
       "scopeHash": "dbb3be875a160b8d1b32c59516c7c8f02a24f72223106b64cddea5fd6bdb5d2d",
       "state": "ADMITTED_LOCKED"
     },
+    "dbb6dcf2d659e72ee4cc66b2800304dcb106e35c138d4a44f921a168764a9246": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3b31f11541dbd95ba2a91e7bfb2e610c6710dad1",
+          "lockGeneration": 3203,
+          "lockScope": "CONTROL_PLANE:H_EARTH:GEN3200_QUALIFIER_IMPORT_CLOSURE_REPAIR:20261109:ONE",
+          "operationId": "CONTROL_PLANE_H_EARTH_GEN3200_NATIVE_QUALIFIER_SOURCE_MATERIALIZATION_REPAIR_20261109_001",
+          "procedureLocatorDigest": "104ee355fa8a3ca1fce587c8de32b5d6254cad725d8aa4b656cb2fb11508cf94",
+          "requestDigest": "033418e0e4dacc90fd14ed9c043a447997ea5aad05887144213bfc7fcfc9a4d6",
+          "scopeHash": "dbb6dcf2d659e72ee4cc66b2800304dcb106e35c138d4a44f921a168764a9246"
+        },
+        "bindingDigest": "586bdbec38266a9e412e01d5e2f4fa9d103a0be56e595bfb3274b2387daed3a0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a76db3bd417ca6faa8e9e8ed3110bb5b15c57631711cb20cff6fc7ad1d68af3d",
+          "commentId": 6758663045,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5842,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42753553028,
+          "workflowSha": "3b31f11541dbd95ba2a91e7bfb2e610c6710dad1"
+        },
+        "lineageAnchorCommitSha": "c0f8699a463a4dc1e0825dd6475dc463269cb1fd",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3b31f11541dbd95ba2a91e7bfb2e610c6710dad1",
+      "lockGeneration": 3203,
+      "lockScope": "CONTROL_PLANE:H_EARTH:GEN3200_QUALIFIER_IMPORT_CLOSURE_REPAIR:20261109:ONE",
+      "operationId": "CONTROL_PLANE_H_EARTH_GEN3200_NATIVE_QUALIFIER_SOURCE_MATERIALIZATION_REPAIR_20261109_001",
+      "procedureLocatorDigest": "104ee355fa8a3ca1fce587c8de32b5d6254cad725d8aa4b656cb2fb11508cf94",
+      "released": false,
+      "requestDigest": "033418e0e4dacc90fd14ed9c043a447997ea5aad05887144213bfc7fcfc9a4d6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "dbb6dcf2d659e72ee4cc66b2800304dcb106e35c138d4a44f921a168764a9246",
+      "state": "ADMITTED_LOCKED"
+    },
     "dbbeba2060708db9871252b21583e1c29df1ec4ab2d56d65ae10234def97dbb5": {
       "governingHead": "e2ededa143e5808db7b6658d5d9ed2e29df77b88",
       "independentAuthorityProvenance": {
@@ -29701,7 +29745,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3202,
+  "lockGeneration": 3203,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

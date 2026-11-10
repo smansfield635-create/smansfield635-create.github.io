@@ -1,0 +1,82 @@
+{
+  "authorityInherited": false,
+  "authorityPolicy": "FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE",
+  "authoritySource": "FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE",
+  "authorityVerification": {
+    "authorityIdentity": {
+      "governingHead": "18ecab50e38b13ad002b241f97d7f08135d422d4",
+      "lockGeneration": 3196,
+      "lockScope": "CONTROL_PLANE:H_EARTH:GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION:20261109:ONE",
+      "operationId": "CONTROL_PLANE_H_EARTH_GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION_20261109_001",
+      "procedureLocatorDigest": "701d8a43411dd746c61740d89cec5a76d78934057f2ca9789f1d85331b528b67",
+      "requestDigest": "3feb9cc6661dc009e575e0c9ed253a93fd2f1ddf4f47153bc3168878b56c0b40",
+      "scopeHash": "8a4f2cba7a87e933c63d815344227997a253f0f429d0d9993057fd0f3a24adf7"
+    },
+    "commentId": 6752461819,
+    "issueNumber": 6911,
+    "lineage": {
+      "anchorCommitSha": "457f16673180d8bc737b2a7b17fcc722f1466019",
+      "branchHead": "8a70430525d247a1ba790ce6eeed8d1f6c4be13a",
+      "checkpointVerification": null,
+      "commitCount": 18,
+      "result": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+      "spanRecovery": null
+    },
+    "origin": "CANONICAL_INTAKE",
+    "result": "AUTHENTICATED_CANONICAL_AUTHORITY",
+    "workflowRunId": 42706817564
+  },
+  "branchCreationAuthorized": true,
+  "casAttempt": 1,
+  "casRetryLimit": 8,
+  "committedLedgerBlobSha": "c66808bec521d61cfbc79def17d1c42db799ae08",
+  "contentTransport": "GIT_BLOB_FALLBACK",
+  "evidencePolicy": "EXACT_HEAD_REVALIDATION_REQUIRED",
+  "exactHeadRevalidationRequired": true,
+  "governingRef": "refs/heads/main",
+  "implementationInferenceAuthorized": false,
+  "ledgerCompareAndSwapCommitted": true,
+  "ledgerGenerationAfter": 3212,
+  "ledgerGenerationBefore": 3211,
+  "liveGoverningHead": "d732b6c299b04082a54913b9783d532074e2f665",
+  "observedLedgerBlobSha": "83eaafc964837d5765dd82adf5fbc8e37492a140",
+  "observedLockRefHead": "8a70430525d247a1ba790ce6eeed8d1f6c4be13a",
+  "oneLedgerMutationRequired": true,
+  "operationStarted": true,
+  "predecessor": {
+    "governingHead": "18ecab50e38b13ad002b241f97d7f08135d422d4",
+    "lockGeneration": 3196,
+    "lockScope": "CONTROL_PLANE:H_EARTH:GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION:20261109:ONE",
+    "operationId": "CONTROL_PLANE_H_EARTH_GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION_20261109_001",
+    "scopeHash": "8a4f2cba7a87e933c63d815344227997a253f0f429d0d9993057fd0f3a24adf7",
+    "terminalDisposition": "SUPERSEDED",
+    "terminalHistoryPreserved": true
+  },
+  "preservedEvidenceRefs": [
+    "issue:6911#issuecomment-6752461819",
+    "issue:6911#issuecomment-6753392285",
+    "issue:6911#issuecomment-6779844875",
+    "workflow:42706817564",
+    "generation:3196",
+    "pr:7286@d0d17645ddb3a9ab3b6a4e98d46ae26c797638e3"
+  ],
+  "reasonCode": "GOVERNING_HEAD_ADVANCED",
+  "repositoryWritesAuthorized": true,
+  "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+  "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+  "successor": {
+    "authorityProvenanceBound": true,
+    "governingHead": "d732b6c299b04082a54913b9783d532074e2f665",
+    "lockGeneration": 3212,
+    "lockScope": "CONTROL_PLANE:H_EARTH:GEN3178_FIXED_NATIVE_QUALIFIER_REGISTRATION:20261109:ONE",
+    "operationId": "CONTROL_PLANE_H_EARTH_GEN3178_NATIVE_QUALIFIER_AUTHORITY_BINDING_SUCCESSOR_20261110_001",
+    "procedureLocatorDigest": "acd4a202ac2844a74867ff71033251fc1e7ed5388afd3c01d1ea4d56294b18d9",
+    "projectId": "H_EARTH",
+    "requestDigest": "b840310fca578aa80d6a742153a39d8c9e63438fb0ff8de9681387890f2b6b0e",
+    "scopeHash": "8a4f2cba7a87e933c63d815344227997a253f0f429d0d9993057fd0f3a24adf7",
+    "state": "ADMITTED_LOCKED"
+  },
+  "transitionCommitSha": "2cb20214b7b697eae15d1ac203cd5443030b3223",
+  "transitionId": "H_EARTH_GEN3196_TO_H_EARTH_GEN3178_FROZEN_NATIVE_AUTHORITY_BINDING_20261110_001",
+  "workflowExecutionAuthorized": true
+}

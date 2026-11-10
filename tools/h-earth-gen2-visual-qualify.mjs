@@ -619,9 +619,11 @@ async function gen3200Capture(){
             globalGpuResident:root?.dataset.globalGroundcoverGpuResident??null,
             woodlandGpuResident:root?.dataset.woodlandGrassGpuResident??null,
             progressText:document.getElementById('h-earth-vegetation-progress')?.textContent?.slice(0,240)??null,
-            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null};
+            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null,
+            startupMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,
+            enterEnabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled===false};
         });
-        let state,ready=false,provisionalImageCaptured=false;
+        let state,ready=false,provisionalImageCaptured=false,controlGestureSent=false,entryClicked=false;
         for(let i=0;i<420;i++){
           state=await observe();
           if(i%30===0)RECEIPT.progress.push({label,device,waitSeconds:i,
@@ -638,6 +640,22 @@ async function gen3200Capture(){
                 sourceStateAtCapture:state});
               provisionalImageCaptured=true;
             }
+          }
+          // The real entrance intentionally keeps run8eReady=false until a changed
+          // canvas view has rendered and its Enter Gratitude control was clicked.
+          // Perform the existing user interaction, never fabricate READY or bypass it.
+          if(state.startupMode==='test'&&!controlGestureSent){
+            const accepted=await page.evaluate(()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              return c?.dispatchEvent(new WheelEvent('wheel',{deltaY:-280,bubbles:true,cancelable:true}))??false;
+            });
+            controlGestureSent=true;
+            RECEIPT.progress.push({label,device,stage:'ACTUAL_CONTROL_GESTURE_SENT',gesture:'wheel',eventDispatchReturned:accepted});
+          }
+          if(state.startupMode==='ready'&&state.enterEnabled&&!entryClicked){
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            entryClicked=true;
+            RECEIPT.progress.push({label,device,stage:'EXISTING_GRATITUDE_ENTRANCE_CLICKED'});
           }
           if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
           if(state.error||state.firstFailure||errors.length||failures.length)break;

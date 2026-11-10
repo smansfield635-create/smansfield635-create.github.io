@@ -5,10 +5,13 @@ on:
       target_sha:
         required: true
         type: string
+  pull_request:
+    types: [opened, synchronize, reopened]
 permissions:
   contents: read
 jobs:
   visual:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -37,5 +40,37 @@ jobs:
         with:
           name: h-earth-gen2-visual-${{ inputs.target_sha }}
           path: /tmp/gen2-evidence
+          if-no-files-found: error
+          retention-days: 30
+
+  gen3207-single-owner:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen3207-single-owner-visual-capture-20261110'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Require exact admitted inspection head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install established first-party Chromium tooling
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Matched real WebGL Gen3207 active single-owner capture
+        run: |
+          node --check tools/h-earth-gen2-visual-qualify.mjs
+          node tools/h-earth-gen2-visual-qualify.mjs --gen3207-single-owner
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen3207-actual-single-owner-webgl
+          path: /tmp/gen2-evidence/gen3207
           if-no-files-found: error
           retention-days: 30

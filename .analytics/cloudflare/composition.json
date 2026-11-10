@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-10T00:42:16Z",
+  "generatedAt": "2026-11-10T01:24:39Z",
   "window": {
-    "start": "2026-10-11T00:42:16Z",
-    "end": "2026-11-10T00:42:16Z"
+    "start": "2026-10-11T01:24:39Z",
+    "end": "2026-11-10T01:24:39Z"
   },
   "dimensions": {
     "requestPath": [
@@ -123,17 +123,12 @@
         "visits": 1
       },
       {
-        "value": "/showroom/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/campaigns/rob/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -143,9 +138,9 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/water/",
+        "value": "/signup",
         "pageLoads": 1,
-        "visits": 1
+        "visits": 0
       },
       {
         "value": "/characters/",
@@ -153,7 +148,7 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -168,7 +163,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/categories/integrity/",
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -183,6 +183,11 @@
         "visits": 1
       },
       {
+        "value": "/laws/categories/integrity/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
@@ -193,7 +198,12 @@
         "visits": 1
       },
       {
-        "value": "/frontier/waste/",
+        "value": "/prelude/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -203,12 +213,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -218,19 +228,9 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/signup",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/prelude/",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/gauges/",

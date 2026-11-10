@@ -1949,14 +1949,14 @@ jobs:
           NODE
 
   gen3214-material-webgl:
-    if: \${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3214-material-visual-20261110' }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3214-material-visual-20261110' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
       - name: Checkout exact admitted first-party visual tooling (sparse)
         uses: actions/checkout@v4
         with:
-          ref: \${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
           sparse-checkout: |
             tools
@@ -1964,7 +1964,7 @@ jobs:
       - name: Verify immutable first-party visual inspection head
         shell: bash
         env:
-          EXPECTED_SHA: \${{ github.event.pull_request.head.sha }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
       - uses: actions/setup-node@v4
         with:

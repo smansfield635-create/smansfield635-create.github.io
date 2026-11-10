@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-10T05:25:08Z",
+  "generatedAt": "2026-11-10T06:32:18Z",
   "window": {
-    "start": "2026-10-11T05:25:08Z",
-    "end": "2026-11-10T05:25:08Z"
+    "start": "2026-10-11T06:32:18Z",
+    "end": "2026-11-10T06:32:18Z"
   },
   "dimensions": {
     "requestPath": [
@@ -118,12 +118,12 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/consider-the-energy/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -208,12 +208,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -228,14 +228,14 @@
         "visits": 0
       },
       {
-        "value": "/nine-summits/universe/**",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/evidence/",
         "pageLoads": 1,
         "visits": 0
+      },
+      {
+        "value": "/nine-summits/universe/**",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "refererHost": [
@@ -287,12 +287,12 @@
         "visits": 10
       },
       {
-        "value": "MX",
+        "value": "SG",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "SG",
+        "value": "MX",
         "pageLoads": 1,
         "visits": 1
       },

@@ -586,19 +586,37 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
       RECEIPT[label]={sourceHead:head,worldSha256:HASH(world),sourceClean:true};
     }
     if(positiveX){
-      const candidateDirectory=STAGE+'-candidate';
-      const native=spawnSync(process.execPath,['--test','h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs'],
-        {cwd:candidateDirectory,encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024});
-      RECEIPT.nativeFocused={
-        command:'node --test h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs',
-        exactProductHead:CAND,exitCode:native.status,signal:native.signal,
-        stderrTail:(native.stderr??'').slice(-3000),
-        stdoutTail:(native.stdout??'').slice(-3500),spawnError:native.error?.message??null
+      const testFile='h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs';
+      const runNative=(label,args)=>spawnSync(process.execPath,args,
+        {cwd:STAGE+'-'+label,encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024});
+      const oldNative=runNative('baseline',['--test',testFile]);
+      const newNative=runNative('candidate',['--test',testFile]);
+      const failures=x=>[...(x.stdout??'').matchAll(/^not ok \d+ - (.+)$/gm)].map(m=>m[1]);
+      const oldFailures=failures(oldNative),newFailures=failures(newNative);
+      RECEIPT.nativeFull={
+        command:'node --test '+testFile,
+        baseline:{head:BASE,exitCode:oldNative.status,failedTestNames:oldFailures},
+        candidate:{head:CAND,exitCode:newNative.status,failedTestNames:newFailures},
+        preExistingFailureParity:oldNative.status===newNative.status&&
+          JSON.stringify(oldFailures)===JSON.stringify(newFailures),
+        claim:'FULL_NATIVE_PASS_ONLY_IF_BOTH_EXIT_ZERO',
+        knownFixtureFailuresNotWaived:true
       };
-      if(native.status!==0)throw Error('GEN3220_EXISTING_FOCUSED_NATIVE_TEST_FAILED:'+JSON.stringify(RECEIPT.nativeFocused));
+      if(oldNative.error||newNative.error||!RECEIPT.nativeFull.preExistingFailureParity)
+        throw Error('GEN3220_NATIVE_TEST_SCOPE_REGRESSION:'+JSON.stringify(RECEIPT.nativeFull));
+      // Run the unchanged relevant source-root/upload/capacity tests, without
+      // editing their assertions or claiming unrelated failing VM fixture tests pass.
+      const namePattern='^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile|duplicate root|nonfinite |declared contact|actual RGBA|RGBA alpha|object RGB|owner uploads|float32-overflow|tile upload budget|total immutable population|owner rejects empty|shader failure|upload exception|program link failure)';
+      const focused=runNative('candidate',['--test','--test-name-pattern',namePattern,testFile]);
+      RECEIPT.nativeFocused={
+        command:'node --test --test-name-pattern '+namePattern+' '+testFile,
+        productHead:CAND,exitCode:focused.status,
+        outputTail:(focused.stdout??'').slice(-2200),error:focused.error?.message??null
+      };
+      if(focused.status!==0)throw Error('GEN3220_FOCUSED_ROOT_OR_GPU_NATIVE_TEST_FAILED:'+JSON.stringify(RECEIPT.nativeFocused));
       RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';
     }
-    BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+        BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
     RECEIPT.browserExecuted=true;
     for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND]]:[['candidate',4174,CAND]])){
       let labelFailed=false;

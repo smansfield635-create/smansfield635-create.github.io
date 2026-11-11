@@ -1,0 +1,18 @@
+{
+  "inputSha256": "678c63cda13c0c2ced0655f4379f931189af5de50017d7aacffb5b38eecb40fb",
+  "allCellsAudited": 680960,
+  "changedCellsTouchingPredeterminedCoreOrDomain": 0,
+  "randomBilinearSamples": 500000,
+  "randomCoreSamples": 405697,
+  "randomCoreLeaks": 0,
+  "maxCoreDelta": 0.0,
+  "normalizedRG8DecodeTested": true,
+  "boundaryZerosAndReflectionTranspose": true,
+  "coreGuardDisposition": "PASS_FOR_FIXED_BILINEAR_SOURCE_CORE_DEFINITION",
+  "overallDisposition": "HOLD_TRANSITION_GUARD_FAILS",
+  "limits": [
+    "No texture upload or GPU sampler execution. Runtime must use same grid convention and linear decode, no mipmap support expansion.",
+    "Proof protects bilinearly interpolated original source-width fields, not an unsampled exact native-distance geometry.",
+    "Core fix does not cure known gradient amplification."
+  ]
+}

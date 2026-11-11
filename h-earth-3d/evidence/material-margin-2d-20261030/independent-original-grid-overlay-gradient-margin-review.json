@@ -1,0 +1,16 @@
+{
+  "baselineOriginalAtlasMaxGradientInLocalWindow": 0.1910335535514996,
+  "candidateOriginalAtlasPlusCorrectionMaxGradient": 0.185204569554471,
+  "maxCandidateWitness": {
+    "x": 170.33333334333338,
+    "z": -271.00000001,
+    "baselineGradient": 0.18555960444738023,
+    "correctionGradient": [
+      0.001953125,
+      0.0
+    ]
+  },
+  "overlayCells": 9024,
+  "method": "All4one-sidedcorners of originalatlas/correction overlaypartition; epsilon1e-8 insidecells",
+  "runtimeQualified": false
+}

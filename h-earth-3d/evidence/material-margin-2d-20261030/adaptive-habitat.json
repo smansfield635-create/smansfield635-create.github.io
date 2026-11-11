@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_ADAPTIVE_ASYMMETRIC_HABITAT_MARGIN_v1",
+  "parameters": {
+    "gridStepMeters": 0.5,
+    "maxBandMeters": 6.0,
+    "localThicknessRayStepMeters": 0.25,
+    "sourceCoreFraction": 0.5,
+    "minLocalThicknessMeters": 4.0,
+    "rejectedContourTaperMeters": 3.0,
+    "centerSlopeFactor": 0.85
+  },
+  "source": "Final coastal panel and exact current sigma2 baseline",
+  "qualifiedContourVertices": 6942,
+  "changedGridCells": 43050,
+  "changedQuarterMeterWitnesses": 179115,
+  "frozenContinuousGridCells": 633198,
+  "maxOutsideCertifiedBilinearSupportDelta": 0.0,
+  "selectedEdge": {
+    "x": 165.6666666667,
+    "nearestContourPoint": [
+      165.5,
+      -270.11807224646253
+    ],
+    "highThicknessLowerBoundMeters": 5.75,
+    "lowThicknessLowerBoundMeters": 12.75,
+    "insideBandMeters": 1.4375,
+    "outsideBandMeters": 3.1875,
+    "endpointCoverage": [
+      0.06344694945992499,
+      0.7371894294581773
+    ],
+    "endpointSlopes": [
+      0.06779301194161924,
+      0.12382659058531553
+    ],
+    "interfaceSlope": 0.16144360902255653,
+    "qualified": true,
+    "taperWeight": 1.0,
+    "baselineMaxGradientPerMeter": 0.1902167182661763,
+    "candidateMaxGradientPerMeter": 0.18983647889682556,
+    "baselineDarkPeak": 0.8156408668731904,
+    "candidateDarkPeak": 0.8156408668731904,
+    "frozenDarkColumnSpansAfterBilinearSupport": [
+      [
+        -268.0,
+        -264.5
+      ]
+    ]
+  },
+  "baselineTopology": {
+    "highComponents": 3,
+    "lowHoles": 11,
+    "highCells": 345448
+  },
+  "candidateTopology": {
+    "highComponents": 3,
+    "lowHoles": 11,
+    "highCells": 345480
+  },
+  "disposition": "NUMERICAL_PROTOTYPE_REVIEW_REQUIRED",
+  "limits": [
+    "Adaptive geometric quarterwidth fixes original central-half regions before texture support. Actual continuous frozen cores include one .5m cell halo and are separately certified.",
+    "Normal-ray width is a conservative0.25m bracket, not a whole-world medial-axis guarantee.",
+    "Neighboring contour interpolation and compact endpoint residual taper require independent gradient review.",
+    "Actual final geographic protection/maxpanel composition not applied; only coastal x>94 and panelmargin>7 eligible.",
+    "Signed Float64 correction texture prototype, not uploaded R8 or production GPU format.",
+    "P samples are untouched, but final blend coefficient and therefore texture contrast can change inside margins.",
+    "No whole-landscape completion or final-light visual acceptance."
+  ],
+  "inputHashes": {
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/region-core/adaptive_habitat.py": "8cc87ded17fc3b97664761f34cde731b1c95034cec629011ccf95bb2eb7cb1f6",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/region-core/signed-distance-habitat.npz": "5b0e1000cb1b8573826b893f461ffb0476c56f0ae4a3a1bf6b3c81bf8b0306f3",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/habitat-core-input/native-atlas.bin": "56227147b4e2b03e06c0bc674b3d198f70d38f18e970c1a40a1c51c3ec5efbe1",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/habitat-core-input/sigma2-atlas.bin": "cdcad7b7da59a873221f41c4c81b724979f048b5c69523bc51affedb1637e764"
+  }
+}

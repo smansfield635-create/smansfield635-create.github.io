@@ -1,0 +1,18 @@
+{
+  "solver": "LOCAL_ORIGINAL_ATLAS_OVERLAY_MINIMAX_THEN_MINIMUM_ALTERATION",
+  "variables": 1350,
+  "inequalities": 173916,
+  "contourEqualities": 198,
+  "success": true,
+  "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "seconds": 1.1888948200066807,
+  "runtimeIntegrated": false,
+  "minimumChangePhaseSuccess": true,
+  "minimaxSlope": 0.1817249014865106,
+  "activeGradientMaxBaseline": 0.18842262557288425,
+  "activeGradientMaxCandidate": 0.18842262557288425,
+  "maxCorrection": 0.0078125,
+  "changedVertices": 69,
+  "prequantizedContourResidual": 4.336808689942018e-19,
+  "quantizationMaxError": 0.00048151669617989295
+}

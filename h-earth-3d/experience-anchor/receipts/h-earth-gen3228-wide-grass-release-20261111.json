@@ -1,0 +1,108 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3228_WIDE_GRASS_SOURCE_BOUND_FINAL_RELEASE_BINDING_20261111_001",
+  "canonicalAdmissionGeneration": 3231,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewScope": "Source-bound same-world/interaction continuity and first-party WebGL comparison against controlling Anchor visual proxy; owner confirms desired grass improvement and explicitly requests publication. No original 32s source video replay or physical Android proof claimed.",
+  "reviewedBaselineHead": "35d188c541064bea9f0756f7d4925503f17d20fb",
+  "productSourceHead": "e3638544c4e31e3ab74907063de6fdfe90c9c772",
+  "sourceOnlyFinalization": [
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/experience-anchor/receipts/h-earth-gen3228-wide-grass-release-20261111.json"
+  ],
+  "ownerDecision": {
+    "intent": "PUBLISH_THE_EXISTING_FULL_GRASS_EXPANSION",
+    "sourceIssue": 5842,
+    "sourceCommentId": 6808561692,
+    "visualDirection": "KEEP_ALL_496748_ADDITIONAL_ROOTS",
+    "fasterInitialResponsivenessNotRequired": true,
+    "physicalAndroidCandidateWasReviewed": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+      "sha256": "fe81f5ae755a33086270c2e830ec398b3d7944e05a6901c410be75c2e1be1a09"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "6ca9f38d891db73cf8ac4206cca22f0e5ff12ed3c9af01b1fc982915f4bd7ca1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "25901eea790fe1a8abc220f68fd06cb79f382902670cc3492f14e48a5f4bbb74"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "1e156bc046bbb3045e852481cc4ebae60a7d198e4be562605980a7135ee8480e"
+    }
+  ],
+  "firstPartyEvidence": {
+    "sourceRun": 43106028346,
+    "artifactId": 13894102654,
+    "artifactSha256": "78d80d1a88a3d9ddd89129240f66bfeb0c53b412a88f3f585912889aec016e48",
+    "inspectorHead": "09d98728a875a922eb38503fdf866bc82615a201",
+    "candidateHead": "e3638544c4e31e3ab74907063de6fdfe90c9c772",
+    "sourceRootCountBefore": 2965467,
+    "sourceRootCountAfter": 3462215,
+    "newRoots": 496748,
+    "newCoverageCells": 33377,
+    "gpuUploadedBytes": 55395440,
+    "renderedMatchedCameras": 4,
+    "optimizedVsUnoptimizedControlNwImageSha256": "e5107bbd97713886e0d7ed739ccab4f887642b92e0741f24170f2de06293df19",
+    "nativeWoodlandPositiveBoundary": 950000,
+    "nativeWoodlandNegativeBoundary": 950001,
+    "baselineAndCandidateFullNativeHistoricalFailures": 14
+  },
+  "sourceIdentity": {
+    "originalGrassSourceBlobsPreserved": {
+      "supplement": "56b76da04d1f7d3469d12433adfdedbdf36a1eae",
+      "owner": "af7bc3aa1f9e4de1cd9f6bc7dcf008e3ca0e456f"
+    },
+    "liveImportMapIdentityReboundToBlobs": true,
+    "terrainCameraWaterTreesNavigationShadersChanged": false,
+    "productionDeploymentPerformed": false
+  },
+  "comparison": {
+    "anchorObserved": "Historical continuous navigable mountain-to-ground world and direct immersive camera interaction; controlling original video identity and contact sheet unchanged.",
+    "sourceDelta": "Retains and densifies existing dryland grass within unchanged canonical environment. Updated live index only rebinds two exact SHA-derived JavaScript request identities so browsers load the qualified source instead of stale cached grass. No new world/camera/interaction UI or environment owner.",
+    "acceptanceBoundary": "All eleven controlling same-world invariants preserved by source-unchanged geometry, navigation and globe and first-party rendered candidate/camera proof. Physical Android response unmeasured and not claimed, original anchor video not replayed. Owner explicitly requests release of this existing improvement."
+  },
+  "limitations": [
+    "Original 32.0635-second anchor video not replayed in this exact operation; source-bound continuity and preserved historical anchor/proxy compared.",
+    "First-party browser screenshots are from Gen3230 artifact #13894102654, not copied into this repository; the preceding visual paths include controlling anchor and historical evidence and do not purport to be these newer PNGs.",
+    "Physical Android first-explorable time, device FPS and visual review of exact new product SHA unmeasured; no fabricated human hardware receipt.",
+    "Full native suite retains 14 identical historical failures in published and Gen3228 versions; focused capacity, native and WebGL checks passed.",
+    "Preparation improvement measured in phone-sized Chromium/SwiftShader does not establish faster first Enter, which was never required.",
+    "This receipt creates no independent merge/deployment/publication authority; normal selected checks, publication preflight, exact-head Pages deploy and live verification still apply."
+  ]
+}

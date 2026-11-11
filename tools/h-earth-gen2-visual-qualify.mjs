@@ -7,6 +7,7 @@ import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
 // Gen3210, separate admitted single sparse exact-candidate WebGL capture. No product edits.
+if(process.argv.includes('--gen3217-positive-x-comparison')){await gen3210Capture(false,true);process.exit(0);}
 if(process.argv.includes('--gen3211-admission-census')){await gen3210Capture(true);process.exit(0);}
 if(process.argv.includes('--gen3210-single-owner')){await gen3210Capture();process.exit(0);}
 
@@ -543,23 +544,33 @@ if(process.argv.includes('--self-test')){
 }
 
 
-async function gen3210Capture(reasonCensus=false){
-  const BASE='320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',CAND='31d905b6cd9176eff8cb937229f6988dc8ca66a8';
-  const OUTPUT=reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
+async function gen3210Capture(reasonCensus=false,positiveX=false){
+  const BASE=positiveX?'31d905b6cd9176eff8cb937229f6988dc8ca66a8':'320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',
+        CAND=positiveX?'36d62e6919b53e72082b74e103533a164cbb03c5':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+  const OUTPUT=positiveX?'/tmp/gen2-evidence/gen3217':reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
   const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
   const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
-  const TARGETS=[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
+  const TARGETS=positiveX?[
+   {id:'stationB_N',x:129.82571460976874,z:-389.03054421247367,yaw:0,pitch:-14},
+   {id:'stationB_E',x:129.82571460976874,z:-389.03054421247367,yaw:90,pitch:-14},
+   {id:'stationB_S',x:129.82571460976874,z:-389.03054421247367,yaw:180,pitch:-14},
+   {id:'stationB_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-14}
+  ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
   const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
     baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
     browserExecuted:false,publicationPerformed:false,productMutationPerformed:false,baselineArtifactId:13793222990,baselineImagesFromRun:42877561418,baselineImagesNotRegenerated:true,sparseProductStage:true,
     exploratoryNotFinalKeep:true,images:[],provisional:[],progress:[],errors:[]};
   if(reasonCensus){RECEIPT.readOnlyCensus='GEN3211_ACTUAL_GROUND_ADMISSION';RECEIPT.admissionObservations=[];}
+  if(positiveX){RECEIPT.captureMode='GEN3217_POSITIVE_X_PROTECTED_VS_CORRECTED';
+    RECEIPT.priorObserverCameraOnly=true;RECEIPT.latestOwnerPhotoFirstHitProven=false;
+    RECEIPT.sourceDifference='EXISTING_GRASS_PLACEMENT_ONLY';
+    RECEIPT.nativeProductHeads={baseline:BASE,candidate:CAND};}
   const WORKTREES=[],SERVERS=[];let BROWSER;
   await fs.mkdir(OUTPUT,{recursive:true});
   try{
     if(!/^[0-9a-f]{40}$/.test(RECEIPT.inspectionHead))throw Error('INSPECTION_COMMIT_INVALID');
-    for(const [label,head] of [['candidate',CAND]]){
+    for(const [label,head] of (positiveX?[['baseline',BASE],['candidate',CAND]]:[['candidate',CAND]])){
       GIT(['fetch','--no-tags','--depth=1','origin',head]);
       const dir=STAGE+'-'+label;
       // Reuse established sparse-checkout: never materialize a second 498k-file world.
@@ -574,7 +585,7 @@ async function gen3210Capture(reasonCensus=false){
     }
     BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
     RECEIPT.browserExecuted=true;
-    for(const [label,port,head] of [['candidate',4174,CAND]]){
+    for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND]]:[['candidate',4174,CAND]])){
       let labelFailed=false;
       const directory=STAGE+'-'+label;
       const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
@@ -687,6 +698,9 @@ async function gen3210Capture(reasonCensus=false){
           if(state.error||state.firstFailure||state.backgroundError||errors.length||failures.length)break;
           await DELAY(1000);
         }
+        if(positiveX&&label==='candidate'&&state.owner?.woodlandSeamBridge?.failureCode){
+          throw Error('GEN3217_DRY_STAND_CONNECTION_NOT_AVAILABLE:'+JSON.stringify(state.owner.woodlandSeamBridge));
+        }
         if(!mature){
           await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-incomplete-residency.png',fullPage:true});
           throw Error('MATURE_VEGETATION_NOT_PROVEN:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,3),failures:failures.slice(0,3)}));
@@ -728,7 +742,7 @@ async function gen3210Capture(reasonCensus=false){
       if(labelFailed)continue;
       if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
     }
-    if(RECEIPT.images.length!==4||RECEIPT.images.filter(v=>v.label==='candidate').length!==4)
+    if(RECEIPT.images.length!==(positiveX?8:4)||RECEIPT.images.filter(v=>v.label==='candidate').length!==4)
       throw Error('GEN3210_EXACT_CANDIDATE_IMAGE_SET_INCOMPLETE');
     RECEIPT.result='CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
   }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}

@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawnSync} from 'node:child_process';
 
 const ROOT=process.cwd();
 const MANIFEST_PATH='h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json';
@@ -144,6 +144,197 @@ if(scoped&&experienceChanges.length===1&&experienceChanges[0]===scoped.routePath
       },null,2));
       process.exit(0);
     }
+  }
+}
+
+
+// Evidence-governed proportional acceptance for an EXACT previously reviewed,
+// content-addressed, bounded vegetation change. This is NOT a folder/type
+// exemption and is NOT a general waiver of the eleven hard Anchor invariants.
+// Other visual/interaction/world/unknown changes continue to the full gate.
+const PROPORTIONAL_VEGETATION_PATHS=Object.freeze([
+  'showroom/globe/h-earth/render/grass-continuity-supplement.v1.js',
+  'showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js'
+]);
+// Registered, independently reviewed exact first candidate. New source heads
+// require a separately approved registry revision; a self-authored receipt
+// cannot manufacture authority for arbitrary future H-Earth source.
+const REGISTERED_PROPORTIONAL_PRECEDENT=Object.freeze({
+  acceptedProductHead:'2316d7b75a32517d81bc2bbbcaf9e8d361f0c875',
+  ownerCommentId:6799551629,webglRunId:42954810048,
+  webglArtifactId:13825689284,
+  webglArchiveSha256:'9ebde450430fa2fb8a4d5281fd3531e9299b03863dfe922e6c872625323ed5ad',
+  originalRootCount:2858738,addedRoots:50940,maximumAddedRoots:60000
+});
+const PROPORTIONAL_MODES=Object.freeze({
+  qualification:'EXACT_BOUNDED_VEGETATION_PRECEDENT_REUSE',
+  inherited:'SOURCE_BOUND_UNCHANGED_ACCEPTED_ANCHOR_INVARIANT'
+});
+const REQUIRED_PROPORTIONAL_CHECKS=Object.freeze([
+  'SOURCE_BLOB_IDENTITY','ORIGINAL_ROOT_PARITY','GROUND_AND_WATER_ADMISSION',
+  'REAL_FIRST_PARTY_WEBGL','GPU_ALLOCATION_AND_DRAW',
+  'OWNER_VISUAL_INTERIM_KEEP','NO_CAMERA_NAVIGATION_GLOBE_OR_UI_SOURCE_CHANGE'
+]);
+function proportionalEvidenceDecision({changed,experienceChanges,receipt,anchor,observedBlobs,acceptedBlobs,ancestorValid}){
+  const deny=errorCode=>({result:'FAIL_CLOSED',errorCode});
+  if(!receipt||receipt.schema!=='H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1'||
+     receipt.qualificationMode!==PROPORTIONAL_MODES.qualification)return deny('PROPORTIONAL_RECEIPT_INVALID');
+  if(receipt.anchorId!==anchor.anchorId||
+     receipt.anchorSha256!==anchor.sourceVideo.sha256||
+     receipt.reviewedAgainstAnchor!==true||receipt.disposition!=='PASS'||
+     receipt.fullElevenInvariantIndependentlyRetested!==false||
+     receipt.originalVideoReplayed!==false)return deny('PROPORTIONAL_ANCHOR_CLAIM_INVALID');
+  if(!/^[0-9a-f]{40}$/.test(receipt.acceptedProductHead??'')||
+     !ancestorValid)return deny('PROPORTIONAL_ACCEPTED_SOURCE_ANCESTRY_MISSING');
+  if(receipt.acceptedProductHead!==REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead||
+     receipt.precedent?.ownerCommentId!==REGISTERED_PROPORTIONAL_PRECEDENT.ownerCommentId)
+    return deny('PROPORTIONAL_ACCEPTED_PRECEDENT_NOT_REGISTERED');
+  if(receipt.precedent?.state!=='OWNER_ACCEPTED_INTERIM_WITH_LIMITATIONS'||
+     receipt.precedent?.ownerDisposition!=='KEEP'||
+     !Number.isInteger(receipt.precedent?.ownerCommentId)||
+     receipt.precedent.ownerCommentId<=0||
+     receipt.precedent?.sourceHead!==receipt.acceptedProductHead)
+    return deny('PROPORTIONAL_OWNER_PRECEDENT_MISSING');
+  if(!Array.isArray(experienceChanges)||experienceChanges.length!==2||
+     !PROPORTIONAL_VEGETATION_PATHS.every(p=>experienceChanges.includes(p)))
+    return deny('PROPORTIONAL_UNAPPROVED_EXPERIENCE_DELTA');
+  const receiptPaths=changed.filter(p=>p.startsWith(RECEIPT_PREFIX)&&p.endsWith('.json'));
+  if(receiptPaths.length!==1||
+     changed.length!==experienceChanges.length+1||
+     changed.some(p=>!experienceChanges.includes(p)&&!receiptPaths.includes(p)))
+    return deny('PROPORTIONAL_UNRELATED_CHANGED_PATHS');
+  if(!Array.isArray(receipt.experienceFiles)||receipt.experienceFiles.length!==2)
+    return deny('PROPORTIONAL_SOURCE_FILE_SET_INVALID');
+  for(const p of PROPORTIONAL_VEGETATION_PATHS){
+    const found=receipt.experienceFiles.filter(x=>x.path===p);
+    if(found.length!==1||!(/^[0-9a-f]{40}$/.test(found[0].gitBlob??''))||
+       !(/^[0-9a-f]{64}$/.test(found[0].sha256??''))||
+       found[0].gitBlob!==observedBlobs[p]?.gitBlob||
+       found[0].sha256!==observedBlobs[p]?.sha256||
+       found[0].gitBlob!==acceptedBlobs[p])
+      return deny('PROPORTIONAL_EXACT_ACCEPTED_SOURCE_BLOB_DRIFT');
+  }
+  if(!Array.isArray(anchor.requiredInvariants)||anchor.requiredInvariants.length!==11||
+     !receipt.invariants||!receipt.invariantEvidenceModes)
+    return deny('PROPORTIONAL_ANCHOR_INVARIANT_SET_INVALID');
+  for(const invariant of anchor.requiredInvariants){
+    if(receipt.invariants[invariant]!==true||
+       receipt.invariantEvidenceModes[invariant]!==PROPORTIONAL_MODES.inherited)
+      return deny('PROPORTIONAL_INVARIANT_UNSUPPORTED:'+invariant);
+  }
+  if(Object.keys(receipt.invariantEvidenceModes).length!==11||
+     Object.keys(receipt.invariants).length!==11)
+    return deny('PROPORTIONAL_INVARIANT_SET_EXPANDED');
+  for(const check of REQUIRED_PROPORTIONAL_CHECKS)
+    if(receipt.checks?.[check]!==true)return deny('PROPORTIONAL_REQUIRED_CHECK_UNPROVEN:'+check);
+  const webgl=receipt.firstPartyEvidence;
+  if(!Number.isInteger(webgl?.runId)||webgl.runId<=0||
+     !Number.isInteger(webgl?.artifactId)||webgl.artifactId<=0||
+     !Number.isInteger(webgl?.originalRootCount)||webgl.originalRootCount<=0||
+     !Number.isInteger(webgl?.addedRoots)||webgl.addedRoots<=0||
+     !Number.isInteger(webgl?.maximumAddedRoots)||webgl.addedRoots>webgl.maximumAddedRoots||
+     !/^[0-9a-f]{64}$/.test(webgl?.artifactSha256??'')||
+     webgl?.result!=='REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED')
+    return deny('PROPORTIONAL_FIRST_PARTY_EVIDENCE_INVALID');
+  if(webgl.runId!==REGISTERED_PROPORTIONAL_PRECEDENT.webglRunId||
+     webgl.artifactId!==REGISTERED_PROPORTIONAL_PRECEDENT.webglArtifactId||
+     webgl.artifactSha256!==REGISTERED_PROPORTIONAL_PRECEDENT.webglArchiveSha256||
+     webgl.originalRootCount!==REGISTERED_PROPORTIONAL_PRECEDENT.originalRootCount||
+     webgl.addedRoots!==REGISTERED_PROPORTIONAL_PRECEDENT.addedRoots||
+     webgl.maximumAddedRoots!==REGISTERED_PROPORTIONAL_PRECEDENT.maximumAddedRoots)
+    return deny('PROPORTIONAL_EVIDENCE_NOT_REGISTERED');
+  if(receipt.limitations?.includes('ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED')!==true||
+     receipt.limitations?.includes('PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_UNMEASURED')!==true||
+     receipt.limitations?.includes('FULL_ELEVEN_INVARIANT_INDEPENDENT_REPLAY_NOT_CLAIMED')!==true)
+    return deny('PROPORTIONAL_LIMITATIONS_UNDISCLOSED');
+  if(receipt.noNavigationOrWorldChangeClaimed!==true||
+     receipt.noOtherReleaseAuthorityCreated!==true)
+    return deny('PROPORTIONAL_SCOPE_OR_RELEASE_AUTHORITY_INVALID');
+  return {result:'PASS',reason:'EXACT_BOUNDED_SOURCE_AND_HUMAN_ACCEPTED_PRECEDENT',
+    fullAnchorElevenInvariantIndependentlyRetested:false,
+    hardAnchorRequirementsRetained:true,acceptedProductHead:receipt.acceptedProductHead};
+}
+
+function proportionalSelfTest(){
+  const ap=PROPORTIONAL_VEGETATION_PATHS,receiptPath=RECEIPT_PREFIX+'fixture.json';
+  const a={anchorId:'A',sourceVideo:{sha256:'a'.repeat(64)},requiredInvariants:[
+    'I1','I2','I3','I4','I5','I6','I7','I8','I9','I10','I11']};
+  const fields=Object.fromEntries(ap.map(p=>[p,{gitBlob:'b'.repeat(40),sha256:'c'.repeat(64)}]));
+  const r={schema:'H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1',
+    qualificationMode:PROPORTIONAL_MODES.qualification,
+    anchorId:'A',anchorSha256:'a'.repeat(64),reviewedAgainstAnchor:true,disposition:'PASS',
+    fullElevenInvariantIndependentlyRetested:false,originalVideoReplayed:false,
+    acceptedProductHead:REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead,
+    precedent:{state:'OWNER_ACCEPTED_INTERIM_WITH_LIMITATIONS',ownerDisposition:'KEEP',
+      ownerCommentId:REGISTERED_PROPORTIONAL_PRECEDENT.ownerCommentId,sourceHead:REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead},
+    experienceFiles:ap.map(p=>({path:p,...fields[p]})),
+    invariantEvidenceModes:Object.fromEntries(a.requiredInvariants.map(x=>[x,PROPORTIONAL_MODES.inherited])),
+    invariants:Object.fromEntries(a.requiredInvariants.map(x=>[x,true])),
+    checks:Object.fromEntries(REQUIRED_PROPORTIONAL_CHECKS.map(x=>[x,true])),
+    firstPartyEvidence:{runId:REGISTERED_PROPORTIONAL_PRECEDENT.webglRunId,
+      artifactId:REGISTERED_PROPORTIONAL_PRECEDENT.webglArtifactId,
+      originalRootCount:REGISTERED_PROPORTIONAL_PRECEDENT.originalRootCount,
+      addedRoots:REGISTERED_PROPORTIONAL_PRECEDENT.addedRoots,
+      maximumAddedRoots:REGISTERED_PROPORTIONAL_PRECEDENT.maximumAddedRoots,
+      artifactSha256:REGISTERED_PROPORTIONAL_PRECEDENT.webglArchiveSha256,
+      result:'REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED'},
+    limitations:['ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED',
+      'PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_UNMEASURED',
+      'FULL_ELEVEN_INVARIANT_INDEPENDENT_REPLAY_NOT_CLAIMED'],
+    noNavigationOrWorldChangeClaimed:true,noOtherReleaseAuthorityCreated:true};
+  const base={changed:[...ap,receiptPath],experienceChanges:[...ap],receipt:r,anchor:a,
+    observedBlobs:fields,acceptedBlobs:Object.fromEntries(ap.map(p=>[p,'b'.repeat(40)])),
+    ancestorValid:true};
+  const test=(label,modify,expected)=>{const q=structuredClone(base);modify(q);
+    const v=proportionalEvidenceDecision(q);
+    if(v.result!==expected)throw Error('PROPORTIONAL_SELF_TEST_FAILED:'+label+':'+JSON.stringify(v));};
+  test('valid exact frozen source',()=>{},'PASS');
+  test('missing receipt',q=>{q.receipt=null},'FAIL_CLOSED');
+  test('wrong source hash',q=>{q.receipt.experienceFiles[0].gitBlob='e'.repeat(40)},'FAIL_CLOSED');
+  test('unrelated camera source',q=>{q.changed.push('showroom/globe/h-earth/camera.js');q.experienceChanges.push('showroom/globe/h-earth/camera.js')},'FAIL_CLOSED');
+  test('navigation source instead',q=>{q.experienceChanges[0]='showroom/globe/h-earth/vegetation-prototype/route.js'},'FAIL_CLOSED');
+  test('unreviewed human',q=>{q.receipt.precedent.ownerDisposition='UNKNOWN'},'FAIL_CLOSED');
+  test('wrong predecessor ancestry',q=>{q.ancestorValid=false},'FAIL_CLOSED');
+  test('missing GPU proof',q=>{q.receipt.checks.GPU_ALLOCATION_AND_DRAW=false},'FAIL_CLOSED');
+  test('forged future source head',q=>{q.receipt.acceptedProductHead='a'.repeat(40)},'FAIL_CLOSED');
+  test('wrong historical WebGL artifact',q=>{q.receipt.firstPartyEvidence.artifactId++},'FAIL_CLOSED');
+  test('anchor continuity not established',q=>{q.receipt.invariants.I7=false},'FAIL_CLOSED');
+  test('suppressed limitation',q=>{q.receipt.limitations=[]},'FAIL_CLOSED');
+  test('false independently replayed claim',q=>{q.receipt.fullElevenInvariantIndependentlyRetested=true},'FAIL_CLOSED');
+  test('unapproved extra file',q=>{q.changed.push('showroom/globe/h-earth/render/some-other-file.js')},'FAIL_CLOSED');
+  return {schema:'H_EARTH_PROPORTIONAL_ANCHOR_SELF_TEST_v1',result:'PASS',cases:14,
+    noBroadDirectoryExemption:true,allElevenHardRequirementsRetained:true};
+}
+if(process.argv.includes('--proportional-self-test')){
+  console.log(JSON.stringify(proportionalSelfTest(),null,2));
+  process.exit(0);
+}
+const candidateReceiptPaths=changed.filter(p=>p.startsWith(RECEIPT_PREFIX)&&p.endsWith('.json'));
+if(candidateReceiptPaths.length===1&&exists(candidateReceiptPaths[0])){
+  const candidateReceipt=readJson(candidateReceiptPaths[0]);
+  if(candidateReceipt.qualificationMode===PROPORTIONAL_MODES.qualification){
+    const accepted=candidateReceipt.acceptedProductHead;
+    const ancestor=typeof accepted==='string'&&/^[0-9a-f]{40}$/.test(accepted)&&
+      spawnSync('git',['merge-base','--is-ancestor',accepted,head],{cwd:ROOT}).status===0;
+    const observed={},acceptedBlobs={};
+    for(const p of PROPORTIONAL_VEGETATION_PATHS){
+      if(!exists(p))continue;
+      observed[p]={gitBlob:execFileSync('git',['hash-object',p],{cwd:ROOT,encoding:'utf8'}).trim(),
+        sha256:sha256(fs.readFileSync(path.join(ROOT,p)))};
+      if(ancestor){
+        const obj=spawnSync('git',['rev-parse',accepted+':'+p],{cwd:ROOT,encoding:'utf8'});
+        if(obj.status===0)acceptedBlobs[p]=obj.stdout.trim();
+      }
+    }
+    const result=proportionalEvidenceDecision({
+      changed,experienceChanges,receipt:candidateReceipt,anchor,observedBlobs:observed,
+      acceptedBlobs,ancestorValid:ancestor});
+    if(result.result!=='PASS')fail(result.errorCode);
+    console.log(JSON.stringify({schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',
+      ...result,receiptPath:candidateReceiptPaths[0],anchorId:anchor.anchorId,
+      anchorSha256:anchor.sourceVideo.sha256,visualReviewRequiredForDifferentCandidate:true,
+      productionApprovalCreated:false},null,2));
+    process.exit(0);
   }
 }
 

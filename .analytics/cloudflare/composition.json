@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-11T14:24:34Z",
+  "generatedAt": "2026-11-11T15:23:56Z",
   "window": {
-    "start": "2026-10-12T14:24:34Z",
-    "end": "2026-11-11T14:24:34Z"
+    "start": "2026-10-12T15:23:56Z",
+    "end": "2026-11-11T15:23:56Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 525,
-        "visits": 525
+        "pageLoads": 512,
+        "visits": 512
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -19,8 +19,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 87,
-        "visits": 64
+        "pageLoads": 89,
+        "visits": 70
       },
       {
         "value": "/products/education/personal-training/",
@@ -48,11 +48,6 @@
         "visits": 40
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 23,
-        "visits": 15
-      },
-      {
         "value": "/release-proof/",
         "pageLoads": 20,
         "visits": 20
@@ -66,6 +61,11 @@
         "value": "/products/education/",
         "pageLoads": 20,
         "visits": 20
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 12,
+        "visits": 11
       },
       {
         "value": "/showroom/globe/",
@@ -93,19 +93,9 @@
         "visits": 0
       },
       {
-        "value": "/about-this-underdog/",
-        "pageLoads": 3,
-        "visits": 1
-      },
-      {
         "value": "/explore/",
         "pageLoads": 2,
         "visits": 0
-      },
-      {
-        "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 2,
-        "visits": 2
       },
       {
         "value": "/campaigns/rob/",
@@ -113,9 +103,9 @@
         "visits": 2
       },
       {
-        "value": "/nine-summits-of-love/",
+        "value": "/campaigns/consider-the-energy/",
         "pageLoads": 2,
-        "visits": 0
+        "visits": 2
       },
       {
         "value": "/products/archcoin/contract/",
@@ -138,7 +128,32 @@
         "visits": 1
       },
       {
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/manual/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/reverse-audit/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/lattice/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -158,7 +173,7 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -178,22 +193,7 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/wave/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -218,34 +218,9 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/lattice/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/energy/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/gauges/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/nine-summits/universe/**",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/products/five-flags/",
@@ -303,6 +278,11 @@
         "visits": 1
       },
       {
+        "value": "/about-this-underdog/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/products/archcoin/receivable/",
         "pageLoads": 1,
         "visits": 1
@@ -338,8 +318,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1367,
-        "visits": 1264
+        "pageLoads": 1377,
+        "visits": 1274
       },
       {
         "value": "CN",
@@ -434,18 +414,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 827,
-        "visits": 826
+        "pageLoads": 887,
+        "visits": 886
       },
       {
         "value": "Windows",
-        "pageLoads": 213,
-        "visits": 151
+        "pageLoads": 243,
+        "visits": 181
       },
       {
         "value": "Android",
-        "pageLoads": 143,
-        "visits": 128
+        "pageLoads": 163,
+        "visits": 138
       },
       {
         "value": "Unknown",
@@ -453,14 +433,14 @@
         "visits": 74
       },
       {
+        "value": "MacOSX",
+        "pageLoads": 56,
+        "visits": 54
+      },
+      {
         "value": "iOS",
         "pageLoads": 36,
         "visits": 25
-      },
-      {
-        "value": "MacOSX",
-        "pageLoads": 36,
-        "visits": 34
       }
     ],
     "bot": [
@@ -495,8 +475,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1435,
-        "visits": 1357
+        "pageLoads": 1475,
+        "visits": 1397
       },
       {
         "value": "cache",
@@ -507,15 +487,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1471,
+        "pageLoads": 1481,
         "visits": 1358
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1471,
-        "visits": 1358
+        "pageLoads": 1461,
+        "visits": 1348
       }
     ]
   }

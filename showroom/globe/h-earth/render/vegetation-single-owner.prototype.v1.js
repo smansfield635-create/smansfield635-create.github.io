@@ -224,6 +224,216 @@ export async function buildLiveWoodlandSeamBridge({
  return {tiles:[...tiles.values()],receipt:{...receipt,contactCount:added}};
 }
 
+/** Gen3225 experimental broad dryland placement. A second pass after the exact published seam. Original roots, shaders, geometry and groundwater admission remain unchanged. Not owner-accepted or published. */
+export async function buildWideExistingGrassTrial({
+ existingTiles,visibleSurface,geology,maximumAddedRoots=500000,yieldControl=async()=>{}
+}={}){
+ if(!Array.isArray(existingTiles)||typeof visibleSurface?.sample!=='function'||
+    typeof visibleSurface?.admitGround!=='function'||typeof geology?.sampleWaterAt!=='function'||
+    !Number.isSafeInteger(maximumAddedRoots)||maximumAddedRoots<0)throw Error('WOODLAND_SEAM_INPUT_INVALID');
+ const max=Math.min(maximumAddedRoots,500000);
+ // Reuse the established immutable world-space integer hash for all distribution jitter.
+ const hash=(x,z)=>habitatHash(x,z,3225)/4294967296;
+ // Prior owner observation is a search anchor, not a claimed first-hit on the
+ // latest Android photograph. Find two ACTUAL installed grass stands on dry
+ // admitted terrain in this positive-X neighborhood before adding roots.
+ const stationB=Object.freeze({x:129.82571460976874,z:-389.03054421247367});
+ const bounds=Object.freeze({minX:40,maxX:230,minZ:-535,maxZ:-260});
+ const count=new Map(),physical=new Map(),occupied=new Map(),tileKey=(x,z)=>Math.floor(x/4)*4+':'+Math.floor(z/4)*4;
+ const cellKey=(x,z)=>Math.floor(x)+':'+Math.floor(z);
+ const nearKey=(x,z)=>Math.floor(x/.12)+':'+Math.floor(z/.12);
+ const remember=(x,z)=>{const key=nearKey(x,z);let cell=occupied.get(key);if(!cell){cell=[];occupied.set(key,cell);}cell.push([x,z]);};
+ const near=(x,z)=>{const a=Math.floor(x/.12),b=Math.floor(z/.12);
+  for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++)for(const r of occupied.get((a+dx)+':'+(b+dz))??[])
+   if(Math.hypot(r[0]-x,r[1]-z)<.085)return true;
+  return false;};
+ for(const tile of existingTiles){
+  if(tile.minX>=bounds.maxX+4||tile.minX+4<=bounds.minX-4||tile.minZ>=bounds.maxZ+4||tile.minZ+4<=bounds.minZ-4)continue;
+  const key=tile.minX+':'+tile.minZ;physical.set(key,(physical.get(key)??0)+tile.count);
+  for(let i=0;i<tile.packed.length;i+=4){
+   const x=tile.packed[i],z=tile.packed[i+2];
+   if(x<bounds.minX-2||x>bounds.maxX+2||z<bounds.minZ-2||z>bounds.maxZ+2)continue;
+   const k=cellKey(x,z);count.set(k,(count.get(k)??0)+1);remember(x,z);
+  }
+ }
+ // Gen3225 BROAD_EXPERIMENT: use installed root occupancy directly; never require
+ // an arbitrary pair of grass banks before checking actual eligible ground.
+ // This is a prior positive-X observer search region, not a photo first hit.
+ const patches=new Map();
+ for(const [key,n] of count){
+  if(n===0)continue;
+  const [x,z]=key.split(':').map(Number);
+  if(Math.hypot(x+.5-stationB.x,z+.5-stationB.z)>104)continue;
+  const px=Math.floor(x/6),pz=Math.floor(z/6),k=px+':'+pz;
+  let p=patches.get(k);if(!p){p={id:k,n:0,x:0,z:0};patches.set(k,p);}
+  p.n+=n;p.x+=(x+.5)*n;p.z+=(z+.5)*n;
+ }
+ const stands=[...patches.values()].filter(p=>p.n>=24).map(p=>({
+  id:p.id,n:p.n,x:p.x/p.n,z:p.z/p.n
+ })).sort((a,b)=>
+  Math.hypot(a.x-stationB.x,a.z-stationB.z)-
+  Math.hypot(b.x-stationB.x,b.z-stationB.z)||
+  a.id.localeCompare(b.id));
+ const sourceCondition={stationB,standBins:stands.length,
+  candidateStandPairs:'NOT_REQUIRED_DIRECT_OCCUPANCY_INFILL',
+  observedGrassCells:count.size,selectedPair:null,
+  photographicFirstHitProven:false,waterAndGroundAdmissionUnmodified:true};
+ if(!stands.length)return {tiles:[],receipt:{
+  schema:'H_EARTH_WIDE_EXISTING_GRASS_TRIAL_v1',addedRoots:0,contactCount:0,
+  source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
+  routeAnchor:'SOURCE_OBSERVED_BROAD_DRYLAND_SEARCH',spineAnchors:[],bounds,sourceCondition,
+  failureCode:'NO_SOURCE_OBSERVED_POSITIVE_X_GRASS_OCCUPANCY',
+  maximumAddedRoots:max,originalRootsPreserved:true,grassAppearanceChanged:false,
+  shaderMaterialOrTerrainChanged:false,worldSupportAndGroundAdmissionRequired:true,
+  screenshotSeamWorldCoordinatesUnproven:true,ownerVisualAcceptance:'PENDING_NEW_EXPERIMENT'}};
+ const clamp=x=>Math.max(0,Math.min(1,x));
+ const smooth=x=>{const t=clamp(x);return t*t*(3-2*t);};
+ const field=(x,z,scale,salt)=>{
+  const u=x/scale,v=z/scale,ix=Math.floor(u),iz=Math.floor(v),a=smooth(u-ix),b=smooth(v-iz);
+  const h=(dx,dz)=>hash(ix+dx+salt,iz+dz-salt);
+  return (h(0,0)*(1-a)+h(1,0)*a)*(1-b)+(h(0,1)*(1-a)+h(1,1)*a)*b;
+ };
+ // Occupancy-driven transition axis through all authenticated nearby grass
+ // groups. No arbitrary two-bank pairing, geometric gap threshold, or pre-gate.
+ // Candidate roots still face the unchanged real ground/water/footprint admission.
+ const weights=stands.map(p=>Math.min(p.n,180));
+ const weightSum=weights.reduce((n,v)=>n+v,0);
+ const center=stands.reduce((v,p,i)=>({x:v.x+p.x*weights[i],z:v.z+p.z*weights[i]}),{x:0,z:0});
+ center.x/=weightSum;center.z/=weightSum;
+ let varX=0,varZ=0,cross=0;
+ for(let i=0;i<stands.length;i++){
+  const dx=stands[i].x-center.x,dz=stands[i].z-center.z,w=weights[i];
+  varX+=w*dx*dx;varZ+=w*dz*dz;cross+=w*dx*dz;
+ }
+ const theta=.5*Math.atan2(2*cross,varX-varZ),ux=Math.cos(theta),uz=Math.sin(theta);
+ const projection=p=>(p.x-center.x)*ux+(p.z-center.z)*uz;
+ const standPositions=stands.map(projection);
+ let minAlong=Math.min(...standPositions)-7,maxAlong=Math.max(...standPositions)+7;
+ if(maxAlong-minAlong<38){const mid=(maxAlong+minAlong)/2;minAlong=mid-19;maxAlong=mid+19;}
+ sourceCondition.infillCenter={x:center.x,z:center.z};
+ sourceCondition.infillAxis={ux,uz,minAlong,maxAlong,widthMeters:80};
+ sourceCondition.standExtent={
+  minX:Math.min(...stands.map(p=>p.x)),maxX:Math.max(...stands.map(p=>p.x)),
+  minZ:Math.min(...stands.map(p=>p.z)),maxZ:Math.max(...stands.map(p=>p.z))};
+ // The published narrow footprint left a wider bare landscape. Cover the bounded
+ // dry corridor linking observed roots to the owner's prior positive-X camera
+ // search region; observer position is NOT asserted to be a terrain first hit.
+ // The source-observed grass-axis envelope remains included at its origin.
+ const corridorX=stationB.x-center.x,corridorZ=stationB.z-center.z;
+ const corridorLength=Math.hypot(corridorX,corridorZ);
+ const dirX=corridorX/corridorLength,dirZ=corridorZ/corridorLength;
+ sourceCondition.corridorSearch={
+  origin:{x:center.x,z:center.z},
+  towardPriorObserver:{x:stationB.x,z:stationB.z},
+  lengthMeters:corridorLength,priorObserverNotGroundHit:true,
+  sourceDerivedGrassConnection:true,finalPhotoCorrespondenceUnproven:true};
+ const proposed=[];
+ for(let cz=bounds.minZ;cz<bounds.maxZ;cz++)for(let cx=bounds.minX;cx<bounds.maxX;cx++){
+  const x=cx+.5,z=cz+.5,dx=x-center.x,dz=z-center.z;
+  const along=dx*ux+dz*uz,lateral=Math.abs(-dx*uz+dz*ux);
+  const patch=.52*field(x,z,5,47)+.48*field(x,z,12,71);
+  const originalWidth=24+16*field(x,z,23,81);
+  const originalFeather=(along>=minAlong&&along<=maxAlong&&lateral<=originalWidth)
+   ?(1-smooth((lateral-3)/Math.max(1,originalWidth-3)))*(.72+.28*patch):0;
+  const forward=dx*dirX+dz*dirZ,side=Math.abs(-dx*dirZ+dz*dirX);
+  // Broad regional trial footprint, tapered to existing planted edges.
+  const width=36+18*field(x,z,27,93);
+  const inCorridor=forward>=-7&&forward<=corridorLength+5&&side<=width;
+  const longitudinal=inCorridor?
+    smooth(Math.min((forward+7)/10,(corridorLength+5-forward)/10)):0;
+  const corridorFeather=inCorridor?
+    (1-smooth((side-2)/Math.max(1,width-2)))*(.66+.34*patch)*(.75+.25*longitudinal):0;
+  // Source-root distance provides a broad ecological footprint rather than
+  // relying on a photo-inferred ground hit or an arbitrary narrow corridor.
+  let nearest=Infinity;for(const stand of stands)nearest=Math.min(nearest,Math.hypot(x-stand.x,z-stand.z));
+  const reach=1-smooth((nearest-12)/95);
+  const organic=.48*field(x,z,21,281)+.52*field(x,z,8,317);
+  const regionalFeather=(.20+.60*reach)*smooth((organic-.18)/.65);
+  const coverage=Math.max(originalFeather,corridorFeather,regionalFeather);
+  if(coverage<=.08)continue;
+  const before=count.get(cellKey(x,z))??0;
+  if(before>22)continue; // Already dense grass remains untouched.
+  const target=Math.floor(36*Math.min(1,coverage+.14));
+  if(target<=before)continue;
+  const edge=Math.min(cx-bounds.minX,bounds.maxX-cx,cz-bounds.minZ,bounds.maxZ-cz);
+  if(edge<2)continue;
+  // Interleave eight longitudinal sectors so the entire eligible corridor
+  // gets its first planting pass before any local densification.
+  const sector=Math.max(0,Math.min(7,Math.floor(8*clamp(forward/corridorLength))));
+  const gapPriority=before<=2?.74:.2;
+  proposed.push({cx,cz,target,sector,before,
+   priority:coverage+gapPriority+.06*hash(cx+117,cz-57)});
+ }
+ sourceCondition.sparseCandidateCells=proposed.length;
+ sourceCondition.occupancyAxisMode='SOURCE_GRASS_TO_WIDE_ADMITTED_DRYLAND_WITH_ORGANIC_FEATHER';
+ if(!proposed.length)return {tiles:[],receipt:{
+  schema:'H_EARTH_WIDE_EXISTING_GRASS_TRIAL_v1',addedRoots:0,contactCount:0,
+  source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
+  routeAnchor:'SOURCE_OBSERVED_BROAD_DRYLAND_SEARCH',spineAnchors:[],bounds,sourceCondition,
+  failureCode:'NO_OCCUPANCY_DRIVEN_SPARSE_CELLS_FOUND',
+  maximumAddedRoots:max,originalRootsPreserved:true,grassAppearanceChanged:false,
+  shaderMaterialOrTerrainChanged:false,worldSupportAndGroundAdmissionRequired:true,
+  screenshotSeamWorldCoordinatesUnproven:true,ownerVisualAcceptance:'PENDING_NEW_EXPERIMENT'}};
+ // Interleave every accepted connection segment before spending the bounded
+ // root budget; a dense patch at one end must not starve the other regions.
+ const groups=Array.from({length:8},()=>[]);
+ for(const cell of proposed)groups[cell.sector].push(cell);
+ for(const group of groups)group.sort((a,b)=>b.priority-a.priority||a.cz-b.cz||a.cx-b.cx);
+ const order=[];for(let i=0;i<Math.max(...groups.map(g=>g.length));i++)for(const group of groups)if(group[i])order.push(group[i]);
+ let added=0,candidates=0;
+ let nextWideYieldAt=performance.now()+20;
+ const filledCellKeys=new Set();
+ const rejected={terrain:0,slope:0,groundAdmission:0,water:0,duplicate:0,tileCapacity:0};
+ const tiles=new Map();
+ // Level every eligible corridor sector before spending the remaining root
+ // allowance on denser clumps. The user-requested broad coverage takes
+ // priority over a locally perfect-looking patch.
+ for(const passCap of [8,18,36]){
+  for(const cell of order){
+   if(added>=max)break;
+   const {cx,cz,target}=cell,desired=Math.min(passCap,target);
+   const localKey=cx+':'+cz;let have=count.get(localKey)??0,cellAdded=0;
+   if(have>=desired)continue;
+   for(let k=0;k<36&&have<desired&&added<max;k++){
+    const j=(k*17)%36,ix=j%6,iz=Math.floor(j/6);
+    const x=Math.fround(cx+(ix+.14+.72*hash(cx*89+ix,cz*97+iz))/6);
+    const z=Math.fround(cz+(iz+.14+.72*hash(cx*101+iz,cz*103+ix))/6);
+    candidates++;
+    if(near(x,z)){rejected.duplicate++;continue;}
+    const hit=visibleSurface.sample(x,z);
+    if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)){rejected.terrain++;continue;}
+    if(hit.slope>1.05){rejected.slope++;continue;}
+    if(!visibleSurface.admitGround(x,z,hit)){rejected.groundAdmission++;continue;}
+    const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
+    if(water&&water.y>local.y+.04){rejected.water++;continue;}
+    const key=tileKey(x,z),already=physical.get(key)??0;
+    if(already>=1600){rejected.tileCapacity++;continue;}
+    const minX=Math.floor(x/4)*4,minZ=Math.floor(z/4)*4,id='WIDE_GRASS_TRIAL:'+key;
+    if(!tiles.has(id))tiles.set(id,{id,minX,minZ,roots:[]});
+    tiles.get(id).roots.push({x,y:Math.fround(hit.y),z,
+     angle:hash(cx*109+k,cz*113+k)*Math.PI*2,
+     seed:(Math.imul(cx*127+k,73856093)^Math.imul(cz*131+k,19349663))>>>0,
+     slope:hit.slope,triangleId:hit.triangleId,region:'WIDE_GRASS_TRIAL',support:hit.owner});
+    physical.set(key,already+1);remember(x,z);have++;cellAdded++;added++;
+   }
+   if(cellAdded){filledCellKeys.add(localKey);count.set(localKey,have);}
+   if(added%256<cellAdded&&performance.now()>=nextWideYieldAt){await yieldControl();nextWideYieldAt=performance.now()+20;}
+  }
+  if(added>=max)break;
+ }
+ const cellsFilled=filledCellKeys.size;
+ sourceCondition.coveragePasses=[8,18,36];
+ sourceCondition.cellsWithNewGrass=cellsFilled;
+ sourceCondition.rootAllowanceUsed=added;
+ const receipt={schema:'H_EARTH_WIDE_EXISTING_GRASS_TRIAL_v1',addedRoots:added,source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
+   routeAnchor:'SOURCE_OBSERVED_BROAD_DRYLAND_DENSIFICATION',spineAnchors:[],bounds,sourceCondition,
+   candidateCells:proposed.length,cellsFilled,candidates,rejected,maximumAddedRoots:max,
+   originalRootsPreserved:true,grassAppearanceChanged:false,shaderMaterialOrTerrainChanged:false,
+   worldSupportAndGroundAdmissionRequired:true,rootGeometry:'ORIGINAL_SINGLE_OWNER_UNCHANGED',
+   screenshotSeamWorldCoordinatesUnproven:true,ownerVisualAcceptance:'PENDING_NEW_EXPERIMENT'};
+ return {tiles:[...tiles.values()],receipt:{...receipt,contactCount:added}};
+}
+
 /** Extend only the existing ravine atlas from the roots actually installed.
  * Empty, wet and unsupported texels cannot gain soil; old coverage never falls. */
 export function buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt}={}){
@@ -264,7 +474,7 @@ export function planImmutableTiles(presentation){
    const id=`${Math.fround(root.x)}:${Math.fround(root.y)}:${Math.fround(root.z)}:${root.seed}`;
    if(ids.has(id))throw Error('ROOT_DUPLICATE');ids.add(id);rootIds.push(id);
    if((root.region==='RAVINE'||root.region==='RAVINE_SUPPLEMENT'))ravineRoots++;else woodlandRoots++;
-   if(woodlandRoots>450000)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
+   if(woodlandRoots>allocation.maximumWoodlandRoots)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
    if(ravineRoots>allocation.maximumRavineRoots)throw Error('RAVINE_ROOT_BUDGET_EXCEEDED');
    packed.set([root.x,root.y,root.z,root.angle],i*4);
   });
@@ -326,7 +536,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
  const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);
  const originalRootCount=globalTiles.reduce((n,t)=>n+t.count,0),bankTiles=trusted?oasisBankTiles(originalRootCount):[],oasisRoots=bankTiles.reduce((n,t)=>n+t.count,0),baseTiles=Object.freeze([...globalTiles,...bankTiles]),baseRootCount=originalRootCount+oasisRoots;
- let tiles=baseTiles,entranceReceipt=null,woodlandSeamReceipt=null,habitat=presentation.habitat;
+ let tiles=baseTiles,entranceReceipt=null,woodlandSeamReceipt=null,wideGrassTrialReceipt=null,habitat=presentation.habitat;
  if(entranceGrass){
   if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
   const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:runtimePlantingBaselineTiles(baseTiles),yieldControl});
@@ -336,7 +546,14 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   const seam=await buildLiveWoodlandSeamBridge({existingTiles:baseTiles,visibleSurface:entranceGrass.visibleSurface,
     geology:entranceGrass.geology,maximumAddedRoots:Math.min(60000,remaining),yieldControl});
   const seamExtra=seam.tiles.length?planImmutableTiles(seam).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded})):[];
-  tiles=Object.freeze([...baseTiles,...extra,...seamExtra]);entranceReceipt=addition.receipt;woodlandSeamReceipt=seam.receipt;
+  const seamRoots=seamExtra.reduce((n,t)=>n+t.count,0);
+  const wideRemaining=Math.max(0,allocation.maximumRoots-(baseRootCount-oasisRoots)-cavernAdded-seamRoots);
+  const wide=await buildWideExistingGrassTrial({existingTiles:[...baseTiles,...extra,...seamExtra],
+   visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,
+   maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});
+  const wideExtra=wide.tiles.length?planImmutableTiles(wide).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots})):[];
+  tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra]);
+  entranceReceipt=addition.receipt;woodlandSeamReceipt=seam.receipt;wideGrassTrialReceipt=wide.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);
   habitat=buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt:(x,z)=>{
    const hit=floor.sample(x,z)??entranceGrass.visibleSurface.sample(x,z);
@@ -392,7 +609,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of mergeGrassRanges(fine)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;selectedFineRoots+=range.count;}
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,drawCallCount,submittedTriangles:(visibleCoarseRoots+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

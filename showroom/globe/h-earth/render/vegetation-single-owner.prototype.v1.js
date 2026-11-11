@@ -90,38 +90,54 @@ export async function buildLiveWoodlandSeamBridge({
   const h=(dx,dz)=>hash(ix+dx+salt,iz+dz-salt);
   return (h(0,0)*(1-a)+h(1,0)*a)*(1-b)+(h(0,1)*(1-a)+h(1,1)*a)*b;
  };
+ // Occupancy-driven transition axis through all authenticated nearby grass
+ // groups. No arbitrary two-bank pairing, geometric gap threshold, or pre-gate.
+ // Candidate roots still face the unchanged real ground/water/footprint admission.
+ const weights=stands.map(p=>Math.min(p.n,180));
+ const weightSum=weights.reduce((n,v)=>n+v,0);
+ const center=stands.reduce((v,p,i)=>({x:v.x+p.x*weights[i],z:v.z+p.z*weights[i]}),{x:0,z:0});
+ center.x/=weightSum;center.z/=weightSum;
+ let varX=0,varZ=0,cross=0;
+ for(let i=0;i<stands.length;i++){
+  const dx=stands[i].x-center.x,dz=stands[i].z-center.z,w=weights[i];
+  varX+=w*dx*dx;varZ+=w*dz*dz;cross+=w*dx*dz;
+ }
+ const theta=.5*Math.atan2(2*cross,varX-varZ),ux=Math.cos(theta),uz=Math.sin(theta);
+ const projection=p=>(p.x-center.x)*ux+(p.z-center.z)*uz;
+ const standPositions=stands.map(projection);
+ let minAlong=Math.min(...standPositions)-7,maxAlong=Math.max(...standPositions)+7;
+ if(maxAlong-minAlong<38){const mid=(maxAlong+minAlong)/2;minAlong=mid-19;maxAlong=mid+19;}
+ sourceCondition.infillCenter={x:center.x,z:center.z};
+ sourceCondition.infillAxis={ux,uz,minAlong,maxAlong,widthMeters:14};
+ sourceCondition.standExtent={
+  minX:Math.min(...stands.map(p=>p.x)),maxX:Math.max(...stands.map(p=>p.x)),
+  minZ:Math.min(...stands.map(p=>p.z)),maxZ:Math.max(...stands.map(p=>p.z))};
  const proposed=[];
  for(let cz=bounds.minZ;cz<bounds.maxZ;cz++)for(let cx=bounds.minX;cx<bounds.maxX;cx++){
-  const x=cx+.5,z=cz+.5,observerDistance=Math.hypot(x-stationB.x,z-stationB.z);
-  if(observerDistance>76)continue;
-  // Eligible candidates must remain close to real installed grass, but no
-  // geometric bank-pair, midpoint, sparse-segment or five-hit gate applies.
-  let nearest=Infinity;
-  for(const p of stands){
-   const d=Math.hypot(x-p.x,z-p.z);
-   if(d<nearest)nearest=d;
-  }
-  if(nearest>23)continue;
+  const x=cx+.5,z=cz+.5,dx=x-center.x,dz=z-center.z;
+  const along=dx*ux+dz*uz,lateral=Math.abs(-dx*uz+dz*ux);
+  if(along<minAlong||along>maxAlong||lateral>19)continue;
+  const patch=.52*field(x,z,5,47)+.48*field(x,z,12,71);
+  const width=11+7*field(x,z,19,81);
+  if(lateral>width)continue;
+  const feather=1-smooth((lateral-3)/Math.max(1,width-3));
+  const ends=smooth(Math.min((along-minAlong)/11,(maxAlong-along)/11));
+  const coverage=feather*(.55+.45*patch)*(.70+.30*ends);
   const before=count.get(cellKey(x,z))??0;
-  if(before>9)continue; // Prefer genuinely sparse middle/edges.
-  const proximity=1-smooth((nearest-3)/21);
-  const observerFeather=1-.32*smooth((observerDistance-42)/34);
-  const patch=.55*field(x,z,5,47)+.45*field(x,z,12,71);
-  const coverage=proximity*observerFeather*(.60+.40*patch);
-  const target=Math.floor(26*coverage);
+  if(before>16)continue;
+  const target=Math.floor(30*coverage);
   if(target<=before)continue;
   const edge=Math.min(cx-bounds.minX,bounds.maxX-cx,cz-bounds.minZ,bounds.maxZ-cz);
   if(edge<2)continue;
-  const sector=(Math.floor((Math.atan2(z-stationB.z,x-stationB.x)+Math.PI)/
-   (Math.PI/4))%8+8)%8;
-  const gapPriority=before<=2?.65:.20;
-  const edgePriority=nearest>=4&&nearest<=18?.24:0;
-  proposed.push({cx,cz,target,sector,nearest,before,
-   priority:coverage+gapPriority+edgePriority+.07*hash(cx+117,cz-57)});
+  const sector=Math.max(0,Math.min(7,Math.floor(8*(along-minAlong)/(maxAlong-minAlong))));
+  // Prefer empty and low-occupancy cells; round-robin the full multi-stand
+  // transition so the capacity cannot be consumed in one localized patch.
+  const gapPriority=before<=2?.75:.24;
+  proposed.push({cx,cz,target,sector,before,
+   priority:coverage+gapPriority+.06*hash(cx+117,cz-57)});
  }
  sourceCondition.sparseCandidateCells=proposed.length;
- sourceCondition.occupancyRadiusMeters=23;
- sourceCondition.observerSearchRadiusMeters=76;
+ sourceCondition.occupancyAxisMode='ALL_AUTHENTIC_POSITIVE_X_GRASS_GROUPS';
  if(!proposed.length)return {tiles:[],receipt:{
   schema:'H_EARTH_EXISTING_GRASS_SEAM_BRIDGE_v1',addedRoots:0,contactCount:0,
   source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',

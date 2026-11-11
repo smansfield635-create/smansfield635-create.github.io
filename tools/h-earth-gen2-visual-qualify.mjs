@@ -546,16 +546,16 @@ if(process.argv.includes('--self-test')){
 
 async function gen3210Capture(reasonCensus=false,positiveX=false){
   const BASE=positiveX?'31d905b6cd9176eff8cb937229f6988dc8ca66a8':'320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',
-        CAND=positiveX?'d70f65dc8ea0350a846a46d17db5339a92f2c271':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+        CAND=positiveX?'e54386559028777ca474dc95c7d204bd26d7651e':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
   const OUTPUT=positiveX?'/tmp/gen2-evidence/gen3217':reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
   const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
   const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
   const TARGETS=positiveX?[
-   {id:'stationB_N',x:129.82571460976874,z:-389.03054421247367,yaw:0,pitch:-28},
-   {id:'stationB_E',x:129.82571460976874,z:-389.03054421247367,yaw:90,pitch:-28},
-   {id:'stationB_S',x:129.82571460976874,z:-389.03054421247367,yaw:180,pitch:-28},
-   {id:'stationB_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-28}
+   {id:'stationB_N',x:129.82571460976874,z:-389.03054421247367,yaw:0,pitch:-12},
+   {id:'stationB_E',x:129.82571460976874,z:-389.03054421247367,yaw:90,pitch:-12},
+   {id:'stationB_S',x:129.82571460976874,z:-389.03054421247367,yaw:180,pitch:-12},
+   {id:'stationB_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-12}
   ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
   const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
     baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
@@ -753,14 +753,22 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
       const after=RECEIPT.images.find(x=>x.label==='candidate')?.singleOwner;
       if(!before||!after||!(after.woodlandSeamBridge?.addedRoots>0)||
          before.originalRootCount!==after.originalRootCount||
-         after.installedRootCount-before.installedRootCount!==after.woodlandSeamBridge.addedRoots)
+         after.installedRootCount-before.installedRootCount!==after.woodlandSeamBridge.addedRoots-(before.woodlandSeamBridge?.addedRoots??0))
         throw Error('GEN3217_ORIGINAL_ROOT_PARITY_OR_NEW_ROOT_DELTA_FAILED:'+JSON.stringify({before,after}));
-      RECEIPT.rootDelta={beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,
+      RECEIPT.rootDelta={beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
         newRoots:after.woodlandSeamBridge.addedRoots,
         originalRootParity:true,verifiedGpuUpload:after.gpuUploadCount>0,
         observedGrassDrawnInCandidateDirections:RECEIPT.images.filter(x=>x.label==='candidate'&&x.singleOwner.drawCallCount>0).map(x=>x.view)};
       if(!RECEIPT.rootDelta.observedGrassDrawnInCandidateDirections.length)
         throw Error('GEN3217_NO_GRASS_VISIBLE_IN_ANY_MATCHED_CAMERA');
+      RECEIPT.imageDifferences=['stationB_N','stationB_E','stationB_S','stationB_W'].map(view=>{
+        const baseline=RECEIPT.images.find(x=>x.label==='baseline'&&x.view===view);
+        const candidate=RECEIPT.images.find(x=>x.label==='candidate'&&x.view===view);
+        return {view,pngBytesDifferent:baseline.imageSha256!==candidate.imageSha256,
+          baselineSha256:baseline.imageSha256,candidateSha256:candidate.imageSha256};
+      });
+      if(!RECEIPT.imageDifferences.some(x=>x.pngBytesDifferent))
+        throw Error('GEN3217_MATCHED_WEBGL_IMAGES_BYTE_IDENTICAL');
     }
     RECEIPT.result='CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
   }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}

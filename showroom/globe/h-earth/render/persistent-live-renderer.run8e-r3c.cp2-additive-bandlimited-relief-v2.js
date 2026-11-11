@@ -1153,7 +1153,38 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // Preserve the approved native soil and full-strength dark-olive core.
+      // Extend the transition within the existing warped groundcover field;
+      // separate hard color thresholds would create visible contour rings.
+      vec3 groundcoverNativeSoil=palette;
+      float groundcoverTransition=smoothstep(
+        0.03,0.66,groundcoverOrganic*0.78+mesoField*0.22
+      );
+      float groundcoverOutside=1.0-groundcoverTransition;
+      float groundcoverShoulder=0.55*groundcoverTransition*
+        (1.0-groundcoverPatch)*(1.0-groundcoverPatch)*
+        groundcoverSuitability*groundcoverProtection;
+      float groundcoverCompositeWeight=groundcoverWeight+
+        (1.0-groundcoverWeight)*groundcoverShoulder;
+      vec3 groundcoverEarthOlive=mix(
+        groundcoverNativeSoil,groundcoverTone,0.22
+      );
+      vec3 groundcoverMossOlive=mix(
+        groundcoverNativeSoil,groundcoverTone,0.68
+      )+vec3(-0.004,0.005,-0.004)*groundcoverMoisture;
+      vec3 groundcoverTonalCurve=
+        groundcoverOutside*groundcoverOutside*groundcoverOutside*
+          groundcoverNativeSoil+
+        3.0*groundcoverOutside*groundcoverOutside*groundcoverTransition*
+          groundcoverEarthOlive+
+        3.0*groundcoverOutside*groundcoverTransition*groundcoverTransition*
+          groundcoverMossOlive+
+        groundcoverTransition*groundcoverTransition*groundcoverTransition*
+          groundcoverTone;
+      palette=mix(
+        groundcoverNativeSoil,groundcoverTonalCurve,
+        groundcoverCompositeWeight
+      );
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

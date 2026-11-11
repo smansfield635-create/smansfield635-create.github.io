@@ -13,7 +13,7 @@ test('exact-source proportional mode: positive and eleven adversarial fixtures',
   const receipt=JSON.parse(result.stdout);
   assert.equal(receipt.schema,'H_EARTH_PROPORTIONAL_ANCHOR_SELF_TEST_v1');
   assert.equal(receipt.result,'PASS');
-  assert.equal(receipt.cases,12);
+  assert.equal(receipt.cases,14);
   assert.equal(receipt.noBroadDirectoryExemption,true);
   assert.equal(receipt.allElevenHardRequirementsRetained,true);
 });

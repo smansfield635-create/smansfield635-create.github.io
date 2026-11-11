@@ -6,6 +6,11 @@ import crypto from 'node:crypto';
 import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
+// Gen3210, separate admitted single sparse exact-candidate WebGL capture. No product edits.
+if(process.argv.includes('--gen3217-positive-x-comparison')){await gen3210Capture(false,true);process.exit(0);}
+if(process.argv.includes('--gen3211-admission-census')){await gen3210Capture(true);process.exit(0);}
+if(process.argv.includes('--gen3210-single-owner')){await gen3210Capture();process.exit(0);}
+
 const productHeads=new Set([
   '783c6347f768565e794418ff02a0201e69e0730d',
   '192404eda2fae556c452083309061c82901a933f'
@@ -536,4 +541,293 @@ if(process.argv.includes('--self-test')){
   console.log('H_EARTH_GEN2_VISUAL_QUALIFICATION_EVIDENCE '+JSON.stringify(receipt));
   if(receipt.result!=='PASS')process.exitCode=1;
  }
+}
+
+
+async function gen3210Capture(reasonCensus=false,positiveX=false){
+  const BASE=positiveX?'31d905b6cd9176eff8cb937229f6988dc8ca66a8':'320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',
+        CAND=positiveX?'2316d7b75a32517d81bc2bbbcaf9e8d361f0c875':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+  const OUTPUT=positiveX?'/tmp/gen2-evidence/gen3217':reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
+  const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
+  const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
+  const TARGETS=positiveX?[
+   // Source-observed installed-root center + prior authentic Station B camera.
+   // Station B remains a search anchor, not a claim of photo first-hit.
+   {id:'infillCenter_N',x:64.58312043705473,z:-314.94399624029495,yaw:0,pitch:-12},
+   {id:'infillCenter_E',x:64.58312043705473,z:-314.94399624029495,yaw:90,pitch:-12},
+   {id:'corridorObserver_NW',x:129.82571460976874,z:-389.03054421247367,yaw:-42,pitch:-12},
+   {id:'corridorObserver_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-12}
+  ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
+  const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
+    baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
+    browserExecuted:false,publicationPerformed:false,productMutationPerformed:false,baselineArtifactId:13793222990,baselineImagesFromRun:42877561418,baselineImagesNotRegenerated:true,sparseProductStage:true,
+    exploratoryNotFinalKeep:true,images:[],provisional:[],progress:[],errors:[]};
+  if(reasonCensus){RECEIPT.readOnlyCensus='GEN3211_ACTUAL_GROUND_ADMISSION';RECEIPT.admissionObservations=[];}
+  if(positiveX){RECEIPT.captureMode='GEN3217_POSITIVE_X_PROTECTED_VS_CORRECTED';
+    RECEIPT.priorObserverCameraOnly=true;RECEIPT.latestOwnerPhotoFirstHitProven=false;
+    RECEIPT.sourceDifference='EXISTING_GRASS_PLACEMENT_ONLY';
+    RECEIPT.nativeProductHeads={baseline:BASE,candidate:CAND};}
+  const WORKTREES=[],SERVERS=[];let BROWSER;
+  await fs.mkdir(OUTPUT,{recursive:true});
+  try{
+    if(!/^[0-9a-f]{40}$/.test(RECEIPT.inspectionHead))throw Error('INSPECTION_COMMIT_INVALID');
+    for(const [label,head] of (positiveX?[['baseline',BASE],['candidate',CAND]]:[['candidate',CAND]])){
+      GIT(['fetch','--no-tags','--depth=1','origin',head]);
+      const dir=STAGE+'-'+label;
+      // Reuse established sparse-checkout: never materialize a second 498k-file world.
+      GIT(['worktree','add','--no-checkout','--detach',dir,head]);WORKTREES.push(dir);
+      GIT(['sparse-checkout','set','--cone','showroom/globe','h-earth-3d','assets'],dir);
+      GIT(['checkout','--force',head],dir);
+      if(!await fs.stat(dir+'/showroom/globe/h-earth/index.html').then(x=>x.isFile()).catch(()=>false))throw Error('SPARSE_PUBLIC_WORLD_ENTRY_MISSING');
+      if(GIT(['rev-parse','HEAD'],dir)!==head||GIT(['status','--porcelain'],dir))throw Error('EXACT_READONLY_WORKTREE_INVALID:'+label);
+      const world=await fs.readFile(dir+'/showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
+      if(HASH(world)!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_WORLD_MISMATCH:'+label);
+      RECEIPT[label]={sourceHead:head,worldSha256:HASH(world),sourceClean:true};
+    }
+    if(positiveX){
+      const testFile='h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs';
+      const runNative=(label,args)=>spawnSync(process.execPath,args,
+        {cwd:STAGE+'-'+label,encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024});
+      const oldNative=runNative('baseline',['--test',testFile]);
+      const newNative=runNative('candidate',['--test',testFile]);
+      const failures=x=>[...(x.stdout??'').matchAll(/^not ok \d+ - (.+)$/gm)].map(m=>m[1]);
+      const oldFailures=failures(oldNative),newFailures=failures(newNative);
+      RECEIPT.nativeFull={
+        command:'node --test '+testFile,
+        baseline:{head:BASE,exitCode:oldNative.status,failedTestNames:oldFailures},
+        candidate:{head:CAND,exitCode:newNative.status,failedTestNames:newFailures},
+        preExistingFailureParity:oldNative.status===newNative.status&&
+          JSON.stringify(oldFailures)===JSON.stringify(newFailures),
+        claim:'FULL_NATIVE_PASS_ONLY_IF_BOTH_EXIT_ZERO',
+        knownFixtureFailuresNotWaived:true
+      };
+      if(oldNative.error||newNative.error||!RECEIPT.nativeFull.preExistingFailureParity)
+        throw Error('GEN3220_NATIVE_TEST_SCOPE_REGRESSION:'+JSON.stringify(RECEIPT.nativeFull));
+      // Run the unchanged relevant source-root/upload/capacity tests, without
+      // editing their assertions or claiming unrelated failing VM fixture tests pass.
+      const rootTestPrefix=/^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile|duplicate root|nonfinite |declared contact|actual RGBA|RGBA alpha|object RGB|owner uploads|float32-overflow|tile upload budget|total immutable population|owner rejects empty|shader failure|upload exception|program link failure)/;
+      const knownBaselinePassingNames=[...(oldNative.stdout??'').matchAll(/^ok \d+ - (.+)$/gm)]
+        .map(m=>m[1]).filter(name=>rootTestPrefix.test(name));
+      if(!knownBaselinePassingNames.length)throw Error('GEN3220_NO_KNOWN_PASSING_ROOT_NATIVE_ASSERTIONS');
+      const escapeName=name=>name.replace(/[|\\{}()[\]^$+*?.]/g,'\\$&');
+      const namePattern='^(?:'+knownBaselinePassingNames.map(escapeName).join('|')+')$';
+      const focused=runNative('candidate',['--test','--test-name-pattern',namePattern,testFile]);
+      RECEIPT.nativeFocused={
+        command:'node --test --test-name-pattern <EXACT_BASELINE_PASSING_SOURCE_TEST_NAMES> '+testFile,
+        exactSelectedNames:knownBaselinePassingNames,
+        excludedPreexistingFullNativeFailures:oldFailures.filter(name=>rootTestPrefix.test(name)),
+        productHead:CAND,exitCode:focused.status,
+        outputTail:(focused.stdout??'').slice(-2600),error:focused.error?.message??null,
+        selectorPolicy:'BASELINE_PASSING_SOURCE_TEST_NAMES_ONLY_FULL_SUITE_FAILURES_RETAINED'
+      };
+      if(focused.status!==0)throw Error('GEN3220_FOCUSED_ROOT_OR_GPU_NATIVE_TEST_FAILED:'+JSON.stringify(RECEIPT.nativeFocused));
+      RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';
+    }
+        BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+    RECEIPT.browserExecuted=true;
+    for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND]]:[['candidate',4174,CAND]])){
+      let labelFailed=false;
+      const directory=STAGE+'-'+label;
+      const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
+      SERVERS.push(server);
+      let serving=false;
+      for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:'+port+'/showroom/globe/h-earth/')).ok){serving=true;break}}catch{}await DELAY(250)}
+      if(!serving)throw Error('LOCAL_FIRST_PARTY_SERVER_NOT_READY:'+label);
+      for(const device of ['phone']){
+        const viewport=device==='phone'?{width:412,height:915}:{width:1280,height:720};
+        const views=device==='phone'?TARGETS:[TARGETS[4]];
+        const context=await BROWSER.newContext({viewport,deviceScaleFactor:device==='phone'?2:1,isMobile:device==='phone',hasTouch:device==='phone'});
+        const page=await context.newPage(),errors=[],failures=[],fixtureHashes=[];
+        page.on('pageerror',e=>errors.push(String(e?.message||e)));
+        page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
+        page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+        try {
+        await page.route('**/functional-landscape/navigation.js*',async route=>{
+          const response=await route.fetch(),source=await response.text();
+          const coast="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
+          const marker='export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){';
+          if(source.split(coast).length!==2||source.split(marker).length!==2)throw Error('HISTORICAL_NAVIGATION_FIXTURE_DRIFT:'+label);
+          const waypoints=TARGETS.map(t=>"QUALIFIER_"+t.id+":{waypointId:'QUALIFIER_"+t.id+"',position:{x:"+t.x+",z:"+t.z+"},yawDegrees:"+t.yaw+",pitchDegrees:"+t.pitch+"}").join(',');
+          const modified=source.replace(coast,coast+','+waypoints)
+           .replace(marker,marker+"if(globalThis.__hEarthQualifierWaypoint){intent={action:'GOTO_WAYPOINT',waypointId:globalThis.__hEarthQualifierWaypoint};delete globalThis.__hEarthQualifierWaypoint;}");
+          fixtureHashes.push({original:HASH(source),intercepted:HASH(modified),waypoints:TARGETS.length});
+          await route.fulfill({response,body:modified});
+        });
+        await page.goto('http://127.0.0.1:'+port+'/showroom/globe/h-earth/?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:90000});
+        const observe=()=>page.evaluate(()=>{
+          const root=document.getElementById('h-earth-functional-landscape-route');
+          const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+          const route=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+          const gpu=route?.getLiveGpuReceipt?.(),resources=gpu?.resources,nav=route?.getIntakeReceipt?.()?.currentNavigationState;
+          const owner=resources?.singleOwnerVegetation,background=gpu?.vegetationBackground;
+          const uniformGroundAdmission=resources?.uniformGroundAdmission??null;
+          return {ready:root?.dataset.run8eReady==='true',error:root?.dataset.run8eError==='true',
+            canvasWidth:canvas?.width??0,canvasHeight:canvas?.height??0,
+            webgl:resources?.context?.created===true&&resources?.context?.lost===false,
+            frames:gpu?.counters?.gpuFramebufferPresentationCount??0,
+            nav:nav?{position:nav.position,sequence:nav.sequence,accepted:nav.accepted,action:nav.action,pitchDegrees:nav.pitchDegrees,yawDegrees:nav.yawDegrees,terrainSupported:nav.terrainSupported}:null,
+            owner:owner?{originalRootCount:owner.originalRootCount,installedRootCount:owner.installedRootCount,
+              gpuRequestedBytes:owner.gpuRequestedBytes,gpuUploadedBytes:owner.gpuUploadedBytes,
+              gpuAllocatedBytes:owner.gpuAllocatedBytes,maximumPackedBytes:owner.maximumPackedBytes,
+              globalMaximumPackedBytes:owner.globalMaximumPackedBytes,
+              preparationMs:owner.preparationMs,cpuDrawSubmissionMilliseconds:owner.cpuDrawSubmissionMilliseconds,
+              rootOwnerCount:owner.rootOwnerCount,gpuAllocationVerified:owner.gpuAllocationVerified,
+              gpuUploadCount:owner.gpuUploadCount,drawCallCount:owner.drawCallCount,
+              selectedFineRoots:owner.selectedFineRoots,visibleCoarseRoots:owner.visibleCoarseRoots,
+              woodlandSeamBridge:owner.woodlandSeamBridge??null}:null,
+            uniformGroundAdmission,
+            backgroundPhase:background?.phase??null,backgroundError:background?.error??null,
+            firstFailure:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage??null,
+            vegetationState:root?.dataset.vegetationState??null,
+            globalGpuResident:root?.dataset.globalGroundcoverGpuResident??null,
+            woodlandGpuResident:root?.dataset.woodlandGrassGpuResident??null,
+            progressText:document.getElementById('h-earth-vegetation-progress')?.textContent?.slice(0,240)??null,
+            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null,
+            startupMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,
+            enterEnabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled===false};
+        });
+        let state,ready=false,provisionalImageCaptured=false,controlGestureSent=false,entryClicked=false;
+        for(let i=0;i<420;i++){
+          state=await observe();
+          if(reasonCensus&&state.uniformGroundAdmission&&i%2===0){const a=state.uniformGroundAdmission;const last=RECEIPT.admissionObservations.at(-1);if(!last||last.receipt.tested!==a.tested)RECEIPT.admissionObservations.push({stage:'ENTER_WAIT',waitSeconds:i,vegetationState:state.vegetationState,backgroundPhase:state.backgroundPhase,receipt:a});}
+          if(i%30===0)RECEIPT.progress.push({label,device,waitSeconds:i,
+            frames:state.frames,ready:state.ready,vegetationState:state.vegetationState,
+            backgroundPhase:state.backgroundPhase,ownerBridgeRoots:state.owner?.woodlandSeamBridge?.addedRoots??null,
+            progressText:state.progressText,loaderText:state.loaderText,
+            ownerRoots:state.owner?.installedRootCount??null,firstFailure:state.firstFailure});
+          if(!provisionalImageCaptured&&state.webgl&&state.frames>0&&state.canvasWidth>=100&&state.canvasHeight>=100){
+            const filename=label+'-'+device+'-first-real-webgl-NOT-MATURE.png';
+            const bytes=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+filename});
+            if(bytes.length>=1024){
+              RECEIPT.provisional.push({label,device,head,filename,imageBytes:bytes.length,imageSha256:HASH(bytes),
+                actualWebglPresentationCount:state.frames,vegetationMaturity:'NOT_PROVEN',
+                sourceStateAtCapture:state});
+              provisionalImageCaptured=true;
+            }
+          }
+          // The real entrance intentionally keeps run8eReady=false until a changed
+          // canvas view has rendered and its Enter Gratitude control was clicked.
+          // Perform the existing user interaction, never fabricate READY or bypass it.
+          if(state.startupMode==='test'&&!controlGestureSent){
+            const accepted=await page.evaluate(()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              return c?.dispatchEvent(new WheelEvent('wheel',{deltaY:-280,bubbles:true,cancelable:true}))??false;
+            });
+            controlGestureSent=true;
+            RECEIPT.progress.push({label,device,stage:'ACTUAL_CONTROL_GESTURE_SENT',gesture:'wheel',eventDispatchReturned:accepted});
+          }
+          if(state.startupMode==='ready'&&state.enterEnabled&&!entryClicked){
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            entryClicked=true;
+            RECEIPT.progress.push({label,device,stage:'EXISTING_GRATITUDE_ENTRANCE_CLICKED'});
+          }
+          if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
+          if(state.error||state.firstFailure||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(!ready)throw Error('ACTUAL_WEBGL_NOT_RENDERED:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,4),failures:failures.slice(0,4)}));
+        const early=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+label+'-'+device+'-early.png'});
+        if(early.length<1024)throw Error('ACTUAL_EARLY_CANVAS_EMPTY:'+label);
+        let mature=false;
+        for(let i=0;i<540;i++){
+          state=await observe();const o=state.owner;
+          if(reasonCensus&&state.uniformGroundAdmission&&i%2===0){const a=state.uniformGroundAdmission;const last=RECEIPT.admissionObservations.at(-1);if(!last||last.receipt.tested!==a.tested)RECEIPT.admissionObservations.push({stage:'VEGETATION_WAIT',waitSeconds:i,vegetationState:state.vegetationState,backgroundPhase:state.backgroundPhase,receipt:a});}
+          if(state.vegetationState==='prepared'&&state.backgroundPhase==='OWNER_PREPARED'&&
+             o?.installedRootCount>0&&o?.rootOwnerCount===1&&o?.gpuAllocationVerified===true&&
+             o?.gpuUploadCount>0&&state.frames>0&&
+             (label==='baseline'||o.woodlandSeamBridge?.addedRoots>0)){
+            if(o.drawCallCount>0&&o.selectedFineRoots>0){mature=true;break}
+            if(i%8===0){await page.locator('#h-earth-functional-landscape-canvas').hover();await page.mouse.wheel(0,1)}
+          }
+          if(state.error||state.firstFailure||state.backgroundError||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(positiveX&&label==='candidate'&&state.owner?.woodlandSeamBridge?.failureCode){
+          throw Error('GEN3217_DRY_STAND_CONNECTION_NOT_AVAILABLE:'+JSON.stringify(state.owner.woodlandSeamBridge));
+        }
+        if(!mature){
+          await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-incomplete-residency.png',fullPage:true});
+          throw Error('MATURE_VEGETATION_NOT_PROVEN:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,3),failures:failures.slice(0,3)}));
+        }
+        if(reasonCensus){const a=state.uniformGroundAdmission;if(a?.schema!=='H_EARTH_UNIFORM_GROUND_ADMISSION_v1'||!Number.isInteger(a.tested)||!a.rejections||a.maximumSandCoverage!==0.12)throw Error('GEN3211_ACTUAL_ADMISSION_RECEIPT_INVALID:'+JSON.stringify(a));RECEIPT.admissionCensus={scope:'ALL_SHARED_ADMISSION_CALLS_DURING_CURRENT_SINGLE_OWNER_PREPARATION_NOT_ISOLATED_BRIDGE_DELTA',source:'EXISTING_GET_LIVE_GPU_RECEIPT',exactProductHead:CAND,fullAtMature:a,bridgeGroupedRejections:state.owner?.woodlandSeamBridge?.rejected??null,bridgeAddedRoots:state.owner?.woodlandSeamBridge?.addedRoots??null};}
+        const canvas=page.locator('#h-earth-functional-landscape-canvas');
+        for(const target of views){
+          const before=await observe();
+          const navigationStarted=Date.now();
+          await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id},target.id);
+          await canvas.hover();await page.mouse.wheel(0,1);
+          let actual,match=false;
+          for(let i=0;i<120;i++){
+            actual=await observe();const n=actual.nav;
+            if(n?.sequence>before.nav?.sequence&&n?.accepted===true&&n.action?.startsWith('GOTO_WAYPOINT')&&n.terrainSupported===true&&
+              Math.hypot(n.position?.x-target.x,n.position?.z-target.z)<.04&&Math.abs(n.pitchDegrees-target.pitch)<.05&&actual.frames>before.frames){match=true;break}
+            if(actual.error||actual.firstFailure||errors.length||failures.length)break;
+            await DELAY(250);
+          }
+          if(!match)throw Error('GEN3210_MATCHED_CAMERA_NOT_REACHED:'+label+':'+device+':'+target.id+':'+JSON.stringify(actual));
+          if(actual.vegetationState!=='prepared'||actual.backgroundPhase!=='OWNER_PREPARED'||!actual.owner?.gpuAllocationVerified||actual.owner.gpuUploadCount<=0||!(actual.owner.installedRootCount>0)||(label==='candidate'&&!(actual.owner.woodlandSeamBridge?.addedRoots>0)))
+            throw Error('GEN3210_SINGLE_OWNER_GPU_RESIDENCY_REGRESSION:'+label+':'+target.id+':'+JSON.stringify(actual.owner));
+          // A mature, GPU-resident population can be fully frustum-culled in one
+          // camera direction. Zero per-view draw calls are visibility evidence,
+          // not missing allocation/upload; keep the exact recorded state.
+          const filename=label+'-'+target.id+'-'+device+'-mature-webgl.png';
+          const bytes=await canvas.screenshot({path:OUTPUT+'/'+filename});
+          if(bytes.length<1024)throw Error('EMPTY_WEBGL_CAPTURE:'+filename);
+          RECEIPT.images.push({label,head,device,view:target.id,target,actualCamera:actual.nav,
+            navigationToFrameMilliseconds:Date.now()-navigationStarted,
+            filename,imageSha256:HASH(bytes),imageBytes:bytes.length,
+            singleOwner:actual.owner,perViewCulled:actual.owner.drawCallCount===0, ...(reasonCensus?{sharedGroundAdmission:actual.uniformGroundAdmission}:{}),preparationPhase:actual.backgroundPhase,ownerDisposition:'PENDING',photographedSeamLocationUnverified:true});
+        }
+        RECEIPT[label][device]={viewport,fixtureHashes,errors,failedRequests:failures};
+        await context.close();
+        }catch(e){
+          RECEIPT.errors.push('CAPTURE_CASE_FAILED:'+label+':'+device+':'+String(e?.stack||e));
+          try{await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-failure-page.png',fullPage:true})}catch{}
+          await context.close().catch(()=>{});
+          labelFailed=true;
+          break;
+        }
+      }
+      server.kill('SIGTERM');
+      if(labelFailed)continue;
+      if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
+    }
+    if(RECEIPT.images.length!==(positiveX?8:4)||RECEIPT.images.filter(v=>v.label==='candidate').length!==4)
+      throw Error('GEN3210_EXACT_CANDIDATE_IMAGE_SET_INCOMPLETE');
+    if(positiveX){
+      const before=RECEIPT.images.find(x=>x.label==='baseline')?.singleOwner;
+      const after=RECEIPT.images.find(x=>x.label==='candidate')?.singleOwner;
+      if(!before||!after||!(after.woodlandSeamBridge?.addedRoots>0)||
+         before.originalRootCount!==after.originalRootCount||
+         after.installedRootCount-before.installedRootCount!==after.woodlandSeamBridge.addedRoots-(before.woodlandSeamBridge?.addedRoots??0))
+        throw Error('GEN3217_ORIGINAL_ROOT_PARITY_OR_NEW_ROOT_DELTA_FAILED:'+JSON.stringify({before,after}));
+      if(after.woodlandSeamBridge.addedRoots>60000||
+         after.gpuUploadedBytes!==after.gpuRequestedBytes||
+         after.gpuAllocatedBytes<after.gpuRequestedBytes||
+         after.gpuAllocatedBytes>after.maximumPackedBytes)
+        throw Error('GEN3220_ROOT_OR_GPU_ALLOCATION_BOUND_FAILED:'+JSON.stringify(after));
+      RECEIPT.rootDelta={coverageTarget:'FULL_SOURCE_GROUNDED_POSITIVE_X_DRY_CORRIDOR',beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
+        newRoots:after.woodlandSeamBridge.addedRoots,
+        originalRootParity:true,verifiedGpuUpload:after.gpuUploadCount>0,
+        observedGrassDrawnInCandidateDirections:RECEIPT.images.filter(x=>x.label==='candidate'&&x.singleOwner.drawCallCount>0).map(x=>x.view)};
+      if(!RECEIPT.rootDelta.observedGrassDrawnInCandidateDirections.length)
+        throw Error('GEN3217_NO_GRASS_VISIBLE_IN_ANY_MATCHED_CAMERA');
+      RECEIPT.imageDifferences=['infillCenter_N','infillCenter_E','corridorObserver_NW','corridorObserver_W'].map(view=>{
+        const baseline=RECEIPT.images.find(x=>x.label==='baseline'&&x.view===view);
+        const candidate=RECEIPT.images.find(x=>x.label==='candidate'&&x.view===view);
+        return {view,pngBytesDifferent:baseline.imageSha256!==candidate.imageSha256,
+          baselineSha256:baseline.imageSha256,candidateSha256:candidate.imageSha256};
+      });
+      if(!RECEIPT.imageDifferences.some(x=>x.pngBytesDifferent))
+        throw Error('GEN3217_MATCHED_WEBGL_IMAGES_BYTE_IDENTICAL');
+    }
+    RECEIPT.result='CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
+  }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}
+  finally{
+    await fs.writeFile(OUTPUT+'/receipt.json',JSON.stringify(RECEIPT,null,2)+'\n');
+    if(BROWSER)await BROWSER.close().catch(()=>{});
+    for(const server of SERVERS)server.kill('SIGTERM');
+    for(const dir of WORKTREES.reverse())try{GIT(['worktree','remove','--force',dir])}catch{}
+  }
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-11T16:24:51Z",
+  "generatedAt": "2026-11-11T17:24:52Z",
   "window": {
-    "start": "2026-08-13T16:24:51Z",
-    "end": "2026-11-11T16:24:51Z"
+    "start": "2026-08-13T17:24:52Z",
+    "end": "2026-11-11T17:24:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,10 @@
       }
     },
     "byPath": {
+      "/": {
+        "pageLoads": 941,
+        "visits": 681
+      },
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
@@ -33,10 +37,6 @@
       "/index.html": {
         "pageLoads": 110,
         "visits": 0
-      },
-      "/": {
-        "pageLoads": 941,
-        "visits": 681
       },
       "/laws/": {
         "pageLoads": 100,
@@ -58,12 +58,12 @@
         "pageLoads": 90,
         "visits": 0
       },
-      "/laws/research/methods-and-models/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 490,
+        "visits": 0
+      },
+      "/laws/research/methods-and-models/": {
+        "pageLoads": 50,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -86,6 +86,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
@@ -97,10 +101,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -162,13 +162,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -186,6 +186,10 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -198,13 +202,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/wave/": {
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/about/": {
         "pageLoads": 40,
@@ -212,10 +216,6 @@
       },
       "/door/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -266,10 +266,6 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
         "visits": 0
@@ -277,6 +273,10 @@
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -312,13 +312,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 2832,
-        "visits": 0
-      },
       "www.google.com": {
         "pageLoads": 630,
         "visits": 630
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 2832,
+        "visits": 0
       },
       "(none)": {
         "pageLoads": 541,

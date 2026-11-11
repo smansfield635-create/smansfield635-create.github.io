@@ -31,8 +31,11 @@ export async function buildLiveWoodlandSeamBridge({
  const max=Math.min(maximumAddedRoots,12000);
  // Reuse the established immutable world-space integer hash for all distribution jitter.
  const hash=(x,z)=>habitatHash(x,z,3207)/4294967296;
- const path=[[-141,-226],...GRASS_CONTINUITY_CONNECTOR];
- const bounds=Object.freeze({minX:-167,maxX:17,minZ:-314,maxZ:-205});
+ // Prior owner observation is a search anchor, not a claimed first-hit on the
+ // latest Android photograph. Find two ACTUAL installed grass stands on dry
+ // admitted terrain in this positive-X neighborhood before adding roots.
+ const stationB=Object.freeze({x:129.82571460976874,z:-389.03054421247367});
+ const bounds=Object.freeze({minX:50,maxX:212,minZ:-495,maxZ:-300});
  const count=new Map(),physical=new Map(),occupied=new Map(),tileKey=(x,z)=>Math.floor(x/4)*4+':'+Math.floor(z/4)*4;
  const cellKey=(x,z)=>Math.floor(x)+':'+Math.floor(z);
  const nearKey=(x,z)=>Math.floor(x/.12)+':'+Math.floor(z/.12);
@@ -50,6 +53,69 @@ export async function buildLiveWoodlandSeamBridge({
    const k=cellKey(x,z);count.set(k,(count.get(k)??0)+1);remember(x,z);
   }
  }
+ // Select a source-observed pair of existing grassy banks separated by a
+ // genuinely sparse middle. Never infer a ground hit from the observer camera.
+ const patches=new Map();
+ for(const [key,n] of count){
+  const [x,z]=key.split(':').map(Number);
+  if(Math.hypot(x+.5-stationB.x,z+.5-stationB.z)>104)continue;
+  const px=Math.floor(x/6),pz=Math.floor(z/6),k=px+':'+pz;
+  let p=patches.get(k);if(!p){p={id:k,n:0,x:0,z:0};patches.set(k,p);}
+  p.n+=n;p.x+=(x+.5)*n;p.z+=(z+.5)*n;
+ }
+ const stands=[...patches.values()].filter(p=>p.n>=24).map(p=>({
+  id:p.id,n:p.n,x:p.x/p.n,z:p.z/p.n
+ })).sort((a,b)=>
+  (Math.hypot(a.x-stationB.x,a.z-stationB.z)-Math.min(35,a.n)*.2)-
+  (Math.hypot(b.x-stationB.x,b.z-stationB.z)-Math.min(35,b.n)*.2)||
+  a.id.localeCompare(b.id)).slice(0,90);
+ const possible=[];
+ for(let i=0;i<stands.length;i++)for(let j=i+1;j<stands.length;j++){
+  const a=stands[i],b=stands[j],length=Math.hypot(a.x-b.x,a.z-b.z);
+  if(length<17||length>70)continue;
+  const mx=(a.x+b.x)/2,mz=(a.z+b.z)/2,offset=Math.hypot(mx-stationB.x,mz-stationB.z);
+  if(offset>55)continue;
+  let sparse=0;
+  for(let k=1;k<=11;k++){
+   const t=k/12,x=a.x+(b.x-a.x)*t,z=a.z+(b.z-a.z)*t;
+   if((count.get(Math.floor(x)+':'+Math.floor(z))??0)<=2)sparse++;
+  }
+  if(sparse<5)continue;
+  possible.push({a,b,length,sparse,offset,score:sparse*8+Math.min(a.n,b.n)*.12-offset*.65-Math.abs(length-40)*.17});
+ }
+ possible.sort((a,b)=>b.score-a.score||a.a.id.localeCompare(b.a.id)||a.b.id.localeCompare(b.b.id));
+ const dry=(x,z)=>{
+  const hit=visibleSurface.sample(x,z);
+  if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)||hit.slope>1.05)return false;
+  if(!visibleSurface.admitGround(x,z,hit))return false;
+  const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
+  return !water||water.y<=local.y+.04;
+ };
+ let selected=null;
+ for(const pair of possible.slice(0,90)){
+  let dryWitnesses=0;
+  for(const t of [.15,.325,.5,.675,.85]){
+   const x=pair.a.x+(pair.b.x-pair.a.x)*t,z=pair.a.z+(pair.b.z-pair.a.z)*t;
+   if(dry(x,z))dryWitnesses++;
+  }
+  if(dryWitnesses===5){selected={...pair,dryWitnesses};break;}
+ }
+ const sourceCondition={stationB,standBins:stands.length,candidateStandPairs:possible.length,
+  selectedPair:selected?{a:[selected.a.x,selected.a.z],b:[selected.b.x,selected.b.z],
+    sparseWitnesses:selected.sparse,dryWitnesses:selected.dryWitnesses,length:selected.length,
+    distanceFromObserver:selected.offset}:null,
+  photographicFirstHitProven:false,waterAndGroundAdmissionUnmodified:true};
+ if(!selected)return {tiles:[],receipt:{
+  schema:'H_EARTH_EXISTING_GRASS_SEAM_BRIDGE_v1',addedRoots:0,contactCount:0,
+  source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
+  routeAnchor:'PREVIOUS_STATION_B_POSITIVE_X_SOURCE_SUPPORTED_SEARCH',spineAnchors:[],bounds,sourceCondition,
+  failureCode:'NO_DRY_INTER_STAND_POSITIVE_X_BRIDGE_FOUND',
+  maximumAddedRoots:max,originalRootsPreserved:true,grassAppearanceChanged:false,
+  shaderMaterialOrTerrainChanged:false,worldSupportAndGroundAdmissionRequired:true,
+  screenshotSeamWorldCoordinatesUnproven:true,ownerVisualAcceptance:'PENDING'}};
+ const path=[[selected.a.x,selected.a.z],
+  [(selected.a.x+selected.b.x)/2,(selected.a.z+selected.b.z)/2],
+  [selected.b.x,selected.b.z]];
  const clamp=x=>Math.max(0,Math.min(1,x));
  const smooth=x=>{const t=clamp(x);return t*t*(3-2*t);};
  const field=(x,z,scale,salt)=>{
@@ -121,7 +187,7 @@ export async function buildLiveWoodlandSeamBridge({
   if(cellsFilled%24===0&&cellAdded)await yieldControl();
  }
  const receipt={schema:'H_EARTH_EXISTING_GRASS_SEAM_BRIDGE_v1',addedRoots:added,source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
-   routeAnchor:'EXISTING_GRASS_CONTINUITY_CONNECTOR',spineAnchors:path,bounds,
+   routeAnchor:'PREVIOUS_STATION_B_POSITIVE_X_SOURCE_SUPPORTED_STANDS',spineAnchors:path,bounds,sourceCondition,
    candidateCells:proposed.length,cellsFilled,candidates,rejected,maximumAddedRoots:max,
    originalRootsPreserved:true,grassAppearanceChanged:false,shaderMaterialOrTerrainChanged:false,
    worldSupportAndGroundAdmissionRequired:true,rootGeometry:'ORIGINAL_SINGLE_OWNER_UNCHANGED',

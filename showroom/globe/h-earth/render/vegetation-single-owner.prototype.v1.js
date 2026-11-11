@@ -35,7 +35,7 @@ export async function buildLiveWoodlandSeamBridge({
  // latest Android photograph. Find two ACTUAL installed grass stands on dry
  // admitted terrain in this positive-X neighborhood before adding roots.
  const stationB=Object.freeze({x:129.82571460976874,z:-389.03054421247367});
- const bounds=Object.freeze({minX:50,maxX:212,minZ:-495,maxZ:-300});
+ const bounds=Object.freeze({minX:50,maxX:212,minZ:-495,maxZ:-294});
  const count=new Map(),physical=new Map(),occupied=new Map(),tileKey=(x,z)=>Math.floor(x/4)*4+':'+Math.floor(z/4)*4;
  const cellKey=(x,z)=>Math.floor(x)+':'+Math.floor(z);
  const nearKey=(x,z)=>Math.floor(x/.12)+':'+Math.floor(z/.12);
@@ -112,32 +112,51 @@ export async function buildLiveWoodlandSeamBridge({
  sourceCondition.standExtent={
   minX:Math.min(...stands.map(p=>p.x)),maxX:Math.max(...stands.map(p=>p.x)),
   minZ:Math.min(...stands.map(p=>p.z)),maxZ:Math.max(...stands.map(p=>p.z))};
+ // The previous narrow footprint left a wide bare middle. Cover the bounded
+ // dry corridor linking observed roots to the owner's prior positive-X camera
+ // search region; observer position is NOT asserted to be a terrain first hit.
+ // The source-observed grass-axis envelope remains included at its origin.
+ const corridorX=stationB.x-center.x,corridorZ=stationB.z-center.z;
+ const corridorLength=Math.hypot(corridorX,corridorZ);
+ const dirX=corridorX/corridorLength,dirZ=corridorZ/corridorLength;
+ sourceCondition.corridorSearch={
+  origin:{x:center.x,z:center.z},
+  towardPriorObserver:{x:stationB.x,z:stationB.z},
+  lengthMeters:corridorLength,priorObserverNotGroundHit:true,
+  sourceDerivedGrassConnection:true,finalPhotoCorrespondenceUnproven:true};
  const proposed=[];
  for(let cz=bounds.minZ;cz<bounds.maxZ;cz++)for(let cx=bounds.minX;cx<bounds.maxX;cx++){
   const x=cx+.5,z=cz+.5,dx=x-center.x,dz=z-center.z;
   const along=dx*ux+dz*uz,lateral=Math.abs(-dx*uz+dz*ux);
-  if(along<minAlong||along>maxAlong||lateral>19)continue;
   const patch=.52*field(x,z,5,47)+.48*field(x,z,12,71);
-  const width=11+7*field(x,z,19,81);
-  if(lateral>width)continue;
-  const feather=1-smooth((lateral-3)/Math.max(1,width-3));
-  const ends=smooth(Math.min((along-minAlong)/11,(maxAlong-along)/11));
-  const coverage=feather*(.55+.45*patch)*(.70+.30*ends);
+  const originalWidth=11+7*field(x,z,19,81);
+  const originalFeather=(along>=minAlong&&along<=maxAlong&&lateral<=originalWidth)
+   ?(1-smooth((lateral-3)/Math.max(1,originalWidth-3)))*(.72+.28*patch):0;
+  const forward=dx*dirX+dz*dirZ,side=Math.abs(-dx*dirZ+dz*dirX);
+  // Full continuous corridor envelope, tapered to existing planted edges.
+  const width=7.5+2.5*field(x,z,17,93);
+  const inCorridor=forward>=-7&&forward<=corridorLength+5&&side<=width;
+  const longitudinal=inCorridor?
+    smooth(Math.min((forward+7)/10,(corridorLength+5-forward)/10)):0;
+  const corridorFeather=inCorridor?
+    (1-smooth((side-2)/Math.max(1,width-2)))*(.66+.34*patch)*(.75+.25*longitudinal):0;
+  const coverage=Math.max(originalFeather,corridorFeather);
+  if(coverage<=.08)continue;
   const before=count.get(cellKey(x,z))??0;
-  if(before>16)continue;
-  const target=Math.floor(30*coverage);
+  if(before>22)continue; // Already dense grass remains untouched.
+  const target=Math.floor(36*Math.min(1,coverage+.14));
   if(target<=before)continue;
   const edge=Math.min(cx-bounds.minX,bounds.maxX-cx,cz-bounds.minZ,bounds.maxZ-cz);
   if(edge<2)continue;
-  const sector=Math.max(0,Math.min(7,Math.floor(8*(along-minAlong)/(maxAlong-minAlong))));
-  // Prefer empty and low-occupancy cells; round-robin the full multi-stand
-  // transition so the capacity cannot be consumed in one localized patch.
-  const gapPriority=before<=2?.75:.24;
+  // Interleave eight longitudinal sectors so the entire eligible corridor
+  // gets its first planting pass before any local densification.
+  const sector=Math.max(0,Math.min(7,Math.floor(8*clamp(forward/corridorLength))));
+  const gapPriority=before<=2?.74:.2;
   proposed.push({cx,cz,target,sector,before,
    priority:coverage+gapPriority+.06*hash(cx+117,cz-57)});
  }
  sourceCondition.sparseCandidateCells=proposed.length;
- sourceCondition.occupancyAxisMode='ALL_AUTHENTIC_POSITIVE_X_GRASS_GROUPS';
+ sourceCondition.occupancyAxisMode='SOURCE_GRASS_TO_PRIOR_OBSERVER_DRY_CORRIDOR_WITH_SOURCE_AXIS';
  if(!proposed.length)return {tiles:[],receipt:{
   schema:'H_EARTH_EXISTING_GRASS_SEAM_BRIDGE_v1',addedRoots:0,contactCount:0,
   source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
@@ -152,38 +171,50 @@ export async function buildLiveWoodlandSeamBridge({
  for(const cell of proposed)groups[cell.sector].push(cell);
  for(const group of groups)group.sort((a,b)=>b.priority-a.priority||a.cz-b.cz||a.cx-b.cx);
  const order=[];for(let i=0;i<Math.max(...groups.map(g=>g.length));i++)for(const group of groups)if(group[i])order.push(group[i]);
- let added=0,cellsFilled=0,candidates=0;
+ let added=0,candidates=0;
+ const filledCellKeys=new Set();
  const rejected={terrain:0,slope:0,groundAdmission:0,water:0,duplicate:0,tileCapacity:0};
  const tiles=new Map();
- for(const cell of order){
-  if(added>=max)break;
-  const {cx,cz,target}=cell;
-  const localKey=cx+':'+cz;let have=count.get(localKey)??0,cellAdded=0;
-  for(let k=0;k<36&&have<target&&added<max;k++){
-   const j=(k*17)%36,ix=j%6,iz=Math.floor(j/6);
-   const x=Math.fround(cx+(ix+.14+.72*hash(cx*89+ix,cz*97+iz))/6);
-   const z=Math.fround(cz+(iz+.14+.72*hash(cx*101+iz,cz*103+ix))/6);
-   candidates++;
-   if(near(x,z)){rejected.duplicate++;continue;}
-   const hit=visibleSurface.sample(x,z);
-   if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)){rejected.terrain++;continue;}
-   if(hit.slope>1.05){rejected.slope++;continue;}
-   if(!visibleSurface.admitGround(x,z,hit)){rejected.groundAdmission++;continue;}
-   const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
-   if(water&&water.y>local.y+.04){rejected.water++;continue;}
-   const key=tileKey(x,z),already=physical.get(key)??0;
-   if(already>=1600){rejected.tileCapacity++;continue;}
-   const minX=Math.floor(x/4)*4,minZ=Math.floor(z/4)*4,id='WOODLAND_SEAM_BRIDGE:'+key;
-   if(!tiles.has(id))tiles.set(id,{id,minX,minZ,roots:[]});
-   tiles.get(id).roots.push({x,y:Math.fround(hit.y),z,
-    angle:hash(cx*109+k,cz*113+k)*Math.PI*2,
-    seed:(Math.imul(cx*127+k,73856093)^Math.imul(cz*131+k,19349663))>>>0,
-    slope:hit.slope,triangleId:hit.triangleId,region:'WOODLAND_SEAM_BRIDGE',support:hit.owner});
-   physical.set(key,already+1);remember(x,z);have++;cellAdded++;added++;
+ // Level every eligible corridor sector before spending the remaining root
+ // allowance on denser clumps. The user-requested broad coverage takes
+ // priority over a locally perfect-looking patch.
+ for(const passCap of [8,18,36]){
+  for(const cell of order){
+   if(added>=max)break;
+   const {cx,cz,target}=cell,desired=Math.min(passCap,target);
+   const localKey=cx+':'+cz;let have=count.get(localKey)??0,cellAdded=0;
+   if(have>=desired)continue;
+   for(let k=0;k<36&&have<desired&&added<max;k++){
+    const j=(k*17)%36,ix=j%6,iz=Math.floor(j/6);
+    const x=Math.fround(cx+(ix+.14+.72*hash(cx*89+ix,cz*97+iz))/6);
+    const z=Math.fround(cz+(iz+.14+.72*hash(cx*101+iz,cz*103+ix))/6);
+    candidates++;
+    if(near(x,z)){rejected.duplicate++;continue;}
+    const hit=visibleSurface.sample(x,z);
+    if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)){rejected.terrain++;continue;}
+    if(hit.slope>1.05){rejected.slope++;continue;}
+    if(!visibleSurface.admitGround(x,z,hit)){rejected.groundAdmission++;continue;}
+    const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
+    if(water&&water.y>local.y+.04){rejected.water++;continue;}
+    const key=tileKey(x,z),already=physical.get(key)??0;
+    if(already>=1600){rejected.tileCapacity++;continue;}
+    const minX=Math.floor(x/4)*4,minZ=Math.floor(z/4)*4,id='WOODLAND_SEAM_BRIDGE:'+key;
+    if(!tiles.has(id))tiles.set(id,{id,minX,minZ,roots:[]});
+    tiles.get(id).roots.push({x,y:Math.fround(hit.y),z,
+     angle:hash(cx*109+k,cz*113+k)*Math.PI*2,
+     seed:(Math.imul(cx*127+k,73856093)^Math.imul(cz*131+k,19349663))>>>0,
+     slope:hit.slope,triangleId:hit.triangleId,region:'WOODLAND_SEAM_BRIDGE',support:hit.owner});
+    physical.set(key,already+1);remember(x,z);have++;cellAdded++;added++;
+   }
+   if(cellAdded){filledCellKeys.add(localKey);count.set(localKey,have);}
+   if(added%256<cellAdded)await yieldControl();
   }
-  if(cellAdded){cellsFilled++;count.set(localKey,have);}
-  if(cellsFilled%24===0&&cellAdded)await yieldControl();
+  if(added>=max)break;
  }
+ const cellsFilled=filledCellKeys.size;
+ sourceCondition.coveragePasses=[8,18,36];
+ sourceCondition.cellsWithNewGrass=cellsFilled;
+ sourceCondition.rootAllowanceUsed=added;
  const receipt={schema:'H_EARTH_EXISTING_GRASS_SEAM_BRIDGE_v1',addedRoots:added,source:'ACTIVE_SINGLE_OWNER_WOODLAND_V1',
    routeAnchor:'PREVIOUS_STATION_B_POSITIVE_X_OCCUPANCY_INFILL',spineAnchors:[],bounds,sourceCondition,
    candidateCells:proposed.length,cellsFilled,candidates,rejected,maximumAddedRoots:max,

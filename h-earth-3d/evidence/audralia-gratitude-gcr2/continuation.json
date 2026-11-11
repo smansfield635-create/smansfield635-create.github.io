@@ -1,0 +1,56 @@
+{
+  "schema": "AUDRALIA_GCR2_DURABLE_CONTINUATION_v1",
+  "operationId": "AUDRALIA_GRATITUDE_GCR2_METRIC_ECOLOGY_INSPECTION_20261018_001",
+  "projectId": "H_EARTH",
+  "status": "ADMITTED_SOURCE_CONSTRUCTION_SAVED_PENDING_QUALIFICATION",
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2819,
+    "receiptIssueCommentId": 6259560365,
+    "lockCommit": "520dd7861ecd2fb7a10e0982c5a1adbd71b52eda"
+  },
+  "exactBase": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+  "branch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
+  "checkpointBeforeEvidenceCommit": "a66623650bdf7e63fa93c73a75569c17680bc987",
+  "filesExpected": [
+    "h-earth-3d/evidence/audralia-gratitude-gcr2/continuation.json",
+    "h-earth-3d/evidence/audralia-gratitude-gcr2/operation-packet.json",
+    "h-earth-3d/evidence/audralia-gratitude-gcr2/qualification.json",
+    "h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+    "showroom/globe/audralia/gcr2-completed-gratitude/app.mjs",
+    "showroom/globe/audralia/gcr2-completed-gratitude/ecology-field.v1.mjs",
+    "showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs",
+    "showroom/globe/audralia/gcr2-completed-gratitude/index.html",
+    "showroom/globe/audralia/gcr2-completed-gratitude/metric-geography-bridge.v1.mjs"
+  ],
+  "lastCompleted": [
+    "CANONICAL_PACKET_COMPILER_READY_REBOUND_BASE",
+    "AUTHENTIC_CANONICAL_ADMISSION_2819",
+    "EXACT_CANDIDATE_BRANCH_CREATED_FROM_ADMITTED_BASE",
+    "SOURCE_BOUND_METRIC_HYDROLOGY_ECOLOGY_MODULES_COMMITTED",
+    "SINGLE_CANVAS_GCR1_DERIVED_INSPECTION_SHELL_COMMITTED",
+    "GCR2_THREE_DELTA_MOUTHS_ON_CONNECTED_SHORELINE",
+    "EASTERN_OUTLET_DERIVED_CANDIDATE_SOURCE_GRAPH_UNCHANGED",
+    "NATIVE_NODE_13_TESTS_PASS",
+    "ZERO_DELTA_CENTERLINE_OUTSIDE_LAND",
+    "SINGLE_ADMITTED_NINE_PATH_SOURCE_DIFF_VERIFIED"
+  ],
+  "firstIncompleteAction": "INDEPENDENT_SOURCE_GEOGRAPHY_WEST_REVIEW_AND_LAWFUL_EXACT_SHA_DEVICE_PREVIEW",
+  "boundaries": {
+    "productPublication": "NOT_AUTHORIZED",
+    "ownerVisualAcceptance": "NOT_OCCURRED",
+    "localRegionWebGL": "NOT_IMPLANTED",
+    "protectedSnapshot": "UNTOUCHED",
+    "currentLiveRoutes": "UNTOUCHED",
+    "financialWorkCreditsRequired": false
+  },
+  "intendedReview": "EXACT_SHA_FIRST_PARTY_NONPRODUCTION_PREVIEW_KEEP_ONE_REPAIR_REJECT",
+  "latestEngineeringAction": "PROPOSED_REV5_THREE_MOUTH_DELTA_RECONCILED_AND_CANDIDATE_EASTERN_CONFLUENCE_MODELED",
+  "updatedCandidateStatus": "NATIVE_NODE_13_PASS_AND_DELTA_TOPOLOGY_PASS_NOT_VISUALLY_ACCEPTED",
+  "unresolvedGeometry": {
+    "candidateEasternOutlet": "DERIVED_NOT_CANONICAL",
+    "twoPeripheralTributarySourcesStillOutsideCandidateCoast": true,
+    "physicalCoastline": "NOT_FINAL",
+    "physicalWaterDischarge": "NOT_PROVEN"
+  }
+}

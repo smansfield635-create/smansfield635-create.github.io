@@ -1,0 +1,65 @@
+{
+  "schema": "H_EARTH_GEN2824_B2_G_WORLD_PACKAGE_RECONCILIATION_CHECKPOINT_v1",
+  "operationId": "H_EARTH_G_WORLD_BASE_PACKAGE_CORRESPONDENCE_REPAIR_20261019_001",
+  "generation": 2824,
+  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6562#issuecomment-6279314468",
+  "governingHead": "d1debb9e448be6f96d89655f32a6b12989218ba9",
+  "branch": "h-earth-gworld-precomputed-correspondence-gen2824",
+  "completed": [
+    "ADMITTED_AND_LOCKED_GEN2824",
+    "SAVED_BASELINE_RED_CORRESPONDENCE_TEST_COMMIT_925a94db",
+    "SAVED_BOUNDED_RECONCILIATION_GENERATOR_COMMIT_4f4a3185",
+    "SOURCE_INSPECTION_OF_ORIGINAL_GEN2666_MANIFEST_HYDRATOR_AND_HASH_WRITERS"
+  ],
+  "diagnosis": {
+    "worldPoint": {
+      "x": 208.00238513946533,
+      "z": -344.0039446949959
+    },
+    "precomputedMeshY": 4.687925815582275,
+    "publishedB2GWorldY": 10.448828774270622,
+    "measuredDeficitMeters": 5.760902958688346,
+    "priorPackageSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "priorPackageBytes": 11736235,
+    "priorCanonicalSourceBlob": "71a95053892140d792573587a6b82798663e3df1",
+    "publishedLiveCommit": "c8c5f68b23ca6f71ae07240dfd29ec1b672109c6"
+  },
+  "generationCandidate": {
+    "script": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+    "mode": "--reconcile-east-a",
+    "directSourceDeltaOnly": true,
+    "sphericalWorldCoordinates": true,
+    "changeOnlyTerrainPrimitivePositionsAndAffectedNormals": true,
+    "retainNonTerrainPositionsNormalsIndices": true,
+    "computeNewRawAndCanonicalFNVPackageDigests": true,
+    "updateCompressedAssetManifestAndHydratorPin": true,
+    "expectedCommand": "node h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs --reconcile-east-a",
+    "referenceTestCommand": "node --test --test-concurrency=1 h-earth-3d/validation/h-earth.east-a-precomputed-gworld-correspondence.v1.test.mjs h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs",
+    "generatedBinary": false,
+    "executionVerified": false,
+    "rebakeQualifiesPublication": false
+  },
+  "preservation": {
+    "publishedGrassRoots": 1457471,
+    "approvedTrees": 4,
+    "beachCavernWaterUntouched": true,
+    "noAdditionalStageBUplift": true,
+    "noParallelGeographyAuthority": true,
+    "gen2823MaterialShaderDraftUnchanged": true,
+    "noPagesDeployment": true
+  },
+  "firstIncompleteStep": "EXECUTE_GEN2824_RECONCILE_MODE_ON_AUTHORIZED_NODE_WORKTREE_WITH_11MB_PINNED_ASSET_THEN_VERIFY_CHANGED_BYTE_SET_AND_NATIVE_TESTS",
+  "pending": [
+    "REBUILD_GENERATED_11MB_ASSET_FROM_PINNED_ORIGINAL_WITH_REGULAR_NODE_AND_ZLIB",
+    "TEST_CANONICAL_ELEVATION_AND_SPHERICAL_NORMAL_CORRESPONDENCE",
+    "INDEPENDENT_W_PROTECTED_NON_EAST_A_GEOMETRY_BYTE_DIFFERENTIAL",
+    "EXACT_GPU_BROWSER_AND_OWNER_PHONE_REVIEW",
+    "OWNER_KEEP_ONE_REPAIR_REJECT"
+  ],
+  "limitations": [
+    "Current in-chat connected tools can author and save source/test files, but no authorized binary asset execution/writeback descriptor for this Gen2824 scope was found in the checked root/extension transport registries.",
+    "Source code for the generator is not a verified Node or live browser result; do not claim that mesh mismatch is fixed before binary and manifest/hydrator are regenerated and tested.",
+    "Do not dispatch arbitrary GitHub Actions code as a general agent execution workaround."
+  ],
+  "authorityEffect": "NONE_EVIDENCE_CHECKPOINT_ONLY"
+}

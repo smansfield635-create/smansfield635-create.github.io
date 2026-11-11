@@ -160,7 +160,7 @@ const PROPORTIONAL_MODES=Object.freeze({
   qualification:'EXACT_BOUNDED_VEGETATION_PRECEDENT_REUSE',
   inherited:'SOURCE_BOUND_UNCHANGED_ACCEPTED_ANCHOR_INVARIANT'
 });
-const REQUIRED_SCOPED_CHECKS=Object.freeze([
+const REQUIRED_PROPORTIONAL_CHECKS=Object.freeze([
   'SOURCE_BLOB_IDENTITY','ORIGINAL_ROOT_PARITY','GROUND_AND_WATER_ADMISSION',
   'REAL_FIRST_PARTY_WEBGL','GPU_ALLOCATION_AND_DRAW',
   'OWNER_VISUAL_INTERIM_KEEP','NO_CAMERA_NAVIGATION_GLOBE_OR_UI_SOURCE_CHANGE'
@@ -212,7 +212,7 @@ function proportionalEvidenceDecision({changed,experienceChanges,receipt,anchor,
   if(Object.keys(receipt.invariantEvidenceModes).length!==11||
      Object.keys(receipt.invariants).length!==11)
     return deny('PROPORTIONAL_INVARIANT_SET_EXPANDED');
-  for(const check of REQUIRED_SCOPED_CHECKS)
+  for(const check of REQUIRED_PROPORTIONAL_CHECKS)
     if(receipt.checks?.[check]!==true)return deny('PROPORTIONAL_REQUIRED_CHECK_UNPROVEN:'+check);
   const webgl=receipt.firstPartyEvidence;
   if(!Number.isInteger(webgl?.runId)||webgl.runId<=0||
@@ -250,7 +250,7 @@ function proportionalSelfTest(){
     experienceFiles:ap.map(p=>({path:p,...fields[p]})),
     invariantEvidenceModes:Object.fromEntries(a.requiredInvariants.map(x=>[x,PROPORTIONAL_MODES.inherited])),
     invariants:Object.fromEntries(a.requiredInvariants.map(x=>[x,true])),
-    checks:Object.fromEntries(REQUIRED_SCOPED_CHECKS.map(x=>[x,true])),
+    checks:Object.fromEntries(REQUIRED_PROPORTIONAL_CHECKS.map(x=>[x,true])),
     firstPartyEvidence:{runId:42,artifactId:31,originalRootCount:8,addedRoots:2,
       maximumAddedRoots:6,artifactSha256:'f'.repeat(64),result:'REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED'},
     limitations:['ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED',

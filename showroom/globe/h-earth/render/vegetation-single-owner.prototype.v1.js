@@ -23,12 +23,12 @@ export function runtimePlantingBaselineTiles(tiles){
  * connector. This is placement data only. The authenticated original tiles, the
  * grass vertex/fragment shaders and the terrain are never changed. */
 export async function buildLiveWoodlandSeamBridge({
- existingTiles,visibleSurface,geology,maximumAddedRoots=12000,yieldControl=async()=>{}
+ existingTiles,visibleSurface,geology,maximumAddedRoots=60000,yieldControl=async()=>{}
 }={}){
  if(!Array.isArray(existingTiles)||typeof visibleSurface?.sample!=='function'||
     typeof visibleSurface?.admitGround!=='function'||typeof geology?.sampleWaterAt!=='function'||
     !Number.isSafeInteger(maximumAddedRoots)||maximumAddedRoots<0)throw Error('WOODLAND_SEAM_INPUT_INVALID');
- const max=Math.min(maximumAddedRoots,12000);
+ const max=Math.min(maximumAddedRoots,60000);
  // Reuse the established immutable world-space integer hash for all distribution jitter.
  const hash=(x,z)=>habitatHash(x,z,3207)/4294967296;
  // Prior owner observation is a search anchor, not a claimed first-hit on the
@@ -334,7 +334,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   const cavernAdded=extra.reduce((n,t)=>n+t.count,0);
   const remaining=Math.max(0,allocation.maximumRoots-(baseRootCount-oasisRoots)-cavernAdded);
   const seam=await buildLiveWoodlandSeamBridge({existingTiles:baseTiles,visibleSurface:entranceGrass.visibleSurface,
-    geology:entranceGrass.geology,maximumAddedRoots:Math.min(12000,remaining),yieldControl});
+    geology:entranceGrass.geology,maximumAddedRoots:Math.min(60000,remaining),yieldControl});
   const seamExtra=seam.tiles.length?planImmutableTiles(seam).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded})):[];
   tiles=Object.freeze([...baseTiles,...extra,...seamExtra]);entranceReceipt=addition.receipt;woodlandSeamReceipt=seam.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);

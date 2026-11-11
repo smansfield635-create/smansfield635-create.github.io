@@ -1,9 +1,9 @@
 {
   "schema": "DGB_OWNER_HEARTBEAT_QUALIFICATION_V1",
-  "generatedAt": "2026-11-11T15:23:56Z",
+  "generatedAt": "2026-11-11T16:24:51Z",
   "window": {
-    "start": "2026-11-11T09:23:56Z",
-    "end": "2026-11-11T15:23:56Z"
+    "start": "2026-11-11T10:24:51Z",
+    "end": "2026-11-11T16:24:51Z"
   },
   "expected": [
     "/analytics-owner-device/heartbeat/s26/",

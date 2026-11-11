@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-11T02:26:11Z",
+  "generatedAt": "2026-11-11T03:26:28Z",
   "window": {
-    "start": "2026-08-13T02:26:11Z",
-    "end": "2026-11-11T02:26:11Z"
+    "start": "2026-08-13T03:26:28Z",
+    "end": "2026-11-11T03:26:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 951,
+        "pageLoads": 941,
         "visits": 681
       },
       "/governance/": {
@@ -58,12 +58,12 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 490,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -270,13 +270,13 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -294,17 +294,21 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/about-this-underdog/": {
+        "pageLoads": 10,
+        "visits": 0
       }
     },
     "byReferer": {

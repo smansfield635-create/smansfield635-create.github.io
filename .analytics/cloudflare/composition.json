@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-11T02:26:11Z",
+  "generatedAt": "2026-11-11T03:26:28Z",
   "window": {
-    "start": "2026-10-12T02:26:11Z",
-    "end": "2026-11-11T02:26:11Z"
+    "start": "2026-10-12T03:26:28Z",
+    "end": "2026-11-11T03:26:28Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 457,
-        "visits": 383
+        "pageLoads": 417,
+        "visits": 353
       },
       {
         "value": "/",
@@ -218,12 +218,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -316,7 +316,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 103,
+        "pageLoads": 113,
         "visits": 0
       },
       {
@@ -338,18 +338,18 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1376,
+        "pageLoads": 1386,
         "visits": 1283
       },
       {
-        "value": "CA",
-        "pageLoads": 43,
-        "visits": 43
+        "value": "CN",
+        "pageLoads": 40,
+        "visits": 40
       },
       {
-        "value": "CN",
-        "pageLoads": 30,
-        "visits": 30
+        "value": "CA",
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "BR",
@@ -375,13 +375,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1263,
-        "visits": 1196
+        "pageLoads": 1233,
+        "visits": 1166
       },
       {
         "value": "mobile",
-        "pageLoads": 226,
-        "visits": 192
+        "pageLoads": 216,
+        "visits": 182
       },
       {
         "value": "tablet",

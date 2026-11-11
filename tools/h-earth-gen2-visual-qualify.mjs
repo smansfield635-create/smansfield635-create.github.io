@@ -552,10 +552,12 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
   const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
   const TARGETS=positiveX?[
-   {id:'stationB_N',x:129.82571460976874,z:-389.03054421247367,yaw:0,pitch:-12},
-   {id:'stationB_E',x:129.82571460976874,z:-389.03054421247367,yaw:90,pitch:-12},
-   {id:'stationB_S',x:129.82571460976874,z:-389.03054421247367,yaw:180,pitch:-12},
-   {id:'stationB_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-12}
+   // Exact source-observed infill centroid from Gen3216 real WebGL receipt,
+   // run 42942820132; this is a candidate-derived camera, NOT photo first-hit.
+   {id:'infillCenter_N',x:64.58312043705473,z:-314.94399624029495,yaw:0,pitch:-12},
+   {id:'infillCenter_E',x:64.58312043705473,z:-314.94399624029495,yaw:90,pitch:-12},
+   {id:'infillCenter_S',x:64.58312043705473,z:-314.94399624029495,yaw:180,pitch:-12},
+   {id:'infillCenter_W',x:64.58312043705473,z:-314.94399624029495,yaw:-90,pitch:-12}
   ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
   const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
     baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
@@ -761,7 +763,7 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
         observedGrassDrawnInCandidateDirections:RECEIPT.images.filter(x=>x.label==='candidate'&&x.singleOwner.drawCallCount>0).map(x=>x.view)};
       if(!RECEIPT.rootDelta.observedGrassDrawnInCandidateDirections.length)
         throw Error('GEN3217_NO_GRASS_VISIBLE_IN_ANY_MATCHED_CAMERA');
-      RECEIPT.imageDifferences=['stationB_N','stationB_E','stationB_S','stationB_W'].map(view=>{
+      RECEIPT.imageDifferences=['infillCenter_N','infillCenter_E','infillCenter_S','infillCenter_W'].map(view=>{
         const baseline=RECEIPT.images.find(x=>x.label==='baseline'&&x.view===view);
         const candidate=RECEIPT.images.find(x=>x.label==='candidate'&&x.view===view);
         return {view,pngBytesDifferent:baseline.imageSha256!==candidate.imageSha256,

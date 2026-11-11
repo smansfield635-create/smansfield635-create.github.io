@@ -638,6 +638,33 @@ async function gen3226Capture(){
         const views=device==='phone'?TARGETS:[TARGETS[4]];
         const context=await BROWSER.newContext({viewport,deviceScaleFactor:device==='phone'?2:1,isMobile:device==='phone',hasTouch:device==='phone'});
         const page=await context.newPage(),errors=[],failures=[],fixtureHashes=[];
+        // Gen3226 read-only scheduler audit. The served product module and its root
+        // placement remain byte-for-byte untouched; native requestAnimationFrame
+        // is called with the original callback and its returned request identifier.
+        await page.addInitScript(() => {
+          const nativeRaf=globalThis.requestAnimationFrame;
+          const audit={schema:'H_EARTH_GEN3226_FRAME_WAIT_AUDIT_v1',
+            all:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            rendererYield:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            wideTrialYield:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            sampleStacks:[],firstEnterActionElapsedMs:null};
+          globalThis.__hEarthGen3226FrameWaitAudit=audit;
+          if(typeof nativeRaf!=='function')return;
+          globalThis.requestAnimationFrame=function(callback){
+            const t=performance.now(),stack=(new Error()).stack??'';
+            const rendererYield=stack.includes('yieldToBrowserPaint');
+            const wideTrialYield=rendererYield&&stack.includes('buildWideExistingGrassTrial');
+            if(rendererYield&&audit.sampleStacks.length<6)
+              audit.sampleStacks.push(stack.split('\\n').slice(0,7).join(' | ').slice(0,650));
+            const track=[audit.all,...(rendererYield?[audit.rendererYield]:[]),...(wideTrialYield?[audit.wideTrialYield]:[])];
+            for(const p of track)p.requested++;
+            return nativeRaf.call(globalThis,function(timestamp){
+              const wait=performance.now()-t;
+              for(const p of track){p.completed++;p.waitMs+=wait;p.maxWaitMs=Math.max(p.maxWaitMs,wait);}
+              return callback(timestamp);
+            });
+          };
+        });
         page.on('pageerror',e=>errors.push(String(e?.message||e)));
         page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
         page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
@@ -724,6 +751,8 @@ async function gen3226Capture(){
             await page.locator('#h-earth-loading-screen [data-enter]').click();
             entryClicked=true;
             RECEIPT.progress.push({label,device,stage:'EXISTING_GRATITUDE_ENTRANCE_CLICKED'});
+            await page.evaluate(()=>{const a=globalThis.__hEarthGen3226FrameWaitAudit;
+              if(a&&a.firstEnterActionElapsedMs===null)a.firstEnterActionElapsedMs=performance.now();});
           }
           if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
           if(state.error||state.firstFailure||errors.length||failures.length)break;
@@ -755,6 +784,19 @@ async function gen3226Capture(){
           await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-incomplete-residency.png',fullPage:true});
           throw Error('MATURE_VEGETATION_NOT_PROVEN:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,3),failures:failures.slice(0,3)}));
         }
+        RECEIPT.frameSchedulingAudit??={schema:'H_EARTH_GEN3226_FRAME_WAIT_COMPARISON_v1',
+          methodology:'Browser native RAF delegated unchanged; call stacks identify renderer yield origins. Stack sampling and measurement add overhead. This is instrumented first-party Chromium/SwiftShader, not phone GPU, and not a perfect causal attribution.',cases:{}};
+        RECEIPT.frameSchedulingAudit.cases[label+'-'+device]=await page.evaluate(()=>{
+          const a=globalThis.__hEarthGen3226FrameWaitAudit;
+          if(!a)return {instrumentationUnavailable:true};
+          const copy=p=>({requested:p.requested,completed:p.completed,
+            waitMs:p.waitMs,maxWaitMs:p.maxWaitMs});
+          return {all:copy(a.all),rendererYield:copy(a.rendererYield),
+            wideTrialYield:copy(a.wideTrialYield),sampleStacks:a.sampleStacks,
+            firstEnterActionElapsedMs:a.firstEnterActionElapsedMs,
+            elapsedAtMatureMs:performance.now(),timestampBasis:'navigation performance.now()',
+            scope:'ORIGINAL_SERVED_SOURCE_WITH_REQUEST_ANIMATION_FRAME_OBSERVATION_WRAPPER'};
+        });
         if(reasonCensus){const a=state.uniformGroundAdmission;if(a?.schema!=='H_EARTH_UNIFORM_GROUND_ADMISSION_v1'||!Number.isInteger(a.tested)||!a.rejections||a.maximumSandCoverage!==0.12)throw Error('GEN3211_ACTUAL_ADMISSION_RECEIPT_INVALID:'+JSON.stringify(a));RECEIPT.admissionCensus={scope:'ALL_SHARED_ADMISSION_CALLS_DURING_CURRENT_SINGLE_OWNER_PREPARATION_NOT_ISOLATED_BRIDGE_DELTA',source:'EXISTING_GET_LIVE_GPU_RECEIPT',exactProductHead:CAND,fullAtMature:a,bridgeGroupedRejections:state.owner?.woodlandSeamBridge?.rejected??null,bridgeAddedRoots:state.owner?.woodlandSeamBridge?.addedRoots??null};}
         const canvas=page.locator('#h-earth-functional-landscape-canvas');
         for(const target of views){
@@ -813,6 +855,19 @@ async function gen3226Capture(){
          after.gpuAllocatedBytes<after.gpuRequestedBytes||
          after.gpuAllocatedBytes>after.maximumPackedBytes)
         throw Error('GEN3220_ROOT_OR_GPU_ALLOCATION_BOUND_FAILED:'+JSON.stringify(after));
+      if(RECEIPT.frameSchedulingAudit){
+        const b=RECEIPT.frameSchedulingAudit.cases['baseline-phone'],
+              c=RECEIPT.frameSchedulingAudit.cases['candidate-phone'];
+        if(b&&c&&!b.instrumentationUnavailable&&!c.instrumentationUnavailable){
+          RECEIPT.frameSchedulingAudit.delta={
+            rendererYieldRequestDelta:c.rendererYield.requested-b.rendererYield.requested,
+            rendererYieldWaitMsDelta:c.rendererYield.waitMs-b.rendererYield.waitMs,
+            wideTrialYieldRequested:c.wideTrialYield.requested,
+            wideTrialYieldWaitMs:c.wideTrialYield.waitMs,
+            elapsedAtMatureMsDelta:c.elapsedAtMatureMs-b.elapsedAtMatureMs,
+            wideAttributionDefinitive:false};
+        }
+      }
       RECEIPT.rootDelta={coverageTarget:'FULL_SOURCE_GROUNDED_POSITIVE_X_DRY_CORRIDOR',beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
         newRoots:after.wideGrassTrial.addedRoots,wideGrassTrial:after.wideGrassTrial,
         priorInterimRoots:before.woodlandSeamBridge?.addedRoots??0,

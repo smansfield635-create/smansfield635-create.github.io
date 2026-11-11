@@ -156,6 +156,16 @@ const PROPORTIONAL_VEGETATION_PATHS=Object.freeze([
   'showroom/globe/h-earth/render/grass-continuity-supplement.v1.js',
   'showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js'
 ]);
+// Registered, independently reviewed exact first candidate. New source heads
+// require a separately approved registry revision; a self-authored receipt
+// cannot manufacture authority for arbitrary future H-Earth source.
+const REGISTERED_PROPORTIONAL_PRECEDENT=Object.freeze({
+  acceptedProductHead:'2316d7b75a32517d81bc2bbbcaf9e8d361f0c875',
+  ownerCommentId:6799551629,webglRunId:42954810048,
+  webglArtifactId:13825689284,
+  webglArchiveSha256:'9ebde450430fa2fb8a4d5281fd3531e9299b03863dfe922e6c872625323ed5ad',
+  originalRootCount:2858738,addedRoots:50940,maximumAddedRoots:60000
+});
 const PROPORTIONAL_MODES=Object.freeze({
   qualification:'EXACT_BOUNDED_VEGETATION_PRECEDENT_REUSE',
   inherited:'SOURCE_BOUND_UNCHANGED_ACCEPTED_ANCHOR_INVARIANT'
@@ -176,6 +186,9 @@ function proportionalEvidenceDecision({changed,experienceChanges,receipt,anchor,
      receipt.originalVideoReplayed!==false)return deny('PROPORTIONAL_ANCHOR_CLAIM_INVALID');
   if(!/^[0-9a-f]{40}$/.test(receipt.acceptedProductHead??'')||
      !ancestorValid)return deny('PROPORTIONAL_ACCEPTED_SOURCE_ANCESTRY_MISSING');
+  if(receipt.acceptedProductHead!==REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead||
+     receipt.precedent?.ownerCommentId!==REGISTERED_PROPORTIONAL_PRECEDENT.ownerCommentId)
+    return deny('PROPORTIONAL_ACCEPTED_PRECEDENT_NOT_REGISTERED');
   if(receipt.precedent?.state!=='OWNER_ACCEPTED_INTERIM_WITH_LIMITATIONS'||
      receipt.precedent?.ownerDisposition!=='KEEP'||
      !Number.isInteger(receipt.precedent?.ownerCommentId)||
@@ -223,6 +236,13 @@ function proportionalEvidenceDecision({changed,experienceChanges,receipt,anchor,
      !/^[0-9a-f]{64}$/.test(webgl?.artifactSha256??'')||
      webgl?.result!=='REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED')
     return deny('PROPORTIONAL_FIRST_PARTY_EVIDENCE_INVALID');
+  if(webgl.runId!==REGISTERED_PROPORTIONAL_PRECEDENT.webglRunId||
+     webgl.artifactId!==REGISTERED_PROPORTIONAL_PRECEDENT.webglArtifactId||
+     webgl.artifactSha256!==REGISTERED_PROPORTIONAL_PRECEDENT.webglArchiveSha256||
+     webgl.originalRootCount!==REGISTERED_PROPORTIONAL_PRECEDENT.originalRootCount||
+     webgl.addedRoots!==REGISTERED_PROPORTIONAL_PRECEDENT.addedRoots||
+     webgl.maximumAddedRoots!==REGISTERED_PROPORTIONAL_PRECEDENT.maximumAddedRoots)
+    return deny('PROPORTIONAL_EVIDENCE_NOT_REGISTERED');
   if(receipt.limitations?.includes('ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED')!==true||
      receipt.limitations?.includes('PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_UNMEASURED')!==true||
      receipt.limitations?.includes('FULL_ELEVEN_INVARIANT_INDEPENDENT_REPLAY_NOT_CLAIMED')!==true)
@@ -244,15 +264,20 @@ function proportionalSelfTest(){
     qualificationMode:PROPORTIONAL_MODES.qualification,
     anchorId:'A',anchorSha256:'a'.repeat(64),reviewedAgainstAnchor:true,disposition:'PASS',
     fullElevenInvariantIndependentlyRetested:false,originalVideoReplayed:false,
-    acceptedProductHead:'d'.repeat(40),
+    acceptedProductHead:REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead,
     precedent:{state:'OWNER_ACCEPTED_INTERIM_WITH_LIMITATIONS',ownerDisposition:'KEEP',
-      ownerCommentId:12,sourceHead:'d'.repeat(40)},
+      ownerCommentId:REGISTERED_PROPORTIONAL_PRECEDENT.ownerCommentId,sourceHead:REGISTERED_PROPORTIONAL_PRECEDENT.acceptedProductHead},
     experienceFiles:ap.map(p=>({path:p,...fields[p]})),
     invariantEvidenceModes:Object.fromEntries(a.requiredInvariants.map(x=>[x,PROPORTIONAL_MODES.inherited])),
     invariants:Object.fromEntries(a.requiredInvariants.map(x=>[x,true])),
     checks:Object.fromEntries(REQUIRED_PROPORTIONAL_CHECKS.map(x=>[x,true])),
-    firstPartyEvidence:{runId:42,artifactId:31,originalRootCount:8,addedRoots:2,
-      maximumAddedRoots:6,artifactSha256:'f'.repeat(64),result:'REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED'},
+    firstPartyEvidence:{runId:REGISTERED_PROPORTIONAL_PRECEDENT.webglRunId,
+      artifactId:REGISTERED_PROPORTIONAL_PRECEDENT.webglArtifactId,
+      originalRootCount:REGISTERED_PROPORTIONAL_PRECEDENT.originalRootCount,
+      addedRoots:REGISTERED_PROPORTIONAL_PRECEDENT.addedRoots,
+      maximumAddedRoots:REGISTERED_PROPORTIONAL_PRECEDENT.maximumAddedRoots,
+      artifactSha256:REGISTERED_PROPORTIONAL_PRECEDENT.webglArchiveSha256,
+      result:'REAL_WEBGL_GPU_AND_ROOT_PARITY_VERIFIED'},
     limitations:['ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED',
       'PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_UNMEASURED',
       'FULL_ELEVEN_INVARIANT_INDEPENDENT_REPLAY_NOT_CLAIMED'],
@@ -271,11 +296,13 @@ function proportionalSelfTest(){
   test('unreviewed human',q=>{q.receipt.precedent.ownerDisposition='UNKNOWN'},'FAIL_CLOSED');
   test('wrong predecessor ancestry',q=>{q.ancestorValid=false},'FAIL_CLOSED');
   test('missing GPU proof',q=>{q.receipt.checks.GPU_ALLOCATION_AND_DRAW=false},'FAIL_CLOSED');
+  test('forged future source head',q=>{q.receipt.acceptedProductHead='a'.repeat(40)},'FAIL_CLOSED');
+  test('wrong historical WebGL artifact',q=>{q.receipt.firstPartyEvidence.artifactId++},'FAIL_CLOSED');
   test('anchor continuity not established',q=>{q.receipt.invariants.I7=false},'FAIL_CLOSED');
   test('suppressed limitation',q=>{q.receipt.limitations=[]},'FAIL_CLOSED');
   test('false independently replayed claim',q=>{q.receipt.fullElevenInvariantIndependentlyRetested=true},'FAIL_CLOSED');
   test('unapproved extra file',q=>{q.changed.push('showroom/globe/h-earth/render/some-other-file.js')},'FAIL_CLOSED');
-  return {schema:'H_EARTH_PROPORTIONAL_ANCHOR_SELF_TEST_v1',result:'PASS',cases:12,
+  return {schema:'H_EARTH_PROPORTIONAL_ANCHOR_SELF_TEST_v1',result:'PASS',cases:14,
     noBroadDirectoryExemption:true,allElevenHardRequirementsRetained:true};
 }
 if(process.argv.includes('--proportional-self-test')){

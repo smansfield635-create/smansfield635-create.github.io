@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-11T22:25:23Z",
+  "generatedAt": "2026-11-11T23:25:21Z",
   "window": {
-    "start": "2026-08-13T22:25:23Z",
-    "end": "2026-11-11T22:25:23Z"
+    "start": "2026-08-13T23:25:21Z",
+    "end": "2026-11-11T23:25:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3923,
-    "visits": 1171,
+    "pageLoads": 3973,
+    "visits": 1181,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3923,
-        "visits": 1171
+        "pageLoads": 3973,
+        "visits": 1181
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 901,
-        "visits": 671
+        "pageLoads": 941,
+        "visits": 681
       },
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -71,39 +71,35 @@
         "visits": 10
       },
       "/developer/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 20
-      },
-      "/laws/research/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
-        "visits": 20
+        "visits": 0
       },
       "/showroom/": {
         "pageLoads": 40,
-        "visits": 10
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
         "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
       },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
       },
       "/build/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/compass-composite/": {
@@ -119,15 +115,15 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 72,
+        "pageLoads": 62,
         "visits": 10
-      },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -183,7 +179,15 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 40,
+        "pageLoads": 70,
+        "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
+      },
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
@@ -191,14 +195,6 @@
         "visits": 20
       },
       "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 80,
-        "visits": 30
-      },
-      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -211,7 +207,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -313,11 +309,11 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 620,
-        "visits": 620
+        "pageLoads": 630,
+        "visits": 630
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2752,
+        "pageLoads": 2792,
         "visits": 0
       },
       "(none)": {

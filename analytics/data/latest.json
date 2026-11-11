@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-11T12:30:25Z",
+  "generatedAt": "2026-11-11T13:25:16Z",
   "window30d": {
-    "start": "2026-10-12T12:30:25Z",
-    "end": "2026-11-11T12:30:25Z"
+    "start": "2026-10-12T13:25:16Z",
+    "end": "2026-11-11T13:25:16Z"
   },
   "daily": [
     {
       "date": "2026-10-13",
-      "pageLoads": 0
+      "pageLoads": 30
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 50
+      "pageLoads": 70
     },
     {
       "date": "2026-10-15",
@@ -44,11 +44,11 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 80
+      "pageLoads": 40
     },
     {
       "date": "2026-10-24",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-03",
-      "pageLoads": 21
+      "pageLoads": 20
     },
     {
       "date": "2026-11-04",
@@ -124,29 +124,24 @@
     },
     {
       "date": "2026-11-11",
-      "pageLoads": 18
+      "pageLoads": 19
     }
   ],
   "summary": {
-    "pageLoads": 1471,
-    "botPageLoads": 718,
-    "nonBotPageLoads": 753
+    "pageLoads": 1421,
+    "botPageLoads": 748,
+    "nonBotPageLoads": 673
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1281,
-      "visits": 1281
+      "pageLoads": 1321,
+      "visits": 1321
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 123,
+      "pageLoads": 113,
       "visits": 0
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 16,
-      "visits": 16
     },
     {
       "host": "www.google.com",
@@ -159,9 +154,9 @@
       "visits": 10
     },
     {
-      "host": "github.com",
-      "pageLoads": 10,
-      "visits": 10
+      "host": "bing.com",
+      "pageLoads": 6,
+      "visits": 6
     }
   ],
   "topPages": [
@@ -172,13 +167,13 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 437,
-      "visits": 373
+      "pageLoads": 417,
+      "visits": 353
     },
     {
       "path": "/",
-      "pageLoads": 108,
-      "visits": 85
+      "pageLoads": 88,
+      "visits": 65
     },
     {
       "path": "/products/education/personal-training/",

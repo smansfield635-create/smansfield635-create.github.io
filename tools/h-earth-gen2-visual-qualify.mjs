@@ -625,9 +625,13 @@ async function gen3226Capture(){
     }
         BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
     RECEIPT.browserExecuted=true;
-    for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND]]:[['candidate',4174,CAND]])){
+    for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND],['candidateSchedulingProbe',4175,CAND]]:[['candidate',4174,CAND]])){
       let labelFailed=false;
-      const directory=STAGE+'-'+label;
+      const directory=STAGE+'-'+(label==='candidateSchedulingProbe'?'candidate':label);
+      if(label==='candidateSchedulingProbe')RECEIPT[label]={
+        sourceHead:CAND,worldSha256:RECEIPT.candidate.worldSha256,sourceClean:true,
+        browserScriptVariant:'IN_MEMORY_20MS_YIELD_CADENCE_EXPERIMENT_NOT_PRODUCT_SOURCE',
+        exactSourceHeadClaimForServedScript:false};
       const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
       SERVERS.push(server);
       let serving=false;
@@ -635,7 +639,7 @@ async function gen3226Capture(){
       if(!serving)throw Error('LOCAL_FIRST_PARTY_SERVER_NOT_READY:'+label);
       for(const device of ['phone']){
         const viewport=device==='phone'?{width:412,height:915}:{width:1280,height:720};
-        const views=device==='phone'?TARGETS:[TARGETS[4]];
+        const views=device==='phone'?(label==='candidateSchedulingProbe'?[TARGETS[2]]:TARGETS):[TARGETS[4]];
         const context=await BROWSER.newContext({viewport,deviceScaleFactor:device==='phone'?2:1,isMobile:device==='phone',hasTouch:device==='phone'});
         const page=await context.newPage(),errors=[],failures=[],fixtureHashes=[];
         // Gen3226 read-only scheduler audit. The served product module and its root
@@ -669,6 +673,27 @@ async function gen3226Capture(){
         page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
         page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
         try {
+        if(label==='candidateSchedulingProbe'){
+          // Disposable browser-response experiment only. No on-disk source,
+          // committed product version, or original Gen3226 exact source case is
+          // modified. Only the wide pass's cadence is altered.
+          await page.route('**/render/vegetation-single-owner.prototype.v1.js*',async route=>{
+            const response=await route.fetch(),original=await response.text();
+            const a=' let added=0,candidates=0;\\n const filledCellKeys=new Set();'.replace('\\n','\n');
+            const b='   if(added%256<cellAdded)await yieldControl();';
+            if(original.split(a).length!==2||original.split(b).length!==2)
+              throw Error('WIDE_SCHEDULING_PROBE_SOURCE_MARKER_DRIFT');
+            const modified=original.replace(a,' let added=0,candidates=0;\\n let nextWideYieldAt=performance.now()+20;\\n const filledCellKeys=new Set();'.replaceAll('\\n','\n'))
+              .replace(b,'   if(added%256<cellAdded&&performance.now()>=nextWideYieldAt){await yieldControl();nextWideYieldAt=performance.now()+20;}');
+            RECEIPT.schedulingVariant={schema:'H_EARTH_GEN3226_DISPOSABLE_YIELD_CADENCE_PROBE_v1',
+              label,sourceHead:CAND,browserOnly:true,productSourceChanged:false,
+              originalServedScriptSha256:HASH(original),instrumentedServedScriptSha256:HASH(modified),
+              inMemoryChange:'WIDE_GRASS_ONLY_YIELD_IF_20MS_ACTIVE_WORK_ELAPSED_AT_EXISTING_256_ROOT_CANDIDATE_CHECKPOINTS',
+              fullBrowserScriptNotEqualToProductBytes:true,
+              injectionApplied:true,originalHeadImmutable:true};
+            await route.fulfill({response,body:modified});
+          });
+        }
         await page.route('**/functional-landscape/navigation.js*',async route=>{
           const response=await route.fetch(),source=await response.text();
           const coast="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
@@ -775,9 +800,9 @@ async function gen3226Capture(){
           if(state.error||state.firstFailure||state.backgroundError||errors.length||failures.length)break;
           await DELAY(1000);
         }
-        if(positiveX&&label==='candidate'&&state.owner?.wideGrassTrial?.failureCode)
+        if(positiveX&&label!=='baseline'&&state.owner?.wideGrassTrial?.failureCode)
           throw Error('GEN3226_WIDE_DRYLAND_REJECTED:'+JSON.stringify(state.owner.wideGrassTrial));
-        if(positiveX&&label==='candidate'&&state.owner?.woodlandSeamBridge?.failureCode){
+        if(positiveX&&label!=='baseline'&&state.owner?.woodlandSeamBridge?.failureCode){
           throw Error('GEN3217_DRY_STAND_CONNECTION_NOT_AVAILABLE:'+JSON.stringify(state.owner.woodlandSeamBridge));
         }
         if(!mature){
@@ -840,7 +865,8 @@ async function gen3226Capture(){
       if(labelFailed)continue;
       if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
     }
-    if(RECEIPT.images.length!==(positiveX?8:4)||RECEIPT.images.filter(v=>v.label==='candidate').length!==4)
+    if(RECEIPT.images.length!==(positiveX?9:4)||RECEIPT.images.filter(v=>v.label==='candidate').length!==4||
+       (positiveX&&RECEIPT.images.filter(v=>v.label==='candidateSchedulingProbe').length!==1))
       throw Error('GEN3210_EXACT_CANDIDATE_IMAGE_SET_INCOMPLETE');
     if(positiveX){
       const before=RECEIPT.images.find(x=>x.label==='baseline')?.singleOwner;
@@ -885,6 +911,33 @@ async function gen3226Capture(){
       });
       if(!RECEIPT.imageDifferences.some(x=>x.pngBytesDifferent))
         throw Error('GEN3217_MATCHED_WEBGL_IMAGES_BYTE_IDENTICAL');
+      const sampled=RECEIPT.images.find(x=>x.label==='candidateSchedulingProbe')?.singleOwner;
+      if(!RECEIPT.schedulingVariant?.injectionApplied||!sampled||
+        sampled.installedRootCount!==after.installedRootCount||
+        sampled.originalRootCount!==after.originalRootCount||
+        sampled.gpuRequestedBytes!==after.gpuRequestedBytes||
+        sampled.gpuUploadedBytes!==after.gpuUploadedBytes||
+        sampled.gpuAllocatedBytes!==after.gpuAllocatedBytes||
+        sampled.wideGrassTrial?.addedRoots!==after.wideGrassTrial?.addedRoots||
+        sampled.wideGrassTrial?.cellsFilled!==after.wideGrassTrial?.cellsFilled||
+        JSON.stringify(sampled.wideGrassTrial?.rejected)!==JSON.stringify(after.wideGrassTrial?.rejected))
+        throw Error('GEN3226_IN_MEMORY_SCHEDULING_ROOT_GPU_CENSUS_PARITY_FAILED');
+      const nativeTiming=RECEIPT.frameSchedulingAudit?.cases?.['candidate-phone'],
+            probeTiming=RECEIPT.frameSchedulingAudit?.cases?.['candidateSchedulingProbe-phone'];
+      RECEIPT.schedulingVariant.measured={
+        originalPreparationMs:after.preparationMs,variantPreparationMs:sampled.preparationMs,
+        preparationSavedMs:after.preparationMs-sampled.preparationMs,
+        originalWideWaitMs:nativeTiming?.wideTrialYield?.waitMs??null,
+        variantWideWaitMs:probeTiming?.wideTrialYield?.waitMs??null,
+        originalWideYieldRequests:nativeTiming?.wideTrialYield?.requested??null,
+        variantWideYieldRequests:probeTiming?.wideTrialYield?.requested??null,
+        originalEnterElapsedMs:nativeTiming?.firstEnterActionElapsedMs??null,
+        variantEnterElapsedMs:probeTiming?.firstEnterActionElapsedMs??null,
+        originalMatureElapsedMs:nativeTiming?.elapsedAtMatureMs??null,
+        variantMatureElapsedMs:probeTiming?.elapsedAtMatureMs??null,
+        rootGpuCensusParity:true,rootIdentityByteParityNotDirectlyMeasured:true,
+        physicalAndroidMeasured:false};
+      RECEIPT.schedulingVariant.result='EXPLORATORY_IN_MEMORY_SCHEDULING_COMPARISON_CAPTURED_NO_PRODUCT_MUTATION';
     }
     RECEIPT.result=RECEIPT.nativeFull?.requiresIndependentReview||RECEIPT.nativeFocused?.requiresIndependentReview?'CAPTURED_WITH_UNRESOLVED_NATIVE_TEST_DIFFERENCES':'CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
   }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}

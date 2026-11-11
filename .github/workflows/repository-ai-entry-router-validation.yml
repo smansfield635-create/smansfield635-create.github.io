@@ -248,8 +248,21 @@ jobs:
           import {spawnSync} from 'node:child_process';
           const head=process.env.EXPECTED_HEAD;
           const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const event=JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8'));
+          const marker=process.env.REMOTE_ROUTER_MARKER;
+          const body=String(event.comment?.body??'').replace(/\r\n/g,'\n').trim();
+          if(!body.startsWith(marker+'\n')) throw new Error('REMOTE_REQUEST_MARKER_INVALID');
+          const q=JSON.parse(body.slice(marker.length).trim());
+          if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1'||q.subjectHead!==head) throw new Error('REMOTE_REQUEST_SUBJECT_INVALID');
+          if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
+          const requested=q.paths.map(value=>{
+            const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/,'');
+            if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0')) throw new Error('REMOTE_PATH_INVALID');
+            return p;
+          });
+          if(new Set(requested).size!==requested.length) throw new Error('REMOTE_PATH_DUPLICATE');
           const owners=[R.routerInfrastructure,...(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT')].filter(Boolean);
-          const exact=[...new Set(owners.flatMap(owner=>owner.ownedExactPaths||[]))].sort();
+          const exact=requested.filter(p=>owners.some(o=>(o.ownedExactPaths||[]).includes(p)||(o.ownedPathPrefixes||[]).some(prefix=>p.startsWith(prefix)))).sort();
           let recovered=0;
           for(const p of exact){
             if(fs.existsSync(p))continue;

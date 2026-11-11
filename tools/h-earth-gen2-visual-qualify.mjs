@@ -606,12 +606,20 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
         throw Error('GEN3220_NATIVE_TEST_SCOPE_REGRESSION:'+JSON.stringify(RECEIPT.nativeFull));
       // Run the unchanged relevant source-root/upload/capacity tests, without
       // editing their assertions or claiming unrelated failing VM fixture tests pass.
-      const namePattern='^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile|duplicate root|nonfinite |declared contact|actual RGBA|RGBA alpha|object RGB|owner uploads|float32-overflow|tile upload budget|total immutable population|owner rejects empty|shader failure|upload exception|program link failure)';
+      const rootTestPrefix=/^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile|duplicate root|nonfinite |declared contact|actual RGBA|RGBA alpha|object RGB|owner uploads|float32-overflow|tile upload budget|total immutable population|owner rejects empty|shader failure|upload exception|program link failure)/;
+      const knownBaselinePassingNames=[...(oldNative.stdout??'').matchAll(/^ok \d+ - (.+)$/gm)]
+        .map(m=>m[1]).filter(name=>rootTestPrefix.test(name));
+      if(!knownBaselinePassingNames.length)throw Error('GEN3220_NO_KNOWN_PASSING_ROOT_NATIVE_ASSERTIONS');
+      const escapeName=name=>name.replace(/[|\\{}()[\]^$+*?.]/g,'\\$&');
+      const namePattern='^(?:'+knownBaselinePassingNames.map(escapeName).join('|')+')$';
       const focused=runNative('candidate',['--test','--test-name-pattern',namePattern,testFile]);
       RECEIPT.nativeFocused={
-        command:'node --test --test-name-pattern '+namePattern+' '+testFile,
+        command:'node --test --test-name-pattern <EXACT_BASELINE_PASSING_SOURCE_TEST_NAMES> '+testFile,
+        exactSelectedNames:knownBaselinePassingNames,
+        excludedPreexistingFullNativeFailures:oldFailures.filter(name=>rootTestPrefix.test(name)),
         productHead:CAND,exitCode:focused.status,
-        outputTail:(focused.stdout??'').slice(-2200),error:focused.error?.message??null
+        outputTail:(focused.stdout??'').slice(-2600),error:focused.error?.message??null,
+        selectorPolicy:'BASELINE_PASSING_SOURCE_TEST_NAMES_ONLY_FULL_SUITE_FAILURES_RETAINED'
       };
       if(focused.status!==0)throw Error('GEN3220_FOCUSED_ROOT_OR_GPU_NATIVE_TEST_FAILED:'+JSON.stringify(RECEIPT.nativeFocused));
       RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';

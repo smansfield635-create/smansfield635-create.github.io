@@ -468,9 +468,9 @@ void main(){
   vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/leafHeight,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec2 colorField=coverPaletteField(ownershipRoot);
-  float patch=colorField.x,dry=smoothstep(.35,.8,colorField.y);
-  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),patch);
-  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),patch);
+  float coverPatchFactor=colorField.x,dry=smoothstep(.35,.8,colorField.y);
+  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),coverPatchFactor);
+  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),coverPatchFactor);
   vec3 palette=mix(forest,olive,dry);
   vec3 lowPalette=mix(vec3(.075,.152,.064),vec3(.177,.146,.068),dry);
   vec3 midPalette=mix(vec3(.103,.19,.063),vec3(.25,.196,.078),dry);
@@ -478,9 +478,9 @@ void main(){
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
   vec3 publishedColor=palette;
   vec3 ecoColor=mix(palette,ecologicalPalette,.84);
-  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),patch);
+  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),coverPatchFactor);
   finePalette=mix(finePalette,vec3(.16,.175,.05),dry*.42);
-  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*patch)*(.88+.24*emergence),1.0);
+  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*coverPatchFactor)*(.88+.24*emergence),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
@@ -2014,6 +2014,20 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     return vegetationPreparation;
   }
 
+  // Gen3164: two existing authored vegetation populations, disjoint in world Z.
+  // The signed woodland atlas starts at z=-572; supplemental meadow roots are
+  // strictly south of z=-576 and use their own already-qualified buffers.
+  const COMBINED_INLAND_GRASS=Object.freeze({
+    supplementalNorthernLimitZ:-576, signedRootSouthernLimitZ:-572,
+    maximumGpuBytes:55*1024*1024, maximumDrawCalls:2048,
+    maximumFrameTriangles:24000000, maximumGlobalInstances:4096,
+    minimumAdmittedRootsWithin24m:8
+  });
+  const COMBINED_INLAND_SITES=Object.freeze([
+    Object.freeze({id:'inland-seam-near',x:-200,z:-728}),
+    Object.freeze({id:'inland-seam-far',x:-200,z:-656})
+  ]);
+  let combinedInlandVegetationReceipt=null;
   let replacementPreparation=null;
   function prepareReplacementVegetation({onProgress=()=>{}}={}){
     if(vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1')throw Error('REPLACEMENT_STRATEGY_NOT_SELECTED');
@@ -2075,7 +2089,64 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:performance.now()-gpuStarted,soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('REPLACEMENT_UPLOAD_GL_ERROR:'+error);
-      onProgress({phase:'SINGLE_POPULATION_RESIDENT'});return resources.singleOwnerVegetation.getReceipt();
+      onProgress({phase:'SINGLE_POPULATION_RESIDENT'});
+      // The original signed woodland owner is fully ready before any optional
+      // supplement is created. Native source/world identities remain immutable.
+      const nativeOwner=resources.singleOwnerVegetation.getReceipt();
+      if(nativeOwner.originalRootCount!==2858738||
+        nativeOwner.gpuAllocatedBytes>nativeOwner.maximumPackedBytes)
+        throw Error('COMBINED_NATIVE_OWNER_IDENTITY_OR_ALLOCATION_MISMATCH');
+      // Reuse exactly the existing ground, water, structure and habitat admission
+      // from the production single-owner route; do not bypass protection.
+      const cover=await buildHEarthGlobalGroundCover(pilotPackage,{
+        refinement:resources.refinement?.surface??null,
+        visibleSurface:resources.vegetationVisibleSurface,
+        placementExclusion:(x,z)=>z>=COMBINED_INLAND_GRASS.supplementalNorthernLimitZ,
+        baselineExclusion:()=>false,
+        order:'CAMERA_FIRST',
+        priorityOrigin:{x:-200,z:-728},
+        onProgress:update=>onProgress({...update,phase:'COMBINED_'+update.phase})
+      });
+      const localSites=COMBINED_INLAND_SITES.map(site=>{
+        let admitted24=0,nearest=Infinity;
+        for(let i=0;i<cover.records.length;i+=20){
+          if(!cover.admittedRecords?.[i/20])continue;
+          const distance=Math.hypot(cover.records[i+12]-site.x,cover.records[i+13]-site.z);
+          if(distance<=24)admitted24++;
+          nearest=Math.min(nearest,distance);
+        }
+        return {...site,admitted24,nearest};
+      });
+      if(localSites.some(site=>site.admitted24<COMBINED_INLAND_GRASS.minimumAdmittedRootsWithin24m))
+        throw Error('COMBINED_INLAND_ROUTE_ADMISSION_INSUFFICIENT:'+
+          localSites.map(site=>site.id+'='+site.admitted24).join(','));
+      if(cover.receipt.instanceCount>65536||cover.receipt.totalGpuBytes>8388608||
+        nativeOwner.gpuAllocatedBytes+cover.receipt.totalGpuBytes+
+        counters.woodlandHabitatUploadedBytes+counters.habitatMaterialUploadedBytes>
+        COMBINED_INLAND_GRASS.maximumGpuBytes)
+        throw Error('COMBINED_VEGETATION_PREUPLOAD_RESOURCE_BUDGET');
+      await uploadGlobalCover(cover);
+      const combinedGpuBytes=nativeOwner.gpuAllocatedBytes+
+        resources.globalCover.gpuByteLength+
+        counters.woodlandHabitatUploadedBytes+counters.habitatMaterialUploadedBytes;
+      if(combinedGpuBytes>COMBINED_INLAND_GRASS.maximumGpuBytes)
+        throw Error('COMBINED_VEGETATION_POSTUPLOAD_RESOURCE_BUDGET');
+      combinedInlandVegetationReceipt=Object.freeze({
+        schema:'H_EARTH_GEN3164_COMBINED_EXISTING_VEGETATION_v1',
+        resident:true,source:'SIGNED_WOODLAND_PLUS_EXISTING_GLOBAL_COVER',
+        nativeOriginalRootCount:nativeOwner.originalRootCount,
+        nativeInstalledRootCount:nativeOwner.installedRootCount,
+        nativeGpuBytes:nativeOwner.gpuAllocatedBytes,
+        globalInstanceCount:cover.receipt.instanceCount,
+        globalGpuBytes:resources.globalCover.gpuByteLength,
+        combinedGpuBytes,maximumCombinedGpuBytes:COMBINED_INLAND_GRASS.maximumGpuBytes,
+        nativeRootAtlasPreserved:true,
+        globalHabitatAndRouteAdmissionReused:true,
+        supplementalNorthernLimitZ:COMBINED_INLAND_GRASS.supplementalNorthernLimitZ,
+        signedRootSouthernLimitZ:COMBINED_INLAND_GRASS.signedRootSouthernLimitZ,
+        populationCameraIndependent:true,sites:localSites});
+      onProgress({phase:'COMBINED_VEGETATION_RESIDENT',...combinedInlandVegetationReceipt});
+      return resources.singleOwnerVegetation.getReceipt();
     })();return replacementPreparation;
   }
 
@@ -2328,7 +2399,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(woodlandNear)drawWoodlandFineGrass(packet,1024);
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
   }
-  function drawGlobalCover(packet){
+  function drawGlobalCover(packet,nativeOwnerDraw=null){
     const state=resources.globalCover;
     if(!state?.uploadComplete||!state.coverageValidated){
       drawLocalPreview(packet);
@@ -2339,6 +2410,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const woodlandNear=resources.woodlandFineGrass;
     if(woodlandNear){const limit=3072,draws=[];let count=0;for(const draw of selected.draws){const n=Math.min(draw.count,limit-count);if(n>0){draws.push({...draw,count:n});count+=n;}if(count===limit)break;}selected={...selected,draws,visibleInstanceCount:count};}
     const partition=partitionHEarthMeadowSelectedInstances(state.cover,selected,state.presentation);
+    // Fail before the supplemental WebGL draw when the two real populations
+    // together would exceed the declared main-frame draw or triangle limits.
+    if(nativeOwnerDraw&&(
+      nativeOwnerDraw.drawCallCount+partition.drawCount>COMBINED_INLAND_GRASS.maximumDrawCalls||
+      nativeOwnerDraw.submittedTriangles+partition.triangles>COMBINED_INLAND_GRASS.maximumFrameTriangles||
+      partition.ids.length>COMBINED_INLAND_GRASS.maximumGlobalInstances))
+      throw Error('COMBINED_VEGETATION_FRAME_BUDGET_EXCEEDED');
     gl.useProgram(state.program);gl.uniform1i(gl.getUniformLocation(state.program,'uPilotFallback'),pilotCoverageOwner.shouldDrawPilot()?1:0);
     gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);
     gl.activeTexture(gl.TEXTURE7);gl.bindTexture(gl.TEXTURE_2D,state.meadowRootsTexture);
@@ -3165,7 +3243,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.treeCollection?.draw(packet);
     gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.activeTexture(gl.TEXTURE0);
     if(vegetationStrategy){
-      resources.singleOwnerVegetation?.draw(packet);
+      const nativeOwnerDraw=resources.singleOwnerVegetation?.draw(packet);
+      if(combinedInlandVegetationReceipt?.resident===true)
+        drawGlobalCover(packet,nativeOwnerDraw);
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
     }else drawGlobalCover(packet);
     if(resources.plantingPilot&&pilotCoverageOwner.shouldDrawPilot()){resources.plantingPilot.draw(packet);counters.totalDrawnIndexCount+=resources.plantingPilotLayout.receipt.rootCount*72;gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);}
@@ -3223,6 +3303,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function getResourceReceipt() {
     const debugRenderer = gl.getExtension('WEBGL_debug_renderer_info');
     return {
+      combinedInlandVegetation:combinedInlandVegetationReceipt?
+        {...combinedInlandVegetationReceipt,
+          nativeLastDraw:resources.singleOwnerVegetation?.getReceipt()?.drawCallCount??null,
+          globalLastDraw:resources.globalCover?.lastDraw??null,
+          maxFrameDrawCalls:COMBINED_INLAND_GRASS.maximumDrawCalls,
+          maxFrameTriangles:COMBINED_INLAND_GRASS.maximumFrameTriangles}:null,
       woodlandHabitat:resources.woodlandHabitat?{...resources.woodlandHabitat.receipt,textureUploadCount:counters.woodlandHabitatTextureUploadCount,uploadedBytes:counters.woodlandHabitatUploadedBytes,perFrameUploadBytes:0}:null,
       habitatMaterialPresentation:resources.habitatMaterialPresentation?{...resources.habitatMaterialPresentation.receipt,textureUploadCount:counters.habitatMaterialTextureUploadCount,uploadedBytes:counters.habitatMaterialUploadedBytes,perFrameUploadBytes:0}:null,
       terrainSeamPresentation:resources.terrainSeamPresentation??null,

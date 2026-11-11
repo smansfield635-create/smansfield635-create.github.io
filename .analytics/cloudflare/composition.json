@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-11T01:23:46Z",
+  "generatedAt": "2026-11-11T02:26:11Z",
   "window": {
-    "start": "2026-10-12T01:23:46Z",
-    "end": "2026-11-11T01:23:46Z"
+    "start": "2026-10-12T02:26:11Z",
+    "end": "2026-11-11T02:26:11Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 417,
-        "visits": 353
+        "pageLoads": 457,
+        "visits": 383
       },
       {
         "value": "/",
@@ -34,8 +34,8 @@
       },
       {
         "value": "/nine-summits/universe/",
-        "pageLoads": 46,
-        "visits": 46
+        "pageLoads": 44,
+        "visits": 44
       },
       {
         "value": "/about/",
@@ -98,9 +98,9 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/rob/",
+        "value": "/explore/",
         "pageLoads": 2,
-        "visits": 2
+        "visits": 0
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -108,9 +108,9 @@
         "visits": 2
       },
       {
-        "value": "/explore/",
+        "value": "/campaigns/rob/",
         "pageLoads": 2,
-        "visits": 0
+        "visits": 2
       },
       {
         "value": "/nine-summits-of-love/",
@@ -133,6 +133,11 @@
         "visits": 1
       },
       {
+        "value": "/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
@@ -148,11 +153,6 @@
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
@@ -163,17 +163,22 @@
         "visits": 1
       },
       {
+        "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/explore/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/waste/",
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -198,6 +203,11 @@
         "visits": 1
       },
       {
+        "value": "/prelude/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
         "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
@@ -208,12 +218,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -221,16 +231,6 @@
         "value": "/laws/research/evidence-and-sources/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/prelude/",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/gauges/",
@@ -311,12 +311,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1334,
-        "visits": 1334
+        "pageLoads": 1332,
+        "visits": 1332
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 113,
+        "pageLoads": 103,
         "visits": 0
       },
       {
@@ -338,18 +338,18 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1388,
-        "visits": 1285
-      },
-      {
-        "value": "CN",
-        "pageLoads": 40,
-        "visits": 40
+        "pageLoads": 1376,
+        "visits": 1283
       },
       {
         "value": "CA",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 43,
+        "visits": 43
+      },
+      {
+        "value": "CN",
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "BR",
@@ -375,13 +375,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1235,
-        "visits": 1168
+        "pageLoads": 1263,
+        "visits": 1196
       },
       {
         "value": "mobile",
-        "pageLoads": 216,
-        "visits": 182
+        "pageLoads": 226,
+        "visits": 192
       },
       {
         "value": "tablet",
@@ -417,8 +417,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 53,
-        "visits": 50
+        "pageLoads": 51,
+        "visits": 48
       },
       {
         "value": "MobileSafari",
@@ -444,8 +444,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 245,
-        "visits": 183
+        "pageLoads": 243,
+        "visits": 181
       },
       {
         "value": "Android",
@@ -476,15 +476,15 @@
       },
       {
         "value": "0",
-        "pageLoads": 706,
-        "visits": 594
+        "pageLoads": 704,
+        "visits": 592
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1430,
-        "visits": 1361
+        "pageLoads": 1428,
+        "visits": 1359
       },
       {
         "value": "routing-apis",
@@ -500,8 +500,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1438,
-        "visits": 1360
+        "pageLoads": 1436,
+        "visits": 1358
       },
       {
         "value": "cache",
@@ -512,15 +512,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1474,
-        "visits": 1361
+        "pageLoads": 1472,
+        "visits": 1359
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1474,
-        "visits": 1361
+        "pageLoads": 1472,
+        "visits": 1359
       }
     ]
   }

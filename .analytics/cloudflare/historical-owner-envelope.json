@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-11T01:23:46Z",
+  "generatedAt": "2026-11-11T02:26:11Z",
   "window": {
-    "start": "2026-08-13T01:23:46Z",
-    "end": "2026-11-11T01:23:46Z"
+    "start": "2026-08-13T02:26:11Z",
+    "end": "2026-11-11T02:26:11Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 941,
+        "pageLoads": 951,
         "visits": 681
       },
       "/governance/": {
@@ -102,13 +102,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -305,10 +305,6 @@
       "/prototypes/abc-roofing/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/about-this-underdog/": {
-        "pageLoads": 10,
-        "visits": 0
       }
     },
     "byReferer": {

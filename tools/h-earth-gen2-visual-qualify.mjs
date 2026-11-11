@@ -546,18 +546,18 @@ if(process.argv.includes('--self-test')){
 
 async function gen3210Capture(reasonCensus=false,positiveX=false){
   const BASE=positiveX?'31d905b6cd9176eff8cb937229f6988dc8ca66a8':'320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',
-        CAND=positiveX?'e54386559028777ca474dc95c7d204bd26d7651e':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+        CAND=positiveX?'675ce0e57f865c3d411f6a295c82f72c75745fb9':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
   const OUTPUT=positiveX?'/tmp/gen2-evidence/gen3217':reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
   const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
   const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
   const TARGETS=positiveX?[
-   // Exact source-observed infill centroid from Gen3216 real WebGL receipt,
-   // run 42942820132; this is a candidate-derived camera, NOT photo first-hit.
+   // Source-observed installed-root center + prior authentic Station B camera.
+   // Station B remains a search anchor, not a claim of photo first-hit.
    {id:'infillCenter_N',x:64.58312043705473,z:-314.94399624029495,yaw:0,pitch:-12},
    {id:'infillCenter_E',x:64.58312043705473,z:-314.94399624029495,yaw:90,pitch:-12},
-   {id:'infillCenter_S',x:64.58312043705473,z:-314.94399624029495,yaw:180,pitch:-12},
-   {id:'infillCenter_W',x:64.58312043705473,z:-314.94399624029495,yaw:-90,pitch:-12}
+   {id:'corridorObserver_NW',x:129.82571460976874,z:-389.03054421247367,yaw:-42,pitch:-12},
+   {id:'corridorObserver_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-12}
   ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
   const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
     baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
@@ -757,13 +757,13 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
          before.originalRootCount!==after.originalRootCount||
          after.installedRootCount-before.installedRootCount!==after.woodlandSeamBridge.addedRoots-(before.woodlandSeamBridge?.addedRoots??0))
         throw Error('GEN3217_ORIGINAL_ROOT_PARITY_OR_NEW_ROOT_DELTA_FAILED:'+JSON.stringify({before,after}));
-      RECEIPT.rootDelta={beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
+      RECEIPT.rootDelta={coverageTarget:'FULL_SOURCE_GROUNDED_POSITIVE_X_DRY_CORRIDOR',beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
         newRoots:after.woodlandSeamBridge.addedRoots,
         originalRootParity:true,verifiedGpuUpload:after.gpuUploadCount>0,
         observedGrassDrawnInCandidateDirections:RECEIPT.images.filter(x=>x.label==='candidate'&&x.singleOwner.drawCallCount>0).map(x=>x.view)};
       if(!RECEIPT.rootDelta.observedGrassDrawnInCandidateDirections.length)
         throw Error('GEN3217_NO_GRASS_VISIBLE_IN_ANY_MATCHED_CAMERA');
-      RECEIPT.imageDifferences=['infillCenter_N','infillCenter_E','infillCenter_S','infillCenter_W'].map(view=>{
+      RECEIPT.imageDifferences=['infillCenter_N','infillCenter_E','corridorObserver_NW','corridorObserver_W'].map(view=>{
         const baseline=RECEIPT.images.find(x=>x.label==='baseline'&&x.view===view);
         const candidate=RECEIPT.images.find(x=>x.label==='candidate'&&x.view===view);
         return {view,pngBytesDifferent:baseline.imageSha256!==candidate.imageSha256,

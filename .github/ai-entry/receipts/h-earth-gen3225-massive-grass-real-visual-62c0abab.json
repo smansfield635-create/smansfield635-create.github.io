@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3225-massive-grass-real-visual-62c0abab",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7332,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3225-visual-20261111",
+  "requestCommit": "90a5b21e298981d58e97d691bf53e42416bda92e",
+  "requestCommitParent": "ef0406992fbd6b62e2c329ae02acf6d3b28d66c2",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ef0406992fbd6b62e2c329ae02acf6d3b28d66c2",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "62c0ababea855d60e8da51837267cee050f138d2"
+  },
+  "bridgeRunId": "43062522779",
+  "dispatchedRunId": 43062554675,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43062554675",
+  "dispatchedRunHeadSha": "ef0406992fbd6b62e2c329ae02acf6d3b28d66c2",
+  "dispatchedAt": "2026-11-11T16:52:16.189Z",
+  "resolvedAt": "2026-11-11T16:52:20.172Z"
+}

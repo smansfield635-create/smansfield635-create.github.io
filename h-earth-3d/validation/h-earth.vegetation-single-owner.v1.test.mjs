@@ -115,10 +115,22 @@ test('tile upload budget rejects more than 1600 roots before processing root rec
  const p={tiles:[{id:'oversized',minX:0,minZ:0,roots:Array(1601).fill(null)}],receipt:{contactCount:1601}};
  assert.throws(()=>planImmutableTiles(p),/TILE_ROOT_BUDGET_EXCEEDED/);
 });
-test('total immutable population cannot exceed 7.2MB packed-root budget',()=>{
- const tiles=Array.from({length:282},(_,t)=>({id:`tile-${t}`,minX:t*4,minZ:0,
-  roots:Array.from({length:1600},(_,i)=>root(t*4+(i%40)*.1,Math.floor(i/40)*.1,.25))}));
- assert.throws(()=>planImmutableTiles({tiles,receipt:{contactCount:451200}}),/POPULATION_GPU_BUDGET_EXCEEDED/);
+test('woodland population accepts the raised 950,000-root limit and rejects one beyond',()=>{
+ const maximumWoodlandRoots=950000,maximumTileRoots=1600;
+ const tiles=Array.from({length:Math.ceil(maximumWoodlandRoots/maximumTileRoots)},(_,t)=>({
+  id:`tile-${t}`,minX:t*4,minZ:0,
+  roots:Array.from({length:Math.min(maximumTileRoots,maximumWoodlandRoots-t*maximumTileRoots)},
+   (_,i)=>root(t*4+(i%40)*.1,Math.floor(i/40)*.1))
+ }));
+ // The legacy 451,200-root fixture must now be admitted: 450,000 is obsolete.
+ assert.doesNotThrow(()=>planImmutableTiles({tiles:tiles.slice(0,282),receipt:{contactCount:451200}}));
+ // Positive at the new exact ceiling, with identical tile and packed root rules.
+ const accepted=planImmutableTiles({tiles,receipt:{contactCount:maximumWoodlandRoots}});
+ assert.equal(accepted.reduce((n,t)=>n+t.count,0),maximumWoodlandRoots);
+ // One extra supported woodland root must fail closed at the actual ceiling.
+ const last=tiles.at(-1);
+ last.roots.push(root(last.minX+3.95,3.95,.75));
+ assert.throws(()=>planImmutableTiles({tiles,receipt:{contactCount:maximumWoodlandRoots+1}}),/POPULATION_GPU_BUDGET_EXCEEDED/);
 });
 test('owner rejects empty fixed control before allocating GPU resources',async()=>{
  const f=fakeGL();await assert.rejects(createSingleOwnerVegetation(f.gl,presentation(),{environment,planetRadius:6200000}),/EMPTY_FIXED_CONTROL/);

@@ -381,6 +381,7 @@ export async function buildWideExistingGrassTrial({
  for(const group of groups)group.sort((a,b)=>b.priority-a.priority||a.cz-b.cz||a.cx-b.cx);
  const order=[];for(let i=0;i<Math.max(...groups.map(g=>g.length));i++)for(const group of groups)if(group[i])order.push(group[i]);
  let added=0,candidates=0;
+ let nextWideYieldAt=performance.now()+20;
  const filledCellKeys=new Set();
  const rejected={terrain:0,slope:0,groundAdmission:0,water:0,duplicate:0,tileCapacity:0};
  const tiles=new Map();
@@ -416,7 +417,7 @@ export async function buildWideExistingGrassTrial({
     physical.set(key,already+1);remember(x,z);have++;cellAdded++;added++;
    }
    if(cellAdded){filledCellKeys.add(localKey);count.set(localKey,have);}
-   if(added%256<cellAdded)await yieldControl();
+   if(added%256<cellAdded&&performance.now()>=nextWideYieldAt){await yieldControl();nextWideYieldAt=performance.now()+20;}
   }
   if(added>=max)break;
  }

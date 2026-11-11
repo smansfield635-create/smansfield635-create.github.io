@@ -1,0 +1,252 @@
+{
+  "canonical-operation-request.json": {
+    "allowedPaths": [
+      "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+    ],
+    "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+    "errorPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "exactGoverningHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "exactTestCommand": "python3 h-earth-3d/evidence/material-margin-prototype-20261030/margin_prototype.py <RECOVERED_WORKSPACE_ROOT>",
+    "executingRole": {
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateControlPlane": false,
+      "mayMutateDiagnosticTooling": true,
+      "mayMutateProduct": false,
+      "role": "SOUTH_EVIDENCE_BUILDER",
+      "scopeExpansionAllowed": false
+    },
+    "fingerprintDomain": {
+      "head": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+      "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+      "paths": [
+        "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+      ]
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W",
+          "N"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "CURRENT_ATLAS_IN_BASELINE",
+        "OUTSIDE_ENDPOINT_PRESERVATION",
+        "TEXTURE_INPUT_UNCHANGED",
+        "NO_OPPOSITE_PATCH_MERGING",
+        "EXPLICIT_AMBIGUITY_AND_GAP_EXCLUSIONS",
+        "NO_GLOBAL_OR_VISUAL_CLAIM"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "a1fca35f83da4fd84876f55627005e7df0bbb6e07e76e4cc0cc334441597ffeb",
+      "receiptId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001_COMPLETE",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:MATERIAL_MARGIN_PROTOTYPE_20261030",
+    "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+    "prohibitedPaths": [
+      "showroom/**",
+      ".github/**",
+      "PRODUCT_RENDERER_MUTATION",
+      "NEW_GPU_RUN",
+      "MERGE_DEPLOY_PUBLICATION"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "intent": "Persist and independently qualify a source-bound one-dimensional material-margin locator and compact endpoint-preserving coefficient reconstruction on existing archived witnesses; preserve all exclusions, current atlas, actual substrate texture and prior failures. Numerical prototype only; no renderer/GPU/publication.",
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateDiagnosticTooling": true,
+      "mayMutateProduct": false,
+      "principal": "OWNER",
+      "scopeExpansionAllowed": false,
+      "source": "Owner Proceed accordingly after source reconciliation and explicit next margin implementation boundary."
+    },
+    "requiredInputs": [
+      {
+        "id": "OWNER_PROCEED",
+        "resolved": true
+      },
+      {
+        "id": "CURRENT_BASELINE_ATLAS_RECONCILED",
+        "resolved": true
+      },
+      {
+        "id": "ORIGINAL_PAIRED_PACKET_HASH_VERIFIED",
+        "resolved": true
+      },
+      {
+        "id": "INDEPENDENT_MARGIN_DESIGN_REVIEW",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "PORTABLE_NUMERICAL_PROTOTYPE",
+      "EXPLICIT_REJECTED_AND_EXCLUDED_INTERVALS",
+      "INDEPENDENT_TEST_REVIEW",
+      "EXACT_SOURCE_EVIDENCE_DRAFT"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "NO_REPOSITORY_WRITE_BEFORE_ADMISSION",
+      "NO_PRODUCTION_INTEGRATION_OR_GPU",
+      "NO_VISUAL_ACCEPTANCE_FROM_NUMERICAL_PASS"
+    ],
+    "subjectIdentity": {
+      "constructionBase": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+      "inputPacketSha256": "08b0c3ae8e1cc3c318b7fa1ada6d01e75370f5423745f2250db6354805b3fdef",
+      "model": "Qcurrent=A*P+B+D_atlas; P unchanged; compact 12m reconstruction",
+      "runBudget": 0,
+      "sourceIssue": 6911,
+      "supersedesNoExistingProduct": true,
+      "targetBranch": "h-earth/material-margin-prototype-20261030"
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "REJECTED_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  },
+  "canonical-construction-procedure.json": {
+    "bridgeOutputFingerprintDomain": {
+      "head": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+      "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+      "paths": [
+        "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+      ]
+    },
+    "canonicalInputSchemas": [
+      "REPOSITORY_OPERATION_REQUEST_v1",
+      "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "H_EARTH_ARCHIVED_MARGIN_PROTOTYPE_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "evaluationToolingHeadBindingRule": "Exact current baseline260c66540 and previously hash verified paired archive. Numerical source model only; no new GPU or product integration.",
+    "exactAllowedRepositoryPaths": [
+      "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "Obtain canonical admission then create bounded evidence branch.",
+        "step": 1
+      },
+      {
+        "action": "Persist complete prototype, current baseline sampling, exact output, and independent tests. Full-file writes.",
+        "step": 2
+      },
+      {
+        "action": "Verify immutable files and create draft PR. Preserve numerical limitations and first incomplete two-dimensional integration boundary.",
+        "step": 3
+      }
+    ],
+    "exactGoverningHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "exactTestRunnerCommand": "python3 h-earth-3d/evidence/material-margin-prototype-20261030/margin_prototype.py <RECOVERED_WORKSPACE_ROOT>",
+    "independentVerifierDefinition": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "CURRENT_ATLAS_IN_BASELINE",
+        "OUTSIDE_ENDPOINT_PRESERVATION",
+        "TEXTURE_INPUT_UNCHANGED",
+        "NO_OPPOSITE_PATCH_MERGING",
+        "EXPLICIT_AMBIGUITY_AND_GAP_EXCLUSIONS",
+        "NO_GLOBAL_OR_VISUAL_CLAIM"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "allowed": "Reuse archived paired native arrays and current atlas; local CPU proof only.",
+      "forbidden": "No recapture, fresh GPU, broad reference blur, unsupported owner selection or product change."
+    },
+    "procedureId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001_PROCEDURE",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/material-margin-prototype-20261030/**"
+      ],
+      "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    }
+  },
+  "canonical-packet-receipt.json": {
+    "admissionAuthorityCreated": false,
+    "artifactDigests": {
+      "canonicalConstructionProcedure": "0009b82a8d8bb9dad7f3fe40051c754551324bbcd58418116ff579697e36f44a",
+      "canonicalIntakeComment": "5567442e38e033df57b7492994a4a3d894b8d04864ab193aa91a8586a2a671c6",
+      "canonicalIntakeEnvelope": "7f616721d7b768376db6d7298aa84f5aa06d56ac75438e86194ba53ccd94a9b0",
+      "canonicalOperationRequest": "2e031b6b7a5fd9dd083bdcbf8dc9acb92ff6946313ebcdd65910e15d30af3e93"
+    },
+    "authorityEffect": "NONE_PACKET_COMPILATION_ONLY",
+    "claimAuthorityCreated": false,
+    "commentDigest": "5567442e38e033df57b7492994a4a3d894b8d04864ab193aa91a8586a2a671c6",
+    "deploymentAuthorityCreated": false,
+    "envelopeDigest": "466e5ddb5c98accc039923aaef4d4925dc9b3ceb11bed5ba5323bfd0f23ede73",
+    "governingHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "lockScope": "H_EARTH:MATERIAL_MARGIN_PROTOTYPE_20261030",
+    "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+    "mergeAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+    "procedureDigest": "213030aafe82035b20f6ca1d854da576dc625328b23d4bf68d59b90651f5c676",
+    "publicationAuthorityCreated": false,
+    "releaseAuthorityCreated": false,
+    "requestDigest": "660b7e3fbf5a3a58572636661aa03d4264e0d02cb143878e8e589d05b8790061",
+    "result": "PACKET_READY",
+    "schema": "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "scientificAuthorityCreated": false,
+    "semanticValidator": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "submissionReady": true,
+    "transportSchema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+  },
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2991,
+    "comment": 6514306408,
+    "run": 40998065073
+  }
+}

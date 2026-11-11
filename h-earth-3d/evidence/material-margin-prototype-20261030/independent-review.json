@@ -1,0 +1,45 @@
+{
+  "sourceSha256": "b780c1867ca782163f237d63b2719dfac55df437feb30f91f5d7fe1881a56738",
+  "actualPrototypeExecuted": true,
+  "syntheticRoot": "/tmp/hearth-margin-review-q6vzhpg2",
+  "tests": {
+    "constant": {
+      "changedMembers": 0
+    },
+    "linear": {
+      "changedMembers": 0
+    },
+    "narrow_gray": {
+      "changedMembers": 0
+    },
+    "narrow_chroma": {
+      "changedMembers": 0
+    },
+    "single_step": {
+      "changedMembers": 240
+    },
+    "reverse_step": {
+      "changedMembers": 240
+    },
+    "irregular_step": {
+      "changedMembers": 42
+    }
+  },
+  "chromaticRegression": "Original luminance-only counterexample now unchanged and rejected by RGB-direction opposing-transition guard",
+  "actualShoulderSlopeTowardBoundary": [
+    0.06022144,
+    0.000636166144,
+    6.396160614400001e-06,
+    6.399616006144001e-08
+  ],
+  "coefficientEnvelopeAllPass": true,
+  "existingPrototypeTests": [
+    "outside_exact",
+    "constant_preserved",
+    "no_endpoint_overshoot_synthetic",
+    "texture_response",
+    "zero_endpoint_correction_and_derivative",
+    "unbracketed_support_rejected"
+  ],
+  "scope": "Independent synthetic archived-transect prototype review only; no world or GPU qualification."
+}

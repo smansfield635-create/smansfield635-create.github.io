@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-11T18:25:59Z",
+  "generatedAt": "2026-11-11T19:24:55Z",
   "window": {
-    "start": "2026-08-13T18:25:59Z",
-    "end": "2026-11-11T18:25:59Z"
+    "start": "2026-08-13T19:24:55Z",
+    "end": "2026-11-11T19:24:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4033,
-    "visits": 1231,
+    "pageLoads": 4013,
+    "visits": 1181,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4033,
-        "visits": 1231
+        "pageLoads": 4013,
+        "visits": 1181
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1021,
-        "visits": 761
+        "pageLoads": 941,
+        "visits": 681
       },
       "/governance/": {
         "pageLoads": 60,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 130,
+        "pageLoads": 140,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -86,13 +86,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -142,7 +146,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -156,10 +160,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -187,16 +187,16 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 190,
-        "visits": 10
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 220,
+        "visits": 20
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -242,6 +242,14 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
@@ -267,15 +275,15 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 180,
-        "visits": 50
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
         "visits": 30
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 100,
+        "pageLoads": 10,
         "visits": 0
       },
       "/home/": {
@@ -305,16 +313,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 710,
-        "visits": 710
+        "pageLoads": 630,
+        "visits": 630
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2802,
+        "pageLoads": 2832,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 511,
-        "visits": 511
+        "pageLoads": 541,
+        "visits": 541
       },
       "raw.githack.com": {
         "pageLoads": 10,

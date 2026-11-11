@@ -112,3 +112,38 @@ jobs:
           path: /tmp/gen2-evidence/gen3211
           if-no-files-found: error
           retention-days: 30
+  
+  gen3217-positive-x-grass-visual:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen3217-positive-x-grass-visual-20261110'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            tools
+            .github/workflows
+      - name: Require admitted exact Gen3217 inspection head
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install established first-party Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Actual matched protected versus corrected positive-X grass WebGL
+        run: |
+          node --check tools/h-earth-gen2-visual-qualify.mjs
+          node tools/h-earth-gen2-visual-qualify.mjs --gen3217-positive-x-comparison
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen3217-positive-x-actual-webgl
+          path: /tmp/gen2-evidence/gen3217
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,299 @@
+{
+  "schema": "AUDRALIA_GCR2_ADMITTED_CONSTRUCTION_PACKET_v1",
+  "classification": "NINE_PATH_CANDIDATE_ONLY",
+  "originalOperationId": "AUDRALIA_GRATITUDE_GCR2_METRIC_ECOLOGY_INSPECTION_20261018_001",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "candidateBranch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
+  "admittedBaseHead": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+  "canonicalSourceComment": {
+    "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6553#issuecomment-6259554781",
+    "id": 6259554781
+  },
+  "canonicalReturnComment": {
+    "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6553#issuecomment-6259560365",
+    "id": 6259560365,
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2819
+  },
+  "canonicalLockCommit": "520dd7861ecd2fb7a10e0982c5a1adbd71b52eda",
+  "originalAuthoringSources": {
+    "planetaryFrame": {
+      "path": "control-plane/h-earth/ow01-planetary-reference-frame-v1/reference-frame.v1.json",
+      "blob": "e5608b6208331d8887de08ec898c5bca4af91e72"
+    },
+    "protectedRevision5": {
+      "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
+      "blob": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c"
+    },
+    "gcr1Precedent": {
+      "path": "showroom/globe/audralia/gcr1-continent-reconstruction/app.mjs",
+      "blob": "c0a762e240781eb5fdbda2b4470decba22061e26"
+    },
+    "localCurvature": {
+      "path": "showroom/globe/h-earth/render/planetary-world-frame.js",
+      "blob": "0938daa8586715c3636b373894bd7e6e28c1ea91"
+    },
+    "currentPublishedRootAtlasCount": 1457471
+  },
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "algorithm": "SHA256",
+      "domain": "exact nine-path GCR2 nonproduction inspection plus pinned production source blobs and candidate-browser evidence"
+    },
+    "canonicalInputSchemas": [
+      "AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1",
+      "H_EARTH_AUDRALIA_PLANETARY_REFERENCE_FRAME_v1",
+      "H_EARTH_PRECOMPUTED_GRASS_v1",
+      "GCR1_INSPECTION_PRECEDENT"
+    ],
+    "canonicalOutputSchemas": [
+      "AUDRALIA_GCR2_METRIC_BIOME_WATERSHED_INSPECTION_v1",
+      "GCR2_NAMED_ANCHOR_METRIC_VERIFICATION",
+      "EXACT_SHA_BROWSER_QUALIFICATION_EVIDENCE"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INCOMPLETE_AUTHORITY",
+      "REGRESSION",
+      "EXACT_PREVIEW_UNAVAILABLE"
+    ],
+    "evaluationToolingHeadBindingRule": "Exact current main and accepted 30N/0E contract; bound archived rev5 geography and current live H-Earth habitat/terrain sources by blob SHA; do not mutate protected 24057 or current H-Earth",
+    "exactAllowedRepositoryPaths": [
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/continuation.json",
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/operation-packet.json",
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/qualification.json",
+      "h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/app.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/ecology-field.v1.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/index.html",
+      "showroom/globe/audralia/gcr2-completed-gratitude/metric-geography-bridge.v1.mjs"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "base": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+        "branch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
+        "sequence": [
+          "Use validated standalone metric source as input, not an authoritative product file",
+          "Construct bounded GCR2 same-site inspection route without changes to active Audralia or H-Earth routes",
+          "Add macro continental hydrology/ecological LOD layers without modifying protected geography",
+          "Independent W proof on fixed current-source baseline and artifact hash",
+          "Freeze candidate, test, and then establish separate first-party exact-sha snapshot/materialization under separately valid authority"
+        ]
+      }
+    ],
+    "exactGoverningHead": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+    "exactTestRunnerCommand": "node --test h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+    "independentVerifierDefinition": {
+      "bearing": "W",
+      "function": "independent path and geography/evidence verification",
+      "identity": "Soren",
+      "mode": "functional West verification after South construction; no independent instance claimed at intake"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "exclude": [
+        "Historical Gen329 external rawcdn alias",
+        "Unregistered preview provider",
+        "pre-admission source branch or runtime write",
+        "repeating unchanged expensive verification"
+      ],
+      "reuse": "PR 1487 GCR1 and PR 1447 original same-origin immutable snapshot; protected rev5 geo transfer; Stage2 H-Earth live 84459f64"
+    },
+    "procedureId": "AUDRALIA_GCR2_PARALLEL_INSPECTION_PROCEDURE_20261018_001",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/audralia-gratitude-gcr2/qualification.json"
+      ],
+      "execution": "Bounded candidate-first tests; passive existing CI; no Work chamber",
+      "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml"
+    }
+  },
+  "operationRequest": {
+    "allowedPaths": [
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/continuation.json",
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/operation-packet.json",
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/qualification.json",
+      "h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/app.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/ecology-field.v1.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs",
+      "showroom/globe/audralia/gcr2-completed-gratitude/index.html",
+      "showroom/globe/audralia/gcr2-completed-gratitude/metric-geography-bridge.v1.mjs"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/audralia-gratitude-gcr2/qualification.json"
+    ],
+    "constructionProcedureLocator": "h-earth-3d/evidence/audralia-gratitude-gcr2/operation-packet.json#constructionProcedure",
+    "errorPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INCOMPLETE_AUTHORITY",
+      "REGRESSION",
+      "EXACT_PREVIEW_UNAVAILABLE"
+    ],
+    "exactGoverningHead": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+    "exactTestCommand": "node --test h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+    "executingRole": {
+      "bearing": "N",
+      "function": "Bound canonical authorization and construction sequence; South construction only after admission",
+      "identity": "Alaric"
+    },
+    "fingerprintDomain": {
+      "algorithm": "SHA256",
+      "domain": "exact nine-path GCR2 nonproduction inspection plus pinned production source blobs and candidate-browser evidence"
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "bearing": "W",
+      "function": "independent path and geography/evidence verification",
+      "identity": "Soren",
+      "mode": "functional West verification after South construction; no independent instance claimed at intake"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "90e68a84c9a8584704af9bbba988f7ec352d629346e48a92fc82d948ffe90804",
+      "receiptId": "AUDRALIA_GCR2_OWNER_SCOPE_AND_PRECEDENT_20261018",
+      "result": "COMPLETE_AFTER_USER_DISPOSITION",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:AUDRALIA:GRATITUDE_METRIC_ECOLOGICAL_INSPECTION:GCR2:V1",
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "operationId": "AUDRALIA_GRATITUDE_GCR2_METRIC_ECOLOGY_INSPECTION_20261018_001",
+    "prohibitedPaths": [
+      "showroom/globe/audralia/index.html",
+      "showroom/globe/h-earth/index.html",
+      "inspection/audralia-24057-exact/**",
+      "showroom/globe/audralia/gcr1-continent-reconstruction/app.mjs",
+      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "h-earth-3d/terrain/h-earth.terrain-field.js",
+      ".github/ai-router/",
+      "production release or deployment",
+      "new external preview host",
+      "additional WebGL/canvas product authority"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "issue": 6553,
+      "precedents": [
+        "PR_1487_AUDRALIA_GCR1",
+        "PR_1447_H_EARTH_GEN329_SAME_ORIGIN_SNAPSHOT",
+        "PR_3507_PREVIEW_PROVIDER_POLICY"
+      ],
+      "source": "Owner direction in current ChatGPT conversation, 2026-10-18; GitHub issue #6553"
+    },
+    "requiredInputs": [
+      {
+        "id": "AI_ENTRYPOINT.json",
+        "resolved": true
+      },
+      {
+        "id": "AGENTS.md",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/ow01-construction-execution-plan.v1.json",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/ow01-reciprocal-comparative-baseline.v1.json",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/ow01-narrative-world-reciprocity-binding.v1.json",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/ow01-environmental-acoustic-continuity.v1.json",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/reciprocal-preconstruction-excellence-record.v1.json",
+        "resolved": true
+      },
+      {
+        "id": "control-plane/h-earth/ow01-planetary-reference-frame-v1/reference-frame.v1.json",
+        "resolved": true
+      },
+      {
+        "id": "showroom/globe/audralia/gcr1-continent-reconstruction/app.mjs",
+        "resolved": true
+      },
+      {
+        "id": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+        "resolved": true
+      },
+      {
+        "id": "GitHub issue #6553 owner directive plus exact-source evidence",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/human-disposition/exact-candidate-physical-preview-contract.v1.json",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "One candidate-only inspectable Audralia Gratitude globe with metric bridge and mature continental ecology",
+      "Verified geographic/biome/drainage identities and startup resource budget",
+      "Exact-head browser and device candidate preview evidence; production routes unchanged"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "Canonical packet compiler or admission not PASS",
+      "Project path ownership ambiguous at admitted scope",
+      "Expected source blobs or main continuity changed without review",
+      "Any protected 24057 or live H-Earth source byte change",
+      "New second world/weather/camera implementation",
+      "Browser or device review unavailable",
+      "Independent W verification or owner disposition missing",
+      "Preview is third-party or mutable branch alias rather than immutable same-origin SHA"
+    ],
+    "subjectIdentity": {
+      "relation": "Completed planetary continent with an entered meter-scale H-Earth region; no independent H-Earth product",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "strategy": "FIRST_PARTY_EXACT_CANDIDATE_CHAMBER_AFTER_ADMISSION",
+      "surface": "AUDRALIA_GRATITUDE_GCR2_NONPRODUCTION_INSPECTION"
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml"
+  },
+  "changedPathGovernance": "ONLY_EXACT_NINE_ALLOWED_PATHS",
+  "productionAudraliaTouched": false,
+  "productionHEarthTouched": false,
+  "protectedRevision5Touched": false,
+  "physicalWidthsOfRiversEstablished": false,
+  "finalCoastlineEstablished": false,
+  "localPermanentWaterFlowEstablished": false
+}

@@ -546,7 +546,7 @@ if(process.argv.includes('--self-test')){
 
 async function gen3210Capture(reasonCensus=false,positiveX=false){
   const BASE=positiveX?'31d905b6cd9176eff8cb937229f6988dc8ca66a8':'320322f34c1a244fabf3e914ccb6a6b4ff1f24ab',
-        CAND=positiveX?'675ce0e57f865c3d411f6a295c82f72c75745fb9':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
+        CAND=positiveX?'2316d7b75a32517d81bc2bbbcaf9e8d361f0c875':'31d905b6cd9176eff8cb937229f6988dc8ca66a8';
   const OUTPUT=positiveX?'/tmp/gen2-evidence/gen3217':reasonCensus?'/tmp/gen2-evidence/gen3211':'/tmp/gen2-evidence/gen3210',STAGE='/tmp/gen3210-webgl-'+process.pid;
   const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
   const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -584,6 +584,19 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
       const world=await fs.readFile(dir+'/showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
       if(HASH(world)!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_WORLD_MISMATCH:'+label);
       RECEIPT[label]={sourceHead:head,worldSha256:HASH(world),sourceClean:true};
+    }
+    if(positiveX){
+      const candidateDirectory=STAGE+'-candidate';
+      const native=spawnSync(process.execPath,['--test','h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs'],
+        {cwd:candidateDirectory,encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024});
+      RECEIPT.nativeFocused={
+        command:'node --test h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs',
+        exactProductHead:CAND,exitCode:native.status,signal:native.signal,
+        stderrTail:(native.stderr??'').slice(-3000),
+        stdoutTail:(native.stdout??'').slice(-3500),spawnError:native.error?.message??null
+      };
+      if(native.status!==0)throw Error('GEN3220_EXISTING_FOCUSED_NATIVE_TEST_FAILED:'+JSON.stringify(RECEIPT.nativeFocused));
+      RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';
     }
     BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
     RECEIPT.browserExecuted=true;
@@ -629,6 +642,10 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
             frames:gpu?.counters?.gpuFramebufferPresentationCount??0,
             nav:nav?{position:nav.position,sequence:nav.sequence,accepted:nav.accepted,action:nav.action,pitchDegrees:nav.pitchDegrees,yawDegrees:nav.yawDegrees,terrainSupported:nav.terrainSupported}:null,
             owner:owner?{originalRootCount:owner.originalRootCount,installedRootCount:owner.installedRootCount,
+              gpuRequestedBytes:owner.gpuRequestedBytes,gpuUploadedBytes:owner.gpuUploadedBytes,
+              gpuAllocatedBytes:owner.gpuAllocatedBytes,maximumPackedBytes:owner.maximumPackedBytes,
+              globalMaximumPackedBytes:owner.globalMaximumPackedBytes,
+              preparationMs:owner.preparationMs,cpuDrawSubmissionMilliseconds:owner.cpuDrawSubmissionMilliseconds,
               rootOwnerCount:owner.rootOwnerCount,gpuAllocationVerified:owner.gpuAllocationVerified,
               gpuUploadCount:owner.gpuUploadCount,drawCallCount:owner.drawCallCount,
               selectedFineRoots:owner.selectedFineRoots,visibleCoarseRoots:owner.visibleCoarseRoots,
@@ -711,6 +728,7 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
         const canvas=page.locator('#h-earth-functional-landscape-canvas');
         for(const target of views){
           const before=await observe();
+          const navigationStarted=Date.now();
           await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id},target.id);
           await canvas.hover();await page.mouse.wheel(0,1);
           let actual,match=false;
@@ -731,6 +749,7 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
           const bytes=await canvas.screenshot({path:OUTPUT+'/'+filename});
           if(bytes.length<1024)throw Error('EMPTY_WEBGL_CAPTURE:'+filename);
           RECEIPT.images.push({label,head,device,view:target.id,target,actualCamera:actual.nav,
+            navigationToFrameMilliseconds:Date.now()-navigationStarted,
             filename,imageSha256:HASH(bytes),imageBytes:bytes.length,
             singleOwner:actual.owner,perViewCulled:actual.owner.drawCallCount===0, ...(reasonCensus?{sharedGroundAdmission:actual.uniformGroundAdmission}:{}),preparationPhase:actual.backgroundPhase,ownerDisposition:'PENDING',photographedSeamLocationUnverified:true});
         }
@@ -757,6 +776,11 @@ async function gen3210Capture(reasonCensus=false,positiveX=false){
          before.originalRootCount!==after.originalRootCount||
          after.installedRootCount-before.installedRootCount!==after.woodlandSeamBridge.addedRoots-(before.woodlandSeamBridge?.addedRoots??0))
         throw Error('GEN3217_ORIGINAL_ROOT_PARITY_OR_NEW_ROOT_DELTA_FAILED:'+JSON.stringify({before,after}));
+      if(after.woodlandSeamBridge.addedRoots>60000||
+         after.gpuUploadedBytes!==after.gpuRequestedBytes||
+         after.gpuAllocatedBytes<after.gpuRequestedBytes||
+         after.gpuAllocatedBytes>after.maximumPackedBytes)
+        throw Error('GEN3220_ROOT_OR_GPU_ALLOCATION_BOUND_FAILED:'+JSON.stringify(after));
       RECEIPT.rootDelta={coverageTarget:'FULL_SOURCE_GROUNDED_POSITIVE_X_DRY_CORRIDOR',beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
         newRoots:after.woodlandSeamBridge.addedRoots,
         originalRootParity:true,verifiedGpuUpload:after.gpuUploadCount>0,

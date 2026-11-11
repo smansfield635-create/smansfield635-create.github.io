@@ -681,10 +681,16 @@ async function gen3226Capture(){
             const response=await route.fetch(),original=await response.text();
             const a=' let added=0,candidates=0;\\n const filledCellKeys=new Set();'.replace('\\n','\n');
             const b='   if(added%256<cellAdded)await yieldControl();';
-            if(original.split(a).length!==2||original.split(b).length!==2)
+            const functionStart=original.indexOf('export async function buildWideExistingGrassTrial(');
+            const functionEnd=original.indexOf('/** Extend only the existing ravine atlas',functionStart);
+            if(functionStart<0||functionEnd<=functionStart)
+              throw Error('WIDE_SCHEDULING_PROBE_FUNCTION_BOUNDARY_DRIFT');
+            const wideOriginal=original.slice(functionStart,functionEnd);
+            if(wideOriginal.split(a).length!==2||wideOriginal.split(b).length!==2)
               throw Error('WIDE_SCHEDULING_PROBE_SOURCE_MARKER_DRIFT');
-            const modified=original.replace(a,' let added=0,candidates=0;\\n let nextWideYieldAt=performance.now()+20;\\n const filledCellKeys=new Set();'.replaceAll('\\n','\n'))
+            const wideModified=wideOriginal.replace(a,' let added=0,candidates=0;\\n let nextWideYieldAt=performance.now()+20;\\n const filledCellKeys=new Set();'.replaceAll('\\n','\n'))
               .replace(b,'   if(added%256<cellAdded&&performance.now()>=nextWideYieldAt){await yieldControl();nextWideYieldAt=performance.now()+20;}');
+            const modified=original.slice(0,functionStart)+wideModified+original.slice(functionEnd);
             RECEIPT.schedulingVariant={schema:'H_EARTH_GEN3226_DISPOSABLE_YIELD_CADENCE_PROBE_v1',
               label,sourceHead:CAND,browserOnly:true,productSourceChanged:false,
               originalServedScriptSha256:HASH(original),instrumentedServedScriptSha256:HASH(modified),

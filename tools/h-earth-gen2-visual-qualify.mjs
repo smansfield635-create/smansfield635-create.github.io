@@ -622,7 +622,10 @@ async function gen3226Capture(){
       };
       if(focused.status!==0)RECEIPT.nativeFocused.requiresIndependentReview=true;
       const capacityName='woodland population accepts the raised 950,000-root limit and rejects one beyond';
-      const capacity=runNative('candidate',['--test','--test-name-pattern','^'+capacityName+'
+      const capacity=runNative('candidate',['--test','--test-name-pattern',capacityName,testFile]);
+      RECEIPT.nativeCapacity={testName:capacityName,productHead:CAND,exitCode:capacity.status,outputTail:(capacity.stdout??'').slice(-1700),error:capacity.error?.message??null};
+      if(capacity.status!==0||!/(?:^|\n)ok \d+ - woodland population accepts the raised 950,000-root limit and rejects one beyond/m.test(capacity.stdout??''))
+        throw Error('GEN3230_EXACT_NATIVE_950000_950001_ASSERTION_FAILED:'+JSON.stringify(RECEIPT.nativeCapacity));
       RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';
     }
         BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});

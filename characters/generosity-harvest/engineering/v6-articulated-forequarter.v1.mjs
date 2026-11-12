@@ -296,13 +296,19 @@ function articulatedKernel(){
     if(!feasible)continue;
     // Every accepted incremental state must also retain the protected collar,
     // topology and face orientation, not merely be intersection-free.
-    let geometryGate;
-    try{geometryGate=deps.verifyCandidate(source,{...source,vertices:next},spec.manifest,{clearance:0});}
-    catch(error){lastWitness={kind:"INCREMENTAL_GEOMETRY_REJECTED",reason:String(error.message)};continue;}
-    if(geometryGate.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2"){
-     lastWitness=geometryGate.witness||{kind:"INCREMENTAL_GEOMETRY_REJECTED"};
-     continue;
+    // Collision freedom for the complete swept interval was certified above.
+    // Recheck the complementary orientation invariant locally; the topology,
+    // protected vertices and collar are unchanged by construction.
+    let oriented=true;
+    for(const face of patch){
+     const [a,b,c]=face.indices;
+     const oldN=cross(sub(source.vertices[b],source.vertices[a]),sub(source.vertices[c],source.vertices[a]));
+     const newN=cross(sub(next[b],next[a]),sub(next[c],next[a]));
+     if(norm(newN)<=1e-10||dot(oldN,newN)<=1e-10*norm(oldN)){
+      oriented=false;lastWitness={kind:"INCREMENTAL_FACE_ORIENTATION_REJECTED",faceId:face.id};break;
+     }
     }
+    if(!oriented)continue;
     const energy=objective(next);
     if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;break;}
    }

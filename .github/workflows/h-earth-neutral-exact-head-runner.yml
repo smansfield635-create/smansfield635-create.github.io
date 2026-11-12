@@ -1947,3 +1947,86 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Isolated Gen3246 tooling PR: exact immutable Gen3245 product browser-only qualification.
+  # Historical neutral/Gen3187 jobs above remain unchanged; no release authority.
+  gen3246-gen3245-meadow-material-gpu-pr:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3245-material-native-gpu-rebind-20261112' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Check out the two-path admitted tooling candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: verifier-tooling
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify exact tooling ancestry, two-file scope and unchanged historical profiles
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='14a1dab2d169a2accafc84163965fdaf0d5991bf'
+          test "$(git -C verifier-tooling rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git -C verifier-tooling fetch --no-tags --depth=1 origin "$base"
+          mapfile -t changed < <(git -C verifier-tooling diff --name-only "$base" HEAD)
+          test "${#changed[@]}" -eq 2
+          printf '%s\n' "${changed[@]}" | grep -Fxq 'h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs'
+          printf '%s\n' "${changed[@]}" | grep -Fxq '.github/workflows/h-earth-neutral-exact-head-runner.yml'
+          node --check verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs
+          python3 - <<'PY'
+          import subprocess, pathlib
+          base='14a1dab2d169a2accafc84163965fdaf0d5991bf'
+          old=subprocess.check_output(['git','-C','verifier-tooling','show',base+':.github/workflows/h-earth-neutral-exact-head-runner.yml'])
+          new=pathlib.Path('verifier-tooling/.github/workflows/h-earth-neutral-exact-head-runner.yml').read_bytes()
+          assert new.startswith(old), 'HISTORICAL_QUALIFIER_PROFILE_CHANGED'
+          assert new[len(old):].startswith(b'\n  # Isolated Gen3246 tooling PR:'), 'GEN3239_JOB_APPEND_MISSING'
+          print('GEN3239_TWO_PATH_AND_HISTORIC_PROFILE_PRESERVATION_PASS')
+          PY
+      - name: Check out immutable Gen3245 grass candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 3480025fb2a142c699db241ca018c2cd1e6400c0
+          path: product
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Require exact product head and prepared source present
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = '3480025fb2a142c699db241ca018c2cd1e6400c0'
+          test -f product/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz
+          test -f product/showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+      - name: Install existing first-party Chromium dependency
+        working-directory: product
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Execute exact candidate real-Enter completed-owner GPU and three-view qualification
+        working-directory: product
+        shell: bash
+        env:
+          H_EARTH_GEN3245_GPU_ONLY: '1'
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen3245-gpu"
+          export CODEX_PRIMARY_RUNTIME_NODE_MODULES="$PWD/node_modules"
+          export H_EARTH_RUNTIME_OUTPUT_PATH="$RUNNER_TEMP/gen3245-gpu/receipt.json"
+          export H_EARTH_RUNTIME_SCREENSHOT_DIR="$RUNNER_TEMP/gen3245-gpu"
+          timeout 3300s node ../verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs 2>&1 | tee "$RUNNER_TEMP/gen3245-gpu/runtime.log"
+          test "$(jq -r '.schema' "$RUNNER_TEMP/gen3245-gpu/receipt.json")" = H_EARTH_GEN3245_GPU_RESIDENCY_RUNTIME_v1
+          test "$(jq -r '.result' "$RUNNER_TEMP/gen3245-gpu/receipt.json")" = PASS
+          test "$(jq -r '.head' "$RUNNER_TEMP/gen3245-gpu/receipt.json")" = '3480025fb2a142c699db241ca018c2cd1e6400c0'
+          test "$(jq -r '.fullOwnerResidencyVerified' "$RUNNER_TEMP/gen3245-gpu/receipt.json")" = true
+      - name: Retain exact completed-owner GPU receipts and actual rendered frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3245-full-owner-gpu-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/gen3245-gpu/
+          if-no-files-found: warn
+          retention-days: 30

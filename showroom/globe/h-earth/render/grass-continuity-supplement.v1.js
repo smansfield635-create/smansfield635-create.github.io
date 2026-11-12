@@ -3,7 +3,7 @@ import {isVerifiedPlantingPoint} from './verified-planting-cells.v1.js';
 /** Gen2810 foothill and meadow presentation allocation. Design budget, not a hardware claim. */
 // Exact terrain-v2 census plus preserved runtime population; never a density target.
 // Activation requires exact-head runtime GPU allocation/upload checks before readiness.
-export const GRASS_CONTINUITY_ALLOCATION=Object.freeze({maximumRoots:3472956,maximumPackedBytes:55567296,maximumWoodlandRoots:950000,maximumRavineRoots:2527012,maximumTileRoots:1600,originalWoodlandRoots:385944,originalRavineRoots:139198,spacing:.14});
+export const GRASS_CONTINUITY_ALLOCATION=Object.freeze({maximumRoots:3803720,maximumPackedBytes:60859520,maximumWoodlandRoots:1276708,maximumRavineRoots:2527012,maximumTileRoots:1600,originalWoodlandRoots:385944,originalRavineRoots:139198,spacing:.14});
 export const GRASS_CONTINUITY_BOUNDS=Object.freeze([-298,-570,88,-234]);
 export const GRASS_CONTINUITY_CONNECTOR=Object.freeze([[-108,-256],[-78,-278],[-38,-286],[0,-282],[40,-274]].map(Object.freeze));
 const clamp=x=>Math.max(0,Math.min(1,x)),smooth=x=>{const t=clamp(x);return t*t*(3-2*t);},f=Math.fround;

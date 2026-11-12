@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate} from './v6-articulated-independent-verifier.v1.mjs';
-import {sourceAnchors,kinematicFrame,clearancePreflight,construct} from './v6-articulated-forequarter.v1.mjs';
+import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct} from './v6-articulated-forequarter.v1.mjs';
 import {verifySourceBytes,prepareNativeFourCameraReview,ACCEPTED_R63_SHA256} from './v6-articulated-native-bridge.v1.mjs';
 import {createHash} from 'node:crypto';
 
@@ -72,12 +72,13 @@ test('source-owned anchors must use measured barycentric control, never free-spa
  assert.throws(()=>sourceAnchors(a,{...s,anchors:{...toyAnchors,paw:{faceId:999,barycentric:[1,0,0]}}}),/ANCHOR_NOT_SOURCE_RETIRED_FACE/);
  assert.throws(()=>sourceAnchors(a,{...s,requireR63:true}),/R63_SOURCE_FACE_OWNERSHIP_MISMATCH/);
 });
-test('unmeasured radii and missing spatial trajectory cannot silently construct a specimen',()=>{
+test('source-derived limb radii and missing spatial trajectory are enforced',()=>{
  const src=bodyPatch(),s={manifest:patchManifest,anchors:toyAnchors,requireR63:false,clearance:.001};
  assert.throws(()=>construct(src,s),/EXPLICIT_3D_ANATOMICAL_TRAJECTORY_REQUIRED/);
  const pts=sourceAnchors(src,s),frame=kinematicFrame(pts,{shoulder:pts.scapula,elbow:pts.elbow,wrist:pts.forearm,paw:pts.paw});
  assert.equal(frame.segments.length,3);
- assert.throws(()=>construct(src,{...s,trajectory:{shoulder:pts.scapula,elbow:pts.elbow,wrist:pts.forearm,paw:pts.paw}}),/SOURCE_DERIVED_THREE_LIMB_RADII_REQUIRED/);
+ const computed=measuredRadii(src,s,frame);assert.equal(computed.length,3);assert.ok(computed.every(x=>Number.isFinite(x)&&x>0));
+ assert.throws(()=>construct(src,{...s,trajectory:{shoulder:pts.scapula,elbow:pts.elbow,wrist:pts.forearm,paw:pts.paw},radii:[.001,.001,.001]}),/RADIUS_NOT_SOURCE_MEASURED/);
 });
 test('the bridge rejects mismatched accepted R63 bytes and premature camera review',()=>{
  const bytes='synthetic fixture',sha=createHash('sha256').update(bytes).digest('hex');

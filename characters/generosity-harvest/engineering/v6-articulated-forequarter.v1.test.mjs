@@ -1,7 +1,7 @@
 // Gen3237 code checkpoint tests: deterministic synthetic fixtures only; never a frozen R63 specimen.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate} from './v6-articulated-independent-verifier.v1.mjs';
+import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity} from './v6-articulated-independent-verifier.v1.mjs';
 import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct} from './v6-articulated-forequarter.v1.mjs';
 import {verifySourceBytes,prepareNativeFourCameraReview,ACCEPTED_R63_SHA256} from './v6-articulated-native-bridge.v1.mjs';
 import {createHash} from 'node:crypto';
@@ -86,4 +86,35 @@ test('the bridge rejects mismatched accepted R63 bytes and premature camera revi
  assert.throws(()=>verifySourceBytes(bytes),/R63_SOURCE_SHA256_MISMATCH/);
  assert.equal(ACCEPTED_R63_SHA256.length,64);
  assert.throws(()=>prepareNativeFourCameraReview({sourceSha256:ACCEPTED_R63_SHA256},{operationId:'bad'}),/EXACT_R63_OPERATION_REQUIRED/);
+});
+
+test('Gen3243 independent fidelity rejects no-motion and accepts exact frozen target',()=>{
+ const source={vertices:[[0,0,0],[0,0,0],[0,0,0]]};
+ const desired=[[1,0,0],[0,1,0],[0,0,1]];
+ const roles=new Map([[0,0],[1,1],[2,2]]);
+ const stationary={vertices:source.vertices.map(p=>p.slice())};
+ const noMotion=articulationFidelity(source,stationary,desired,[0,1,2],roles);
+ assert.equal(noMotion.result,'FAIL_FIDELITY');
+ assert.equal(noMotion.progress,0);
+ assert.equal(noMotion.relativeError,1);
+ const exact=articulationFidelity(source,{vertices:desired},desired,[0,1,2],roles);
+ assert.equal(exact.result,'PASS_FIDELITY');
+ assert.equal(exact.progress,1);
+ assert.equal(exact.relativeError,0);
+ assert.deepEqual(exact.segmentProgress,[1,1,1]);
+});
+test('Gen3243 census checks full nonincident population and retains all witnesses',()=>{
+ const mesh={vertices:[
+  [0,0,0],[1,0,0],[0,1,0],
+  [.2,.2,-1],[.2,.2,1],[.8,.2,0],
+  [.3,.3,-1],[.3,.3,1],[.7,.3,0],
+  [0,0,3],[1,0,3],[0,1,3]],
+ faces:[{id:1,indices:[0,1,2]},{id:2,indices:[3,4,5]},
+ {id:3,indices:[6,7,8]},{id:4,indices:[9,10,11]}]};
+ const m={retiredFaceIds:[1,2,3],keptFaceIds:[4]};
+ const result=exhaustiveCollisionCensus(mesh,mesh,m);
+ assert.equal(result.pairsChecked,6);
+ assert.equal(result.result,'FAIL_COLLISIONS');
+ assert.ok(result.collisions.length>=2);
+ assert.ok(result.collisions.every(c=>c.pairClass==='NEW_NEW'));
 });

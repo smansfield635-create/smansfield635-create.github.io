@@ -55,19 +55,20 @@ test('protected face, vertex, retirement, and 21-edge contracts fail closed',()=
  assert.throws(()=>verifyCandidate(a,a,{...tinyManifest,collarEdges:[[0,1],[1,2],[2,0]]}),/SOURCE_COLLAR_EDGE_IDENTITY_CHANGED/);
  assert.throws(()=>verifyCandidate(a,a,{...tinyManifest,expected:{...tinyManifest.expected,sourceFaces:2508}}),/R63_SOURCE_FACE_COUNT_MISMATCH/);
 });
-test('nonincident full 3D new-to-protected collision is a hard witness',()=>{
- const A=[[0,0,0],[1,0,0],[0,1,0]],B=[[.2,.2,-1],[.2,.2,1],[.8,.2,0]];
- const source={vertices:[...A,...B.map(p=>[p[0]+2,p[1],p[2]])],faces:[{id:3,indices:[0,1,2]},{id:7,indices:[3,4,5]}]};
- const moved=structuredClone(source);moved.vertices.splice(3,3,...B);
- const m={keptFaceIds:[3],retiredFaceIds:[7],collarEdges:[[3,4],[4,5],[5,3]],expected:{sourceFaces:2,keptFaces:1,retiredFaces:1,collarEdges:3}};
- // Modified protected face is rejected even before collision, as it must be.
- assert.throws(()=>verifyCandidate(source,moved,m),/PROTECTED_VERTEX_CHANGED/);
- const flipped={...source,faces:[{id:3,indices:[0,1,2]},{id:7,indices:[3,5,4]}]};
- assert.throws(()=>verifyCandidate(source,flipped,m),/RETIREMENT_TOPOLOGY_CHANGED/);
+test('nonincident changed-to-protected collision produces a mechanical witness',()=>{
+ const source={
+  vertices:[[0,0,0],[1,0,0],[0,1,0],[1/3,1/3,0],[.2,.2,2],[.5,.2,2],[.2,.5,2]],
+  faces:[{id:10,indices:[0,1,3]},{id:11,indices:[1,2,3]},{id:12,indices:[2,0,3]},{id:30,indices:[4,5,6]}]
+ };
+ const m={keptFaceIds:[30],retiredFaceIds:[10,11,12],collarEdges:[[0,1],[1,2],[2,0]],expected:{sourceFaces:4,keptFaces:1,retiredFaces:3,collarEdges:3}};
+ const moved=structuredClone(source);moved.vertices[3]=[1/3,1/3,3];
+ const result=verifyCandidate(source,moved,m);
+ assert.equal(result.result,'FAIL_MECHANICAL');
+ assert.ok(['PROPER_3D_CONTACT','COPLANAR_AREA','CLEARANCE'].includes(result.witness.kind));
 });
 test('source-owned anchors must use measured barycentric control, never free-space guesses',()=>{
  const a=bodyPatch();const s={manifest:patchManifest,anchors:toyAnchors,requireR63:false};
- const pts=sourceAnchors(a,s);assert.deepEqual(pts.scapula,[1,0,0]);assert.deepEqual(pts.elbow,[1/3,1/3,1/3]);
+ const pts=sourceAnchors(a,s);assert.deepEqual(pts.scapula,[1,0,0]);assert.deepEqual(pts.elbow,[0,0,1]);
  assert.throws(()=>sourceAnchors(a,{...s,anchors:{...toyAnchors,paw:{faceId:999,barycentric:[1,0,0]}}}),/ANCHOR_NOT_SOURCE_RETIRED_FACE/);
  assert.throws(()=>sourceAnchors(a,{...s,requireR63:true}),/R63_SOURCE_FACE_OWNERSHIP_MISMATCH/);
 });

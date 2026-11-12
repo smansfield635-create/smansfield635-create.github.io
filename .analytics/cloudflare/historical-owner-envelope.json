@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-12T10:24:17Z",
+  "generatedAt": "2026-11-12T11:25:32Z",
   "window": {
-    "start": "2026-08-14T10:24:17Z",
-    "end": "2026-11-12T10:24:17Z"
+    "start": "2026-08-14T11:25:32Z",
+    "end": "2026-11-12T11:25:32Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3843,
-    "visits": 1151,
+    "pageLoads": 3893,
+    "visits": 1171,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3843,
-        "visits": 1151
+        "pageLoads": 3893,
+        "visits": 1171
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 881,
-        "visits": 641
+        "pageLoads": 911,
+        "visits": 671
       },
       "/governance/": {
         "pageLoads": 40,
@@ -46,21 +46,17 @@
         "pageLoads": 80,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 82,
-        "visits": 10
-      },
-      "/preview/compass-brain-v1/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
-        "pageLoads": 10,
-        "visits": 10
+      "/laws/research/methods-and-models/": {
+        "pageLoads": 50,
+        "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 490,
         "visits": 0
+      },
+      "/preview/compass-brain-v1/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 130,
@@ -79,7 +75,7 @@
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 80,
+        "pageLoads": 90,
         "visits": 0
       },
       "/showroom/": {
@@ -116,6 +112,10 @@
       },
       "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 62,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -170,10 +170,6 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/laws/research/methods-and-models/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/test/reverse-audit/": {
         "pageLoads": 20,
         "visits": 0
@@ -207,7 +203,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -313,11 +309,11 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 600,
-        "visits": 600
+        "pageLoads": 620,
+        "visits": 620
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2692,
+        "pageLoads": 2722,
         "visits": 0
       },
       "(none)": {

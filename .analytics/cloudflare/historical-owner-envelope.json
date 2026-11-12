@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-12T09:26:14Z",
+  "generatedAt": "2026-11-12T10:24:17Z",
   "window": {
-    "start": "2026-08-14T09:26:14Z",
-    "end": "2026-11-12T09:26:14Z"
+    "start": "2026-08-14T10:24:17Z",
+    "end": "2026-11-12T10:24:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4003,
-    "visits": 1161,
+    "pageLoads": 3843,
+    "visits": 1151,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4003,
-        "visits": 1161
+        "pageLoads": 3843,
+        "visits": 1151
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 911,
-        "visits": 661
+        "pageLoads": 881,
+        "visits": 641
       },
       "/governance/": {
         "pageLoads": 40,
@@ -46,20 +46,24 @@
         "pageLoads": 80,
         "visits": 0
       },
-      "/laws/research/methods-and-models/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 610,
-        "visits": 0
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 82,
+        "visits": 10
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 490,
+        "visits": 0
+      },
       "/showroom/globe/audralia/": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 10
       },
       "/products/": {
@@ -75,7 +79,7 @@
         "visits": 0
       },
       "/index.html": {
-        "pageLoads": 90,
+        "pageLoads": 80,
         "visits": 0
       },
       "/showroom/": {
@@ -112,10 +116,6 @@
       },
       "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
-        "visits": 10
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 72,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -170,6 +170,10 @@
         "pageLoads": 40,
         "visits": 0
       },
+      "/laws/research/methods-and-models/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/test/reverse-audit/": {
         "pageLoads": 20,
         "visits": 0
@@ -179,19 +183,19 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 60,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 80,
-        "visits": 40
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 240,
+        "pageLoads": 220,
         "visits": 20
       },
       "/door/": {
@@ -203,7 +207,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -259,16 +263,20 @@
         "visits": 0
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/payable/": {
-        "pageLoads": 20,
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 240,
-        "visits": 60
+        "pageLoads": 260,
+        "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -287,7 +295,7 @@
         "visits": 120
       },
       "/analytics/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/governance-bridge/governance/": {
@@ -305,16 +313,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 620,
-        "visits": 620
+        "pageLoads": 600,
+        "visits": 600
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2842,
+        "pageLoads": 2692,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 531,
-        "visits": 531
+        "pageLoads": 541,
+        "visits": 541
       },
       "raw.githack.com": {
         "pageLoads": 10,

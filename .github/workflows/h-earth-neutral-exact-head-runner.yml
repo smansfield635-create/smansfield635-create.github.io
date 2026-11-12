@@ -1947,3 +1947,81 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Gen3241: isolated PR-only Gen3238 browser causal factor test, never a release.
+  gen3241-meadow-ground-factor-pr:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3238-meadow-ground-factor-browser-tooling-20261112' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout bounded admitted tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Enforce exact two-file authorization and historical byte preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=f8f9c307730e0d96b5680c3659d1c781dbae2789
+          test "$(git -C tooling rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          git -C tooling fetch --no-tags --depth=1 origin "$base"
+          python3 - <<'PY'
+          import pathlib,subprocess
+          base='f8f9c307730e0d96b5680c3659d1c781dbae2789'
+          cmd=lambda *args:subprocess.check_output(['git','-C','tooling',*args])
+          changed=cmd('diff','--name-only',base,'HEAD').decode().splitlines()
+          assert sorted(changed)==sorted(['.github/workflows/h-earth-neutral-exact-head-runner.yml','tools/h-earth-ground-material-comparison.v1.mjs']), changed
+          oldwf=cmd('show',base+':.github/workflows/h-earth-neutral-exact-head-runner.yml')
+          newwf=pathlib.Path('tooling/.github/workflows/h-earth-neutral-exact-head-runner.yml').read_bytes()
+          assert newwf.startswith(oldwf) and newwf[len(oldwf):].startswith(b'\n  # Gen3241:')
+          oldjs=cmd('show',base+':tools/h-earth-ground-material-comparison.v1.mjs').decode()
+          newjs=pathlib.Path('tooling/tools/h-earth-ground-material-comparison.v1.mjs').read_text()
+          add="  if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3238_MEADOW_GROUND_FACTOR_V1')return runGen3238Meadow(argv);\n"
+          assert newjs.replace(add,'').startswith(oldjs)
+          print('GEN3241_AUTHORIZED_TWO_PATH_SOURCE_AND_LEGACY_PREFIX_PASS')
+          PY
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+      - name: Check out immutable published product only
+        uses: actions/checkout@v4
+        with:
+          ref: ab4b5989a62b216e8aa7015480c957984326843a
+          path: product
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Enforce three source Git blobs, no grass mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = ab4b5989a62b216e8aa7015480c957984326843a
+          test "$(git -C product hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C product hash-object h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz)" = 9139e9c429957679c6e30001ea0e0fb95fbc45fc
+      - name: Install first-party browser dependency
+        working-directory: tooling
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture real owner-center and geographic controls under four modes
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3238_MEADOW_GROUND_FACTOR_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen3241-meadow-factor"
+          timeout 3500s node tools/h-earth-ground-material-comparison.v1.mjs --product-dir ../product --output "$RUNNER_TEMP/gen3241-meadow-factor" 2>&1 | tee "$RUNNER_TEMP/gen3241-meadow-factor/runtime.log"
+          jq -e '.schema=="H_EARTH_GEN3238_MATCHED_GROUND_FACTOR_GPU_RECEIPT_v1" and .result=="PASS_MATCHED_BROWSER_FACTOR_CAPTURED_VISUAL_DISPOSITION_PENDING" and .sourceProductHead=="ab4b5989a62b216e8aa7015480c957984326843a" and (.views|length)==12' "$RUNNER_TEMP/gen3241-meadow-factor/receipt.json"
+      - name: Preserve images and terminal error receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3241-meadow-ground-factor-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/gen3241-meadow-factor/
+          if-no-files-found: warn
+          retention-days: 30

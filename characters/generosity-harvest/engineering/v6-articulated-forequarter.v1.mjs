@@ -174,19 +174,9 @@ function articulatedKernel(){
    if(free.has(a))adjacency.get(a).push({other:b,weight});
    if(free.has(b))adjacency.get(b).push({other:a,weight});
   }
-  // Fixed graph-H1 quadratic: target fidelity plus unit source-edge smoothness.
-  // A fixed number of Jacobi iterations provides a deterministic unconstrained
-  // reference, not a separate candidate or a starting penetrated mesh.
-  const reference=source.vertices.map(p=>[0,0,0]);
-  for(let it=0;it<320;it++){
-   const next=reference.map(v=>v.slice());
-   for(const ix of movable){
-    const ns=adjacency.get(ix),sum=ns.reduce((v,e)=>v+e.weight,0);
-    for(let k=0;k<3;k++)next[ix][k]=((target[ix][k]-source.vertices[ix][k])+
-     ns.reduce((v,e)=>v+e.weight*reference[e.other][k],0))/(1+sum);
-   }
-   for(const ix of movable)reference[ix]=next[ix];
-  }
+  // The frozen source-edge-weighted H1 term is evaluated directly in
+  // objective() and its exact analytic gradient below. Do not calculate an
+  // unused smoothing candidate or change the frozen target.
   const sourceCandidate={...source,vertices:source.vertices};
   // Source identity must be independently validated before any solver step.
   const sourceGate=deps.verifyCandidate(source,sourceCandidate,spec.manifest,{clearance:0});
@@ -217,7 +207,10 @@ function articulatedKernel(){
     value+=weight*dot(sub(ua,ub),sub(ua,ub));
    }
    for(const pair of pairs){
-    const d=deps.triangleDistance(triangles(vertices,pair.a),triangles(vertices,pair.b));
+    const A=triangles(vertices,pair.a),B=triangles(vertices,pair.b);
+    if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+dHat<=Math.min(...B.map(p=>p[k]))||
+      Math.max(...B.map(p=>p[k]))+dHat<=Math.min(...A.map(p=>p[k]))))continue;
+    const d=deps.triangleDistance(A,B);
     if(d<dHat){const v=barrier(d);if(!Number.isFinite(v))return Infinity;value+=v;}
    }
    return value;
@@ -228,7 +221,11 @@ function articulatedKernel(){
   for(let it=0;it<120;it++){
    const active=[];
    for(const pair of pairs){
-    const d=deps.triangleDistance(triangles(vertices,pair.a),triangles(vertices,pair.b));
+    const A=triangles(vertices,pair.a),B=triangles(vertices,pair.b);
+    const separated=[0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+dHat<=Math.min(...B.map(p=>p[k]))||
+      Math.max(...B.map(p=>p[k]))+dHat<=Math.min(...A.map(p=>p[k])));
+    if(separated)continue; // conservative AABB culling; no exact-contact pair is excluded
+    const d=deps.triangleDistance(A,B);
     if(d<dHat)active.push(pair);
    }
    const gradient=new Map(movable.map(ix=>{
@@ -278,8 +275,16 @@ function articulatedKernel(){
      return certifiedPair(pair,left,mid,depth+1)&&certifiedPair(pair,mid,right,depth+1);
     };
     let feasible=true;
-    for(const pair of pairs)if(!certifiedPair(pair,0,1,0)){
-     feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};break;
+    for(const pair of pairs){
+     // Swept AABB is a conservative continuous-time broad phase.
+     // The exact interval-certified CCD remains mandatory for all survivors.
+     const swept=f=>f.indices.flatMap(ix=>[vertices[ix],next[ix]]);
+     const A=swept(pair.a),B=swept(pair.b);
+     if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))<Math.min(...B.map(p=>p[k]))||
+       Math.max(...B.map(p=>p[k]))<Math.min(...A.map(p=>p[k]))))continue;
+     if(!certifiedPair(pair,0,1,0)){
+      feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};break;
+     }
     }
     if(!feasible)continue;
     // Every accepted incremental state must also retain the protected collar,

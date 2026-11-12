@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-12T04:25:55Z",
+  "generatedAt": "2026-11-12T05:25:50Z",
   "window": {
-    "start": "2026-08-14T04:25:55Z",
-    "end": "2026-11-12T04:25:55Z"
+    "start": "2026-08-14T05:25:50Z",
+    "end": "2026-11-12T05:25:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,22 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3943,
+    "pageLoads": 3903,
     "visits": 1181,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3943,
+        "pageLoads": 3903,
         "visits": 1181
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 941,
+        "pageLoads": 921,
         "visits": 681
-      },
-      "/index.html": {
-        "pageLoads": 110,
-        "visits": 0
       },
       "/governance/": {
         "pageLoads": 40,
@@ -76,6 +72,10 @@
       },
       "/coherence-diagnostic/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/index.html": {
+        "pageLoads": 90,
         "visits": 0
       },
       "/showroom/": {
@@ -313,7 +313,7 @@
         "visits": 630
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2762,
+        "pageLoads": 2722,
         "visits": 0
       },
       "(none)": {

@@ -289,7 +289,9 @@ function articulatedKernel(){
     if(!feasible)continue;
     // Every accepted incremental state must also retain the protected collar,
     // topology and face orientation, not merely be intersection-free.
-    const geometryGate=deps.verifyCandidate(source,{...source,vertices:next},spec.manifest,{clearance:0});
+    let geometryGate;
+    try{geometryGate=deps.verifyCandidate(source,{...source,vertices:next},spec.manifest,{clearance:0});}
+    catch(error){lastWitness={kind:"INCREMENTAL_GEOMETRY_REJECTED",reason:String(error.message)};continue;}
     if(geometryGate.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2"){
      lastWitness=geometryGate.witness||{kind:"INCREMENTAL_GEOMETRY_REJECTED"};
      continue;

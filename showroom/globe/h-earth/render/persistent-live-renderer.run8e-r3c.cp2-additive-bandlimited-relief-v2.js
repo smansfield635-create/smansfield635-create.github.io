@@ -581,6 +581,8 @@ uniform vec4 uCoastalHabitatBounds;
 uniform vec2 uHabitatAtlasScale;
 uniform float uHabitatHalfTexel;
 uniform int uWoodlandHabitatEnabled;
+uniform highp sampler2D uMeadowGroundOccupancy;
+uniform vec4 uMeadowGroundBounds;
 uniform vec4 uLandscapeFloorFootprints[15];
 uniform int uLandscapeFloorCount;
 // SHORELINE_SOIL_END uniform
@@ -1304,6 +1306,12 @@ void main(){
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
+    // Occupied meadow soil only; immutable original habitat panels remain dominant.
+    vec2 meadowUv=(vWorldPosition.xz-uMeadowGroundBounds.xy)/(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy);
+    if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThan(meadowUv,vec2(1.0)))){
+      float meadowOccupancy=texture(uMeadowGroundOccupancy,meadowUv).r;
+      habitatColorCoverage=max(habitatColorCoverage,meadowOccupancy);
+    }
     base=mix(base,habitatSoil,habitatColorCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
@@ -1670,6 +1678,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   const resources = {};
   let correctedMaterialDisposed=false;
   function disposeCorrectedMaterial(){
+    if(resources.meadowGroundOccupancyTexture){gl.deleteTexture(resources.meadowGroundOccupancyTexture);resources.meadowGroundOccupancyTexture=null;}
     correctedMaterialDisposed=true;
     for(const texture of resources.correctedTextures??[])gl.deleteTexture(texture);
     resources.correctedTextures=[];
@@ -2056,6 +2065,45 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
       // The admitted entrance roots and their soil coverage are finalized together.
       const installedHabitat=resources.singleOwnerVegetation.habitat;
+      // Frozen Gen3238 occupancy signal: fail closed on any drift, never invent map cells.
+      const meadowMapResponse=await fetch('/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz');
+      if(!meadowMapResponse.ok)throw Error('MEADOW_OCCUPANCY_MAP_UNAVAILABLE');
+      const meadowGzip=new Uint8Array(await meadowMapResponse.arrayBuffer());
+      const meadowDigest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',meadowGzip)),v=>v.toString(16).padStart(2,'0')).join('');
+      if(meadowDigest!=='a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015')throw Error('MEADOW_OCCUPANCY_MAP_SHA_DRIFT');
+      const meadowMap=JSON.parse(await new Response(new Blob([meadowGzip]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
+      if(meadowMap.cells?.length!==76874)throw Error('MEADOW_OCCUPANCY_CELL_COUNT_DRIFT');
+      const meadowWidth=238,meadowHeight=323,meadowPixels=new Uint8Array(meadowWidth*meadowHeight);
+      const originalPanels=[[-213,-298,-69,-154],[-298,-570,88,-154],[-448,-283,448,-93]];
+      let eligibleMeadowCells=0,protectedMeadowCells=0;
+      for(const cell of meadowMap.cells){
+        const occupied=cell.sourceRoots+cell.additionalRoots;
+        if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6||
+          originalPanels.some(panel=>cell.x+.5>panel[0]&&cell.x+.5<panel[2]&&cell.z+.5>panel[1]&&cell.z+.5<panel[3])){
+          protectedMeadowCells++;continue;
+        }
+        if(!Number.isInteger(cell.x)||!Number.isInteger(cell.z)||cell.x<16||cell.x>=254||cell.z< -559||cell.z>=-236)throw Error('MEADOW_OCCUPANCY_CELL_OUT_OF_BOUNDS');
+        const q=Math.max(0,Math.min(1,(occupied-6)/20)),factor=q*q*(3-2*q);
+        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor);
+        eligibleMeadowCells++;
+      }
+      if(eligibleMeadowCells<1||eligibleMeadowCells+protectedMeadowCells!==76874)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');
+      if(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)<16)throw Error('MEADOW_OCCUPANCY_TEXTURE_UNIT_UNAVAILABLE');
+      const meadowTexture=gl.createTexture();if(!meadowTexture)throw Error('MEADOW_OCCUPANCY_TEXTURE_ALLOCATION');
+      resources.meadowGroundOccupancyTexture=meadowTexture;
+      gl.activeTexture(gl.TEXTURE0+15);gl.bindTexture(gl.TEXTURE_2D,meadowTexture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,meadowWidth,meadowHeight,0,gl.RED,gl.UNSIGNED_BYTE,meadowPixels);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      if(gl.getError()!==gl.NO_ERROR)throw Error('MEADOW_OCCUPANCY_TEXTURE_UPLOAD_GL_ERROR');
+      gl.useProgram(resources.geometryProgram);
+      gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uMeadowGroundOccupancy'),15);
+      gl.uniform4f(gl.getUniformLocation(resources.geometryProgram,'uMeadowGroundBounds'),16,-559,254,-236);
+      gl.activeTexture(gl.TEXTURE0);
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
       gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,installedHabitat.width,installedHabitat.height,0,gl.RED,gl.UNSIGNED_BYTE,installedHabitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -3119,6 +3167,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
+    gl.activeTexture(gl.TEXTURE0+15);gl.bindTexture(gl.TEXTURE_2D,resources.meadowGroundOccupancyTexture);gl.activeTexture(gl.TEXTURE0);
 // SHORELINE_SOIL_BEGIN binding
     gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);gl.activeTexture(gl.TEXTURE0);
 // SHORELINE_SOIL_END binding

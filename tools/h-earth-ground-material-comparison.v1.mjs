@@ -496,6 +496,8 @@ export function gen3238FrameComparison(views){
   return results;
 }
 export async function runGen3238Meadow(argv){
+  // The legacy CLI starts before the appended profile constant is initialized.
+  await Promise.resolve();
   const {product,output}=gen3238Parse(argv);
   const config=GEN3238_MEADOW_FACTOR;
   assertCheckout(product,config.productHead);

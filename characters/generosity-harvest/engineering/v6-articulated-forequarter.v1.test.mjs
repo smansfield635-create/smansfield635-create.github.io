@@ -127,3 +127,16 @@ test('Gen3243 rejects any alteration of the frozen half-step and IPC coefficient
  assert.throws(()=>constructGen3243(src,{...spec,barrierActivation:.003}),/FROZEN_IPC_ACTIVATION_MISMATCH/);
  assert.throws(()=>constructGen3243(src,{...spec,barrierWeight:2}),/FROZEN_IPC_WEIGHT_MISMATCH/);
 });
+
+test('Gen3243 accelerated census retains exact protected minimum and full pair count',()=>{
+ const source={
+  vertices:[[0,0,0],[1,0,0],[0,1,0],[0,0,2],[1,0,2],[0,1,2],[0,0,5],[1,0,5],[0,1,5]],
+  faces:[{id:1,indices:[0,1,2]},{id:2,indices:[3,4,5]},{id:3,indices:[6,7,8]}]
+ };
+ const manifest={retiredFaceIds:[1,2],keptFaceIds:[3]};
+ const census=exhaustiveCollisionCensus(source,source,manifest,{clearance:.00129});
+ assert.equal(census.result,'PASS_COLLISIONS');
+ assert.equal(census.pairsChecked,3);
+ assert.ok(Math.abs(census.protectedMinimum-3)<1e-10);
+ assert.equal(census.collisionCount,0);
+});

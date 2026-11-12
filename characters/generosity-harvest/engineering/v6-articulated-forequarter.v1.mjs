@@ -55,9 +55,30 @@ function articulatedKernel(){
   return {desired,movable};
  }
  function measuredRadii(source,spec,frame){
-  if(!spec.radii||!Array.isArray(spec.radii)||spec.radii.length!==3||spec.radii.some(r=>!Number.isFinite(r)||r<=0))throw Error("SOURCE_DERIVED_THREE_LIMB_RADII_REQUIRED");
-  // Radii must be provided from the accepted R63 face-owned measurement, never guessed from free-space stations.
-  return spec.radii.slice();
+  // Actual accepted-source triangle extent, not a user-guessed free-space tube radius.
+  // The three reference spans are upper-arm / elbow-return / compact-paw stations.
+  const owned=spec.anchors;
+  if(!owned)throw Error("SOURCE_FACE_ANCHORS_REQUIRED_FOR_RADIUS_MEASUREMENT");
+  const windows=[["upperArm"],["elbow","forearm"],["paw"]];
+  const faces=new Map(source.faces.map(f=>[String(f.id),f]));
+  const radii=windows.map((roles,i)=>{
+   const a=frame.from[i],b=frame.from[i+1],v=sub(b,a),sq=dot(v,v);
+   if(sq<=1e-20)throw Error("DEGENERATE_SOURCE_RADIUS_AXIS:"+i);
+   const samples=roles.flatMap(role=>{
+    const id=owned[role]?.faceId,f=faces.get(String(id));
+    if(!f)throw Error("RADIUS_SOURCE_FACE_MISSING:"+role);
+    return f.indices.map(ix=>{
+     const p=source.vertices[ix],t=clamp(dot(sub(p,a),v)/sq);
+     return dist(p,add(a,scale(v,t)));
+    });
+   });
+   const radius=Math.max(...samples);
+   if(!Number.isFinite(radius)||radius<=0)throw Error("SOURCE_DERIVED_RADIUS_INVALID:"+i);
+   return radius;
+  });
+  if(spec.radii&&(!Array.isArray(spec.radii)||spec.radii.length!==3||spec.radii.some((x,i)=>!Number.isFinite(x)||Math.abs(x-radii[i])>1e-10)))
+   throw Error("RADIUS_NOT_SOURCE_MEASURED");
+  return radii;
  }
  function clearancePreflight(source,spec,frame,radii,deps){
   const delta=spec.clearance;if(!Number.isFinite(delta)||delta<=0)throw Error("POSITIVE_SOURCE_SCALE_CLEARANCE_REQUIRED");

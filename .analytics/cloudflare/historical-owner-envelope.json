@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-12T05:25:50Z",
+  "generatedAt": "2026-11-12T06:34:58Z",
   "window": {
-    "start": "2026-08-14T05:25:50Z",
-    "end": "2026-11-12T05:25:50Z"
+    "start": "2026-08-14T06:34:58Z",
+    "end": "2026-11-12T06:34:58Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3903,
-    "visits": 1181,
+    "pageLoads": 3893,
+    "visits": 1171,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3903,
-        "visits": 1181
+        "pageLoads": 3893,
+        "visits": 1171
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 921,
-        "visits": 681
+        "pageLoads": 911,
+        "visits": 671
       },
       "/governance/": {
         "pageLoads": 40,
@@ -158,13 +158,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -309,8 +309,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 630,
-        "visits": 630
+        "pageLoads": 620,
+        "visits": 620
       },
       "diamondgatebridge.com": {
         "pageLoads": 2722,

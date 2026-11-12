@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-12T05:25:50Z",
+  "generatedAt": "2026-11-12T06:34:58Z",
   "window": {
-    "start": "2026-10-13T05:25:50Z",
-    "end": "2026-11-12T05:25:50Z"
+    "start": "2026-10-13T06:34:58Z",
+    "end": "2026-11-12T06:34:58Z"
   },
   "dimensions": {
     "requestPath": [
@@ -238,14 +238,14 @@
         "visits": 0
       },
       {
-        "value": "/nine-summits/universe/**",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/evidence/",
         "pageLoads": 1,
         "visits": 0
+      },
+      {
+        "value": "/nine-summits/universe/**",
+        "pageLoads": 1,
+        "visits": 1
       },
       {
         "value": "/products/five-flags/",

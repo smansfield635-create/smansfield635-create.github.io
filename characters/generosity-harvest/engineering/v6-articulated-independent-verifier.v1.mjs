@@ -147,6 +147,55 @@ function verificationKernel(){
   }
   return {result:"PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2",pairsChecked:checked,protectedFaces:kept.size,retiredFaces:retired.size,collarEdges:boundary.collarEdges.length};
  }
- return {pointTriangleDistance,segmentDistance,segmentTriangleDistance,triangleDistance,coplanarOverlapArea,geometryWitness,patchBoundary,verifyCandidate};
+
+ // Gen3243 independent, exhaustive nonincident collision census. The solver's active set
+ // is never used to decide which pairs the final verifier inspects.
+ function exhaustiveCollisionCensus(source,candidate,manifest,{clearance=0,eps=1e-10}={}){
+  const retired=new Set(manifest.retiredFaceIds.map(String));
+  const kept=new Set(manifest.keptFaceIds.map(String));
+  const changed=candidate.faces.filter(f=>retired.has(String(f.id)));
+  const protectedFaces=candidate.faces.filter(f=>kept.has(String(f.id)));
+  if(changed.length!==retired.size||protectedFaces.length!==kept.size)throw Error("COLLISION_CENSUS_PARTITION_MISMATCH");
+  let pairsChecked=0,protectedMinimum=Infinity;
+  const collisions=[];
+  for(let i=0;i<changed.length;i++){
+   const a=changed[i];
+   for(const b of [...changed.slice(i+1),...protectedFaces]){
+    if(a.indices.some(v=>b.indices.includes(v)))continue;
+    pairsChecked++;
+    const protectedPair=kept.has(String(b.id));
+    const A=triangle(candidate,a),B=triangle(candidate,b);
+    const d=triangleDistance(A,B);
+    if(protectedPair)protectedMinimum=Math.min(protectedMinimum,d);
+    const w=geometryWitness(candidate,a,candidate,b,protectedPair?clearance:0,eps);
+    if(w)collisions.push({...w,pairClass:protectedPair?"NEW_PROTECTED":"NEW_NEW"});
+   }
+  }
+  return {result:collisions.length?"FAIL_COLLISIONS":"PASS_COLLISIONS",pairsChecked,
+   collisionCount:collisions.length,collisions,protectedMinimum};
+ }
+ // Independent signed fidelity calculation against frozen source-to-target displacement.
+ function articulationFidelity(source,candidate,desired,movable,roleByVertex,
+  {progressMin=.8,errorMax=.3,segmentProgressMin=.7}={}){
+  if(!Array.isArray(movable)||!movable.length||!Array.isArray(desired))throw Error("FIDELITY_INPUT_MISSING");
+  const roleNames=[0,1,2],groups=roleNames.map(()=>({numerator:0,denominator:0,count:0}));
+  let numerator=0,denominator=0,error2=0;
+  for(const ix of movable){
+   const role=roleByVertex instanceof Map?roleByVertex.get(ix):roleByVertex[ix];
+   if(!Number.isInteger(role)||role<0||role>2)throw Error("FIDELITY_ROLE_MISSING:"+ix);
+   const d=sub(desired[ix],source.vertices[ix]),u=sub(candidate.vertices[ix],source.vertices[ix]);
+   const dd=dot(d,d),ud=dot(u,d);
+   denominator+=dd;numerator+=ud;error2+=dot(sub(u,d),sub(u,d));
+   groups[role].denominator+=dd;groups[role].numerator+=ud;groups[role].count++;
+  }
+  if(!(denominator>0)||groups.some(g=>!(g.denominator>0)))throw Error("FIDELITY_ZERO_TARGET_DENOMINATOR");
+  const progress=numerator/denominator,error=Math.sqrt(error2/denominator);
+  const segmentProgress=groups.map(g=>g.numerator/g.denominator);
+  return {result:progress>=progressMin&&error<=errorMax&&segmentProgress.every(p=>p>=segmentProgressMin)?"PASS_FIDELITY":"FAIL_FIDELITY",
+   progress,relativeError:error,segmentProgress,targetNorm:Math.sqrt(denominator),
+   movedNorm:Math.sqrt(movable.reduce((v,ix)=>v+dot(sub(candidate.vertices[ix],source.vertices[ix]),sub(candidate.vertices[ix],source.vertices[ix])),0)),
+   segmentCounts:groups.map(g=>g.count)};
+ }
+ return {pointTriangleDistance,segmentDistance,segmentTriangleDistance,triangleDistance,coplanarOverlapArea,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity};
 }
-export const {pointTriangleDistance,segmentDistance,segmentTriangleDistance,triangleDistance,coplanarOverlapArea,geometryWitness,patchBoundary,verifyCandidate}=verificationKernel();
+export const {pointTriangleDistance,segmentDistance,segmentTriangleDistance,triangleDistance,coplanarOverlapArea,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity}=verificationKernel();

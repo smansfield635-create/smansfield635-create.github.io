@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-12T00:43:43Z",
+  "generatedAt": "2026-11-12T01:24:20Z",
   "window": {
-    "start": "2026-10-13T00:43:43Z",
-    "end": "2026-11-12T00:43:43Z"
+    "start": "2026-10-13T01:24:20Z",
+    "end": "2026-11-12T01:24:20Z"
   },
   "dimensions": {
     "requestPath": [
@@ -133,19 +133,14 @@
         "visits": 1
       },
       {
-        "value": "/showroom/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
+        "value": "/signup",
         "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/explore/frontier/water/",
-        "pageLoads": 1,
-        "visits": 1
+        "visits": 0
       },
       {
         "value": "/characters/",
@@ -153,7 +148,7 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -168,7 +163,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/categories/integrity/",
+        "value": "/explore/frontier/water/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -183,6 +183,11 @@
         "visits": 1
       },
       {
+        "value": "/laws/categories/integrity/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
@@ -193,7 +198,7 @@
         "visits": 1
       },
       {
-        "value": "/frontier/waste/",
+        "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -218,14 +223,9 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/signup",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/prelude/",
@@ -514,8 +514,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1454,
-        "visits": 1336
+        "pageLoads": 1484,
+        "visits": 1366
       }
     ]
   }

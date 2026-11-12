@@ -140,3 +140,18 @@ test('Gen3243 accelerated census retains exact protected minimum and full pair c
  assert.ok(Math.abs(census.protectedMinimum-3)<1e-10);
  assert.equal(census.collisionCount,0);
 });
+
+test('Gen3243 protected clearance is not incorrectly imposed between new faces',()=>{
+ const source={
+  vertices:[[0,0,0],[1,0,0],[0,1,0],[0,0,.0007],[1,0,.0007],[0,1,.0007],[0,0,2],[1,0,2],[0,1,2]],
+  faces:[{id:1,indices:[0,1,2]},{id:2,indices:[3,4,5]},{id:3,indices:[6,7,8]}]
+ };
+ const manifest={retiredFaceIds:[1,2],keptFaceIds:[3],
+  expected:{sourceFaces:3,keptFaces:1,retiredFaces:2,collarEdges:6}};
+ // This synthetic fixture is disconnected; verify the collision census directly.
+ const census=exhaustiveCollisionCensus(source,source,manifest,{clearance:.00129});
+ assert.equal(census.result,'PASS_COLLISIONS');
+ assert.equal(census.collisionCount,0);
+ assert.equal(census.pairsChecked,3);
+ assert.ok(census.protectedMinimum>1);
+});

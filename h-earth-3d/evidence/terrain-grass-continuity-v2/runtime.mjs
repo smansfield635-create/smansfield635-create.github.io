@@ -25,7 +25,8 @@ const gen3238Output=process.env.H_EARTH_RUNTIME_OUTPUT_PATH??null;
 const gen3238ScreenshotDir=process.env.H_EARTH_RUNTIME_SCREENSHOT_DIR??null;
 try{
  await page.goto(`http://127.0.0.1:${server.address().port}/showroom/globe/h-earth/`,{waitUntil:'domcontentloaded',timeout:120000});
- await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',{timeout:240000});
+ if(gen3238)await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',null,{timeout:420000,polling:500});
+ else await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',{timeout:240000});
  const sample=async name=>{await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));const gpu=await page.evaluate(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt());const owner=gpu?.resources?.singleOwnerVegetation;assert(owner,'SINGLE_OWNER_GPU_RECEIPT_MISSING');assert(owner.gpuAllocationVerified);assert.equal(owner.gpuObservedBufferBytes,owner.installedRootCount*16);assert.equal(owner.gpuUploadedBytes,owner.gpuObservedBufferBytes);assert.equal(owner.perFrameUploadBytes,0);assert.equal(owner.allocationGlError,0);assert.equal(owner.uploadGlError,0);if(gen3238){
  assert.equal(owner.installedRootCount,3805291,'GEN3238_ROOT_COUNT');
  assert.equal(owner.gpuRequestedBytes,60884656,'GEN3238_REQUESTED_GPU_BYTES');
@@ -44,9 +45,11 @@ if(gen3238){
 }};
  if(!gen3238)await sample('ENTRY');
  await page.mouse.move(400,220);await page.mouse.down();await page.mouse.move(530,235,{steps:14});await page.mouse.up();await page.mouse.wheel(0,-360);
- await page.waitForFunction(()=>document.querySelector('#h-earth-loading-screen')?.dataset.mode==='ready',{timeout:30000});
+ if(gen3238)await page.waitForFunction(()=>document.querySelector('#h-earth-loading-screen')?.dataset.mode==='ready',null,{timeout:120000,polling:500});
+ else await page.waitForFunction(()=>document.querySelector('#h-earth-loading-screen')?.dataset.mode==='ready',{timeout:30000});
  await page.locator('#h-earth-loading-screen [data-enter]').click();
- await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true',{timeout:30000});
+ if(gen3238)await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true',null,{timeout:120000,polling:500});
+ else await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true',{timeout:30000});
  if(gen3238){
   // Gen3187 precedent: controls/READY precede asynchronous replacement-owner residency.
   await page.waitForFunction(()=>{

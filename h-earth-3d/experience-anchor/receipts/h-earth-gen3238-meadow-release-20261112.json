@@ -50,8 +50,8 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "d5b39a57ad52ff8878c753a2986251f8f227f788af0c6468a6dd959bac461e16",
-      "gitBlob": "06139b1b8f3a04086d0a4f5f2ca88c5b189fd304"
+      "sha256": "656c3c36e42984dead2fc846cf3a22ee80f1b8509ca548b90a477401f552b227",
+      "gitBlob": "7db2ea6c002c44471546ade5dd4ec49e7e053605"
     },
     {
       "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
@@ -109,11 +109,13 @@
       "showroom/globe/h-earth/index.html",
       "h-earth-3d/experience-anchor/receipts/h-earth-gen3238-meadow-release-20261112.json"
     ],
-    "productSourceFileMutationUnderThisRelease": false
+    "productSourceFileMutationUnderThisRelease": false,
+    "oldSupplementCacheRevision": "?rev=sha-56b76da04d1f",
+    "newSupplementCacheRevision": "?rev=sha-ac0a70ba41d3"
   },
   "comparison": {
     "anchorObserved": "Historical accepted canonical eleven-invariant source-bound anchor. Visual evidence paths are inherited historical same-world proxies, not new Gen3238 meadow screenshots.",
-    "sourceDelta": "Only finalization cache import identity and this receipt changed after the unmodified GPU-qualified 343076-root additive Gen3238 candidate.",
+    "sourceDelta": "Release finalization updates both changed grass-module cache identities (single-owner vegetation and grass-continuity supplement) and the evidence receipt only; the exact Gen3238 source is preserved.",
     "acceptanceBoundary": "Same-world source continuity and software GPU residency supported; middle-corridor visual acceptance and Android performance pending live owner review."
   },
   "limitations": [

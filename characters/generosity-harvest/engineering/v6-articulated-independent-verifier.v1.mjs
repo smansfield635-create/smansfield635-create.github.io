@@ -165,10 +165,24 @@ function verificationKernel(){
     pairsChecked++;
     const protectedPair=kept.has(String(b.id));
     const A=triangle(candidate,a),B=triangle(candidate,b);
+    // AABB distance is a rigorous lower bound, never a contact decision.
+    // Preserve exact protected minimum by refining every pair whose lower
+    // bound could improve the currently known minimum.
+    let lb2=0;
+    for(let k=0;k<3;k++){
+     const amin=Math.min(...A.map(p=>p[k])),amax=Math.max(...A.map(p=>p[k]));
+     const bmin=Math.min(...B.map(p=>p[k])),bmax=Math.max(...B.map(p=>p[k]));
+     const gap=Math.max(0,bmin-amax,amin-bmax);lb2+=gap*gap;
+    }
+    const lower=Math.sqrt(lb2);
+    const threshold=protectedPair?clearance:0;
+    if(lower>threshold+eps&&(!protectedPair||lower>=protectedMinimum))continue;
     const d=triangleDistance(A,B);
     if(protectedPair)protectedMinimum=Math.min(protectedMinimum,d);
-    const w=geometryWitness(candidate,a,candidate,b,protectedPair?clearance:0,eps);
-    if(w)collisions.push({...w,pairClass:protectedPair?"NEW_PROTECTED":"NEW_NEW"});
+    if(d<=threshold+eps){
+     const w=geometryWitness(candidate,a,candidate,b,threshold,eps);
+     if(w)collisions.push({...w,pairClass:protectedPair?"NEW_PROTECTED":"NEW_NEW"});
+    }
    }
   }
   return {result:collisions.length?"FAIL_COLLISIONS":"PASS_COLLISIONS",pairsChecked,

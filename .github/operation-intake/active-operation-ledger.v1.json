@@ -19671,6 +19671,50 @@
       "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c",
       "state": "ADMITTED_LOCKED"
     },
+    "a3ead5ffb12593d84ef4a0e0328120a77d6e46928a20bdbf9bec3f808726bc83": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b3ee006f7e8102151b97a315b7c2a75f4ea36893",
+          "lockGeneration": 3238,
+          "lockScope": "H_EARTH:FROZEN_ECOLOGICAL_MEADOW_ADDITIVE_COVERAGE:20261112:ONE",
+          "operationId": "H_EARTH_FROZEN_ECOLOGICAL_MEADOW_ADDITIVE_COVERAGE_20261112_001",
+          "procedureLocatorDigest": "d2a8946d241e63f18c3a0710dea3e7468622f9ac213b27851b3230f7e18c9e8e",
+          "requestDigest": "0ce6b24f32db0612b6ce64166336c5c9099f95913823e5faf0f2651333013da5",
+          "scopeHash": "a3ead5ffb12593d84ef4a0e0328120a77d6e46928a20bdbf9bec3f808726bc83"
+        },
+        "bindingDigest": "5c4504e500932dc049827854e15a949efb817fc65451f335d0201ef99f51325e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cb5875fb1d3c293cdeec5c500a61a94ef639b6ce2709998652fa6ebdfea20403",
+          "commentId": 6830967939,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43269990508,
+          "workflowSha": "a8332f13eec2572a2704ab977844a514d2cab4a6"
+        },
+        "lineageAnchorCommitSha": "5fac35e63c45443af36a96139cf212f517019a88",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b3ee006f7e8102151b97a315b7c2a75f4ea36893",
+      "lockGeneration": 3238,
+      "lockScope": "H_EARTH:FROZEN_ECOLOGICAL_MEADOW_ADDITIVE_COVERAGE:20261112:ONE",
+      "operationId": "H_EARTH_FROZEN_ECOLOGICAL_MEADOW_ADDITIVE_COVERAGE_20261112_001",
+      "procedureLocatorDigest": "d2a8946d241e63f18c3a0710dea3e7468622f9ac213b27851b3230f7e18c9e8e",
+      "released": false,
+      "requestDigest": "0ce6b24f32db0612b6ce64166336c5c9099f95913823e5faf0f2651333013da5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a3ead5ffb12593d84ef4a0e0328120a77d6e46928a20bdbf9bec3f808726bc83",
+      "state": "ADMITTED_LOCKED"
+    },
     "a3efca2fc5f7073a7384d3aa10783eb9da27aec041ae343237f2198f68067173": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -31039,7 +31083,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3237,
+  "lockGeneration": 3238,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

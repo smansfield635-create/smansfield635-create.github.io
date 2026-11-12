@@ -1,0 +1,115 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3232_GRASS_RICHNESS_LAST_MILE_RELEASE_20261111_001",
+  "canonicalAdmissionGeneration": 3233,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewScope": "Source-bound eleven-invariant same-world continuity only, supported by unchanged globe, navigation, terrain, trees, coast, water, route and native input-confirmed exact-candidate H-Earth runtime preflight. Owner expressly directs publish-and-adjust for bounded grass silhouette enhancement. NOT independent new-grass visual-quality acceptance, all-root GPU-census proof, original Anchor video replay or physical Android qualification.",
+  "reviewedBaselineHead": "d0db920c0f0c73fbb2fe24f145348f790dc33fdc",
+  "productSourceHead": "54e022705728832525b1abaa0cc67d207eac8cf0",
+  "exactReleaseFinalizationHead": "b72ff31d2f485192d75182d315ec0d387d2b6217",
+  "ownerDecision": {
+    "intent": "PUBLISH_EXISTING_GEN3232_GRASS_AND_REVIEW_LIVE_ADJUST_OR_ROLLBACK",
+    "sourceIssue": 7340,
+    "sourceCommentId": 6811871752,
+    "beforeAfterScreenshotsRequired": false,
+    "ownerPrePublicationVisualApprovalRequired": false,
+    "firstPartyPhysicalAndroidReviewed": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "a7283537e30d09ec2e46b5ef6e5ddce406cd9d97dd646882fb8bafb24558850d"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "d2a7d0bf1da47607a73c52e41d6a11b7af8ee33fb7f1699b46678ed298bee246"
+    }
+  ],
+  "firstPartyEvidence": {
+    "acceptedFullGrassRootPopulationFromPriorGen3230": 3462215,
+    "priorAcceptedWideGrassRun": 43106028346,
+    "priorAcceptedWideGrassArtifactId": 13894102654,
+    "newShaderSourceBlob": "fd95cb6905ce6d177c3e992304d0f5ce83e91862",
+    "newShaderSourceSha256": "a7283537e30d09ec2e46b5ef6e5ddce406cd9d97dd646882fb8bafb24558850d",
+    "exactNewReleaseCandidate": "b72ff31d2f485192d75182d315ec0d387d2b6217",
+    "currentRuntimePreflightRun": 43139976663,
+    "currentRuntimePreflightArtifactId": 13908598340,
+    "currentRuntimePreflightResult": "PREFLIGHT_PASS",
+    "selectedHearthRuntimeResult": "PASS",
+    "nativeCameraInputConfirmed": true,
+    "changedViewSubmittedAndRendered": true,
+    "originalGen2InspectorRun": 43138692311,
+    "originalGen2InspectorResult": "FAIL_PRE_ENTRY_NO_USER_NAVIGATION",
+    "currentShaderFullRootGpuCensus": "NOT_MEASURED",
+    "currentShaderVisualQuality": "NOT_INDEPENDENTLY_ESTABLISHED"
+  },
+  "sourceIdentity": {
+    "originalAcceptedRootPopulation": 3462215,
+    "originalAcceptedGPUByteCensus": 55395440,
+    "currentActualRootCensus": "UNMEASURED",
+    "rootGeneratorAndBufferPackingSourceUnchanged": true,
+    "sameSixVertexRootTopology": true,
+    "sameFineFadeMeters": [
+      14,
+      24
+    ],
+    "changedFilesInProductConstruction": [
+      "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js"
+    ],
+    "finalizationChangedFiles": [
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/experience-anchor/receipts/h-earth-gen3232-grass-richness-release-20261111.json"
+    ],
+    "candidateIndexGitBlob": "2c53613d7793fc5f2b2a36411790b36277700125",
+    "originalPublishedIndexGitBlob": "3572a2254845b96b8fac38c602e36b985f958838",
+    "changedModuleRequestIdentity": "?rev=sha-fd95cb6905ce",
+    "noWorldOrNavigationOwnerChange": true,
+    "productionDeploymentPerformed": false
+  },
+  "comparison": {
+    "anchorObserved": "Accepted single coherent globe–region–ground H-Earth world; earlier accepted Anchor source and repository visual proxy retained.",
+    "sourceDelta": "Only existing installed grass blade-width, top taper and minor second crossed-lobe angular shader expressions changed, plus browser cache identity so existing live code loads this exact source. No grass placement/population/terrain/world/route/navigation/trees/ocean/shore material changes.",
+    "acceptanceBoundary": "All eleven invariant categories remain preserved by source-continuity and candidate's real native-input-confirmed world entry. The stale passive Gen2 verifier fails before Enter and before grass setup, unrelated to shader; the correctly selected live-publication preflight passes real native interaction. Separate exact candidate grass GPU census and perceptual appearance remain unmeasured; public release remains separately gated."
+  },
+  "limitations": [
+    "Original 32.0635-second Anchor video not replayed; inherited canonical video identity and visual proxy apply.",
+    "The precedent visual evidence files are historical Anchor evidence; do not present them as fresh candidate grass screenshots.",
+    "No new before/after screenshots required by superseding owner directive.",
+    "Failed Gen2 run 43138692311 never entered the world or invoked grass shader; it is not a positive grass shader result and remains recorded as FAIL.",
+    "Publication preflight 43139976663 proves exact staged payload, real native input-controlled entry and runtime readiness; it does not prove that all changed grass blades were drawn or that new shader compiled successfully after full grass preparation.",
+    "Current grass root count and actual candidate GPU allocation were not remeasured. Root-generating and upload code remains unchanged from 3462215-root, 55395440-byte accepted prior release.",
+    "Physical Android hardware FPS and initial response were not measured; no improvement or device acceptance is claimed.",
+    "Owner perceptual KEEP / ONE_REPAIR / REJECT is explicitly post-publication under the later rapid-release direction.",
+    "This source-bound same-world receipt grants no merge, publication or deployment authority. Selected checks, approved merge, exact-head Pages preflight/deploy and live verification remain separate."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3238-frozen-meadow-actual-preflight-20261112-001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7349,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3238-meadow-preflight-20261112-001",
+  "requestCommit": "ab93685adcd5414a98df1bb9cfbc3a459b0fdefd",
+  "requestCommitParent": "a8332f13eec2572a2704ab977844a514d2cab4a6",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a8332f13eec2572a2704ab977844a514d2cab4a6",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "125d5251d07955d8e17be7d8e28134ebc41e466f",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "43277211929",
+  "dispatchedRunId": 43277244730,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43277244730",
+  "dispatchedRunHeadSha": "a8332f13eec2572a2704ab977844a514d2cab4a6",
+  "dispatchedAt": "2026-11-12T18:11:30.189Z",
+  "resolvedAt": "2026-11-12T18:11:37.148Z"
+}

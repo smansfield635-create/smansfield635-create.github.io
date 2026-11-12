@@ -188,6 +188,10 @@ function articulatedKernel(){
    for(const ix of movable)reference[ix]=next[ix];
   }
   const sourceCandidate={...source,vertices:source.vertices};
+  // Source identity must be independently validated before any solver step.
+  const sourceGate=deps.verifyCandidate(source,sourceCandidate,spec.manifest,{clearance:0});
+  if(sourceGate.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2")
+   return {status:"SOURCE_GEOMETRY_HARD_STOP",verification:sourceGate,frozenSpecimens:0};
   const initial=deps.exhaustiveCollisionCensus(source,sourceCandidate,spec.manifest,{clearance:0});
   if(initial.result!=="PASS_COLLISIONS")return {status:"SOURCE_GEOMETRY_HARD_STOP",witness:initial.collisions[0],frozenSpecimens:0};
   const dHat=0.002,clearance=0.001290;
@@ -278,6 +282,13 @@ function articulatedKernel(){
      feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};break;
     }
     if(!feasible)continue;
+    // Every accepted incremental state must also retain the protected collar,
+    // topology and face orientation, not merely be intersection-free.
+    const geometryGate=deps.verifyCandidate(source,{...source,vertices:next},spec.manifest,{clearance:0});
+    if(geometryGate.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2"){
+     lastWitness=geometryGate.witness||{kind:"INCREMENTAL_GEOMETRY_REJECTED"};
+     continue;
+    }
     const energy=objective(next);
     if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;break;}
    }

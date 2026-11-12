@@ -137,7 +137,151 @@ function articulatedKernel(){
   if(maxResidual>stepTolerance*10)return {status:"CONSTRAINED_TRAJECTORY_NOT_REACHED",residual:maxResidual,acceptedIterations,witness:lastWitness,frozenSpecimens:0};
   return {status:"MECHANICAL_CANDIDATE_UNFROZEN",candidate,verification,preflight,acceptedIterations,maxResidual,frozenSpecimens:0,sourceFaceAnchors:anchors,nearFar:frame.nearFar};
  }
- return {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter};
+
+ // Gen3243: one frozen source-H1 / IPC barrier method. This builder never certifies
+ // its own output: independent full-population verification is mandatory.
+ function collisionAwareHalfStep(source,spec,deps){
+  if(!deps?.triangleDistance||!deps?.exhaustiveCollisionCensus||!deps?.articulationFidelity||!deps?.verifyCandidate)
+   throw Error("GEN3243_INDEPENDENT_GEOMETRY_DEPENDENCIES_REQUIRED");
+  if(spec?.trialFraction!==undefined&&spec.trialFraction!==0.5)throw Error("FROZEN_HALF_STEP_MISMATCH");
+  if(spec?.barrierActivation!==undefined&&spec.barrierActivation!==0.002)throw Error("FROZEN_IPC_ACTIVATION_MISMATCH");
+  if(spec?.barrierWeight!==undefined&&spec.barrierWeight!==1)throw Error("FROZEN_IPC_WEIGHT_MISMATCH");
+  const frame=kinematicFrame(sourceAnchors(source,spec),spec.trajectory||{});
+  const skin=proposedSkin(source,spec.manifest,frame),movable=skin.movable;
+  if(spec.requireR63!==false&&movable.length!==200)throw Error("FROZEN_200_MOVABLE_VERTEX_MISMATCH");
+  const target=source.vertices.map((p,i)=>add(p,scale(sub(skin.desired[i],p),0.5)));
+  const free=new Set(movable),roleByVertex=new Map();
+  for(const ix of movable){
+   const p=source.vertices[ix];
+   const role=frame.from.slice(0,3).map((a,i)=>({...closestSegment(p,a,frame.from[i+1]),i}))
+    .sort((a,b)=>a.distance-b.distance||a.i-b.i)[0].i;
+   roleByVertex.set(ix,role);
+  }
+  const retired=new Set(spec.manifest.retiredFaceIds.map(String));
+  const patch=source.faces.filter(f=>retired.has(String(f.id)));
+  const protectedFaces=source.faces.filter(f=>!retired.has(String(f.id)));
+  const edges=new Map();
+  for(const f of patch)for(let k=0;k<3;k++){
+   const a=f.indices[k],b=f.indices[(k+1)%3],key=[Math.min(a,b),Math.max(a,b)].join(":");
+   if(!edges.has(key)){
+    const length=dist(source.vertices[a],source.vertices[b]);
+    if(!(length>0))throw Error("DEGENERATE_SOURCE_EDGE");
+    edges.set(key,{a,b,weight:1/length});
+   }
+  }
+  const adjacency=new Map(movable.map(i=>[i,[]]));
+  for(const {a,b,weight} of edges.values()){
+   if(free.has(a))adjacency.get(a).push({other:b,weight});
+   if(free.has(b))adjacency.get(b).push({other:a,weight});
+  }
+  // Fixed graph-H1 quadratic: target fidelity plus unit source-edge smoothness.
+  // A fixed number of Jacobi iterations provides a deterministic unconstrained
+  // reference, not a separate candidate or a starting penetrated mesh.
+  const reference=source.vertices.map(p=>[0,0,0]);
+  for(let it=0;it<320;it++){
+   const next=reference.map(v=>v.slice());
+   for(const ix of movable){
+    const ns=adjacency.get(ix),sum=ns.reduce((v,e)=>v+e.weight,0);
+    for(let k=0;k<3;k++)next[ix][k]=((target[ix][k]-source.vertices[ix][k])+
+     ns.reduce((v,e)=>v+e.weight*reference[e.other][k],0))/(1+sum);
+   }
+   for(const ix of movable)reference[ix]=next[ix];
+  }
+  const sourceCandidate={...source,vertices:source.vertices};
+  const initial=deps.exhaustiveCollisionCensus(source,sourceCandidate,spec.manifest,{clearance:0});
+  if(initial.result!=="PASS_COLLISIONS")return {status:"SOURCE_GEOMETRY_HARD_STOP",witness:initial.collisions[0],frozenSpecimens:0};
+  const dHat=0.002,clearance=0.001290;
+  const pairs=[];
+  for(let i=0;i<patch.length;i++)for(const b of [...patch.slice(i+1),...protectedFaces]){
+   const a=patch[i];if(a.indices.some(v=>b.indices.includes(v)))continue;
+   pairs.push({a,b,indices:[...new Set([...a.indices,...b.indices])].filter(v=>free.has(v))});
+  }
+  const triangles=(vertices,f)=>f.indices.map(ix=>vertices[ix]);
+  const barrier=d=>{
+   if(d>=dHat)return 0;
+   if(d<=0)return Infinity;
+   const x=d-dHat;return -x*x*Math.log(d/dHat);
+  };
+  const objective=vertices=>{
+   let value=0;
+   for(const ix of movable){
+    const u=sub(vertices[ix],source.vertices[ix]),d=sub(target[ix],source.vertices[ix]);
+    value+=dot(sub(u,d),sub(u,d));
+   }
+   for(const {a,b,weight} of edges.values()){
+    const ua=sub(vertices[a],source.vertices[a]),ub=sub(vertices[b],source.vertices[b]);
+    value+=weight*dot(sub(ua,ub),sub(ua,ub));
+   }
+   for(const pair of pairs){
+    const d=deps.triangleDistance(triangles(vertices,pair.a),triangles(vertices,pair.b));
+    if(d<dHat){const v=barrier(d);if(!Number.isFinite(v))return Infinity;value+=v;}
+   }
+   return value;
+  };
+  let vertices=source.vertices.map(p=>p.slice()),lastWitness=null,iterations=0;
+  // Deterministic descent from the original nonintersecting R63 only.
+  // The full-pair CCD safeguard checks intermediate positions, not just endpoints.
+  for(let it=0;it<120;it++){
+   const active=[];
+   for(const pair of pairs){
+    const d=deps.triangleDistance(triangles(vertices,pair.a),triangles(vertices,pair.b));
+    if(d<dHat)active.push(pair);
+   }
+   const gradient=new Map(movable.map(ix=>{
+    const u=sub(vertices[ix],source.vertices[ix]),d=sub(target[ix],source.vertices[ix]);
+    const ns=adjacency.get(ix);
+    return [ix,u.map((v,k)=>2*(v-d[k]+ns.reduce((sum,e)=>sum+e.weight*(v-(vertices[e.other][k]-source.vertices[e.other][k])),0)))];
+   }));
+   // Finite differences apply only to the barrier of geometrically active pairs.
+   // This avoids approximating contact with triangle centroids or bounding boxes.
+   const h=1e-6;
+   for(const pair of active){
+    const local=pair.indices;
+    const contactEnergy=()=>barrier(deps.triangleDistance(triangles(vertices,pair.a),triangles(vertices,pair.b)));
+    for(const ix of local)for(let k=0;k<3;k++){
+     vertices[ix][k]+=h;const plus=contactEnergy();
+     vertices[ix][k]-=2*h;const minus=contactEnergy();
+     vertices[ix][k]+=h;
+     if(!Number.isFinite(plus)||!Number.isFinite(minus))return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:"BARRIER_NUMERICAL_INSTABILITY",iterations:it,frozenSpecimens:0};
+     gradient.get(ix)[k]+=(plus-minus)/(2*h);
+    }
+   }
+   const gradientNorm=Math.sqrt([...gradient.values()].reduce((sum,g)=>sum+dot(g,g),0));
+   if(!Number.isFinite(gradientNorm))return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:"NONFINITE_GRADIENT",iterations:it,frozenSpecimens:0};
+   if(gradientNorm<1e-8)break;
+   const oldEnergy=objective(vertices),direction=new Map([...gradient].map(([ix,g])=>[ix,scale(g,-1/Math.max(1,gradientNorm))]));
+   let accepted=false;
+   for(let backtrack=0;backtrack<22;backtrack++){
+    const alpha=Math.pow(0.5,backtrack)*0.025;
+    const next=vertices.map(p=>p.slice());
+    for(const ix of movable)next[ix]=add(vertices[ix],scale(direction.get(ix),alpha));
+    // Conservative full-population continuous collision detection by
+    // subdivision, including all intermediate states on each proposed move.
+    let feasible=true;
+    for(let t=1;t<=16;t++){
+     const intermediate=vertices.map((p,i)=>free.has(i)?add(p,scale(sub(next[i],p),t/16)):p);
+     const census=deps.exhaustiveCollisionCensus(source,{...source,vertices:intermediate},spec.manifest,{clearance:0});
+     if(census.result!=="PASS_COLLISIONS"){feasible=false;lastWitness=census.collisions[0];break;}
+    }
+    if(!feasible)continue;
+    const energy=objective(next);
+    if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;break;}
+   }
+   if(!accepted)break;
+  }
+  const candidate={...source,vertices};
+  let mechanical;
+  try{mechanical=deps.verifyCandidate(source,candidate,spec.manifest,{clearance});}
+  catch(e){return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:String(e.message),iterations,frozenSpecimens:0};}
+  const census=deps.exhaustiveCollisionCensus(source,candidate,spec.manifest,{clearance});
+  const fidelity=deps.articulationFidelity(source,candidate,target,movable,roleByVertex);
+  if(mechanical.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2"||census.result!=="PASS_COLLISIONS"||fidelity.result!=="PASS_FIDELITY")
+   return {status:"INCONCLUSIVE_FAIL_CLOSED",mechanical,census,fidelity,iterations,lastWitness,frozenSpecimens:0};
+  return {status:"PASS_METHOD_FEASIBILITY_ONLY",mechanical,census,fidelity,iterations,frozenSpecimens:0};
+ }
+ return {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep};
 }
-export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter}=articulatedKernel();
+export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep}=articulatedKernel();
 export function construct(source,spec){return solveArticulatedForequarter(source,spec,independent)}
+
+export function constructGen3243(source,spec){return collisionAwareHalfStep(source,spec,independent)}

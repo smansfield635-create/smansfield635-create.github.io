@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-12T20:23:46Z",
+  "generatedAt": "2026-11-12T21:25:04Z",
   "window": {
-    "start": "2026-08-14T20:23:46Z",
-    "end": "2026-11-12T20:23:46Z"
+    "start": "2026-08-14T21:25:04Z",
+    "end": "2026-11-12T21:25:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3883,
-    "visits": 1161,
+    "pageLoads": 3873,
+    "visits": 1151,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3883,
-        "visits": 1161
+        "pageLoads": 3873,
+        "visits": 1151
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 901,
-        "visits": 661
+        "pageLoads": 891,
+        "visits": 651
       },
       "/governance/": {
         "pageLoads": 40,
@@ -186,13 +186,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -222,19 +222,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -309,8 +309,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 610,
-        "visits": 610
+        "pageLoads": 600,
+        "visits": 600
       },
       "diamondgatebridge.com": {
         "pageLoads": 2722,

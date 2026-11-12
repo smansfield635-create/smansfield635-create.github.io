@@ -1,0 +1,135 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3238_FROZEN_MEADOW_LAST_MILE_RELEASE_FINALIZATION_20261112_001",
+  "canonicalAdmissionGeneration": 3240,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewedBaselineHead": "fe367bc754a444f25826a6e2c6dc736b17bcc8ed",
+  "productSourceHead": "125d5251d07955d8e17be7d8e28134ebc41e466f",
+  "preAnchorReleaseIndexHead": "561f5d3cc54c4009e7a6e8226d4280b8b824d955",
+  "reviewScope": "SOURCE_BOUND_SAME_WORLD_CONTINUITY: Eleven canonical same-world invariants retained by unchanged globe, terrain, coast, rocks, water, trees, navigation, input and route sources. Native frozen meadow quota and complete software-WebGL grass root allocation/upload verified. This does not establish the aesthetic naturalness of the newly planted positive-X middle corridor, physical Android FPS, or a replay of the historical Anchor film.",
+  "ownerDecision": {
+    "intent": "PUBLISH_GEN3238_FROZEN_MEADOW_THEN_OWNER_LIVE_KEEP_ADJUST_ROLLBACK",
+    "sourceIssue": 7340,
+    "sourceCommentId": 6811871752,
+    "currentHandoffCommentId": 6833748889,
+    "beforeAfterScreenshotsRequired": false,
+    "prePublicationVisualApprovalRequired": false,
+    "physicalAndroidReviewed": false,
+    "publicationPerformed": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.grassland-meadow-coverage.v1.test.mjs",
+      "sha256": "38ad173d8823e439f9fb0456f84466c702aaa9ad1ae0c09e5cc5d8b1897dca7d",
+      "gitBlob": "faced001a04ea2be4361c7a8f48fbafd56f0eb7c",
+      "sourceRole": "UNCHANGED_FIRST_PARTY_NATIVE_VALIDATION; included because current Anchor gate classifies h-earth-3d/validation as experience"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "656c3c36e42984dead2fc846cf3a22ee80f1b8509ca548b90a477401f552b227",
+      "gitBlob": "7db2ea6c002c44471546ade5dd4ec49e7e053605"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "f510134675cd4dc87ee876ee55d05d02051d2c7f8d344c9361b64bb6e64bb13d",
+      "gitBlob": "ac0a70ba41d346171480328a9a20d9bb58bca14b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "c40eff3dfda75aa8e86c4a8ea33062751b1845a4e2d8d482088725b6f6ad5397",
+      "gitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85"
+    }
+  ],
+  "firstPartyEvidence": {
+    "nativeQuota": {
+      "originalRootsUnchanged": 3462215,
+      "addedRoots": 343076,
+      "allRoots": 3805291,
+      "frozenMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+      "quotaShortfall": 0
+    },
+    "softwareWebGL": {
+      "runId": 43286740091,
+      "artifactId": 13975981566,
+      "verifierHead": "ad142798550a42872264d58682b04779af8256e4",
+      "productHead": "125d5251d07955d8e17be7d8e28134ebc41e466f",
+      "result": "PASS",
+      "actualRoots": 3805291,
+      "gpuRequestedBytes": 60884656,
+      "gpuObservedBufferBytes": 60884656,
+      "gpuUploadedBytes": 60884656,
+      "gpuAllocationVerified": true,
+      "allocationGlError": 0,
+      "uploadGlError": 0,
+      "perFrameUploadBytes": 0,
+      "worldRebuildCount": 0,
+      "renderedViews": 4,
+      "capturedViewXRange": [
+        -134.282,
+        -120.622
+      ],
+      "positiveXMeadowDirectlyObserved": false,
+      "physicalAndroidFpsMeasured": false
+    }
+  },
+  "sourceIdentity": {
+    "originalAcceptedRoots": 3462215,
+    "addedRoots": 343076,
+    "totalRoots": 3805291,
+    "newGrassOwnerGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "oldIndexCacheRevision": "?rev=sha-fd95cb6905ce",
+    "newIndexCacheRevision": "?rev=sha-7cb62866153d",
+    "frozenMapPreserved": true,
+    "terrainCoastWaterTreesNavigationAndRouteUnchanged": true,
+    "releaseFinalizationChangedPaths": [
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/experience-anchor/receipts/h-earth-gen3238-meadow-release-20261112.json"
+    ],
+    "productSourceFileMutationUnderThisRelease": false,
+    "oldSupplementCacheRevision": "?rev=sha-56b76da04d1f",
+    "newSupplementCacheRevision": "?rev=sha-ac0a70ba41d3"
+  },
+  "comparison": {
+    "anchorObserved": "Historical accepted canonical eleven-invariant source-bound anchor. Visual evidence paths are inherited historical same-world proxies, not new Gen3238 meadow screenshots.",
+    "sourceDelta": "Release finalization updates both changed grass-module cache identities (single-owner vegetation and grass-continuity supplement) and the evidence receipt only; the exact Gen3238 source is preserved.",
+    "acceptanceBoundary": "Same-world source continuity and software GPU residency supported; middle-corridor visual acceptance and Android performance pending live owner review. The current hard Anchor gate classifies new h-earth-3d/validation native test as an experience path, so its exact unchanged source digest is included without treating that test as a visual experience."
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+    "HISTORICAL_VISUAL_PROXY_IS_NOT_A_NEW_MEADOW_CAPTURE",
+    "ACTUAL_RENDERED_GEN3238_VIEWS_AT_NEGATIVE_X_NOT_INSIDE_POSITIVE_X_TARGET_MEADOW",
+    "POSITIVE_X_MEADOW_NATURALNESS_NOT_VISUALLY_ACCEPTED",
+    "ANDROID_HARDWARE_FPS_UNMEASURED",
+    "MERGE_DEPLOYMENT_AND_PUBLICATION_NOT_AUTHORIZED_BY_THIS_RECEIPT"
+  ]
+}

@@ -434,6 +434,128 @@ export async function buildWideExistingGrassTrial({
  return {tiles:[...tiles.values()],receipt:{...receipt,contactCount:added}};
 }
 
+/** Gen3238: authenticated one-metre ecological meadow, additive only.
+ * The archived freeze defines every eligible cell and its quota; runtime
+ * checks remain responsible for each individual root contact. */
+const FROZEN_MEADOW_SHA256='a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015';
+const FROZEN_MEADOW_ROOTS=343076;
+const FROZEN_MEADOW_BASE_ROOTS=3462215;
+const FROZEN_MEADOW_ASSET=new URL('../../../../h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz',import.meta.url);
+export async function loadFrozenEcologicalMeadow({fetchImpl=fetch}={}){
+ const response=await fetchImpl(FROZEN_MEADOW_ASSET.href);
+ if(!response?.ok)throw Error('FROZEN_MEADOW_ASSET_UNAVAILABLE');
+ const bytes=new Uint8Array(await response.arrayBuffer());
+ if(bytes.length!==415483)throw Error('FROZEN_MEADOW_COMPRESSED_LENGTH_MISMATCH');
+ if(!globalThis.crypto?.subtle)throw Error('FROZEN_MEADOW_CRYPTO_UNAVAILABLE');
+ const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
+ if(digest!==FROZEN_MEADOW_SHA256)throw Error('FROZEN_MEADOW_COMPRESSED_SHA256_MISMATCH');
+ if(typeof DecompressionStream!=='function')throw Error('FROZEN_MEADOW_DECOMPRESSOR_UNAVAILABLE');
+ const text=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+ let map;try{map=JSON.parse(text)}catch{throw Error('FROZEN_MEADOW_JSON_INVALID')}
+ return map;
+}
+export async function buildFrozenEcologicalMeadow({
+ existingTiles,visibleSurface,geology,frozenMap=null,
+ yieldControl=async()=>{},onProgress=()=>{}
+}={}){
+ if(!Array.isArray(existingTiles)||typeof visibleSurface?.sample!=='function'||
+  typeof visibleSurface?.admitGround!=='function'||typeof geology?.sampleWaterAt!=='function')
+  throw Error('FROZEN_MEADOW_INPUT_INVALID');
+ const map=frozenMap??await loadFrozenEcologicalMeadow();
+ if(map?.schema!=='H_EARTH_FROZEN_POSITIVE_X_DRY_MEADOW_COVERAGE_MAP_V1'||
+  map.cells?.length!==76874||!Array.isArray(map.perPhysicalTile)||
+  map.parameters?.analysisContextBounds?.join(',')!=='16,-559,254,-236')
+  throw Error('FROZEN_MEADOW_MAP_IDENTITY_MISMATCH');
+ const originalTotal=existingTiles.reduce((n,t)=>n+t.count,0);
+ if(originalTotal!==FROZEN_MEADOW_BASE_ROOTS)throw Error('FROZEN_MEADOW_BASE_POPULATION_DRIFT:'+originalTotal);
+ const hash=(x,z,salt=3238)=>habitatHash(x,z,salt)/4294967296;
+ const count=new Map(),physical=new Map(),occupied=new Map();
+ const cellKey=(x,z)=>Math.floor(x)+':'+Math.floor(z);
+ const tileKey=(x,z)=>Math.floor(x/4)*4+':'+Math.floor(z/4)*4;
+ // The 12cm hash prevents duplicate roots without discarding or moving accepted roots.
+ const nearKey=(x,z)=>Math.floor(x/.12)+':'+Math.floor(z/.12);
+ const remember=(x,z)=>{const key=nearKey(x,z);let a=occupied.get(key);if(!a){a=[];occupied.set(key,a)}a.push(x,z)};
+ const near=(x,z)=>{const a=Math.floor(x/.12),b=Math.floor(z/.12);
+  for(let dz=-1;dz<=1;dz++)for(let dx=-1;dx<=1;dx++){
+   const v=occupied.get((a+dx)+':'+(b+dz));if(!v)continue;
+   for(let j=0;j<v.length;j+=2)if(Math.hypot(v[j]-x,v[j+1]-z)<.085)return true;
+  }return false;
+ };
+ for(const tile of existingTiles){
+  const physicalKey=tile.minX+':'+tile.minZ;
+  physical.set(physicalKey,(physical.get(physicalKey)??0)+tile.count);
+  if(tile.minX>=254||tile.minX+4<=16||tile.minZ>=-236||tile.minZ+4<=-559)continue;
+  for(let i=0;i<tile.packed.length;i+=4){
+   const x=tile.packed[i],z=tile.packed[i+2];
+   if(x<16||x>=254||z< -559||z>= -236)continue;
+   const key=cellKey(x,z);count.set(key,(count.get(key)??0)+1);remember(x,z);
+  }
+ }
+ let expected=0,protectedCells=0;
+ for(const c of map.cells){
+  if(!Number.isInteger(c.x)||!Number.isInteger(c.z)||c.x<16||c.x>=254||c.z< -559||c.z>=-236||
+   !Number.isInteger(c.sourceRoots)||!Number.isInteger(c.additionalRoots)||c.additionalRoots<0||
+   (count.get(c.x+':'+c.z)??0)!==c.sourceRoots)throw Error('FROZEN_MEADOW_CELL_OCCUPANCY_DRIFT:'+c.x+':'+c.z);
+  if(c.additionalRoots&&!c.admitted)throw Error('FROZEN_MEADOW_PROTECTED_ADMISSION:'+c.x+':'+c.z);
+  if(c.additionalRoots&&(!c.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(c.class)))
+   throw Error('FROZEN_MEADOW_PROTECTED_SOIL:'+c.x+':'+c.z);
+  if(!c.additionalRoots)protectedCells++;
+  if(c.sourceRoots+c.additionalRoots!==c.targetRoots&&c.additionalRoots)throw Error('FROZEN_MEADOW_CELL_QUOTA_INVALID');
+  expected+=c.additionalRoots;
+ }
+ if(expected!==FROZEN_MEADOW_ROOTS)throw Error('FROZEN_MEADOW_QUOTA_DRIFT:'+expected);
+ for(const t of map.perPhysicalTile){
+  if((physical.get(t.tile)??0)!==t.physicalRootsBefore||t.physicalRootsAfter>allocation.maximumTileRoots)
+   throw Error('FROZEN_MEADOW_PHYSICAL_TILE_DRIFT:'+t.tile);
+ }
+ let added=0,candidates=0,filledCells=0,shortfallRoots=0;
+ const underfills=[],rejected={duplicate:0,terrain:0,slope:0,groundAdmission:0,water:0,tileCapacity:0};
+ const tiles=new Map();let nextYieldAt=performance.now()+20;
+ // A frozen cell's original root count is never altered. Native contact checks
+ // may reject additional candidates; all differences are carried in the receipt.
+ for(const c of map.cells){
+  if(c.additionalRoots===0)continue;
+  const cx=c.x,cz=c.z,key=cx+':'+cz;
+  let have=c.sourceRoots,placed=0;
+  // Four deterministic, jittered 6x6 lattices supply alternatives around
+  // accepted roots, each respecting the unchanged 8.5cm proximity threshold.
+  for(let k=0;k<144&&placed<c.additionalRoots;k++){
+   const pass=Math.floor(k/36),j=(k*17+pass*11)%36,ix=j%6,iz=Math.floor(j/6);
+   const x=Math.fround(cx+(ix+.14+.72*hash(cx*89+ix+pass*7,cz*97+iz-pass*11,3238))/6);
+   const z=Math.fround(cz+(iz+.14+.72*hash(cx*101+iz-pass*5,cz*103+ix+pass*13,3241))/6);
+   candidates++;
+   if(near(x,z)){rejected.duplicate++;continue}
+   const hit=visibleSurface.sample(x,z);
+   if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)){rejected.terrain++;continue}
+   if(hit.slope>1.05){rejected.slope++;continue}
+   if(!visibleSurface.admitGround(x,z,hit)){rejected.groundAdmission++;continue}
+   const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
+   if(water&&water.y>local.y+.04){rejected.water++;continue}
+   const physicalKey=tileKey(x,z),already=physical.get(physicalKey)??0;
+   if(already>=allocation.maximumTileRoots){rejected.tileCapacity++;continue}
+   const minX=Math.floor(x/4)*4,minZ=Math.floor(z/4)*4,id='FROZEN_ECOLOGICAL_MEADOW:'+physicalKey;
+   if(!tiles.has(id))tiles.set(id,{id,minX,minZ,roots:[]});
+   tiles.get(id).roots.push({x,y:Math.fround(hit.y),z,
+    angle:hash(cx*109+k,cz*113-k,3247)*Math.PI*2,
+    seed:(Math.imul(cx*127+k,73856093)^Math.imul(cz*131+k,19349663)^3238)>>>0,
+    slope:hit.slope,triangleId:hit.triangleId,region:'FROZEN_ECOLOGICAL_MEADOW',support:hit.owner});
+   physical.set(physicalKey,already+1);remember(x,z);placed++;have++;added++;
+  }
+  if(placed)filledCells++;
+  if(placed!==c.additionalRoots){shortfallRoots+=c.additionalRoots-placed;underfills.push({x:cx,z:cz,expected:c.additionalRoots,placed,shortfall:c.additionalRoots-placed})}
+  if(performance.now()>=nextYieldAt){onProgress({phase:'frozen-ecological-meadow',addedRoots:added,quota:FROZEN_MEADOW_ROOTS});await yieldControl();nextYieldAt=performance.now()+20}
+ }
+ const receipt={schema:'H_EARTH_FROZEN_ECOLOGICAL_MEADOW_CONTACTS_v1',
+  sourceMapSha256:FROZEN_MEADOW_SHA256,frozenQuota:FROZEN_MEADOW_ROOTS,
+  acceptedRootsPreserved:originalTotal,addedRoots:added,contactCount:added,
+  finalRootCount:originalTotal+added,filledCells,deficitCells:map.cells.filter(c=>c.additionalRoots>0).length,
+  protectedOrUntouchedCells:protectedCells,candidates,rejected,
+  pointwiseShortfallRoots:shortfallRoots,pointwiseShortfallCells:underfills.length,
+  pointwiseUnderfills:underfills,originalRootOrderAndPackedBytesUnchanged:true,
+  physicalTileCap:allocation.maximumTileRoots,independentGpuProof:'PENDING'};
+ return {tiles:[...tiles.values()],receipt};
+}
+
 /** Extend only the existing ravine atlas from the roots actually installed.
  * Empty, wet and unsupported texels cannot gain soil; old coverage never falls. */
 export function buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt}={}){
@@ -540,7 +662,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
  const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);
  const originalRootCount=globalTiles.reduce((n,t)=>n+t.count,0),bankTiles=trusted?oasisBankTiles(originalRootCount):[],oasisRoots=bankTiles.reduce((n,t)=>n+t.count,0),baseTiles=Object.freeze([...globalTiles,...bankTiles]),baseRootCount=originalRootCount+oasisRoots;
- let tiles=baseTiles,entranceReceipt=null,woodlandSeamReceipt=null,wideGrassTrialReceipt=null,habitat=presentation.habitat;
+ let tiles=baseTiles,entranceReceipt=null,woodlandSeamReceipt=null,wideGrassTrialReceipt=null,frozenMeadowReceipt=null,habitat=presentation.habitat;
  if(entranceGrass){
   if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
   const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:runtimePlantingBaselineTiles(baseTiles),yieldControl});
@@ -556,7 +678,13 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,
    maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});
   const wideExtra=wide.tiles.length?planImmutableTiles(wide).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots})):[];
-  tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra]);
+  const meadow=await buildFrozenEcologicalMeadow({existingTiles:[...baseTiles,...extra,...seamExtra,...wideExtra],
+   visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,yieldControl,onProgress});
+  frozenMeadowReceipt=meadow.receipt;
+  if(meadow.receipt.pointwiseShortfallRoots!==0)throw Error('FROZEN_MEADOW_CONTACT_SHORTFALL:'+meadow.receipt.pointwiseShortfallRoots+':'+meadow.receipt.pointwiseShortfallCells);
+  const wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);
+  const meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));
+  tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra,...meadowExtra]);
   entranceReceipt=addition.receipt;woodlandSeamReceipt=seam.receipt;wideGrassTrialReceipt=wide.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);
   habitat=buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt:(x,z)=>{
@@ -613,7 +741,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of mergeGrassRanges(fine)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;selectedFineRoots+=range.count;}
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,drawCallCount,submittedTriangles:(visibleCoarseRoots+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

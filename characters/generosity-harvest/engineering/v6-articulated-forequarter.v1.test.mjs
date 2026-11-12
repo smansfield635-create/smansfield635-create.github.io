@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity} from './v6-articulated-independent-verifier.v1.mjs';
-import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct,constructGen3243} from './v6-articulated-forequarter.v1.mjs';
+import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct,constructGen3243,collisionAwareHalfStep} from './v6-articulated-forequarter.v1.mjs';
 import {verifySourceBytes,prepareNativeFourCameraReview,ACCEPTED_R63_SHA256} from './v6-articulated-native-bridge.v1.mjs';
 import {createHash} from 'node:crypto';
 
@@ -154,4 +154,26 @@ test('Gen3243 protected clearance is not incorrectly imposed between new faces',
  assert.equal(census.collisionCount,0);
  assert.equal(census.pairsChecked,3);
  assert.ok(census.protectedMinimum>1);
+});
+
+// Gen3247: instrumentation-only synthetic parity. No accepted R63 specimen is run in this test.
+test('Gen3247 passive diagnostics cannot alter the frozen synthetic solver result',()=>{
+ const source=bodyPatch();
+ const anchors=sourceAnchors(source,{manifest:patchManifest,anchors:toyAnchors,requireR63:false});
+ const spec={manifest:patchManifest,anchors:toyAnchors,requireR63:false,trajectory:{
+  shoulder:anchors.scapula,
+  elbow:[anchors.elbow[0],anchors.elbow[1]+0.006,anchors.elbow[2]],
+  wrist:[anchors.forearm[0],anchors.forearm[1],anchors.forearm[2]+0.005],
+  paw:[anchors.paw[0]+0.004,anchors.paw[1],anchors.paw[2]]
+ }};
+ const fakeFidelity=()=>({result:'FAIL_FIDELITY',progress:0,relativeError:1,segmentProgress:[0,0,0]});
+ const deps={triangleDistance,exhaustiveCollisionCensus,articulationFidelity:fakeFidelity,verifyCandidate};
+ const baseline=collisionAwareHalfStep(source,spec,deps);
+ const events=[];
+ const observed=collisionAwareHalfStep(source,{...spec,onTrace:event=>events.push(event)},deps);
+ assert.deepEqual(observed,baseline);
+ assert.ok(events.some(e=>e.event==='initial_state'));
+ assert.ok(events.every(e=>e.schema==='GH_GEN3247_IPC_TRACE_v1'));
+ const ignoringErrors=collisionAwareHalfStep(source,{...spec,onTrace:()=>{throw Error('OBSERVER_FAILURE');}},deps);
+ assert.deepEqual(ignoringErrors,baseline);
 });

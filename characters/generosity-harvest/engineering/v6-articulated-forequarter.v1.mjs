@@ -138,7 +138,6 @@ function articulatedKernel(){
   return {status:"MECHANICAL_CANDIDATE_UNFROZEN",candidate,verification,preflight,acceptedIterations,maxResidual,frozenSpecimens:0,sourceFaceAnchors:anchors,nearFar:frame.nearFar};
  }
 
-
  // Gen3243: one frozen source-H1 / IPC barrier method. This builder never certifies
  // its own output: independent full-population verification is mandatory.
  function collisionAwareHalfStep(source,spec,deps){
@@ -366,6 +365,5 @@ function articulatedKernel(){
 }
 export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep}=articulatedKernel();
 export function construct(source,spec){return solveArticulatedForequarter(source,spec,independent)}
-
 
 export function constructGen3243(source,spec){return collisionAwareHalfStep(source,spec,independent)}

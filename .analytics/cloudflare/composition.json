@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-12T08:28:19Z",
+  "generatedAt": "2026-11-12T09:26:14Z",
   "window": {
-    "start": "2026-10-13T08:28:19Z",
-    "end": "2026-11-12T08:28:19Z"
+    "start": "2026-10-13T09:26:14Z",
+    "end": "2026-11-12T09:26:14Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 538,
-        "visits": 538
+        "pageLoads": 528,
+        "visits": 528
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 452,
-        "visits": 383
+        "pageLoads": 442,
+        "visits": 373
       },
       {
         "value": "/",
@@ -53,11 +53,6 @@
         "visits": 15
       },
       {
-        "value": "/showroom/globe/",
-        "pageLoads": 21,
-        "visits": 21
-      },
-      {
         "value": "/release-proof/",
         "pageLoads": 20,
         "visits": 20
@@ -73,9 +68,19 @@
         "visits": 20
       },
       {
+        "value": "/showroom/globe/",
+        "pageLoads": 11,
+        "visits": 11
+      },
+      {
         "value": "/showroom/globe/earth/",
         "pageLoads": 11,
         "visits": 11
+      },
+      {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/preflight/app/",
@@ -148,17 +153,17 @@
         "visits": 1
       },
       {
+        "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/laws/test/reverse-audit/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -213,12 +218,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -306,18 +311,13 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1341,
-        "visits": 1341
+        "pageLoads": 1351,
+        "visits": 1351
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 128,
+        "pageLoads": 118,
         "visits": 0
-      },
-      {
-        "value": "bing.com",
-        "pageLoads": 17,
-        "visits": 17
       },
       {
         "value": "www.google.com",
@@ -328,13 +328,18 @@
         "value": "www.facebook.com",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "bing.com",
+        "pageLoads": 7,
+        "visits": 7
       }
     ],
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1444,
-        "visits": 1336
+        "pageLoads": 1404,
+        "visits": 1296
       },
       {
         "value": "CN",
@@ -348,7 +353,7 @@
       },
       {
         "value": "BR",
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 10
       },
       {
@@ -497,8 +502,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1437,
-        "visits": 1329
+        "pageLoads": 1497,
+        "visits": 1379
       }
     ],
     "siteTag": [

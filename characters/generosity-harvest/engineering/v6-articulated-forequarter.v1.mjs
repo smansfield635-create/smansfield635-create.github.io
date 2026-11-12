@@ -255,13 +255,27 @@ function articulatedKernel(){
     const alpha=Math.pow(0.5,backtrack)*0.025;
     const next=vertices.map(p=>p.slice());
     for(const ix of movable)next[ix]=add(vertices[ix],scale(direction.get(ix),alpha));
-    // Conservative full-population continuous collision detection by
-    // subdivision, including all intermediate states on each proposed move.
+    // Conservative continuous check: triangle separation is Lipschitz under
+    // linear vertex motion. A whole time interval is certified only if its
+    // endpoint separation exceeds twice its maximum vertex travel.
+    // Ambiguous intervals subdivide; unresolved intervals reject the step.
+    const certifiedPair=(pair,left,right,depth)=>{
+     const travel=Math.max(...[...pair.a.indices,...pair.b.indices].map(ix=>
+      dist(add(vertices[ix],scale(sub(next[ix],vertices[ix]),left)),
+           add(vertices[ix],scale(sub(next[ix],vertices[ix]),right)))));
+     const at=t=>{
+      const tri=f=>f.indices.map(ix=>add(vertices[ix],scale(sub(next[ix],vertices[ix]),t)));
+      return deps.triangleDistance(tri(pair.a),tri(pair.b));
+     };
+     const dl=at(left),dr=at(right);
+     if(Math.min(dl,dr)>2*travel+1e-10)return true;
+     if(dl<=1e-10||dr<=1e-10||depth>=24)return false;
+     const mid=(left+right)/2;
+     return certifiedPair(pair,left,mid,depth+1)&&certifiedPair(pair,mid,right,depth+1);
+    };
     let feasible=true;
-    for(let t=1;t<=16;t++){
-     const intermediate=vertices.map((p,i)=>free.has(i)?add(p,scale(sub(next[i],p),t/16)):p);
-     const census=deps.exhaustiveCollisionCensus(source,{...source,vertices:intermediate},spec.manifest,{clearance:0});
-     if(census.result!=="PASS_COLLISIONS"){feasible=false;lastWitness=census.collisions[0];break;}
+    for(const pair of pairs)if(!certifiedPair(pair,0,1,0)){
+     feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};break;
     }
     if(!feasible)continue;
     const energy=objective(next);

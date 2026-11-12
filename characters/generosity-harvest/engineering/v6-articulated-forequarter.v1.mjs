@@ -166,9 +166,16 @@ function articulatedKernel(){
    if(!edges.has(key)){
     const length=dist(source.vertices[a],source.vertices[b]);
     if(!(length>0))throw Error("DEGENERATE_SOURCE_EDGE");
-    edges.set(key,{a,b,weight:1/length});
+    edges.set(key,{a,b,length});
    }
   }
+  // Gen3242 frozen H1: (medianSourcePatchEdgeLength / sourceEdgeLength)^2.
+  // The prior inverse-length implementation was NOT equivalent and must not
+  // be used to consume the authorized R63 trial.
+  const lengths=[...edges.values()].map(e=>e.length).sort((a,b)=>a-b);
+  const mid=lengths.length>>1;
+  const median=lengths.length%2?lengths[mid]:(lengths[mid-1]+lengths[mid])/2;
+  for(const e of edges.values())e.weight=(median/e.length)**2;
   const adjacency=new Map(movable.map(i=>[i,[]]));
   for(const {a,b,weight} of edges.values()){
    if(free.has(a))adjacency.get(a).push({other:b,weight});

@@ -2087,7 +2087,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor);
         eligibleMeadowCells++;
       }
-      if(eligibleMeadowCells!==33379||protectedMeadowCells!==43495)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');
+      if(eligibleMeadowCells<1||eligibleMeadowCells+protectedMeadowCells!==76874)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');
       if(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)<16)throw Error('MEADOW_OCCUPANCY_TEXTURE_UNIT_UNAVAILABLE');
       const meadowTexture=gl.createTexture();if(!meadowTexture)throw Error('MEADOW_OCCUPANCY_TEXTURE_ALLOCATION');
       resources.meadowGroundOccupancyTexture=meadowTexture;

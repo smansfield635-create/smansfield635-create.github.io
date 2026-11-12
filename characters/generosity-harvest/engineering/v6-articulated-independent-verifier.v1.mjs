@@ -143,7 +143,14 @@ function verificationKernel(){
     if(a.indices.some(x=>b.indices.includes(x)))continue;
     // Clearance is a protected-surface criterion. NEW/NEW pairs require
     // zero intersection/contact but not the provisional protected clearance.
-    checked++;const w=geometryWitness(candidate,a,candidate,b,kept.has(String(b.id))?clearance:0,eps);
+    checked++;
+    const threshold=kept.has(String(b.id))?clearance:0;
+    const A=triangle(candidate,a),B=triangle(candidate,b);
+    // Exact-predicate-preserving broad phase: strictly separated AABBs
+    // cannot intersect or violate the applicable protected clearance.
+    if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+threshold<Math.min(...B.map(p=>p[k]))-eps||
+      Math.max(...B.map(p=>p[k]))+threshold<Math.min(...A.map(p=>p[k]))-eps))continue;
+    const w=geometryWitness(candidate,a,candidate,b,threshold,eps);
     if(w)return {result:"FAIL_MECHANICAL",witness:w,pairsChecked:checked,collarEdges:boundary.collarEdges.length};
    }
   }

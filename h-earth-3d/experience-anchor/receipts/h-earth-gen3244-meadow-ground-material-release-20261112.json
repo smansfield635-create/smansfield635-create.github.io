@@ -1,0 +1,120 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3244_MEADOW_MATERIAL_RELEASE_FINALIZATION_20261112_001",
+  "canonicalAdmissionGeneration": 3245,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewedBaselineHead": "14a1dab2d169a2accafc84163965fdaf0d5991bf",
+  "productSourceHead": "42fd4c65ea857766884bccb571747168effacd82",
+  "reviewScope": "SOURCE_BOUND_SAME_WORLD_CONTINUITY: only bounded occupied-meadow ground coloration added by unchanged Gen3244 renderer. Terrain geometry, coast, water, trees, grass population, globe, navigation and world continuity unchanged. This historical Anchor/source review DOES NOT establish current product native WebGL residency, physical Android performance, a full video replay, or the corrected meadow's visual naturalness; separately required release checks remain controlling.",
+  "ownerDecision": {
+    "intent": "PUBLISH_OCCUPANCY_DERIVED_MEADOW_MATERIAL_AFTER_SELECTED_GATES",
+    "sourceIssue": 7359,
+    "sourcePR": 7360,
+    "ownerReleaseCommentId": 6837832577,
+    "beforeAfterPackageRequired": false,
+    "newRootPlacement": false,
+    "physicalAndroidReviewed": false,
+    "publicationPerformed": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "449e36a62e479f0b85d3d7ef38a30787e78304e1b0b5f474bb7ed7caddb953e2",
+      "sourceRole": "ADMITTED_EXACT_RENDERER_CACHE_IDENTITY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "419c8731eea223cbfe320fa8b1db4acdbbcee6ab6c0eb6f15ff0212e50968cb0",
+      "gitBlob": "3fff04c58765a19bbe0570cf32ef82b3b7ec3ad8",
+      "sourceRole": "IMMUTABLE_ADMITTED_GEN3244_RENDERER"
+    }
+  ],
+  "firstPartyEvidence": {
+    "exactHeadPublicationPreflight": {
+      "runId": 43322557531,
+      "subjectHead": "42fd4c65ea857766884bccb571747168effacd82",
+      "result": "PASS",
+      "meaning": "PAYLOAD_PREFLIGHT_NOT_NATIVE_GPU_PROOF"
+    },
+    "originalGrassGpu": {
+      "runId": 43286740091,
+      "result": "PASS_FOR_ORIGINAL_3805291_ROOT_GRASS_OWNER",
+      "grassRoots": 3805291,
+      "gpuGrassBufferBytes": 60884656,
+      "currentMeadowMaterialGpuQualified": false
+    },
+    "earlierFactorStudy": {
+      "runId": 43307476838,
+      "result": "PASS_READ_ONLY_SOIL_PRESENTATION_COMPARISON_OF_OLD_PRODUCT",
+      "newMaterialShaderQualified": false
+    },
+    "currentCandidate": {
+      "head": "42fd4c65ea857766884bccb571747168effacd82",
+      "priorAnchorRun": 43322515766,
+      "priorAnchorFailure": "EXPERIENCE_CHANGE_WITHOUT_ANCHOR_RECEIPT",
+      "cp3dRun": 43322515792,
+      "cp3dFailure": "VERIFIED_PLANTING_TEMPLATE_LAYOUT:BARK_BEFORE_RENDERER_SURVIVAL",
+      "nativeMaterialGpuPass": false,
+      "androidFps": "UNMEASURED"
+    }
+  },
+  "sourceIdentity": {
+    "frozenRootCount": 3805291,
+    "originalVegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "frozenMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "immutableRendererGitBlob": "3fff04c58765a19bbe0570cf32ef82b3b7ec3ad8",
+    "previousIndexBlob": "7db2ea6c002c44471546ade5dd4ec49e7e053605",
+    "expectedModuleRevision": "?rev=sha-3fff04c58765",
+    "modifiedProductPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+    ],
+    "finalizationPaths": [
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/experience-anchor/receipts/h-earth-gen3244-meadow-ground-material-release-20261112.json"
+    ],
+    "noAdditionalGrass": true
+  },
+  "comparison": {
+    "anchorObserved": "Inherited original Anchor visual proxy and unchanged same-world navigation and geometry; no new material image or Android FPS acceptance.",
+    "sourceDelta": "Content-addressed import map rebind and truthful hard-Anchor source receipt only, independent of unchanged Gen3244 renderer and 3,805,291 grass roots.",
+    "acceptanceBoundary": "SOURCE_BOUND_ELEVEN_INVARIANT_REVIEW_ONLY; GPU_AND_OWNER_PERCEPTUAL_VALIDATION_PENDING"
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+    "NEW_GEN3244_RENDERED_MATERIAL_NATURALNESS_NOT_VISUALLY_ACCEPTED",
+    "CURRENT_PRODUCT_WEBGL_RESIDENCY_NOT_YET_PROVEN",
+    "ANDROID_HARDWARE_FPS_UNMEASURED",
+    "CP3D_INHERITED_BARK_HARNESS_FAILURE_BEFORE_RENDERER_TEST",
+    "MERGE_DEPLOYMENT_PUBLICATION_NOT_AUTHORIZED_BY_THIS_SOURCE_RECEIPT"
+  ]
+}

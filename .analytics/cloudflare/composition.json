@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-12T01:24:20Z",
+  "generatedAt": "2026-11-12T02:28:39Z",
   "window": {
-    "start": "2026-10-13T01:24:20Z",
-    "end": "2026-11-12T01:24:20Z"
+    "start": "2026-10-13T02:28:39Z",
+    "end": "2026-11-12T02:28:39Z"
   },
   "dimensions": {
     "requestPath": [
@@ -98,9 +98,9 @@
         "visits": 1
       },
       {
-        "value": "/campaigns/rob/",
+        "value": "/explore/",
         "pageLoads": 2,
-        "visits": 2
+        "visits": 0
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -108,9 +108,9 @@
         "visits": 2
       },
       {
-        "value": "/explore/",
+        "value": "/campaigns/rob/",
         "pageLoads": 2,
-        "visits": 0
+        "visits": 2
       },
       {
         "value": "/nine-summits-of-love/",
@@ -133,6 +133,11 @@
         "visits": 1
       },
       {
+        "value": "/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
@@ -148,11 +153,6 @@
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
@@ -163,17 +163,22 @@
         "visits": 1
       },
       {
+        "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/explore/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/waste/",
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -196,6 +201,11 @@
         "value": "/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/prelude/",
+        "pageLoads": 1,
+        "visits": 0
       },
       {
         "value": "/showroom/",
@@ -221,16 +231,6 @@
         "value": "/laws/research/evidence-and-sources/",
         "pageLoads": 1,
         "visits": 1
-      },
-      {
-        "value": "/frontier/waste/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/prelude/",
-        "pageLoads": 1,
-        "visits": 0
       },
       {
         "value": "/gauges/",
@@ -370,13 +370,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1243,
-        "visits": 1171
+        "pageLoads": 1150,
+        "visits": 1082
       },
       {
         "value": "mobile",
-        "pageLoads": 218,
-        "visits": 184
+        "pageLoads": 217,
+        "visits": 183
       },
       {
         "value": "tablet",
@@ -434,23 +434,23 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 882,
-        "visits": 881
+        "pageLoads": 858,
+        "visits": 857
       },
       {
         "value": "Windows",
-        "pageLoads": 258,
-        "visits": 191
+        "pageLoads": 221,
+        "visits": 172
       },
       {
         "value": "Android",
-        "pageLoads": 165,
-        "visits": 140
+        "pageLoads": 163,
+        "visits": 138
       },
       {
         "value": "Unknown",
-        "pageLoads": 86,
-        "visits": 74
+        "pageLoads": 70,
+        "visits": 58
       },
       {
         "value": "MacOSX",
@@ -459,8 +459,8 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 36,
-        "visits": 25
+        "pageLoads": 35,
+        "visits": 24
       }
     ],
     "bot": [
@@ -507,15 +507,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1484,
-        "visits": 1366
+        "pageLoads": 1544,
+        "visits": 1426
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1484,
-        "visits": 1366
+        "pageLoads": 1554,
+        "visits": 1416
       }
     ]
   }

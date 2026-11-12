@@ -141,7 +141,9 @@ function verificationKernel(){
    const a=renewed[i];
    for(const b of [...renewed.slice(i+1),...protectedFaces]){
     if(a.indices.some(x=>b.indices.includes(x)))continue;
-    checked++;const w=geometryWitness(candidate,a,candidate,b,clearance,eps);
+    // Clearance is a protected-surface criterion. NEW/NEW pairs require
+    // zero intersection/contact but not the provisional protected clearance.
+    checked++;const w=geometryWitness(candidate,a,candidate,b,kept.has(String(b.id))?clearance:0,eps);
     if(w)return {result:"FAIL_MECHANICAL",witness:w,pairsChecked:checked,collarEdges:boundary.collarEdges.length};
    }
   }

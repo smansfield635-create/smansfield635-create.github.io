@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity} from './v6-articulated-independent-verifier.v1.mjs';
-import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct} from './v6-articulated-forequarter.v1.mjs';
+import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct,constructGen3243} from './v6-articulated-forequarter.v1.mjs';
 import {verifySourceBytes,prepareNativeFourCameraReview,ACCEPTED_R63_SHA256} from './v6-articulated-native-bridge.v1.mjs';
 import {createHash} from 'node:crypto';
 
@@ -117,4 +117,13 @@ test('Gen3243 census checks full nonincident population and retains all witnesse
  assert.equal(result.result,'FAIL_COLLISIONS');
  assert.ok(result.collisions.length>=2);
  assert.ok(result.collisions.every(c=>c.pairClass==='NEW_NEW'));
+});
+
+test('Gen3243 rejects any alteration of the frozen half-step and IPC coefficients',()=>{
+ const src=bodyPatch();
+ const spec={manifest:patchManifest,anchors:toyAnchors,requireR63:false,trajectory:{
+  shoulder:[0,0,0],elbow:[0,0,1],wrist:[1,0,0],paw:[0,1,0]}};
+ assert.throws(()=>constructGen3243(src,{...spec,trialFraction:.25}),/FROZEN_HALF_STEP_MISMATCH/);
+ assert.throws(()=>constructGen3243(src,{...spec,barrierActivation:.003}),/FROZEN_IPC_ACTIVATION_MISMATCH/);
+ assert.throws(()=>constructGen3243(src,{...spec,barrierWeight:2}),/FROZEN_IPC_WEIGHT_MISMATCH/);
 });

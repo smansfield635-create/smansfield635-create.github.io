@@ -138,11 +138,16 @@ function articulatedKernel(){
   return {status:"MECHANICAL_CANDIDATE_UNFROZEN",candidate,verification,preflight,acceptedIterations,maxResidual,frozenSpecimens:0,sourceFaceAnchors:anchors,nearFar:frame.nearFar};
  }
 
+
  // Gen3243: one frozen source-H1 / IPC barrier method. This builder never certifies
  // its own output: independent full-population verification is mandatory.
  function collisionAwareHalfStep(source,spec,deps){
   if(!deps?.triangleDistance||!deps?.exhaustiveCollisionCensus||!deps?.articulationFidelity||!deps?.verifyCandidate)
    throw Error("GEN3243_INDEPENDENT_GEOMETRY_DEPENDENCIES_REQUIRED");
+  // Gen3247: observational-only callback. It cannot modify solver values or decisions.
+  const emit=typeof spec?.onTrace==='function' ? (event,detail)=>{
+   try{spec.onTrace({schema:'GH_GEN3247_IPC_TRACE_v1',event,...detail});}catch(_observerError){}
+  } : null;
   if(spec?.trialFraction!==undefined&&spec.trialFraction!==0.5)throw Error("FROZEN_HALF_STEP_MISMATCH");
   if(spec?.barrierActivation!==undefined&&spec.barrierActivation!==0.002)throw Error("FROZEN_IPC_ACTIVATION_MISMATCH");
   if(spec?.barrierWeight!==undefined&&spec.barrierWeight!==1)throw Error("FROZEN_IPC_WEIGHT_MISMATCH");
@@ -203,43 +208,57 @@ function articulatedKernel(){
    if(d<=0)return Infinity;
    const x=d-dHat;return -x*x*Math.log(d/dHat);
   };
+  let lastObjectiveTerms=null;
   const objective=vertices=>{
    let value=0;
+   let targetEnergy=0,h1Energy=0,barrierEnergy=0;
    for(const ix of movable){
     const u=sub(vertices[ix],source.vertices[ix]),d=sub(target[ix],source.vertices[ix]);
     value+=dot(sub(u,d),sub(u,d));
+    if(emit)targetEnergy+=dot(sub(u,d),sub(u,d));
    }
    for(const {a,b,weight} of edges.values()){
     const ua=sub(vertices[a],source.vertices[a]),ub=sub(vertices[b],source.vertices[b]);
     value+=weight*dot(sub(ua,ub),sub(ua,ub));
+    if(emit)h1Energy+=weight*dot(sub(ua,ub),sub(ua,ub));
    }
    for(const pair of pairs){
     const A=triangles(vertices,pair.a),B=triangles(vertices,pair.b);
     if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+dHat<=Math.min(...B.map(p=>p[k]))||
       Math.max(...B.map(p=>p[k]))+dHat<=Math.min(...A.map(p=>p[k]))))continue;
     const d=deps.triangleDistance(A,B);
-    if(d<dHat){const v=barrier(d);if(!Number.isFinite(v))return Infinity;value+=v;}
+    if(d<dHat){const v=barrier(d);if(!Number.isFinite(v))return Infinity;value+=v;if(emit)barrierEnergy+=v;}
    }
+   if(emit)lastObjectiveTerms={targetEnergy,h1Energy,barrierEnergy,total:value};
    return value;
   };
   let vertices=source.vertices.map(p=>p.slice()),lastWitness=null,iterations=0;
+  if(emit)emit('initial_state',{eligiblePairs:pairs.length,movableVertices:movable.length,patchFaces:patch.length,protectedFaces:protectedFaces.length,barrierActivation:dHat,protectedClearance:clearance});
   // Deterministic descent from the original nonintersecting R63 only.
   // The full-pair CCD safeguard checks intermediate positions, not just endpoints.
   for(let it=0;it<120;it++){
    const active=[];
+   const activeData=emit?{count:0,newNew:0,newProtected:0,minNewNew:null,minNewProtected:null,pairs:[]}:null;
    for(const pair of pairs){
     const A=triangles(vertices,pair.a),B=triangles(vertices,pair.b);
     const separated=[0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+dHat<=Math.min(...B.map(p=>p[k]))||
       Math.max(...B.map(p=>p[k]))+dHat<=Math.min(...A.map(p=>p[k])));
     if(separated)continue; // conservative AABB culling; no exact-contact pair is excluded
     const d=deps.triangleDistance(A,B);
-    if(d<dHat)active.push(pair);
+    if(d<dHat){active.push(pair);
+     if(emit){const isProtected=!retired.has(String(pair.b.id));activeData.count++;
+      if(isProtected){activeData.newProtected++;activeData.minNewProtected=activeData.minNewProtected===null?d:Math.min(activeData.minNewProtected,d);}
+      else{activeData.newNew++;activeData.minNewNew=activeData.minNewNew===null?d:Math.min(activeData.minNewNew,d);}
+      activeData.pairs.push({faceA:pair.a.id,faceB:pair.b.id,distance:d,pairClass:isProtected?'NEW_PROTECTED':'NEW_NEW'});
+     }
+    }
    }
    const gradient=new Map(movable.map(ix=>{
     const u=sub(vertices[ix],source.vertices[ix]),d=sub(target[ix],source.vertices[ix]);
     const ns=adjacency.get(ix);
     return [ix,u.map((v,k)=>2*(v-d[k]+ns.reduce((sum,e)=>sum+e.weight*(v-(vertices[e.other][k]-source.vertices[e.other][k])),0)))];
    }));
+   const baseGradient=emit?new Map([...gradient].map(([ix,g])=>[ix,g.slice()])):null;
    // Finite differences apply only to the barrier of geometrically active pairs.
    // This avoids approximating contact with triangle centroids or bounding boxes.
    const h=1e-6;
@@ -255,9 +274,16 @@ function articulatedKernel(){
     }
    }
    const gradientNorm=Math.sqrt([...gradient.values()].reduce((sum,g)=>sum+dot(g,g),0));
+   const baseGradientNorm=emit?Math.sqrt([...baseGradient.values()].reduce((sum,g)=>sum+dot(g,g),0)):null;
+   const barrierGradientNorm=emit?Math.sqrt([...gradient].reduce((sum,[ix,g])=>sum+g.reduce((v,k,j)=>v+(k-baseGradient.get(ix)[j])**2,0),0)):null;
    if(!Number.isFinite(gradientNorm))return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:"NONFINITE_GRADIENT",iterations:it,frozenSpecimens:0};
    if(gradientNorm<1e-8)break;
    const oldEnergy=objective(vertices),direction=new Map([...gradient].map(([ix,g])=>[ix,scale(g,-1/Math.max(1,gradientNorm))]));
+   const oldTerms=emit?{...lastObjectiveTerms}:null;
+   if(emit){
+    const fidelity=deps.articulationFidelity(source,{...source,vertices},target,movable,roleByVertex);
+    emit('iteration_begin',{it,acceptedIterations:iterations,gradientNorm,baseGradientNorm,barrierGradientNorm,active:activeData,objective:oldTerms,fidelity});
+   }
    let accepted=false;
    for(let backtrack=0;backtrack<22;backtrack++){
     const alpha=Math.pow(0.5,backtrack)*0.025;
@@ -267,6 +293,7 @@ function articulatedKernel(){
     // linear vertex motion. A whole time interval is certified only if its
     // endpoint separation exceeds twice its maximum vertex travel.
     // Ambiguous intervals subdivide; unresolved intervals reject the step.
+    let failedInterval=null;
     const certifiedPair=(pair,left,right,depth)=>{
      const travel=Math.max(...[...pair.a.indices,...pair.b.indices].map(ix=>
       dist(add(vertices[ix],scale(sub(next[ix],vertices[ix]),left)),
@@ -277,7 +304,10 @@ function articulatedKernel(){
      };
      const dl=at(left),dr=at(right);
      if(Math.min(dl,dr)>2*travel+1e-10)return true;
-     if(dl<=1e-10||dr<=1e-10||depth>=24)return false;
+     if(dl<=1e-10||dr<=1e-10||depth>=24){
+      if(emit)failedInterval={depth,left,right,dl,dr,travel,certificateMargin:Math.min(dl,dr)-2*travel-1e-10,reason:dl<=1e-10||dr<=1e-10?'ENDPOINT_CONTACT_OR_NUMERIC_ZERO':'SUBDIVISION_DEPTH_EXHAUSTED'};
+      return false;
+     }
      const mid=(left+right)/2;
      return certifiedPair(pair,left,mid,depth+1)&&certifiedPair(pair,mid,right,depth+1);
     };
@@ -290,7 +320,9 @@ function articulatedKernel(){
      if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))<Math.min(...B.map(p=>p[k]))||
        Math.max(...B.map(p=>p[k]))<Math.min(...A.map(p=>p[k]))))continue;
      if(!certifiedPair(pair,0,1,0)){
-      feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};break;
+      feasible=false;lastWitness={kind:"CONTINUOUS_COLLISION_UNCERTIFIED",faceA:pair.a.id,faceB:pair.b.id};
+      if(emit)emit('line_search_rejected',{it,backtrack,alpha,reason:'CONTINUOUS_COLLISION_UNCERTIFIED',faceA:pair.a.id,faceB:pair.b.id,failedInterval});
+      break;
      }
     }
     if(!feasible)continue;
@@ -308,11 +340,15 @@ function articulatedKernel(){
       oriented=false;lastWitness={kind:"INCREMENTAL_FACE_ORIENTATION_REJECTED",faceId:face.id};break;
      }
     }
-    if(!oriented)continue;
+    if(!oriented){if(emit)emit('line_search_rejected',{it,backtrack,alpha,reason:'INCREMENTAL_FACE_ORIENTATION_REJECTED',witness:lastWitness});continue;}
     const energy=objective(next);
-    if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;break;}
+    if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;
+     if(emit){const fidelity=deps.articulationFidelity(source,{...source,vertices},target,movable,roleByVertex);
+      emit('accepted_step',{it,backtrack,alpha,oldEnergy,newEnergy:energy,oldObjective:oldTerms,newObjective:{...lastObjectiveTerms},fidelity});}
+     break;}
+    if(emit)emit('line_search_rejected',{it,backtrack,alpha,reason:'INSUFFICIENT_ENERGY_DECREASE',oldEnergy,newEnergy:energy});
    }
-   if(!accepted)break;
+   if(!accepted){if(emit)emit('line_search_stalled',{it,acceptedIterations:iterations});break;}
   }
   const candidate={...source,vertices};
   let mechanical;
@@ -321,12 +357,15 @@ function articulatedKernel(){
   const census=deps.exhaustiveCollisionCensus(source,candidate,spec.manifest,{clearance});
   const fidelity=deps.articulationFidelity(source,candidate,target,movable,roleByVertex);
   if(mechanical.result!=="PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2"||census.result!=="PASS_COLLISIONS"||fidelity.result!=="PASS_FIDELITY")
-   return {status:"INCONCLUSIVE_FAIL_CLOSED",mechanical,census,fidelity,iterations,lastWitness,frozenSpecimens:0};
+   {if(emit)emit('final',{status:'INCONCLUSIVE_FAIL_CLOSED',iterations,mechanical,census,fidelity,lastWitness});
+   return {status:"INCONCLUSIVE_FAIL_CLOSED",mechanical,census,fidelity,iterations,lastWitness,frozenSpecimens:0};}
+  if(emit)emit('final',{status:'PASS_METHOD_FEASIBILITY_ONLY',iterations,mechanical,census,fidelity});
   return {status:"PASS_METHOD_FEASIBILITY_ONLY",mechanical,census,fidelity,iterations,frozenSpecimens:0};
  }
  return {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep};
 }
 export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep}=articulatedKernel();
 export function construct(source,spec){return solveArticulatedForequarter(source,spec,independent)}
+
 
 export function constructGen3243(source,spec){return collisionAwareHalfStep(source,spec,independent)}

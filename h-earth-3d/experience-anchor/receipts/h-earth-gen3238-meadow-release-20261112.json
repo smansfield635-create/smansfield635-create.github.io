@@ -49,6 +49,12 @@
   ],
   "experienceFiles": [
     {
+      "path": "h-earth-3d/validation/h-earth.grassland-meadow-coverage.v1.test.mjs",
+      "sha256": "38ad173d8823e439f9fb0456f84466c702aaa9ad1ae0c09e5cc5d8b1897dca7d",
+      "gitBlob": "faced001a04ea2be4361c7a8f48fbafd56f0eb7c",
+      "sourceRole": "UNCHANGED_FIRST_PARTY_NATIVE_VALIDATION; included because current Anchor gate classifies h-earth-3d/validation as experience"
+    },
+    {
       "path": "showroom/globe/h-earth/index.html",
       "sha256": "656c3c36e42984dead2fc846cf3a22ee80f1b8509ca548b90a477401f552b227",
       "gitBlob": "7db2ea6c002c44471546ade5dd4ec49e7e053605"
@@ -116,7 +122,7 @@
   "comparison": {
     "anchorObserved": "Historical accepted canonical eleven-invariant source-bound anchor. Visual evidence paths are inherited historical same-world proxies, not new Gen3238 meadow screenshots.",
     "sourceDelta": "Release finalization updates both changed grass-module cache identities (single-owner vegetation and grass-continuity supplement) and the evidence receipt only; the exact Gen3238 source is preserved.",
-    "acceptanceBoundary": "Same-world source continuity and software GPU residency supported; middle-corridor visual acceptance and Android performance pending live owner review."
+    "acceptanceBoundary": "Same-world source continuity and software GPU residency supported; middle-corridor visual acceptance and Android performance pending live owner review. The current hard Anchor gate classifies new h-earth-3d/validation native test as an experience path, so its exact unchanged source digest is included without treating that test as a visual experience."
   },
   "limitations": [
     "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",

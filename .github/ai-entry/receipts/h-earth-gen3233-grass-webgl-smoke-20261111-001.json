@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3233-grass-webgl-smoke-20261111-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7343,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3233-grass-smoke-20261111-001",
+  "requestCommit": "6b1511fd1964566da33e08ebab5641a86d9e1f39",
+  "requestCommitParent": "d0db920c0f0c73fbb2fe24f145348f790dc33fdc",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "d0db920c0f0c73fbb2fe24f145348f790dc33fdc",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b72ff31d2f485192d75182d315ec0d387d2b6217"
+  },
+  "bridgeRunId": "43138673687",
+  "dispatchedRunId": 43138692311,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43138692311",
+  "dispatchedRunHeadSha": "d0db920c0f0c73fbb2fe24f145348f790dc33fdc",
+  "dispatchedAt": "2026-11-12T02:03:17.629Z",
+  "resolvedAt": "2026-11-12T02:03:21.533Z"
+}

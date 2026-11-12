@@ -502,13 +502,17 @@ void main(){
  float d=length(aRoot.xz-uCamera.xz),t=clamp((d-14.)/10.,0.,1.);
  float detail=1.-t*t*(3.-2.*t),h=fract(sin(dot(aRoot.xz,vec2(12.9898,78.233)))*43758.5453);
  vec3 up=normalize(vec3(aRoot.x,aRoot.y+uRadius,aRoot.z));
- float angle=aRoot.w+float(uFine)*1.5707963;
+ // Fixed per-root tuft irregularity: no new roots, camera-dependent sway, or extra draw.
+ float tuftVariation=fract(sin(dot(aRoot.xz,vec2(29.321,51.773)))*19735.283);
+ float angle=aRoot.w+float(uFine)*(1.5707963+.24*(tuftVariation-.5));
  vec3 across=normalize(vec3(cos(angle),0.,sin(angle)));across=normalize(across-up*dot(up,across));
  int k=gl_VertexID%6;
  float side=(k==0||k==3||k==5)?-1.:1.;
  float level=(k==2||k==4||k==5)?1.:0.;
  float scale=uFine==1?detail:1.;
- float width=mix(.010,.016,h)*scale;
+ // Fuller persistent blades connect the near crossed tuft to the far coarse cover.
+ // Same two triangles and unchanged 14-24 m fine-lobe fade.
+ float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation);
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));
@@ -516,7 +520,7 @@ void main(){
  float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
  float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
  float height=mix(mix(.11,.21,h),entranceHeight,entrance)*scale;
- vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
+ vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.81));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
  // One world-space palette for existing grass and occupied ground.

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-12T12:30:40Z",
+  "generatedAt": "2026-11-12T13:24:41Z",
   "window": {
-    "start": "2026-10-13T12:30:40Z",
-    "end": "2026-11-12T12:30:40Z"
+    "start": "2026-10-13T13:24:41Z",
+    "end": "2026-11-12T13:24:41Z"
   },
   "dimensions": {
     "requestPath": [
@@ -238,14 +238,14 @@
         "visits": 0
       },
       {
-        "value": "/evidence/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
         "value": "/nine-summits/universe/**",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/evidence/",
+        "pageLoads": 1,
+        "visits": 0
       },
       {
         "value": "/products/five-flags/",
@@ -311,8 +311,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1352,
-        "visits": 1352
+        "pageLoads": 1382,
+        "visits": 1382
       },
       {
         "value": "diamondgatebridge.com",
@@ -429,13 +429,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 915,
-        "visits": 914
+        "pageLoads": 895,
+        "visits": 894
       },
       {
         "value": "Windows",
-        "pageLoads": 268,
-        "visits": 201
+        "pageLoads": 258,
+        "visits": 191
       },
       {
         "value": "Android",
@@ -444,13 +444,13 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 96,
-        "visits": 84
+        "pageLoads": 86,
+        "visits": 74
       },
       {
         "value": "MacOSX",
-        "pageLoads": 48,
-        "visits": 46
+        "pageLoads": 58,
+        "visits": 56
       },
       {
         "value": "iOS",
@@ -460,21 +460,21 @@
     ],
     "bot": [
       {
+        "value": "0",
+        "pageLoads": 742,
+        "visits": 635
+      },
+      {
         "value": "1",
         "pageLoads": 736,
         "visits": 735
-      },
-      {
-        "value": "0",
-        "pageLoads": 732,
-        "visits": 625
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1449,
-        "visits": 1380
+        "pageLoads": 1369,
+        "visits": 1300
       },
       {
         "value": "routing-apis",
@@ -509,8 +509,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1518,
-        "visits": 1400
+        "pageLoads": 1418,
+        "visits": 1300
       }
     ]
   }

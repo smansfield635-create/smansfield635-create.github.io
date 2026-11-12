@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-11-12T12:30:40Z",
+  "generatedAt": "2026-11-12T13:24:41Z",
   "window": {
-    "start": "2026-08-14T12:30:40Z",
-    "end": "2026-11-12T12:30:40Z"
+    "start": "2026-08-14T13:24:41Z",
+    "end": "2026-11-12T13:24:41Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -3056,23 +3056,23 @@
         {
           "count": 10,
           "dimensions": {
+            "datetimeHour": "2026-10-23T14:00:00Z"
+          }
+        },
+        {
+          "count": 20,
+          "dimensions": {
             "datetimeHour": "2026-10-23T15:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-23T23:00:00Z"
+            "datetimeHour": "2026-10-23T16:00:00Z"
           }
         },
         {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-10-24T00:00:00Z"
-          }
-        },
-        {
-          "count": 10,
+          "count": 30,
           "dimensions": {
             "datetimeHour": "2026-10-24T01:00:00Z"
           }
@@ -3080,13 +3080,7 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-24T04:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-10-24T05:00:00Z"
+            "datetimeHour": "2026-10-24T06:00:00Z"
           }
         },
         {
@@ -3297,12 +3291,6 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-11-04T03:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
-            "datetimeHour": "2026-11-04T12:00:00Z"
           }
         },
         {
@@ -4347,6 +4335,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-11-12T11:00:00Z"
+          }
+        },
+        {
+          "count": 1,
+          "dimensions": {
+            "datetimeHour": "2026-11-12T12:00:00Z"
           }
         }
       ]

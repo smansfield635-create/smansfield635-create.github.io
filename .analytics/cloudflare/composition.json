@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-11T23:25:21Z",
+  "generatedAt": "2026-11-12T00:43:43Z",
   "window": {
-    "start": "2026-10-12T23:25:21Z",
-    "end": "2026-11-11T23:25:21Z"
+    "start": "2026-10-13T00:43:43Z",
+    "end": "2026-11-12T00:43:43Z"
   },
   "dimensions": {
     "requestPath": [
@@ -133,7 +133,7 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/water/",
+        "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -143,7 +143,7 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/manual/",
+        "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -193,7 +193,7 @@
         "visits": 1
       },
       {
-        "value": "/showroom/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -218,7 +218,7 @@
         "visits": 1
       },
       {
-        "value": "/frontier/waste/",
+        "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -268,7 +268,22 @@
         "visits": 1
       },
       {
+        "value": "/products/archcoin/payable/",
+        "pageLoads": 1,
+        "visits": 0
+      },
+      {
         "value": "/explore/frontier/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/products/archcoin/contract/overview/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/products/archcoin/payable/overview/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -289,21 +304,6 @@
       },
       {
         "value": "/products/archcoin/receivable/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/products/archcoin/payable/",
-        "pageLoads": 1,
-        "visits": 0
-      },
-      {
-        "value": "/products/archcoin/contract/overview/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/products/archcoin/payable/overview/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -514,8 +514,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1484,
-        "visits": 1366
+        "pageLoads": 1454,
+        "visits": 1336
       }
     ]
   }

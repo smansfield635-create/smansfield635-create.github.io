@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-13T16:25:18Z",
+  "generatedAt": "2026-11-13T17:23:47Z",
   "window30d": {
-    "start": "2026-10-14T16:25:18Z",
-    "end": "2026-11-13T16:25:18Z"
+    "start": "2026-10-14T17:23:47Z",
+    "end": "2026-11-13T17:23:47Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 140
+      "pageLoads": 139
     },
     {
       "date": "2026-11-06",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 21
+      "pageLoads": 22
     }
   ],
   "summary": {
     "pageLoads": 1530,
-    "botPageLoads": 786,
-    "nonBotPageLoads": 744
+    "botPageLoads": 782,
+    "nonBotPageLoads": 748
   },
   "referrers": [
     {
@@ -176,14 +176,14 @@
       "visits": 63
     },
     {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 67,
-      "visits": 67
+      "path": "/products/education/personal-training/",
+      "pageLoads": 70,
+      "visits": 70
     },
     {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 65,
-      "visits": 65
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 62,
+      "visits": 62
     },
     {
       "path": "/nine-summits/universe/",

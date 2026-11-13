@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-13T16:25:18Z",
+  "generatedAt": "2026-11-13T17:23:47Z",
   "window": {
-    "start": "2026-10-14T16:25:18Z",
-    "end": "2026-11-13T16:25:18Z"
+    "start": "2026-10-14T17:23:47Z",
+    "end": "2026-11-13T17:23:47Z"
   },
   "dimensions": {
     "requestPath": [
@@ -23,14 +23,14 @@
         "visits": 63
       },
       {
-        "value": "/products/education/personal-training/course.html",
-        "pageLoads": 67,
-        "visits": 67
+        "value": "/products/education/personal-training/",
+        "pageLoads": 70,
+        "visits": 70
       },
       {
-        "value": "/products/education/personal-training/",
-        "pageLoads": 65,
-        "visits": 65
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 62,
+        "visits": 62
       },
       {
         "value": "/nine-summits/universe/",
@@ -138,6 +138,11 @@
         "visits": 1
       },
       {
+        "value": "/laws/core-invariants/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/water/",
         "pageLoads": 1,
         "visits": 1
@@ -153,12 +158,22 @@
         "visits": 1
       },
       {
+        "value": "/laws/hybrid-collapse/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/test/reverse-audit/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/explore/frontier/waste/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -193,11 +208,6 @@
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/signup",
         "pageLoads": 1,
         "visits": 0
@@ -208,17 +218,7 @@
         "visits": 1
       },
       {
-        "value": "/laws/hybrid-collapse/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/wave/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -248,22 +248,22 @@
         "visits": 0
       },
       {
-        "value": "/products/five-flags/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/instruments/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
+        "value": "/frontier/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/frontier/",
+        "value": "/products/five-flags/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -365,13 +365,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1269,
-        "visits": 1196
+        "pageLoads": 1271,
+        "visits": 1198
       },
       {
         "value": "mobile",
-        "pageLoads": 248,
-        "visits": 214
+        "pageLoads": 246,
+        "visits": 212
       },
       {
         "value": "tablet",
@@ -382,18 +382,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 786,
-        "visits": 785
+        "pageLoads": 782,
+        "visits": 781
       },
       {
         "value": "Chrome",
-        "pageLoads": 268,
-        "visits": 219
+        "pageLoads": 276,
+        "visits": 227
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 174,
-        "visits": 161
+        "pageLoads": 172,
+        "visits": 159
       },
       {
         "value": "Edge",
@@ -407,8 +407,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 61,
-        "visits": 55
+        "pageLoads": 59,
+        "visits": 53
       },
       {
         "value": "MobileSafari",
@@ -429,18 +429,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 926,
-        "visits": 925
+        "pageLoads": 930,
+        "visits": 929
       },
       {
         "value": "Windows",
-        "pageLoads": 248,
-        "visits": 180
+        "pageLoads": 246,
+        "visits": 178
       },
       {
         "value": "Android",
-        "pageLoads": 188,
-        "visits": 163
+        "pageLoads": 186,
+        "visits": 161
       },
       {
         "value": "Unknown",
@@ -461,24 +461,24 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 786,
-        "visits": 785
+        "pageLoads": 782,
+        "visits": 781
       },
       {
         "value": "0",
-        "pageLoads": 744,
-        "visits": 626
+        "pageLoads": 748,
+        "visits": 630
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1425,
-        "visits": 1372
+        "pageLoads": 1480,
+        "visits": 1411
       },
       {
         "value": "routing-apis",
-        "pageLoads": 47,
+        "pageLoads": 49,
         "visits": 0
       },
       {

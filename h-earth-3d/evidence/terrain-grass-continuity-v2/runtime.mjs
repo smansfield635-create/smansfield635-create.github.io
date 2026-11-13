@@ -47,16 +47,16 @@ if (process.env.H_EARTH_GEN3256_OPERAND_ISOLATION === '1') {
       assert.equal(source.split(unionNeedle).length,2,'GEN3256_MEADOW_OPERAND_SOURCE_DRIFT');
       const expressions={
         NORMAL:bodyNeedle,
-        OPERANDS_RGB:'base=vec3(__operandHabitat,__operandMeadow,habitatColorCoverage);',
+        OPERANDS_RGB:'base=vec3(gen3256HabitatWeight,gen3256MeadowWeight,habitatColorCoverage);',
         PRE_BLEND:'base=base;',
-        MEADOW_ONLY:'base=mix(base,habitatSoil,__operandMeadow*.68);',
-        HABITAT_ONLY:'base=mix(base,habitatSoil,__operandHabitat*.68);'
+        MEADOW_ONLY:'base=mix(base,habitatSoil,gen3256MeadowWeight*.68);',
+        HABITAT_ONLY:'base=mix(base,habitatSoil,gen3256HabitatWeight*.68);'
       };
       assert(expressions[mode],'GEN3256_UNREGISTERED_DIAGNOSTIC_MODE:'+mode);
       let body=source;
       if(mode!=='NORMAL'){
-        body=body.replace(coverageNeedle,coverageNeedle+'\n    float __operandHabitat=habitatColorCoverage;\n    float __operandMeadow=0.0;');
-        body=body.replace(unionNeedle,'__operandMeadow=meadowOccupancy*meadowOuterWeight;\n      '+unionNeedle);
+        body=body.replace(coverageNeedle,coverageNeedle+'\n    float gen3256HabitatWeight=habitatColorCoverage;\n    float gen3256MeadowWeight=0.0;');
+        body=body.replace(unionNeedle,'gen3256MeadowWeight=meadowOccupancy*meadowOuterWeight;\n      '+unionNeedle);
         body=body.replace(bodyNeedle,expressions[mode]);
       }
       await route.fulfill({response,contentType:'text/javascript',body});
@@ -69,7 +69,18 @@ if (process.env.H_EARTH_GEN3256_OPERAND_ISOLATION === '1') {
         'globalThis.__Gen3256Present=present;globalThis.__Gen3256FrameBridge=spatialFrameBridge;\nconst cssWidth=')});
     });
     await page.goto(urlBase+'/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
-    await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',null,{timeout:420000,polling:500});
+    try {
+      await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',null,{timeout:150000,polling:500});
+    }catch(waitError){
+      const diagnosis=await page.evaluate(()=>({
+        route:document.querySelector('#h-earth-functional-landscape-route')?.dataset??null,
+        loading:document.querySelector('#h-earth-loading-screen')?.dataset??null,
+        title:document.title
+      })).catch(()=>null);
+      throw Error('GEN3256_SOURCE_MODE_STARTUP_FAILURE:'+JSON.stringify({
+        mode,reason:String(waitError),rendererIntercepted,routeIntercepted,problems,diagnosis
+      }));
+    }
     await page.mouse.move(400,220);await page.mouse.down();await page.mouse.move(530,235,{steps:14});await page.mouse.up();await page.mouse.wheel(0,-360);
     await page.waitForFunction(()=>document.querySelector('#h-earth-loading-screen')?.dataset.mode==='ready',null,{timeout:120000,polling:500});
     await page.locator('#h-earth-loading-screen [data-enter]').click();

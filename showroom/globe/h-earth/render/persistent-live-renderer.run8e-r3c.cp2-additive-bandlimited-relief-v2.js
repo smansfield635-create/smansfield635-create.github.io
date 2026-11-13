@@ -1309,7 +1309,38 @@ void main(){
     // Occupied meadow soil only; immutable original habitat panels remain dominant.
     vec2 meadowUv=(vWorldPosition.xz-uMeadowGroundBounds.xy)/(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy);
     if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThan(meadowUv,vec2(1.0)))){
-      float meadowOccupancy=texture(uMeadowGroundOccupancy,meadowUv).r;
+      // Gen3257: soften color within occupied, soil-eligible one-metre cells.
+      // The original R8/NEAREST texel is the hard admission gate; an excluded
+      // zero-valued cell can NEVER receive material color from a neighbor.
+      // Five texelFetch reads; no new texture, shader pass or GPU allocation.
+      float meadowOccupancy=0.0;
+      ivec2 gen3257Dims=textureSize(uMeadowGroundOccupancy,0);
+      vec2 gen3257Texel=meadowUv*vec2(gen3257Dims);
+      ivec2 gen3257Cell=clamp(ivec2(floor(gen3257Texel)),ivec2(0),gen3257Dims-ivec2(1));
+      float gen3257Center=texelFetch(uMeadowGroundOccupancy,gen3257Cell,0).r;
+      if(gen3257Center>0.0){
+        vec2 gen3257Local=fract(gen3257Texel);
+        float gen3257West=texelFetch(uMeadowGroundOccupancy,max(gen3257Cell+ivec2(-1,0),ivec2(0)),0).r;
+        float gen3257East=texelFetch(uMeadowGroundOccupancy,min(gen3257Cell+ivec2(1,0),gen3257Dims-ivec2(1)),0).r;
+        float gen3257South=texelFetch(uMeadowGroundOccupancy,max(gen3257Cell+ivec2(0,-1),ivec2(0)),0).r;
+        float gen3257North=texelFetch(uMeadowGroundOccupancy,min(gen3257Cell+ivec2(0,1),gen3257Dims-ivec2(1)),0).r;
+        // C0 continuity for neighboring positive cells, without blurring
+        // or changing the authoritative frozen occupancy values themselves.
+        float gen3257AcrossX=gen3257Local.x<0.5
+          ?mix(gen3257West,gen3257Center,smoothstep(0.0,1.0,gen3257Local.x+0.5))
+          :mix(gen3257Center,gen3257East,smoothstep(0.0,1.0,gen3257Local.x-0.5));
+        float gen3257AcrossZ=gen3257Local.y<0.5
+          ?mix(gen3257South,gen3257Center,smoothstep(0.0,1.0,gen3257Local.y+0.5))
+          :mix(gen3257Center,gen3257North,smoothstep(0.0,1.0,gen3257Local.y-0.5));
+        // Taper inward toward each zero-valued neighbor, reaching exact zero
+        // before crossing the cell boundary; NEVER tint a protected cell.
+        float gen3257EdgeFade=1.0;
+        if(gen3257West<=0.0)gen3257EdgeFade*=smoothstep(0.0,0.35,gen3257Local.x);
+        if(gen3257East<=0.0)gen3257EdgeFade*=smoothstep(0.0,0.35,1.0-gen3257Local.x);
+        if(gen3257South<=0.0)gen3257EdgeFade*=smoothstep(0.0,0.35,gen3257Local.y);
+        if(gen3257North<=0.0)gen3257EdgeFade*=smoothstep(0.0,0.35,1.0-gen3257Local.y);
+        meadowOccupancy=clamp(0.5*(gen3257AcrossX+gen3257AcrossZ)*gen3257EdgeFade,0.0,1.0);
+      }
       // Attenuate the frozen map's OUTER rectangular cutoffs in world space.
       // Nearest filtering retains zero tint in excluded/protected one-metre cells.
       float meadowOuterDistance=min(min(vWorldPosition.x-uMeadowGroundBounds.x,uMeadowGroundBounds.z-vWorldPosition.x),

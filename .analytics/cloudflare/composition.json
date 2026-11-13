@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-13T21:23:50Z",
+  "generatedAt": "2026-11-13T22:25:41Z",
   "window": {
-    "start": "2026-10-14T21:23:50Z",
-    "end": "2026-11-13T21:23:50Z"
+    "start": "2026-10-14T22:25:41Z",
+    "end": "2026-11-13T22:25:41Z"
   },
   "dimensions": {
     "requestPath": [
@@ -248,7 +248,17 @@
         "visits": 0
       },
       {
+        "value": "/products/five-flags/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/instruments/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -263,22 +273,22 @@
         "visits": 1
       },
       {
+        "value": "/products/nutrition/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/products/archcoin/allocation/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/products/archcoin/receivable/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/products/five-flags/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -294,16 +304,6 @@
       },
       {
         "value": "/products/archcoin/payable/overview/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/products/nutrition/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -387,8 +387,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 287,
-        "visits": 238
+        "pageLoads": 297,
+        "visits": 248
       },
       {
         "value": "ChromeMobile",
@@ -402,8 +402,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 66,
-        "visits": 64
+        "pageLoads": 86,
+        "visits": 74
       },
       {
         "value": "Firefox",
@@ -429,13 +429,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 911,
-        "visits": 910
+        "pageLoads": 931,
+        "visits": 930
       },
       {
         "value": "Windows",
-        "pageLoads": 262,
-        "visits": 194
+        "pageLoads": 252,
+        "visits": 184
       },
       {
         "value": "Android",
@@ -449,8 +449,8 @@
       },
       {
         "value": "MacOSX",
-        "pageLoads": 47,
-        "visits": 45
+        "pageLoads": 57,
+        "visits": 55
       },
       {
         "value": "iOS",

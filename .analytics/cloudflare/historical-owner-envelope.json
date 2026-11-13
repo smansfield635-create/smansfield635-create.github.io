@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T21:23:50Z",
+  "generatedAt": "2026-11-13T22:25:41Z",
   "window": {
-    "start": "2026-08-15T21:23:50Z",
-    "end": "2026-11-13T21:23:50Z"
+    "start": "2026-08-15T22:25:41Z",
+    "end": "2026-11-13T22:25:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,13 +34,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 851,
-        "visits": 631
-      },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/": {
+        "pageLoads": 851,
+        "visits": 631
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 130,
@@ -102,16 +102,16 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 62,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
       },
       "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 62,
         "visits": 10
       },
       "/showroom/globe/audralia/disposition/": {
@@ -130,20 +130,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -152,6 +144,14 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

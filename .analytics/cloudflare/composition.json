@@ -1,36 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-13T11:24:17Z",
+  "generatedAt": "2026-11-13T12:29:29Z",
   "window": {
-    "start": "2026-10-14T11:24:17Z",
-    "end": "2026-11-13T11:24:17Z"
+    "start": "2026-10-14T12:29:29Z",
+    "end": "2026-11-13T12:29:29Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 551,
-        "visits": 551
+        "pageLoads": 511,
+        "visits": 511
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 447,
-        "visits": 377
-      },
-      {
-        "value": "/",
-        "pageLoads": 96,
-        "visits": 73
+        "pageLoads": 397,
+        "visits": 317
       },
       {
         "value": "/products/education/personal-training/course.html",
-        "pageLoads": 68,
-        "visits": 68
+        "pageLoads": 88,
+        "visits": 88
       },
       {
-        "value": "/products/education/personal-training/",
-        "pageLoads": 66,
-        "visits": 66
+        "value": "/",
+        "pageLoads": 86,
+        "visits": 63
       },
       {
         "value": "/nine-summits/universe/",
@@ -38,14 +33,14 @@
         "visits": 52
       },
       {
-        "value": "/about/",
-        "pageLoads": 41,
-        "visits": 41
-      },
-      {
         "value": "/showroom/globe/audralia/",
         "pageLoads": 40,
         "visits": 40
+      },
+      {
+        "value": "/products/education/personal-training/",
+        "pageLoads": 36,
+        "visits": 36
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -64,11 +59,6 @@
       },
       {
         "value": "/showroom/globe/",
-        "pageLoads": 11,
-        "visits": 11
-      },
-      {
-        "value": "/campaigns/wave/",
         "pageLoads": 11,
         "visits": 11
       },
@@ -178,6 +168,11 @@
         "visits": 1
       },
       {
+        "value": "/about/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
@@ -189,6 +184,11 @@
       },
       {
         "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/campaigns/wave/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -311,8 +311,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1405,
-        "visits": 1405
+        "pageLoads": 1415,
+        "visits": 1415
       },
       {
         "value": "diamondgatebridge.com",
@@ -338,8 +338,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1458,
-        "visits": 1349
+        "pageLoads": 1398,
+        "visits": 1299
       },
       {
         "value": "CN",
@@ -353,7 +353,7 @@
       },
       {
         "value": "BR",
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 10
       },
       {
@@ -365,8 +365,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1220,
-        "visits": 1147
+        "pageLoads": 1260,
+        "visits": 1187
       },
       {
         "value": "mobile",
@@ -387,18 +387,18 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 270,
-        "visits": 221
+        "pageLoads": 260,
+        "visits": 211
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 174,
-        "visits": 161
+        "pageLoads": 154,
+        "visits": 141
       },
       {
         "value": "Edge",
-        "pageLoads": 109,
-        "visits": 82
+        "pageLoads": 119,
+        "visits": 92
       },
       {
         "value": "Unknown",
@@ -417,8 +417,8 @@
       },
       {
         "value": "Safari",
-        "pageLoads": 12,
-        "visits": 12
+        "pageLoads": 22,
+        "visits": 22
       },
       {
         "value": "ChromeMobileWebview",
@@ -429,8 +429,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 915,
-        "visits": 914
+        "pageLoads": 905,
+        "visits": 904
       },
       {
         "value": "Windows",
@@ -461,8 +461,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 775,
-        "visits": 774
+        "pageLoads": 795,
+        "visits": 794
       },
       {
         "value": "0",
@@ -490,12 +490,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1485,
-        "visits": 1401
+        "pageLoads": 1465,
+        "visits": 1381
       },
       {
         "value": "cache",
-        "pageLoads": 36,
+        "pageLoads": 26,
         "visits": 1
       }
     ],

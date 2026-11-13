@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T14:25:38Z",
+  "generatedAt": "2026-11-13T15:25:00Z",
   "window": {
-    "start": "2026-08-15T14:25:38Z",
-    "end": "2026-11-13T14:25:38Z"
+    "start": "2026-08-15T15:25:00Z",
+    "end": "2026-11-13T15:25:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3783,
-    "visits": 1131,
+    "pageLoads": 3763,
+    "visits": 1111,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3783,
-        "visits": 1131
+        "pageLoads": 3763,
+        "visits": 1111
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 851,
-        "visits": 631
+        "pageLoads": 841,
+        "visits": 621
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -111,8 +111,8 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 52,
-        "visits": 10
+        "pageLoads": 42,
+        "visits": 0
       },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
@@ -194,16 +194,16 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -258,13 +258,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -309,8 +309,8 @@
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 541,
-        "visits": 541
+        "pageLoads": 521,
+        "visits": 521
       },
       "www.google.com": {
         "pageLoads": 580,

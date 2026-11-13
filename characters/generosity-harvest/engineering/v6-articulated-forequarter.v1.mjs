@@ -311,6 +311,46 @@ function articulatedKernel(){
    return value;
   };
   let vertices=source.vertices.map(p=>p.slice()),lastWitness=null,iterations=0;
+  // Gen3251 is an opt-in observation/certification stop, not a new descent method.
+  // Gen3248 direction, objective, contact projection, target, line search and CCD are unchanged.
+  const firstPassFreeze=spec?.firstFidelityPassFreeze===true;
+  if(firstPassFreeze&&spec.solverMethod!=="CONTACT_PROJECTED_H1_V1")throw Error("GEN3251_FROZEN_METHOD_REQUIRED");
+  const fidelityEligible=f=>f?.result==="PASS_FIDELITY"&&Number.isFinite(f.progress)&&f.progress>=0.80&&
+   Number.isFinite(f.relativeError)&&f.relativeError<=0.30&&Array.isArray(f.segmentProgress)&&
+   f.segmentProgress.length===3&&f.segmentProgress.every(v=>Number.isFinite(v)&&v>=0.70);
+  const certifyFirstAccepted=(fidelity,outerIteration)=>{
+   // Immutable snapshot made before any next direction/optimizer iteration.
+   const candidate={...source,vertices:vertices.map(v=>v.slice()),
+    faces:source.faces.map(f=>({...f,indices:f.indices.slice()}))};
+   let mechanical,census,independentFidelity;
+   try{
+    mechanical=deps.verifyCandidate(source,candidate,spec.manifest,{clearance});
+    census=deps.exhaustiveCollisionCensus(source,candidate,spec.manifest,{clearance});
+    independentFidelity=deps.articulationFidelity(source,candidate,target,movable,roleByVertex);
+   }catch(e){
+    if(emit)emit('first_fidelity_qualification',{outerIteration,acceptedIterations:iterations,status:'VERIFICATION_ERROR',reason:String(e?.message||e)});
+    return {status:'FIRST_FIDELITY_PASS_VERIFICATION_ERROR',reason:String(e?.message||e),
+     candidate,observedFidelity:fidelity,acceptedIterations:iterations,outerIteration,frozenSpecimens:0};
+   }
+   const mechanicalPass=mechanical?.result==='PASS_MECHANICAL_READY_FOR_NATIVE_WEBGL2';
+   const censusPass=census?.result==='PASS_COLLISIONS'&&census?.collisionCount===0&&
+    census?.pairsChecked===pairs.length&&census?.protectedMinimum>=clearance;
+   const fidelityPass=fidelityEligible(independentFidelity)&&
+    JSON.stringify(fidelity)===JSON.stringify(independentFidelity);
+   const base={candidate,mechanical,census,fidelity:independentFidelity,
+    observedFidelity:fidelity,acceptedIterations:iterations,outerIteration,
+    firstFidelityQualifiedAcceptedStep:iterations,firstFidelityQualifiedOuterIteration:outerIteration,
+    frozenSpecimens:0,sweptCCD:{status:'ACCEPTED_STEPS_INTERVAL_CERTIFIED',
+     acceptedSteps:iterations,eligibleNonincidentPairs:pairs.length}};
+   if(!mechanicalPass||!censusPass||!fidelityPass){
+    const witness=mechanical?.witness||census?.collisions?.[0]||
+     {kind:!mechanicalPass?'INDEPENDENT_MECHANICAL_NOT_PASS':!censusPass?'INDEPENDENT_CENSUS_OR_CLEARANCE_NOT_PASS':'INDEPENDENT_FIDELITY_MISMATCH'};
+    if(emit)emit('first_fidelity_qualification',{outerIteration,acceptedIterations:iterations,status:'MECHANICAL_REJECTED',witness});
+    return {status:'FIRST_FIDELITY_PASS_MECHANICAL_REJECTED',witness,...base};
+   }
+   if(emit)emit('first_fidelity_qualification',{outerIteration,acceptedIterations:iterations,status:'MECHANICALLY_CERTIFIED_NOT_EXTERNALLY_FROZEN',fidelity:independentFidelity});
+   return {status:'FIRST_FIDELITY_PASS_MECHANICALLY_CERTIFIED_UNFROZEN',...base};
+  };
   if(emit)emit('initial_state',{eligiblePairs:pairs.length,movableVertices:movable.length,patchFaces:patch.length,protectedFaces:protectedFaces.length,barrierActivation:dHat,protectedClearance:clearance});
   // Deterministic descent from the original nonintersecting R63 only.
   // The full-pair CCD safeguard checks intermediate positions, not just endpoints.
@@ -434,13 +474,18 @@ function articulatedKernel(){
     if(!oriented){if(emit)emit('line_search_rejected',{it,backtrack,alpha,reason:'INCREMENTAL_FACE_ORIENTATION_REJECTED',witness:lastWitness});continue;}
     const energy=objective(next);
     if(energy<oldEnergy-1e-12){vertices=next;iterations++;accepted=true;
-     if(emit){const fidelity=deps.articulationFidelity(source,{...source,vertices},target,movable,roleByVertex);
-      emit('accepted_step',{it,backtrack,alpha,oldEnergy,newEnergy:energy,oldObjective:oldTerms,newObjective:{...lastObjectiveTerms},fidelity});}
+     if(firstPassFreeze||emit){const fidelity=deps.articulationFidelity(source,{...source,vertices},target,movable,roleByVertex);
+      if(emit)emit('accepted_step',{it,backtrack,alpha,oldEnergy,newEnergy:energy,oldObjective:oldTerms,newObjective:{...lastObjectiveTerms},fidelity});
+      if(firstPassFreeze&&fidelityEligible(fidelity))return certifyFirstAccepted(fidelity,it);}
      break;}
     if(emit)emit('line_search_rejected',{it,backtrack,alpha,reason:'INSUFFICIENT_ENERGY_DECREASE',oldEnergy,newEnergy:energy});
    }
    if(!accepted){if(emit)emit('line_search_stalled',{it,acceptedIterations:iterations});break;}
   }
+   if(firstPassFreeze){
+    if(emit)emit('final',{status:'NO_FIDELITY_QUALIFIED_ACCEPTED_STATE',acceptedIterations:iterations,lastWitness});
+    return {status:'NO_FIDELITY_QUALIFIED_ACCEPTED_STATE',acceptedIterations:iterations,lastWitness,frozenSpecimens:0};
+   }
   const candidate={...source,vertices};
   let mechanical;
   try{mechanical=deps.verifyCandidate(source,candidate,spec.manifest,{clearance});}
@@ -462,3 +507,5 @@ export function constructGen3243(source,spec){return collisionAwareHalfStep(sour
 
 // Gen3248: one admitted source-H1-preconditioned active-contact-projected feasibility method.
 export function constructGen3248(source,spec){return collisionAwareHalfStep(source,{...spec,solverMethod:"CONTACT_PROJECTED_H1_V1"},independent)}
+// Gen3251: stop at first accepted fidelity pass; independent full mechanical check on exact geometry.
+export function constructGen3251(source,spec){return collisionAwareHalfStep(source,{...spec,solverMethod:"CONTACT_PROJECTED_H1_V1",firstFidelityPassFreeze:true},independent)}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-13T08:26:34Z",
+  "generatedAt": "2026-11-13T09:26:12Z",
   "window": {
-    "start": "2026-10-14T08:26:34Z",
-    "end": "2026-11-13T08:26:34Z"
+    "start": "2026-10-14T09:26:12Z",
+    "end": "2026-11-13T09:26:12Z"
   },
   "dimensions": {
     "requestPath": [
@@ -153,17 +153,17 @@
         "visits": 1
       },
       {
+        "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/hybrid-collapse/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/laws/test/reverse-audit/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/vision/",
         "pageLoads": 1,
         "visits": 1
       },

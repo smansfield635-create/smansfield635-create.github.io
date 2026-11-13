@@ -1,0 +1,140 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3261_OWNER_KEPT_MEADOW_MATERIAL_RELEASE_FINALIZATION_20261113_001",
+  "canonicalAdmissionGeneration": 3261,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewedBaselineHead": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+  "productSourceHead": "af9f4ceed411fb4038696628da57dd8d89628d33",
+  "reviewScope": "SOURCE_BOUND_SAME_WORLD_CONTINUITY_FOR_OWNER_KEPT_GEN3259_MEADOW_MATERIAL_ATTENUATION: all eleven original Anchor invariants checked for unchanged camera/navigation/globe/terrain/geometry/trees/water/grass, with Gen3260 genuine same-pose WebGL2 image comparison and 3805291-root GPU residency. The only accepted experience source delta changes the meadow-derived ground albedo inside the frozen R8 NEAREST occupancy eligibility; historical habitat remains full strength. Genuine reference, source, and no-tint pixel controls are documented. Original 32-second Anchor film was not replayed and physical Android performance was not measured. A separately geographically positioned wet/rock/water screenshot has not been captured; no false claim of it is made. Source-bound finalization adds only the exact renderer import-map cache revision and this truthful receipt; selected preflight, independent merge authority, deployment and live exact SHA verification remain separate.",
+  "ownerDecision": {
+    "intent": "KEEP_EXACT_GEN3259_VISUAL_CANDIDATE_AND_ADVANCE_THROUGH_EXISTING_PROTECTED_GROUND_RELEASE_QUALIFICATION",
+    "sourceIssue": 7359,
+    "sourcePR": 7382,
+    "ownerVisualKeepCommentId": 6866391850,
+    "ownerReleaseDirectionSource": "2026-11-13 ChatGPT user direct KEEP; assistant-transcribed GitHub comment #6866391850; not GitHub-owner-authored",
+    "acceptedProductHead": "af9f4ceed411fb4038696628da57dd8d89628d33",
+    "beforeAfterPackageReviewed": true,
+    "newRootPlacement": false,
+    "physicalAndroidReviewed": false,
+    "publicationPerformed": false,
+    "materialRedesignAuthorized": false,
+    "matchedCameraNativeProofRun": 43513010013
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "6406a2b8674c113c4a48e7db09a1dfbc821d2ff7c2018baac7d6c0c582086d6e",
+      "gitBlob": "330cc53cb02943499df8010ae4146696da2bbb06",
+      "sourceRole": "GEN3261_EXACT_RENDERER_CONTENT_ADDRESSED_IMPORT_MAP"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "cdd10525a8cefa164baa31bfc56819212db909a06a802fc8f25b580b7eb331ac",
+      "gitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+      "sourceRole": "IMMUTABLE_OWNER_KEPT_GEN3259_MEADOW_MATERIAL_SHADER"
+    }
+  ],
+  "firstPartyEvidence": {
+    "previousAcceptedLiveRelease": {
+      "head": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+      "rootCount": 3805291,
+      "rendererBlob": "c69ef60c6e3126c0267ea60709768c35219f4ee6"
+    },
+    "ownerKeptExactCandidate": {
+      "head": "af9f4ceed411fb4038696628da57dd8d89628d33",
+      "rendererGitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+      "rendererSHA256": "cdd10525a8cefa164baa31bfc56819212db909a06a802fc8f25b580b7eb331ac",
+      "nativeWebglRun": 43513010013,
+      "nativeWebglArtifactId": 14080985332,
+      "nativeWebglSelectedJob": "gen3260-operand-isolation-pr",
+      "result": "PASS_SOFTWARE_CHROMIUM_WEBGL2_MATCHED_CAMERA",
+      "webglImageCount": 2,
+      "archivedTintOffReference": {
+        "runId": 43361582347,
+        "artifactId": 14009515623,
+        "pngSHA256": "169f4f4af00c274866c1e40d542cca7d84ea6e8f3794c1dd695cac93aa8ba1a1",
+        "replayed": false
+      },
+      "originalRootCount": 3805291,
+      "observedGpuBytes": 60884656,
+      "gpuUploadBytes": 60884656,
+      "pageErrors": 0,
+      "baselineSkyChangePixels": 0,
+      "groundPixelsChangedGt8": 199574,
+      "ownerVisualKeepCommentId": 6866391850
+    },
+    "protectedGround": {
+      "sourceAndNativeEvidenceIssueCommentId": 6866498612,
+      "sourceZeroEligibilityMath": "m=0 => addedMeadowExcess=max(0,m*outerWeight-originalHabitatCoverage)=0, so original habitat coverage unchanged",
+      "originalR8MapSHA256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+      "originalMapGitBlob": "9139e9c429957679c6e30001ea0e0fb95fbc45fc",
+      "nativeUntintedControlExactUnchangedPixels": 297841,
+      "nativeSkyExactUnchangedPixels": 168000,
+      "geographicallyDistinctWetRockWaterView": "NOT_SEPARATELY_CAPTURED"
+    },
+    "inheritedLegacyCp3d": {
+      "error": "VERIFIED_PLANTING_TEMPLATE_LAYOUT:BARK",
+      "relation": "OLD_PROCEDURAL_PLANTING_TEMPLATE_PRE_RENDERER; NOT_CLAIMED_PASS; APPLICABILITY_TO_FINAL_RELEASE_MUST_BE_CLASSIFIED"
+    }
+  },
+  "sourceIdentity": {
+    "frozenRootCount": 3805291,
+    "packedGpuRootBytes": 60884656,
+    "originalVegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "frozenMeadowMapSHA256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "frozenMeadowMapGitBlob": "9139e9c429957679c6e30001ea0e0fb95fbc45fc",
+    "unchangedHabitatAtlas": true,
+    "unchangedGeometryTreesWaterNavigation": true,
+    "unchangedRendererGitBlobAfterProductAcceptance": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "originalIndexBlob": "e51839b5cef3cae0d8d91bdb4e322cff6531386d",
+    "finalIndexBlob": "330cc53cb02943499df8010ae4146696da2bbb06",
+    "expectedRendererModuleRevision": "?rev=sha-3471d386d720",
+    "modifiedFinalizationPaths": [
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/experience-anchor/receipts/h-earth-gen3259-meadow-material-release-20261113.json"
+    ]
+  },
+  "comparison": {
+    "anchorObserved": "Inherited source-bound eleven-invariant same-world acceptance backed by previously approved original video visual proxy and preserved H-Earth navigation and presentation; Gen3260 real WebGL2 matched-owner-view success establishes renderer startup and actual material difference. No original-film or physical Android replay claimed.",
+    "sourceDelta": "The immutable Gen3259 product changes only a bounded meadow soil tint calculation. Gen3261 finalization changes only renderer cache bindings in index.html and adds an exact evidence receipt; original roots/map, terrain, water, trees, camera/navigation and habitat atlases are unchanged.",
+    "acceptanceBoundary": "OWNER_KEEP_EXACT_TARGET_VISUAL_AND_SOURCE_BOUND_ELEVEN_INVARIANTS_WITH_NATIVE_WEBGL_SOURCE_AND_ZERO_R8_MASK; GEOGRAPHIC_PROTECTED_WET_ROCK_WATER_CAMERA_NOT_SEPARATELY_CAPTURED; ANDROID_PERFORMANCE_UNMEASURED; NO_MERGE_DEPLOYMENT_AUTHORITY_FROM_SOURCE_RECEIPT"
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+    "GEOGRAPHICALLY_SEPARATE_WET_ROCK_WATER_CONTROL_FRAME_NOT_CAPTURED",
+    "PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_UNMEASURED",
+    "UNSELECTED_CP3D_BARK_LEGACY_FIXTURE_FAILURE_PRESERVED_NOT_WAIVED",
+    "NO_UNRELATED_GRASS_OR_MEADOW_MATERIAL_REDESIGN",
+    "MERGE_DEPLOYMENT_PUBLICATION_NOT_AUTHORIZED_BY_SOURCE_RECEIPT"
+  ]
+}

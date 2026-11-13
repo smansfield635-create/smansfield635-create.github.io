@@ -1316,7 +1316,20 @@ void main(){
                                     min(vWorldPosition.z-uMeadowGroundBounds.y,uMeadowGroundBounds.w-vWorldPosition.z));
       float outerFeatherMeters=5.0+3.0*noise2(vWorldPosition.xz*0.13+vec2(3.7,7.3));
       float meadowOuterWeight=smoothstep(0.0,outerFeatherMeters,max(0.0,meadowOuterDistance));
-      habitatColorCoverage=max(habitatColorCoverage,meadowOccupancy*meadowOuterWeight);
+      // Gen3259: keep the full original habitat signal, but strongly reduce
+      // only the additional meadow occupancy color that created the broad
+      // artificial green/ochre field in the Gen3253 TINT-ON comparison.
+      // The frozen R8/NEAREST zero cells remain a hard exclusion: when
+      // meadowOccupancy is zero, the meadow excess below is exactly zero.
+      float gen3259OriginalHabitat=habitatColorCoverage;
+      float gen3259MeadowExcess=max(0.0,meadowOccupancy*meadowOuterWeight-gen3259OriginalHabitat);
+      // Fade the reduced addition into unchanged surrounding terrain over
+      // a broad world-space margin; do not interpolate excluded R8 cells.
+      float gen3259RegionalFade=smoothstep(0.0,14.0,max(0.0,meadowOuterDistance));
+      float gen3259SoilStrength=mix(0.10,0.16,
+        noise2(vWorldPosition.xz*0.052+vec2(31.0,17.0)));
+      habitatColorCoverage=gen3259OriginalHabitat
+        +gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade;
     }
     base=mix(base,habitatSoil,habitatColorCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);

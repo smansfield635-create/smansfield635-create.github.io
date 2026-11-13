@@ -210,3 +210,129 @@ test('Gen3248 near-contact undefined normal fails closed',()=>{
  assert.equal(r.status,'FAIL_PROJECTED_DIRECTION');
  assert.equal(r.reason,'CONTACT_NORMAL_DEGENERATE');
 });
+
+// Gen3251: synthetic certification state machine only. None of these tests certify R63.
+function firstFidelityFixture({qualification='FIRST',mechanicalFailure=false,censusFailure=false,throwVerifier=false,trace=null}={}){
+ const source=bodyPatch(),anchors=sourceAnchors(source,{manifest:patchManifest,anchors:toyAnchors,requireR63:false});
+ const events=[];const inspected=[];
+ const spec={manifest:patchManifest,anchors:toyAnchors,requireR63:false,firstFidelityPassFreeze:true,
+  solverMethod:'CONTACT_PROJECTED_H1_V1',onTrace:e=>{events.push(e);trace?.(e);},trajectory:{
+   shoulder:anchors.scapula,
+   elbow:[anchors.elbow[0],anchors.elbow[1],anchors.elbow[2]+.006],
+   wrist:[anchors.forearm[0],anchors.forearm[1],anchors.forearm[2]+.005],
+   paw:[anchors.paw[0]+.004,anchors.paw[1],anchors.paw[2]]
+  }};
+ let observedFidelityCalls=0;
+ const dependencies={triangleDistance,
+  articulationFidelity:(s,c)=>{
+   observedFidelityCalls++;
+   const moved=c.vertices.some((p,i)=>p.some((v,k)=>v!==s.vertices[i][k]));
+   return qualification==='FIRST'&&moved?
+    {result:'PASS_FIDELITY',progress:.81,relativeError:.29,segmentProgress:[.71,.72,.73]}:
+    {result:'FAIL_FIDELITY',progress:0,relativeError:1,segmentProgress:[0,0,0]};
+  },
+  verifyCandidate:(s,c,m,opts)=>{
+   const changed=c.vertices.some((p,i)=>p.some((v,k)=>v!==s.vertices[i][k]));
+   inspected.push({type:'mechanical',mesh:c,changed,content:JSON.stringify(c)});
+   if(changed&&throwVerifier)throw Error('INDEPENDENT_VERIFIER_UNAVAILABLE');
+   if(changed&&mechanicalFailure)return {result:'FAIL_MECHANICAL',witness:{kind:'FIRST_STEP_COLLISION_WITNESS',faceA:10,faceB:30}};
+   return verifyCandidate(s,c,m,opts);
+  },
+  exhaustiveCollisionCensus:(s,c,m,opts)=>{
+   const changed=c.vertices.some((p,i)=>p.some((v,k)=>v!==s.vertices[i][k]));
+   inspected.push({type:'census',mesh:c,changed,content:JSON.stringify(c)});
+   if(changed&&censusFailure)return {result:'FAIL_COLLISIONS',collisionCount:1,pairsChecked:0,
+    protectedMinimum:0,collisions:[{kind:'EXACT_CENSUS_WITNESS',faceA:11,faceB:12}]};
+   return exhaustiveCollisionCensus(s,c,m,opts);
+  }
+ };
+ return {source,spec,events,inspected,dependencies,run:()=>collisionAwareHalfStep(source,spec,dependencies),
+  fidelityCallCount:()=>observedFidelityCalls};
+}
+
+test('Gen3251 selects the FIRST accepted fidelity-qualified state, not a later optimizer endpoint',()=>{
+ const f=firstFidelityFixture();const r=f.run();
+ assert.equal(r.status,'FIRST_FIDELITY_PASS_MECHANICALLY_CERTIFIED_UNFROZEN');
+ assert.equal(r.firstFidelityQualifiedAcceptedStep,1);
+ assert.equal(r.acceptedIterations,1);
+ assert.equal(f.events.filter(e=>e.event==='accepted_step').length,1);
+ assert.equal(f.events.filter(e=>e.event==='projected_direction').length,1);
+ assert.deepEqual(r.fidelity.segmentProgress,[.71,.72,.73]);
+});
+
+test('Gen3251 preserves EXACT geometry independently checked by both unchanged verifiers',()=>{
+ const f=firstFidelityFixture();const r=f.run();
+ const actual=f.inspected.filter(x=>x.changed);
+ assert.equal(actual.length,2);
+ assert.deepEqual(actual.map(x=>x.type),['mechanical','census']);
+ assert.strictEqual(actual[0].mesh,actual[1].mesh);
+ assert.strictEqual(actual[0].mesh,r.candidate);
+ assert.equal(actual[0].content,actual[1].content);
+ assert.equal(actual[0].content,JSON.stringify(r.candidate));
+ assert.equal(r.census.pairsChecked,r.sweptCCD.eligibleNonincidentPairs);
+});
+
+test('Gen3251 no later optimizer failure can erase an earlier qualified state',()=>{
+ const f=firstFidelityFixture();const r=f.run();
+ assert.equal(r.status,'FIRST_FIDELITY_PASS_MECHANICALLY_CERTIFIED_UNFROZEN');
+ assert.equal(r.sweptCCD.acceptedSteps,1);
+ assert.equal(f.events.findIndex(e=>e.event==='first_fidelity_qualification'),f.events.length-1);
+ assert.ok(!f.events.some(e=>e.event==='direction_failure'||e.event==='line_search_stalled'));
+});
+
+test('Gen3251 independent mechanical FAIL stops immediately with the FIRST witness, no retry',()=>{
+ const f=firstFidelityFixture({mechanicalFailure:true});const r=f.run();
+ assert.equal(r.status,'FIRST_FIDELITY_PASS_MECHANICAL_REJECTED');
+ assert.equal(r.witness.kind,'FIRST_STEP_COLLISION_WITNESS');
+ assert.equal(r.firstFidelityQualifiedAcceptedStep,1);
+ assert.equal(f.events.filter(e=>e.event==='accepted_step').length,1);
+ assert.equal(r.frozenSpecimens,0);
+});
+
+test('Gen3251 certified local geometry is complete and recoverable, not a numerical-only PASS',()=>{
+ const f=firstFidelityFixture();const r=f.run();
+ const bytes=Buffer.from(JSON.stringify(r.candidate));const recovered=JSON.parse(bytes.toString('utf8'));
+ assert.equal(recovered.vertices.length,f.source.vertices.length);
+ assert.deepEqual(recovered.faces,f.source.faces);
+ assert.ok(recovered.vertices.some((p,i)=>p.some((v,k)=>v!==f.source.vertices[i][k])));
+ const digest=createHash('sha256').update(bytes).digest('hex');
+ assert.equal(createHash('sha256').update(Buffer.from(JSON.stringify(recovered))).digest('hex'),digest);
+ recovered.vertices[4][0]+=1;
+ assert.equal(JSON.stringify(r.candidate),bytes.toString('utf8'));
+ assert.equal(r.frozenSpecimens,0,'external custody, not tests, freezes authentic specimens');
+});
+
+test('Gen3251 no qualifying accepted state returns truthful negative without a candidate',()=>{
+ const f=firstFidelityFixture({qualification:'NEVER'});const r=f.run();
+ assert.ok(['NO_FIDELITY_QUALIFIED_ACCEPTED_STATE','INCONCLUSIVE_FAIL_CLOSED'].includes(r.status),r.status);
+ assert.equal(r.frozenSpecimens,0);
+ assert.equal(r.candidate,undefined);
+ assert.equal(f.events.filter(e=>e.event==='first_fidelity_qualification').length,0);
+});
+
+test('Gen3251 full independent collision census rejection is terminal at first qualified step',()=>{
+ const f=firstFidelityFixture({censusFailure:true});const r=f.run();
+ assert.equal(r.status,'FIRST_FIDELITY_PASS_MECHANICAL_REJECTED');
+ assert.equal(r.witness.kind,'EXACT_CENSUS_WITNESS');
+ assert.equal(f.events.filter(e=>e.event==='accepted_step').length,1);
+});
+
+test('Gen3251 uncertain independent verifier is a fail-closed blocker, never a certified state',()=>{
+ const f=firstFidelityFixture({throwVerifier:true});const r=f.run();
+ assert.equal(r.status,'FIRST_FIDELITY_PASS_VERIFICATION_ERROR');
+ assert.match(r.reason,/INDEPENDENT_VERIFIER_UNAVAILABLE/);
+ assert.equal(r.frozenSpecimens,0);
+ assert.equal(f.events.filter(e=>e.event==='accepted_step').length,1);
+});
+
+test('Gen3251 first accepted direction/alpha/energy retains Gen3248 exact solver-method parity',()=>{
+ const f=firstFidelityFixture();const a=f.run();
+ const priorEvents=[];
+ const b=collisionAwareHalfStep(f.source,{...f.spec,firstFidelityPassFreeze:false,
+  onTrace:e=>priorEvents.push(e)},f.dependencies);
+ const firstNew=f.events.find(e=>e.event==='accepted_step');
+ const firstOld=priorEvents.find(e=>e.event==='accepted_step');
+ assert.ok(firstNew&&firstOld,`new:${a.status} old:${b.status}`);
+ for(const k of ['it','backtrack','alpha','oldEnergy','newEnergy'])assert.equal(firstNew[k],firstOld[k],k);
+ assert.deepEqual(firstNew.fidelity,firstOld.fidelity);
+});

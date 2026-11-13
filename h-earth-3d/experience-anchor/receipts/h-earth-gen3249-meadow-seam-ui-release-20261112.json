@@ -1,0 +1,145 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3249_MEADOW_SEAM_UI_RELEASE_FINALIZATION_20261112_001",
+  "canonicalAdmissionGeneration": 3252,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewedBaselineHead": "a2168b470a63be6ed5f67249d6580bbd89b1d39d",
+  "productSourceHead": "86f3323d0a69e3ea5657ad9eff242c40cf59661a",
+  "reviewScope": "SOURCE_BOUND_SAME_WORLD_CONTINUITY_FOR_BOUNDED_GEN3249_MEADOW_SEAM_AND_OPTIONAL_INSPECTOR_UI: eleven preserved world invariants reviewed with the Gen3250 real Chromium five-frame receipt. Original film not replayed; owner Android visual acceptance of exact seam, naturalness and blade fullness NOT established. The correction hides public diagnostics by default and preserves opt-in inspector. No change to the 3,805,291 existing roots, frozen map, grass shader, terrain geometry, navigation, coast, water or trees. A separately selected exact-head preflight and actual deployment remain necessary.",
+  "ownerDecision": {
+    "intent": "PUBLISH_BOUNDED_MEADOW_SEAM_AND_PUBLIC_UI_AFTER_SELECTED_GATES_THEN_OWNER_INSPECT",
+    "sourceIssue": 7359,
+    "sourcePR": 7369,
+    "ownerReleaseCommentId": 6841877349,
+    "beforeAfterPackageRequired": false,
+    "newRootPlacement": false,
+    "physicalAndroidReviewed": false,
+    "publicationPerformed": false,
+    "thinBladesClaimedFixed": false,
+    "matchedCameraNewComparisonRequired": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "9b687c296a0dd61cf7d2c328c01a9ab272e1efdc4dac7f1f303dcbcf5bd4e0cd",
+      "gitBlob": "e51839b5cef3cae0d8d91bdb4e322cff6531386d",
+      "sourceRole": "CONTENT_HASHED_EXACT_IMPORT_MAP"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "4da1bd5b88c90ebe886da28b9ab120974abced5731d5d1b06a0bcf90165e6c00",
+      "gitBlob": "c69ef60c6e3126c0267ea60709768c35219f4ee6",
+      "sourceRole": "IMMUTABLE_GEN3249_MEADOW_BOUNDARY_RENDERER"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "e43bff800a158e3adb409e81eaeca22b270d9f7b67c19f5127b09349e27e8a21",
+      "gitBlob": "bddf7dcf22c33ba4fa04928016016c37a78e031f",
+      "sourceRole": "IMMUTABLE_GEN3249_OPT_IN_PUBLIC_ROUTE"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "3e16701f69d5530482e8f35a9f8441b97fcbbd42f15889108d37780ac23e481f",
+      "gitBlob": "97209f149a56aa90b057e397e5504123bbfefbc9",
+      "sourceRole": "IMMUTABLE_GEN3249_LOADER_COPY_REPORT"
+    }
+  ],
+  "firstPartyEvidence": {
+    "previousAcceptedLiveRelease": {
+      "mergeHead": "a2168b470a63be6ed5f67249d6580bbd89b1d39d",
+      "pagesRun": 43329316669,
+      "rootCount": 3805291
+    },
+    "currentCandidate": {
+      "head": "86f3323d0a69e3ea5657ad9eff242c40cf59661a",
+      "nativeWebglRun": 43341473325,
+      "nativeWebglArtifactId": 13999328405,
+      "receipt": "H_EARTH_GEN3249_GPU_RESIDENCY_RUNTIME_v1",
+      "result": "PASS_SOFTWARE_CHROMIUM_WEBGL2",
+      "observedGrassRoots": 3805291,
+      "observedGpuBytes": 60884656,
+      "renderedViews": 5,
+      "renderingGlErrors": 0,
+      "ownerAndroidFps": "UNMEASURED",
+      "thinBlades": "NOT_FIXED_BY_THIS_CANDIDATE",
+      "ownerVisualReviewCommentId": 6841564687,
+      "priorAnchorFailure": "EXPERIENCE_CHANGE_WITHOUT_ANCHOR_RECEIPT",
+      "inheritedCp3dFailure": "VERIFIED_PLANTING_TEMPLATE_LAYOUT:BARK_BEFORE_CHANGED_RENDERER"
+    },
+    "exactFinalHeadPublicationPreflight": {
+      "result": "PENDING_NEW_EXACT_RELEASE_HEAD",
+      "runId": null
+    }
+  },
+  "sourceIdentity": {
+    "frozenRootCount": 3805291,
+    "originalVegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "frozenMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "immutableProductGitBlobs": {
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "c69ef60c6e3126c0267ea60709768c35219f4ee6",
+      "showroom/globe/h-earth/vegetation-prototype/route.js": "bddf7dcf22c33ba4fa04928016016c37a78e031f",
+      "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js": "97209f149a56aa90b057e397e5504123bbfefbc9"
+    },
+    "previousIndexBlob": "ae4c1e4ac4b1c88340cfbbed007e17728b68e2db",
+    "newIndexBlob": "e51839b5cef3cae0d8d91bdb4e322cff6531386d",
+    "expectedModuleRevisions": {
+      "renderer": "?rev=sha-c69ef60c6e31",
+      "route": "?rev=sha-bddf7dcf22c3",
+      "loader": "?rev=sha-97209f149a56"
+    },
+    "modifiedProductPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js"
+    ],
+    "finalizationPaths": [
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/experience-anchor/receipts/h-earth-gen3249-meadow-seam-ui-release-20261112.json"
+    ],
+    "noAdditionalGrass": true
+  },
+  "comparison": {
+    "anchorObserved": "Inherited original source-proxy acceptance plus current same-world source review; 5 actual Gen3250 candidate software WebGL screenshots inspected. No physical owner Android full naturalness claim.",
+    "sourceDelta": "Only content-addressed renderer/route/loader import-map bindings and truthful Experience Anchor source acceptance receipt were added during release finalization; three admitted Gen3249 source modules remain unchanged.",
+    "acceptanceBoundary": "SOURCE_BOUND_ELEVEN_INVARIANT_CONTINUITY_AND_GEN3250_SOFTWARE_GPU_PASS_ONLY; THIN_BLADE_AND_ANDROID_AESTHETIC_APPROVAL_NOT_CLAIMED; NO_NEW_MATCHED_COMPARISON_REQUIRED"
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+    "OWNER_ANDROID_SEAM_NATURALNESS_NOT_YET_ACCEPTED",
+    "THIN_DISTANT_GRASS_BLADES_NOT_FIXED_OR_ACCEPTED_BY_THIS_RELEASE",
+    "PHYSICAL_ANDROID_HARDWARE_FPS_UNMEASURED",
+    "NO_NEW_SAME_CAMERA_A_B_COMPARISON_REQUESTED_OR_EXECUTED",
+    "LEGACY_CP3D_BARK_HARNESS_FAILED_BEFORE_CHANGED_RENDERER",
+    "MERGE_DEPLOYMENT_PUBLICATION_NOT_AUTHORIZED_BY_THIS_SOURCE_RECEIPT"
+  ]
+}

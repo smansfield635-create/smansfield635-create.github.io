@@ -140,6 +140,85 @@ function articulatedKernel(){
 
  // Gen3243: one frozen source-H1 / IPC barrier method. This builder never certifies
  // its own output: independent full-population verification is mandatory.
+ function contactProjectedH1Direction({movable,adjacency,gradient,vertices,pairs,triangleDistance,dHat,baseAlpha}){
+ const finite=a=>a.every(Number.isFinite);
+ const idx=new Map(movable.map((id,i)=>[id,i])),count=movable.length,dim=3*count;
+ const rhs=new Float64Array(dim),diag=new Float64Array(dim);
+ for(let i=0;i<count;i++){
+  const id=movable[i],g=gradient.get(id),neighbors=adjacency.get(id);
+  if(!g||!finite(g)||!neighbors) return {status:"FAIL_PROJECTED_DIRECTION",reason:"MISSING_OR_NONFINITE_GRADIENT"};
+  const dd=2*(1+neighbors.reduce((s,e)=>s+e.weight,0));
+  if(!Number.isFinite(dd)||dd<=0)return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_DIAGONAL_INVALID"};
+  for(let k=0;k<3;k++){rhs[3*i+k]=-g[k];diag[3*i+k]=dd;}
+ }
+ const prod=v=>{const out=new Float64Array(dim);for(let i=0;i<count;i++){const id=movable[i];for(let k=0;k<3;k++){let val=2*v[3*i+k];for(const e of adjacency.get(id)){const j=idx.get(e.other);val+=2*e.weight*(v[3*i+k]-(j===undefined?0:v[3*j+k]));}out[3*i+k]=val;}}return out;};
+ const flatDot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+ const bnorm=Math.sqrt(flatDot(rhs,rhs));if(!(bnorm>1e-12))return {status:"FAIL_PROJECTED_DIRECTION",reason:"ZERO_PREFERRED_DIRECTION"};
+ const x=new Float64Array(dim),r=Float64Array.from(rhs),z=Float64Array.from(r,(v,i)=>v/diag[i]),p=Float64Array.from(z);
+ let rz=flatDot(r,z),converged=false;
+ for(let it=0;it<Math.max(50,3*count+40);it++){
+  const ap=prod(p),den=flatDot(p,ap);
+  if(!Number.isFinite(den)||den<=1e-20)return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_PCG_NONPOSITIVE_CURVATURE"};
+  const alpha=rz/den;if(!Number.isFinite(alpha))return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_PCG_NONFINITE_ALPHA"};
+  for(let j=0;j<dim;j++){x[j]+=alpha*p[j];r[j]-=alpha*ap[j];}
+  if(Math.sqrt(flatDot(r,r))<=1e-9*Math.max(1,bnorm)){converged=true;break;}
+  for(let j=0;j<dim;j++)z[j]=r[j]/diag[j];
+  const rz1=flatDot(r,z),beta=rz1/rz;
+  if(!Number.isFinite(beta))return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_PCG_NONFINITE_BETA"};
+  for(let j=0;j<dim;j++)p[j]=z[j]+beta*p[j];
+  rz=rz1;
+ }
+ if(!converged)return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_PCG_UNCONVERGED"};
+ const origNorm=Math.sqrt(flatDot(x,x));
+ if(!(origNorm>1e-12))return {status:"FAIL_PROJECTED_DIRECTION",reason:"H1_ZERO_DIRECTION"};
+ for(let i=0;i<dim;i++)x[i]/=origNorm;
+ const tri=(f,points)=>f.indices.map(i=>points[i]);
+ const advance=()=>vertices.map((p,i)=>{const j=idx.get(i);return j===undefined?p:p.map((v,k)=>v+baseAlpha*x[3*j+k]);});
+ const next=advance();
+ const constraints=[];
+ for(const pair of pairs){
+  if(!pair.indices.length)continue;
+  const A=pair.a.indices.flatMap(i=>[vertices[i],next[i]]);
+  const B=pair.b.indices.flatMap(i=>[vertices[i],next[i]]);
+  if([0,1,2].some(k=>Math.max(...A.map(p=>p[k]))+dHat<Math.min(...B.map(p=>p[k]))||
+     Math.max(...B.map(p=>p[k]))+dHat<Math.min(...A.map(p=>p[k]))))continue;
+  const cur=triangleDistance(tri(pair.a,vertices),tri(pair.b,vertices));
+  const fut=triangleDistance(tri(pair.a,next),tri(pair.b,next));
+  if(!Number.isFinite(cur)||!Number.isFinite(fut))return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_DISTANCE_NONFINITE",pair:[pair.a.id,pair.b.id]};
+  if(cur>=dHat&&fut>=dHat)continue;
+  if(cur<=1e-10)return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_NORMAL_UNDEFINED_AT_ZERO",pair:[pair.a.id,pair.b.id]};
+  const g=new Float64Array(dim),h=1e-6;
+  for(const id of pair.indices){
+   const j=idx.get(id);if(j===undefined)continue;
+   for(let k=0;k<3;k++){
+    const orig=vertices[id][k];
+    vertices[id][k]=orig+h;const plus=triangleDistance(tri(pair.a,vertices),tri(pair.b,vertices));
+    vertices[id][k]=orig-h;const minus=triangleDistance(tri(pair.a,vertices),tri(pair.b,vertices));
+    vertices[id][k]=orig;
+    if(!Number.isFinite(plus)||!Number.isFinite(minus))return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_GRADIENT_NONFINITE",pair:[pair.a.id,pair.b.id]};
+    g[3*j+k]=(plus-minus)/(2*h);
+   }
+  }
+  const g2=flatDot(g,g);
+  if(!(g2>1e-16))return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_NORMAL_DEGENERATE",pair:[pair.a.id,pair.b.id]};
+  constraints.push({g,g2,pair:[pair.a.id,pair.b.id]});
+ }
+ for(let pass=0;pass<32;pass++){
+  let altered=false;
+  for(const c of constraints){
+   const v=flatDot(c.g,x);
+   if(v<0){const n=-v/c.g2;for(let j=0;j<dim;j++)x[j]+=n*c.g[j];altered=true;}
+  }
+  if(!altered)break;
+ }
+ for(const c of constraints)if(flatDot(c.g,x)<-1e-8)return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_PROJECTION_UNRESOLVED",pair:c.pair};
+ const n=Math.sqrt(flatDot(x,x));
+ if(!(n>1e-10))return {status:"FAIL_PROJECTED_DIRECTION",reason:"CONTACT_PROJECTION_ZERO_DIRECTION"};
+ for(let i=0;i<dim;i++)x[i]/=n;
+ if(flatDot(rhs,x)<=1e-12)return {status:"FAIL_PROJECTED_DIRECTION",reason:"NO_DESCENT_AFTER_PROJECTION"};
+ const direction=new Map(movable.map((id,i)=>[id,[x[3*i],x[3*i+1],x[3*i+2]]]));
+ return {status:"PASS_PROJECTED_DIRECTION",direction,activeConstraints:constraints.length};
+}
  function collisionAwareHalfStep(source,spec,deps){
   if(!deps?.triangleDistance||!deps?.exhaustiveCollisionCensus||!deps?.articulationFidelity||!deps?.verifyCandidate)
    throw Error("GEN3243_INDEPENDENT_GEOMETRY_DEPENDENCIES_REQUIRED");
@@ -277,7 +356,20 @@ function articulatedKernel(){
    const barrierGradientNorm=emit?Math.sqrt([...gradient].reduce((sum,[ix,g])=>sum+g.reduce((v,k,j)=>v+(k-baseGradient.get(ix)[j])**2,0),0)):null;
    if(!Number.isFinite(gradientNorm))return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:"NONFINITE_GRADIENT",iterations:it,frozenSpecimens:0};
    if(gradientNorm<1e-8)break;
-   const oldEnergy=objective(vertices),direction=new Map([...gradient].map(([ix,g])=>[ix,scale(g,-1/Math.max(1,gradientNorm))]));
+   const oldEnergy=objective(vertices);
+   let direction;
+   if(spec?.solverMethod==="CONTACT_PROJECTED_H1_V1"){
+    const proposed=contactProjectedH1Direction({movable,adjacency,gradient,vertices,pairs,triangleDistance:deps.triangleDistance,dHat,baseAlpha:0.025});
+    if(proposed.status!=="PASS_PROJECTED_DIRECTION"){
+     if(emit)emit("direction_failure",{it,reason:proposed.reason,pair:proposed.pair||null});
+     return {status:"INCONCLUSIVE_FAIL_CLOSED",reason:proposed.reason,iterations:it,frozenSpecimens:0};
+    }
+    direction=proposed.direction;
+    if(emit)emit("projected_direction",{it,activeConstraints:proposed.activeConstraints});
+   }else{
+    if(spec?.solverMethod)throw Error("UNREGISTERED_SOLVER_METHOD");
+    direction=new Map([...gradient].map(([ix,g])=>[ix,scale(g,-1/Math.max(1,gradientNorm))]));
+   }
    const oldTerms=emit?{...lastObjectiveTerms}:null;
    if(emit){
     const fidelity=deps.articulationFidelity(source,{...source,vertices},target,movable,roleByVertex);
@@ -361,9 +453,12 @@ function articulatedKernel(){
   if(emit)emit('final',{status:'PASS_METHOD_FEASIBILITY_ONLY',iterations,mechanical,census,fidelity});
   return {status:"PASS_METHOD_FEASIBILITY_ONLY",mechanical,census,fidelity,iterations,frozenSpecimens:0};
  }
- return {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep};
+ return {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep,contactProjectedH1Direction};
 }
-export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep}=articulatedKernel();
+export const {sourceAnchors,kinematicFrame,proposedSkin,measuredRadii,clearancePreflight,solveArticulatedForequarter,collisionAwareHalfStep,contactProjectedH1Direction}=articulatedKernel();
 export function construct(source,spec){return solveArticulatedForequarter(source,spec,independent)}
 
 export function constructGen3243(source,spec){return collisionAwareHalfStep(source,spec,independent)}
+
+// Gen3248: one admitted source-H1-preconditioned active-contact-projected feasibility method.
+export function constructGen3248(source,spec){return collisionAwareHalfStep(source,{...spec,solverMethod:"CONTACT_PROJECTED_H1_V1"},independent)}

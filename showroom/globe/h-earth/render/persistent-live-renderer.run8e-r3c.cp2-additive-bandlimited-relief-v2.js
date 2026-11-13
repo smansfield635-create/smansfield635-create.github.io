@@ -1306,7 +1306,7 @@ void main(){
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
-    // Occupied meadow soil only; immutable original habitat panels remain dominant.
+    // Frozen eligible occupied-meadow soil extends continuously through former panel seams.
     vec2 meadowUv=(vWorldPosition.xz-uMeadowGroundBounds.xy)/(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy);
     if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThan(meadowUv,vec2(1.0)))){
       float meadowOccupancy=texture(uMeadowGroundOccupancy,meadowUv).r;
@@ -2080,27 +2080,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const meadowMap=JSON.parse(await new Response(new Blob([meadowGzip]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
       if(meadowMap.cells?.length!==76874)throw Error('MEADOW_OCCUPANCY_CELL_COUNT_DRIFT');
       const meadowWidth=238,meadowHeight=323,meadowPixels=new Uint8Array(meadowWidth*meadowHeight);
-      const originalPanels=[[-213,-298,-69,-154],[-298,-570,88,-154],[-448,-283,448,-93]];
-      // Keep original habitat atlas untouched. Only admit source-eligible meadow
-      // occupancy into a narrow, smoothly tapered overlap inside old rectangles.
-      // This removes the binary material handoff without tinting protected soil.
-      const panelOverlapMeters=9;
-      const smoothUnit=v=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t);};
-      let eligibleMeadowCells=0,protectedMeadowCells=0,overlapMeadowCells=0;
+      // Gen3254: frozen admitted meadow roots, not historic rectangular panels,
+      // decide where grassland soil coloring is allowed. The panel habitat atlas,
+      // original roots, all zero-tint protected cells and the outer map feather
+      // remain unchanged; no grass or terrain geometry is generated here.
+      let eligibleMeadowCells=0,protectedMeadowCells=0;
       for(const cell of meadowMap.cells){
         const occupied=cell.sourceRoots+cell.additionalRoots;
         if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6){
           protectedMeadowCells++;continue;
         }
         if(!Number.isInteger(cell.x)||!Number.isInteger(cell.z)||cell.x<16||cell.x>=254||cell.z< -559||cell.z>=-236)throw Error('MEADOW_OCCUPANCY_CELL_OUT_OF_BOUNDS');
-        const x=cell.x+.5,z=cell.z+.5;
-        const containingPanels=originalPanels.filter(panel=>x>panel[0]&&x<panel[2]&&z>panel[1]&&z<panel[3]);
-        const nearestInsideEdge=containingPanels.length?Math.min(...containingPanels.map(panel=>Math.min(x-panel[0],panel[2]-x,z-panel[1],panel[3]-z))):0;
-        const seamWeight=containingPanels.length?1-smoothUnit((nearestInsideEdge-1.5)/(panelOverlapMeters-1.5)):1;
-        if(seamWeight<=0){protectedMeadowCells++;continue;}
         const q=Math.max(0,Math.min(1,(occupied-6)/20)),factor=q*q*(3-2*q);
-        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor*seamWeight);
-        if(containingPanels.length)overlapMeadowCells++;
+        // Continuous across former habitat-panel boundaries. No panel-distance
+        // taper can manufacture a straight nine-metre material-color stripe.
+        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor);
         eligibleMeadowCells++;
       }
       if(eligibleMeadowCells<1||eligibleMeadowCells+protectedMeadowCells!==76874)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');

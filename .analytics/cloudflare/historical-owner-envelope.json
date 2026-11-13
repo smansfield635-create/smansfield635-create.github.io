@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T00:43:52Z",
+  "generatedAt": "2026-11-13T01:24:19Z",
   "window": {
-    "start": "2026-08-15T00:43:52Z",
-    "end": "2026-11-13T00:43:52Z"
+    "start": "2026-08-15T01:24:19Z",
+    "end": "2026-11-13T01:24:19Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3853,
+    "pageLoads": 3843,
     "visits": 1141,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3853,
+        "pageLoads": 3843,
         "visits": 1141
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 871,
+        "pageLoads": 861,
         "visits": 641
       },
       "/governance/": {
@@ -82,6 +82,14 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -93,14 +101,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -313,7 +313,7 @@
         "visits": 590
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2712,
+        "pageLoads": 2702,
         "visits": 0
       },
       "(none)": {

@@ -1947,3 +1947,156 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Gen3255 separately admitted, exact-Gen3254 one-camera two-product visual qualification.
+  # One PR-only job, appended after immutable original neutral workflow jobs.
+  gen3255-gen3254-exact-camera-native-pr:
+    if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3254-material-seam-native-comparator-20261113'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact two-file admitted comparator tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: verifier-tooling
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify unchanged historic runner and exact two-file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=a6098c8a1e848c0bab4a9374fc950c8cd8d96937
+          test "$(git -C verifier-tooling rev-parse HEAD)" = '${{ github.event.pull_request.head.sha }}'
+          git -C verifier-tooling fetch --no-tags --depth=1 origin "$base"
+          mapfile -t files < <(git -C verifier-tooling diff --name-only "$base" HEAD)
+          test "${#files[@]}" -eq 2
+          printf '%s\n' "${files[@]}" | grep -Fxq '.github/workflows/h-earth-neutral-exact-head-runner.yml'
+          printf '%s\n' "${files[@]}" | grep -Fxq 'h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs'
+          node --check verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs
+          python3 - <<'PY'
+          import pathlib,subprocess
+          base='a6098c8a1e848c0bab4a9374fc950c8cd8d96937'
+          previous=subprocess.check_output(['git','-C','verifier-tooling','show',base+':.github/workflows/h-earth-neutral-exact-head-runner.yml'])
+          current=pathlib.Path('verifier-tooling/.github/workflows/h-earth-neutral-exact-head-runner.yml').read_bytes()
+          assert current.startswith(previous),'GEN3255_HISTORIC_NEUTRAL_RUNNER_MUTATED'
+          assert current[len(previous):].startswith(b'\n  # Gen3255 separately admitted, exact-Gen3254')
+          print('GEN3255_TWO_TOOLING_PATHS_AND_HISTORIC_RUNNER_PASS')
+          PY
+      - name: Checkout exact accepted live Gen3252 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: d30a0c6a154b9882e782113730e5fbdcf9366c44
+          path: baseline
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Checkout exact independently admitted Gen3254 one-file candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 45858854674824ee12de1939082b59d20dbd8afe
+          path: candidate
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Bind immutable products and unchanged root/frozen map identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          grass=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          test "$(git -C baseline rev-parse HEAD)" = d30a0c6a154b9882e782113730e5fbdcf9366c44
+          test "$(git -C candidate rev-parse HEAD)" = 45858854674824ee12de1939082b59d20dbd8afe
+          test "$(git -C baseline hash-object "$renderer")" = c69ef60c6e3126c0267ea60709768c35219f4ee6
+          test "$(git -C candidate hash-object "$renderer")" = 0df7797301b4e320b7eefc70bea34846763ec06b
+          test "$(git -C baseline hash-object "$grass")" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test "$(git -C candidate hash-object "$grass")" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test "$(sha256sum baseline/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz | cut -d' ' -f1)" = a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015
+          test "$(sha256sum candidate/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz | cut -d' ' -f1)" = a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015
+          node --check candidate/"$renderer"
+          git -C candidate fetch --no-tags --depth=1 origin d30a0c6a154b9882e782113730e5fbdcf9366c44
+          test "$(git -C candidate diff --name-only d30a0c6a154b9882e782113730e5fbdcf9366c44 HEAD | grep -v '^\.analytics/\|^analytics/' | wc -l)" -eq 1
+      - name: Install existing first-party Chromium test dependency
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture genuine same-pose WebGL frames from both frozen sources
+        shell: bash
+        env:
+          H_EARTH_GEN3254_EXACT_SINGLE_FRAME: '1'
+        run: |
+          set -euo pipefail
+          export CODEX_PRIMARY_RUNTIME_NODE_MODULES="$GITHUB_WORKSPACE/candidate/node_modules"
+          mkdir -p "$RUNNER_TEMP/gen3254/BASELINE_GEN3252" "$RUNNER_TEMP/gen3254/GEN3254_CANDIDATE"
+          export H_EARTH_GEN3254_FRAME_LABEL=BASELINE_GEN3252
+          export H_EARTH_GEN3254_EXPECTED_HEAD=d30a0c6a154b9882e782113730e5fbdcf9366c44
+          export H_EARTH_RUNTIME_SCREENSHOT_DIR="$RUNNER_TEMP/gen3254/BASELINE_GEN3252"
+          (cd baseline && timeout 2100s node ../verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs) 2>&1 | tee "$RUNNER_TEMP/gen3254/baseline-runtime.log"
+          export H_EARTH_GEN3254_FRAME_LABEL=GEN3254_CANDIDATE
+          export H_EARTH_GEN3254_EXPECTED_HEAD=45858854674824ee12de1939082b59d20dbd8afe
+          export H_EARTH_RUNTIME_SCREENSHOT_DIR="$RUNNER_TEMP/gen3254/GEN3254_CANDIDATE"
+          (cd candidate && timeout 2100s node ../verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs) 2>&1 | tee "$RUNNER_TEMP/gen3254/candidate-runtime.log"
+      - name: Compare exact native GPU receipts, camera and actual PNG pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CODEX_PRIMARY_RUNTIME_NODE_MODULES="$GITHUB_WORKSPACE/candidate/node_modules"
+          export GEN3254_OUT="$RUNNER_TEMP/gen3254"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import assert from 'node:assert/strict';
+          import {createRequire} from 'node:module';
+          const require=createRequire(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES+'/package.json');
+          const {PNG}=require('pngjs');
+          const root=process.env.GEN3254_OUT;
+          const get=(label)=>{
+            const p=path.join(root,label);
+            const receipt=JSON.parse(fs.readFileSync(path.join(p,'receipt.json'),'utf8'));
+            const image=PNG.sync.read(fs.readFileSync(path.join(p,label+'.png')));
+            assert.equal(receipt.schema,'H_EARTH_GEN3254_EXACT_SOURCE_SINGLE_CAMERA_NATIVE_FRAME_v1');
+            assert.equal(receipt.result,'PASS_CAPTURED');
+            assert.equal(receipt.image?.rootCount,3805291);
+            assert.equal(receipt.image?.gpuPackedBytes,60884656);
+            assert.equal(receipt.problems.length,0);
+            return {receipt,image};
+          };
+          const a=get('BASELINE_GEN3252'),b=get('GEN3254_CANDIDATE');
+          assert.equal(a.receipt.head,'d30a0c6a154b9882e782113730e5fbdcf9366c44');
+          assert.equal(b.receipt.head,'45858854674824ee12de1939082b59d20dbd8afe');
+          assert.equal(a.image.width,b.image.width);
+          assert.equal(a.image.height,b.image.height);
+          assert.deepEqual(a.receipt.image.pose,b.receipt.image.pose,'CAMERA_NAV_POSE_MISMATCH');
+          const p=a.receipt.image.camera,q=b.receipt.image.camera;
+          const cameraDelta=Math.hypot(p.x-q.x,p.y-q.y,p.z-q.z);
+          assert(cameraDelta<0.02,'GEN3254_ACTUAL_GPU_CAMERA_MISMATCH:'+cameraDelta);
+          let changed=0,ground=0,sky=0,sum=0;
+          for(let y=0;y<a.image.height;y++)for(let x=0;x<a.image.width;x++){
+            const i=4*(y*a.image.width+x);
+            const dr=Math.abs(a.image.data[i]-b.image.data[i]),dg=Math.abs(a.image.data[i+1]-b.image.data[i+1]),db=Math.abs(a.image.data[i+2]-b.image.data[i+2]);
+            if(Math.max(dr,dg,db)>8){changed++;if(y>=220)ground++;if(y<175)sky++;}
+            sum+=dr+dg+db;
+          }
+          const receipt={schema:'H_EARTH_GEN3254_NATIVE_MATERIAL_SEAM_BASELINE_CANDIDATE_COMPARISON_v1',
+            result:'PASS_CAPTURED_VISUAL_REVIEW_PENDING',
+            baselineHead:a.receipt.head,candidateHead:b.receipt.head,cameraDeltaMeters:cameraDelta,
+            rootCount:3805291,packedGpuBytes:60884656,
+            viewport:{width:a.image.width,height:a.image.height},
+            measured:{changedPixelsGt8:changed,changedGroundPixelsGt8:ground,changedSkyPixelsGt8:sky,
+              changedFraction:changed/(a.image.width*a.image.height),meanAbsoluteRgbDifference:sum/(3*a.image.width*a.image.height)},
+            notes:'Genuine same-source-pose native WebGL frames; no aesthetic or Android PASS inferred. Review image differences and protected soil before release.'};
+          assert(changed>100,'GEN3254_MATERIAL_CORRECTION_NOT_VISIBLE_IN_POSE');
+          fs.writeFileSync(path.join(root,'comparison.json'),JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt));
+          NODE
+      - name: Preserve exact source-bound WebGL images and native comparison evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3254-same-camera-baseline-candidate-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/gen3254/
+          retention-days: 30
+          if-no-files-found: warn

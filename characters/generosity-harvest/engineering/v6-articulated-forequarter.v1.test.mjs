@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {triangleDistance,coplanarOverlapArea,segmentDistance,geometryWitness,patchBoundary,verifyCandidate,exhaustiveCollisionCensus,articulationFidelity} from './v6-articulated-independent-verifier.v1.mjs';
-import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct,constructGen3243,collisionAwareHalfStep} from './v6-articulated-forequarter.v1.mjs';
+import {sourceAnchors,kinematicFrame,measuredRadii,clearancePreflight,construct,constructGen3243,constructGen3248,collisionAwareHalfStep,contactProjectedH1Direction} from './v6-articulated-forequarter.v1.mjs';
 import {verifySourceBytes,prepareNativeFourCameraReview,ACCEPTED_R63_SHA256} from './v6-articulated-native-bridge.v1.mjs';
 import {createHash} from 'node:crypto';
 
@@ -176,4 +176,37 @@ test('Gen3247 passive diagnostics cannot alter the frozen synthetic solver resul
  assert.ok(events.every(e=>e.schema==='GH_GEN3247_IPC_TRACE_v1'));
  const ignoringErrors=collisionAwareHalfStep(source,{...spec,onTrace:()=>{throw Error('OBSERVER_FAILURE');}},deps);
  assert.deepEqual(ignoringErrors,baseline);
+});
+
+test('Gen3248 H1-preconditioned search is deterministic on a source-edge quadratic',()=>{
+ const params={movable:[0,1],adjacency:new Map([[0,[{other:1,weight:2}]],[1,[{other:0,weight:2}]]]),
+  gradient:new Map([[0,[1,0,0]],[1,[-1,0,0]]]),vertices:[[0,0,0],[1,0,0]],pairs:[],
+  triangleDistance:()=>1,dHat:.002,baseAlpha:.025};
+ const a=contactProjectedH1Direction(params),b=contactProjectedH1Direction(params);
+ assert.equal(a.status,'PASS_PROJECTED_DIRECTION');
+ assert.deepEqual(a,b);
+ assert.ok(a.direction.get(0)[0]<0);
+ assert.ok(a.direction.get(1)[0]>0);
+ assert.ok(Math.abs(a.direction.get(0)[0]+a.direction.get(1)[0])<1e-9);
+});
+test('Gen3248 active contact projects away a closing normal but preserves tangential descent',()=>{
+ const vertices=[[0,0,.001],[1,0,.001],[0,1,.001],[0,0,0],[1,0,0],[0,1,0]];
+ const free=[0,1,2],upper={id:10,indices:[0,1,2]},lower={id:11,indices:[3,4,5]};
+ const r=contactProjectedH1Direction({movable:free,adjacency:new Map(free.map(i=>[i,[]])),
+  gradient:new Map(free.map(i=>[i,[-1,0,1]])),vertices,pairs:[{a:upper,b:lower,indices:free}],
+  triangleDistance,dHat:.002,baseAlpha:.025});
+ assert.equal(r.status,'PASS_PROJECTED_DIRECTION',r.reason);
+ assert.equal(r.activeConstraints,1);
+ const d=free.map(i=>r.direction.get(i));
+ assert.ok(d.reduce((s,x)=>s+x[0],0)>0,'tangential motion retained');
+ assert.ok(d.reduce((s,x)=>s+x[2],0)>-1e-6,'contact closing direction removed');
+});
+test('Gen3248 near-contact undefined normal fails closed',()=>{
+ const vertices=[[0,0,.001],[1,0,.001],[0,1,.001],[0,0,0],[1,0,0],[0,1,0]],free=[0,1,2];
+ const r=contactProjectedH1Direction({movable:free,adjacency:new Map(free.map(i=>[i,[]])),
+  gradient:new Map(free.map(i=>[i,[-1,0,1]])),vertices,
+  pairs:[{a:{id:10,indices:[0,1,2]},b:{id:11,indices:[3,4,5]},indices:free}],
+  triangleDistance:()=>.001,dHat:.002,baseAlpha:.025});
+ assert.equal(r.status,'FAIL_PROJECTED_DIRECTION');
+ assert.equal(r.reason,'CONTACT_NORMAL_DEGENERATE');
 });

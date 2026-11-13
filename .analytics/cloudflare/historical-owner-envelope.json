@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T13:24:57Z",
+  "generatedAt": "2026-11-13T14:25:38Z",
   "window": {
-    "start": "2026-08-15T13:24:57Z",
-    "end": "2026-11-13T13:24:57Z"
+    "start": "2026-08-15T14:25:38Z",
+    "end": "2026-11-13T14:25:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3793,
+    "pageLoads": 3783,
     "visits": 1131,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3793,
+        "pageLoads": 3783,
         "visits": 1131
       }
     },
@@ -111,7 +111,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 62,
+        "pageLoads": 52,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -186,6 +186,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
@@ -203,10 +207,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -305,7 +305,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2662,
+        "pageLoads": 2652,
         "visits": 0
       },
       "(none)": {

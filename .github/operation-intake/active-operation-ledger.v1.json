@@ -12883,6 +12883,50 @@
       "scopeHash": "6ceb6b31fc7a2ad919b1ab7490cd2c1b610ca5d770e7e72a936d7db4a3301571",
       "state": "ADMITTED_LOCKED"
     },
+    "6cedbeb20be9aae13b9673cd286862db6a850321ed42ea8316ea84f907f697db": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a6098c8a1e848c0bab4a9374fc950c8cd8d96937",
+          "lockGeneration": 3255,
+          "lockScope": "H_EARTH:GEN3254_EXACT_CAMERA_SOIL_SEAM_NATIVE_COMPARATOR:20261113:ONE",
+          "operationId": "H_EARTH_GEN3254_EXACT_POSE_MATERIAL_SEAM_NATIVE_COMPARATOR_20261113_001",
+          "procedureLocatorDigest": "6a495ccd7ed0792d45ccce1b3ab6549075db9940e5ecc4305eb78250cc6fbdb0",
+          "requestDigest": "11ce25c54d986139d1e4c09750557dc7c57cfff47f97c29d84c1c61abf820681",
+          "scopeHash": "6cedbeb20be9aae13b9673cd286862db6a850321ed42ea8316ea84f907f697db"
+        },
+        "bindingDigest": "2ea791bfa9e6ccf5f6d16bdfd8b3836d6d035b46eb45a88868f7dc2ffcf912e0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e372ae750ea79a9e5ee673a36e0e5351e26a40729589d84060b368497430313c",
+          "commentId": 6858324238,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7359,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43459597015,
+          "workflowSha": "a6098c8a1e848c0bab4a9374fc950c8cd8d96937"
+        },
+        "lineageAnchorCommitSha": "c255a9dd6229bbba5c79df15e643ea3f1b5780d1",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a6098c8a1e848c0bab4a9374fc950c8cd8d96937",
+      "lockGeneration": 3255,
+      "lockScope": "H_EARTH:GEN3254_EXACT_CAMERA_SOIL_SEAM_NATIVE_COMPARATOR:20261113:ONE",
+      "operationId": "H_EARTH_GEN3254_EXACT_POSE_MATERIAL_SEAM_NATIVE_COMPARATOR_20261113_001",
+      "procedureLocatorDigest": "6a495ccd7ed0792d45ccce1b3ab6549075db9940e5ecc4305eb78250cc6fbdb0",
+      "released": false,
+      "requestDigest": "11ce25c54d986139d1e4c09750557dc7c57cfff47f97c29d84c1c61abf820681",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6cedbeb20be9aae13b9673cd286862db6a850321ed42ea8316ea84f907f697db",
+      "state": "ADMITTED_LOCKED"
+    },
     "6d26d6c7f1542c7fa69956bd7d61771c6188fb4aadc30ce237a9d327ff19d9f5": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -31479,7 +31523,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3254,
+  "lockGeneration": 3255,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

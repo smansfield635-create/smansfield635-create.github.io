@@ -112,7 +112,7 @@ if (process.env.H_EARTH_GEN3253_TINT_ISOLATION === '1') {
     assert.equal(A.width,B.width,'GEN3253_VIEWPORT_WIDTH_DRIFT');
     assert.equal(A.height,B.height,'GEN3253_VIEWPORT_HEIGHT_DRIFT');
     assert.equal(on.image.rendererSourceSha256,off.image.rendererSourceSha256,'GEN3253_RENDERER_SOURCE_DRIFT');
-    assert.equal(on.image.pose.yaw,off.image.pose.y,'GEN3253_YAW_MISMATCH');
+    assert.equal(on.image.pose.yaw,off.image.pose.yaw,'GEN3253_YAW_MISMATCH');
     assert.equal(on.image.pose.pitch,off.image.pose.pitch,'GEN3253_PITCH_MISMATCH');
     assert.equal(on.image.navigationSequence,off.image.navigationSequence,'GEN3253_NAV_SEQUENCE_MISMATCH');
     const c0=on.image.camera,c1=off.image.camera;

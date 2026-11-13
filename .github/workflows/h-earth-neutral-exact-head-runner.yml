@@ -1978,7 +1978,7 @@ jobs:
           node --check verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs
           python3 - <<'PY'
           import pathlib,subprocess
-          base='d30a0c6a154b9882e782113730e5fbdcf9366c44'
+          base='62aac1d9739cd6bf55a9f52c373b3019337a5dc1'
           old=subprocess.check_output(['git','-C','verifier-tooling','show',base+':.github/workflows/h-earth-neutral-exact-head-runner.yml'])
           new=pathlib.Path('verifier-tooling/.github/workflows/h-earth-neutral-exact-head-runner.yml').read_bytes()
           assert new.startswith(old),'HISTORICAL_RUNNER_PREFIX_MUTATED'

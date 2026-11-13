@@ -1,3 +1,151 @@
+// Gen3253: one exact-live-source, nonpublished shader-tint GPU isolation.
+// This opt-in branch executes before the unchanged historical runtime below.
+if (process.env.H_EARTH_GEN3253_TINT_ISOLATION === '1') {
+  const {createRequire: makeRequire} = await import('node:module');
+  const {createHash: shaCreate} = await import('node:crypto');
+  const {execFileSync: exec} = await import('node:child_process');
+  const assert = (await import('node:assert/strict')).default;
+  const require = makeRequire(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES + '/package.json');
+  const {chromium} = require('playwright');
+  const {PNG} = require('pngjs');
+  const productHead = 'd30a0c6a154b9882e782113730e5fbdcf9366c44';
+  const actualHead = exec('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+  assert.equal(actualHead,productHead,'GEN3253_EXACT_PUBLISHED_PRODUCT_HEAD');
+  const bodyNeedle='base=mix(base,habitatSoil,habitatColorCoverage*.68);';
+  const rendererPath='/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+  const outDir=process.env.H_EARTH_RUNTIME_SCREENSHOT_DIR;
+  assert(outDir,'GEN3253_OUTPUT_DIR_REQUIRED');fs.mkdirSync(outDir,{recursive:true});
+  const errors=[],images=[],startedAt=Date.now();
+  const baseTypes={'.html':'text/html','.js':'text/javascript','.mjs':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.gz':'application/octet-stream'};
+  const localServer=http.createServer((req,res)=>{
+    try{
+      let file=path.join(process.cwd(),decodeURIComponent(new URL(req.url,'http://localhost').pathname));
+      if(fs.statSync(file).isDirectory())file=path.join(file,'index.html');
+      res.setHeader('Content-Type',baseTypes[path.extname(file)]||'application/octet-stream');
+      fs.createReadStream(file).pipe(res);
+    }catch(error){res.statusCode=404;res.end('Not found');}
+  });
+  await new Promise(resolve=>localServer.listen(0,'127.0.0.1',resolve));
+  const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+  const urlBase='http://127.0.0.1:'+localServer.address().port;
+  const target={x:124.4127167356344,z:-394.77901544898066,yaw:-58.17022448618572,pitch:-4.2995192852338775};
+  async function capture(name,tintOff){
+    const context=await browser.newContext({viewport:{width:960,height:540},deviceScaleFactor:1});
+    const page=await context.newPage(),problems=[];
+    page.on('pageerror',e=>problems.push('PAGE:'+String(e)));
+    page.on('console',m=>{if(m.type()==='error')problems.push('CONSOLE:'+m.text())});
+    page.on('requestfailed',r=>problems.push('NETWORK:'+r.url()+':'+String(r.failure())));
+    let rendererIntercepted=false,routeIntercepted=false,actualSourceDigest=null;
+    await page.route(u=>u.pathname===rendererPath,async route=>{
+      const response=await route.fetch(),source=await response.text();
+      assert.equal(source.split(bodyNeedle).length,2,'GEN3253_SHADER_NEEDLE_NOT_EXACT');
+      actualSourceDigest=shaCreate('sha256').update(source).digest('hex');
+      rendererIntercepted=true;
+      const body=tintOff?source.replace(bodyNeedle,'base=mix(base,habitatSoil,0.0);'):source;
+      await route.fulfill({response,contentType:'text/javascript',body});
+    });
+    await page.route(u=>u.pathname==='/showroom/globe/h-earth/vegetation-prototype/route.js',async route=>{
+      const response=await route.fetch(),source=await response.text(),needle='const cssWidth=';
+      assert.equal(source.split(needle).length,2,'GEN3253_PUBLIC_ROUTE_NEEDLE_DRIFT');
+      routeIntercepted=true;
+      await route.fulfill({response,contentType:'text/javascript',body:source.replace(needle,
+        'globalThis.__Gen3253Present=present;globalThis.__Gen3253FrameBridge=spatialFrameBridge;\nconst cssWidth=')});
+    });
+    await page.goto(urlBase+'/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
+    await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.singleOwnerPrototype==='controls-test',null,{timeout:420000,polling:500});
+    await page.mouse.move(400,220);await page.mouse.down();await page.mouse.move(530,235,{steps:14});await page.mouse.up();await page.mouse.wheel(0,-360);
+    await page.waitForFunction(()=>document.querySelector('#h-earth-loading-screen')?.dataset.mode==='ready',null,{timeout:120000,polling:500});
+    await page.locator('#h-earth-loading-screen [data-enter]').click();
+    await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true',null,{timeout:120000,polling:500});
+    await page.waitForFunction(()=>{
+      const phase=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.vegetationBackground?.phase;
+      return phase==='OWNER_PREPARED'||phase==='FAILED';
+    },null,{timeout:780000,polling:500});
+    const pose=await page.evaluate(async target=>{
+      const urls=[...new Set(performance.getEntriesByType('resource').map(r=>r.name).filter(u=>/\/navigation\.js\?/.test(u)))];
+      if(urls.length!==1)throw Error('GEN3253_NAVIGATION_MODULE_NOT_UNIQUE:'+urls.length);
+      const url=urls[0];let source=await(await fetch(url)).text();
+      source=source.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,quote,p)=>'from '+JSON.stringify(new URL(p,url).href));
+      source+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
+      const nav=await import(URL.createObjectURL(new Blob([source],{type:'text/javascript'})));
+      const resolved=nav.auditResolvePosition(target.x,target.z,target.yaw,'SURFACE');
+      if(!resolved.eligible)throw Error('GEN3253_OWNER_CAMERA_INVALID');
+      const state=nav.auditStateFrom(resolved,{yaw:target.yaw,pitch:target.pitch,fov:56,sequence:30001,action:'GEN3253_TINT_ISOLATION'});
+      if(typeof globalThis.__Gen3253Present!=='function')throw Error('GEN3253_PRESENT_HOOK_MISSING');
+      for(let k=0;k<12;k++){globalThis.__Gen3253Present(state);await new Promise(requestAnimationFrame);}
+      return {position:state.position,yaw:state.yawDegrees,pitch:state.pitchDegrees,sequence:state.sequence};
+    },target);
+    const gpu=await page.evaluate(()=>{
+      const g=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+      const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+      const spatial=globalThis.__Gen3253FrameBridge?.getCopyReportFrameEvidence?.({canvas,rendererReceipt:g?.resources})??null;
+      return {phase:g?.vegetationBackground?.phase,owner:g?.resources?.singleOwnerVegetation,
+        counters:g?.counters,frame:g?.frameRecords?.at(-1)??null,spatial,canvas:{width:canvas?.width,height:canvas?.height}};
+    });
+    assert.equal(gpu.phase,'OWNER_PREPARED','GEN3253_OWNER_NOT_PREPARED');
+    assert.equal(gpu.owner?.installedRootCount,3805291,'GEN3253_ROOT_COUNT_DRIFT');
+    assert.equal(gpu.owner?.gpuObservedBufferBytes,60884656,'GEN3253_PACKED_GPU_DRIFT');
+    assert.equal(gpu.owner?.gpuUploadedBytes,60884656,'GEN3253_UPLOAD_DRIFT');
+    assert.equal(gpu.owner?.perFrameUploadBytes,0,'GEN3253_REUPLOAD');
+    assert.equal(gpu.owner?.allocationGlError,0,'GEN3253_GL_ALLOCATION');
+    assert.equal(gpu.owner?.uploadGlError,0,'GEN3253_GL_UPLOAD');
+    assert.equal(gpu.counters?.worldRebuildCount,0,'GEN3253_WORLD_REBUILT');
+    assert(rendererIntercepted&&routeIntercepted,'GEN3253_BROWSER_SOURCE_INTERCEPT_MISSING');
+    assert.equal(problems.length,0,'GEN3253_BROWSER_ERRORS:'+problems.join('|'));
+    const camera=gpu.frame?.cameraPosition;
+    assert(camera&&Math.hypot(camera.x-target.x,camera.z-target.z)<0.02,'GEN3253_OWNER_CAMERA_SUPPORT_OFFSET');
+    const png=await page.locator('#h-earth-functional-landscape-canvas').screenshot({timeout:120000});
+    const filename=path.join(outDir,name+'.png');fs.writeFileSync(filename,png);
+    const image={name,sourceHead:actualHead,shaderMode:tintOff?'MATERIAL_COLOR_TINT_ZERO':'MATERIAL_COLOR_NORMAL',
+      pngSha256:shaCreate('sha256').update(png).digest('hex'),pngBytes:png.length,
+      rendererSourceSha256:actualSourceDigest,camera,pose,frameSequence:gpu.frame?.frameSequence,
+      navigationSequence:gpu.frame?.navigationSequence,canvas:gpu.canvas,
+      rootCount:gpu.owner.installedRootCount,gpuPackedBytes:gpu.owner.gpuObservedBufferBytes,
+      spatialFrameEvidence:gpu.spatial,problems:[]};
+    images.push(image);
+    await context.close();return {image,pixels:PNG.sync.read(png)};
+  }
+  let result='FAIL',difference=null,failure=null;
+  try{
+    const on=await capture('TINT_ON',false),off=await capture('TINT_OFF',true);
+    const A=on.pixels,B=off.pixels;
+    assert.equal(A.width,B.width,'GEN3253_VIEWPORT_WIDTH_DRIFT');
+    assert.equal(A.height,B.height,'GEN3253_VIEWPORT_HEIGHT_DRIFT');
+    assert.equal(on.image.rendererSourceSha256,off.image.rendererSourceSha256,'GEN3253_RENDERER_SOURCE_DRIFT');
+    assert.equal(on.image.pose.yaw,off.image.pose.y,'GEN3253_YAW_MISMATCH');
+    assert.equal(on.image.pose.pitch,off.image.pose.pitch,'GEN3253_PITCH_MISMATCH');
+    assert.equal(on.image.navigationSequence,off.image.navigationSequence,'GEN3253_NAV_SEQUENCE_MISMATCH');
+    const c0=on.image.camera,c1=off.image.camera;
+    assert(Math.hypot(c0.x-c1.x,c0.y-c1.y,c0.z-c1.z)<0.02,'GEN3253_CAMERA_MISMATCH');
+    let changed=0,absolute=0,lowFrameChanged=0;
+    for(let i=0;i<A.width*A.height;i++){
+      const b=i*4,delta=Math.max(Math.abs(A.data[b]-B.data[b]),Math.abs(A.data[b+1]-B.data[b+1]),Math.abs(A.data[b+2]-B.data[b+2]));
+      if(delta>8){changed++;if(Math.floor(i/A.width)>=Math.floor(A.height*.45))lowFrameChanged++;}
+      absolute+=Math.abs(A.data[b]-B.data[b])+Math.abs(A.data[b+1]-B.data[b+1])+Math.abs(A.data[b+2]-B.data[b+2]);
+    }
+    difference={pixels:A.width*A.height,changedPixelsGt8:changed,changedFractionGt8:changed/(A.width*A.height),
+      changedLowerImagePixelsGt8:lowFrameChanged,meanAbsoluteRgbDifference:absolute/(A.width*A.height*3),
+      note:'Pixel differences are causal evidence to be reviewed visually, not automatic approval or exclusive material attribution; animated content/time may differ.'};
+    assert(changed>100,'GEN3253_TINT_OFF_NO_MEASURABLE_PIXEL_EFFECT');
+    result='PASS_CAPTURED_VISUAL_CAUSAL_DISPOSITION_PENDING';
+  }catch(e){failure=String(e);errors.push(failure);}
+  finally{
+    const receipt={schema:'H_EARTH_GEN3253_TEMPORARY_MATERIAL_TINT_GPU_ISOLATION_v1',result,head:actualHead,
+      sourceRendererGitBlob:'c69ef60c6e3126c0267ea60709768c35219f4ee6',
+      originalRootCount:3805291,originalPackedGpuBytes:60884656,images,difference,errors,
+      noRepositoryProductMutation:true,noPublication:true,physicalAndroidClaim:false,
+      elapsedMilliseconds:Date.now()-startedAt};
+    fs.writeFileSync(path.join(outDir,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+    console.log(JSON.stringify({result,images:images.length,difference,errors}));
+    await browser.close();localServer.close();
+  }
+  if(result!=='PASS_CAPTURED_VISUAL_CAUSAL_DISPOSITION_PENDING')process.exitCode=1;
+  else process.exitCode=0;
+  // The historical runtime below is left source-identical and is not executed
+  // when this explicit diagnostic branch is enabled.
+  process.exit();
+}
+
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';

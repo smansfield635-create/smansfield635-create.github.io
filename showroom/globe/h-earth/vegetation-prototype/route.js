@@ -16,6 +16,7 @@ const root=document.getElementById('h-earth-functional-landscape-route');
 const canvas=document.getElementById('h-earth-functional-landscape-canvas');
 const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
+const ownerInspection=query.get('inspect')==='1';
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
 const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1','ravine-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
 const loader=diagnosticReplay?null:(globalThis.H_EARTH_STARTUP_LOADER??createHEarthLoadingScreen({onEnter:markReady}));
@@ -176,7 +177,7 @@ function markReady(){
   if(terminalFailure)return;
   root.dataset.run8eReady='true';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype=diagnosticReplay?'captured':'manual-ready';
   status.textContent=diagnosticReplay?'Isolated comparison captured · physical-device review remains separate.':'Ready · Drag to look · Two-finger slide or mouse wheel to move · Pinch to zoom';
-  if(!diagnosticReplay&&!spatialSelection&&loader?.attachReportControl){
+  if(!diagnosticReplay&&ownerInspection&&!spatialSelection&&loader?.attachReportControl){
     spatialSelection=createHEarthSpatialSelectionUI({canvas,frameBridge:spatialFrameBridge,rendererReceipt:resources,enabled:()=>loader.getReceipt().mode==='entered'&&interactiveReady&&!terminalFailure});
     loader.attachReportControl(spatialSelection.mount());
   }

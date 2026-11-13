@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T18:25:44Z",
+  "generatedAt": "2026-11-13T19:24:16Z",
   "window": {
-    "start": "2026-08-15T18:25:44Z",
-    "end": "2026-11-13T18:25:44Z"
+    "start": "2026-08-15T19:24:16Z",
+    "end": "2026-11-13T19:24:16Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,12 +26,12 @@
       }
     },
     "byPath": {
-      "/laws/research/methods-and-models/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
       "/laws/": {
         "pageLoads": 80,
+        "visits": 0
+      },
+      "/laws/research/methods-and-models/": {
+        "pageLoads": 50,
         "visits": 0
       },
       "/": {
@@ -42,13 +42,13 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 480,
-        "visits": 0
-      },
       "/showroom/globe/audralia/": {
         "pageLoads": 130,
         "visits": 10
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 480,
+        "visits": 0
       },
       "/products/": {
         "pageLoads": 40,
@@ -66,25 +66,25 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/evidence/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
       "/index.html": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 70,
         "visits": 0
       },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -122,6 +122,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -134,7 +138,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -148,10 +152,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

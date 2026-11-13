@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T03:26:53Z",
+  "generatedAt": "2026-11-13T04:27:00Z",
   "window": {
-    "start": "2026-08-15T03:26:53Z",
-    "end": "2026-11-13T03:26:53Z"
+    "start": "2026-08-15T04:27:00Z",
+    "end": "2026-11-13T04:27:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -190,6 +190,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -204,10 +208,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {

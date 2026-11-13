@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-12T23:24:50Z",
+  "generatedAt": "2026-11-13T00:43:52Z",
   "window30d": {
-    "start": "2026-10-13T23:24:50Z",
-    "end": "2026-11-12T23:24:50Z"
+    "start": "2026-10-14T00:43:52Z",
+    "end": "2026-11-13T00:43:52Z"
   },
   "daily": [
-    {
-      "date": "2026-10-14",
-      "pageLoads": 70
-    },
     {
       "date": "2026-10-15",
       "pageLoads": 90
@@ -92,11 +88,11 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 83
+      "pageLoads": 70
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 110
+      "pageLoads": 102
     },
     {
       "date": "2026-11-06",
@@ -124,19 +120,23 @@
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 33
+      "pageLoads": 35
+    },
+    {
+      "date": "2026-11-13",
+      "pageLoads": 1
     }
   ],
   "summary": {
-    "pageLoads": 1510,
-    "botPageLoads": 782,
-    "nonBotPageLoads": 728
+    "pageLoads": 1492,
+    "botPageLoads": 781,
+    "nonBotPageLoads": 711
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1362,
-      "visits": 1362
+      "pageLoads": 1344,
+      "visits": 1344
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,8 +167,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 449,
-      "visits": 378
+      "pageLoads": 451,
+      "visits": 380
     },
     {
       "path": "/",
@@ -176,19 +176,19 @@
       "visits": 73
     },
     {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 57,
-      "visits": 57
-    },
-    {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 55,
-      "visits": 55
-    },
-    {
       "path": "/nine-summits/universe/",
       "pageLoads": 52,
       "visits": 52
+    },
+    {
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 47,
+      "visits": 47
+    },
+    {
+      "path": "/products/education/personal-training/",
+      "pageLoads": 45,
+      "visits": 45
     },
     {
       "path": "/about/",

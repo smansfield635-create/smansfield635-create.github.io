@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T04:27:00Z",
+  "generatedAt": "2026-11-13T05:24:33Z",
   "window": {
-    "start": "2026-08-15T04:27:00Z",
-    "end": "2026-11-13T04:27:00Z"
+    "start": "2026-08-15T05:24:33Z",
+    "end": "2026-11-13T05:24:33Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,22 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3803,
-    "visits": 1141,
+    "pageLoads": 3793,
+    "visits": 1131,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3803,
-        "visits": 1141
+        "pageLoads": 3793,
+        "visits": 1131
       }
     },
     "byPath": {
       "/laws/research/methods-and-models/": {
         "pageLoads": 50,
         "visits": 0
-      },
-      "/": {
-        "pageLoads": 861,
-        "visits": 641
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 490,
@@ -41,6 +37,10 @@
       "/laws/": {
         "pageLoads": 80,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 851,
+        "visits": 631
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -308,13 +308,13 @@
         "pageLoads": 2662,
         "visits": 0
       },
-      "www.google.com": {
-        "pageLoads": 590,
-        "visits": 590
-      },
       "(none)": {
         "pageLoads": 541,
         "visits": 541
+      },
+      "www.google.com": {
+        "pageLoads": 580,
+        "visits": 580
       },
       "raw.githack.com": {
         "pageLoads": 10,

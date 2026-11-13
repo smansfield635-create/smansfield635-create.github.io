@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3252-meadow-seam-ui-pages-live-exact-main-20261112-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7373,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3252-live-pages-20261112",
+  "requestCommit": "5ebca3ae57c280991c985b5cb386a1225403c502",
+  "requestCommitParent": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "43353793564",
+  "dispatchedRunId": 43353809257,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43353809257",
+  "dispatchedRunHeadSha": "d30a0c6a154b9882e782113730e5fbdcf9366c44",
+  "dispatchedAt": "2026-11-13T02:40:34.527Z",
+  "resolvedAt": "2026-11-13T02:40:41.038Z"
+}

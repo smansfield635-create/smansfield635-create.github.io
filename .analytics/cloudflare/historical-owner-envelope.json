@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-13T01:24:19Z",
+  "generatedAt": "2026-11-13T02:25:55Z",
   "window": {
-    "start": "2026-08-15T01:24:19Z",
-    "end": "2026-11-13T01:24:19Z"
+    "start": "2026-08-15T02:25:55Z",
+    "end": "2026-11-13T02:25:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3843,
+    "pageLoads": 3833,
     "visits": 1141,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3843,
+        "pageLoads": 3833,
         "visits": 1141
       }
     },
@@ -36,10 +36,6 @@
       },
       "/laws/": {
         "pageLoads": 90,
-        "visits": 0
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
@@ -98,13 +94,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -313,7 +309,7 @@
         "visits": 590
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2702,
+        "pageLoads": 2692,
         "visits": 0
       },
       "(none)": {

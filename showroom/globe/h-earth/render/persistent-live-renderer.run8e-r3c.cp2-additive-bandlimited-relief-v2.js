@@ -1310,7 +1310,13 @@ void main(){
     vec2 meadowUv=(vWorldPosition.xz-uMeadowGroundBounds.xy)/(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy);
     if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThan(meadowUv,vec2(1.0)))){
       float meadowOccupancy=texture(uMeadowGroundOccupancy,meadowUv).r;
-      habitatColorCoverage=max(habitatColorCoverage,meadowOccupancy);
+      // Attenuate the frozen map's OUTER rectangular cutoffs in world space.
+      // Nearest filtering retains zero tint in excluded/protected one-metre cells.
+      float meadowOuterDistance=min(min(vWorldPosition.x-uMeadowGroundBounds.x,uMeadowGroundBounds.z-vWorldPosition.x),
+                                    min(vWorldPosition.z-uMeadowGroundBounds.y,uMeadowGroundBounds.w-vWorldPosition.z));
+      float outerFeatherMeters=5.0+3.0*noise2(vWorldPosition.xz*0.13+vec2(3.7,7.3));
+      float meadowOuterWeight=smoothstep(0.0,outerFeatherMeters,max(0.0,meadowOuterDistance));
+      habitatColorCoverage=max(habitatColorCoverage,meadowOccupancy*meadowOuterWeight);
     }
     base=mix(base,habitatSoil,habitatColorCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
@@ -2075,16 +2081,26 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       if(meadowMap.cells?.length!==76874)throw Error('MEADOW_OCCUPANCY_CELL_COUNT_DRIFT');
       const meadowWidth=238,meadowHeight=323,meadowPixels=new Uint8Array(meadowWidth*meadowHeight);
       const originalPanels=[[-213,-298,-69,-154],[-298,-570,88,-154],[-448,-283,448,-93]];
-      let eligibleMeadowCells=0,protectedMeadowCells=0;
+      // Keep original habitat atlas untouched. Only admit source-eligible meadow
+      // occupancy into a narrow, smoothly tapered overlap inside old rectangles.
+      // This removes the binary material handoff without tinting protected soil.
+      const panelOverlapMeters=9;
+      const smoothUnit=v=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t);};
+      let eligibleMeadowCells=0,protectedMeadowCells=0,overlapMeadowCells=0;
       for(const cell of meadowMap.cells){
         const occupied=cell.sourceRoots+cell.additionalRoots;
-        if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6||
-          originalPanels.some(panel=>cell.x+.5>panel[0]&&cell.x+.5<panel[2]&&cell.z+.5>panel[1]&&cell.z+.5<panel[3])){
+        if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6){
           protectedMeadowCells++;continue;
         }
         if(!Number.isInteger(cell.x)||!Number.isInteger(cell.z)||cell.x<16||cell.x>=254||cell.z< -559||cell.z>=-236)throw Error('MEADOW_OCCUPANCY_CELL_OUT_OF_BOUNDS');
+        const x=cell.x+.5,z=cell.z+.5;
+        const containingPanels=originalPanels.filter(panel=>x>panel[0]&&x<panel[2]&&z>panel[1]&&z<panel[3]);
+        const nearestInsideEdge=containingPanels.length?Math.min(...containingPanels.map(panel=>Math.min(x-panel[0],panel[2]-x,z-panel[1],panel[3]-z))):0;
+        const seamWeight=containingPanels.length?1-smoothUnit((nearestInsideEdge-1.5)/(panelOverlapMeters-1.5)):1;
+        if(seamWeight<=0){protectedMeadowCells++;continue;}
         const q=Math.max(0,Math.min(1,(occupied-6)/20)),factor=q*q*(3-2*q);
-        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor);
+        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor*seamWeight);
+        if(containingPanels.length)overlapMeadowCells++;
         eligibleMeadowCells++;
       }
       if(eligibleMeadowCells<1||eligibleMeadowCells+protectedMeadowCells!==76874)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');

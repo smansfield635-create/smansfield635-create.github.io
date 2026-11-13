@@ -1948,7 +1948,7 @@ jobs:
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
 
-  # Gen3260 admitted two-source published-vs-Gen3259 meadow attenuation comparison (archived Gen3253 TINT-OFF reference). PR-only and nonpublished.
+  # Gen3260 admitted two-source published-vs-Gen3259 protected meadow material comparison. PR-only and nonpublished.
   # Historical neutral runner jobs and the production tree remain unchanged.
   gen3260-operand-isolation-pr:
     if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3260-tint-off-guided-native-comparison-20261113'

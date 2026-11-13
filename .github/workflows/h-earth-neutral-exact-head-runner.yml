@@ -2014,6 +2014,7 @@ jobs:
           test "$(sha256sum baseline/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz | cut -d' ' -f1)" = a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015
           test "$(sha256sum candidate/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz | cut -d' ' -f1)" = a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015
           node --check candidate/"$renderer"
+          git -C candidate fetch --no-tags --depth=1 origin d30a0c6a154b9882e782113730e5fbdcf9366c44
           test "$(git -C candidate diff --name-only d30a0c6a154b9882e782113730e5fbdcf9366c44 HEAD | grep -v '^\.analytics/\|^analytics/' | wc -l)" -eq 1
       - name: Install existing first-party Chromium test dependency
         working-directory: candidate

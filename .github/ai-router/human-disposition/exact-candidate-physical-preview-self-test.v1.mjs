@@ -155,7 +155,7 @@ assert(Boolean(exception), 'H_EARTH_EXCEPTION', 'missing one-time exception');
 assert(JSON.stringify(exception) === JSON.stringify(applicabilityExceptions[exceptionKey]), 'H_EARTH_EXCEPTION', 'contract/applicability identity drift');
 assert(exception.scope === 'H_EARTH_CORE' && exception.product.pullRequest === 7399, 'H_EARTH_EXCEPTION', 'scope or PR drift');
 assert(exception.product.headSha === 'cf8d6acae2e3c095419037556afe9c19a22f6ad2', 'H_EARTH_EXCEPTION', 'product head drift');
-assert(exception.product.rendererBlobSha === '01fc835791064945ad2f1b45fc5d68ae90e81444', 'H_EARTH_EXCEPTION', 'renderer digest drift');
+assert(exception.product.rendererGitObject === '01fc835791064945ad2f1b45fc5d68ae90e81444', 'H_EARTH_EXCEPTION', 'renderer digest drift');
 assert(exception.ownerVisualDisposition === 'PENDING_OWNER_REVIEW' && exception.artisticKeepDeclared === false, 'H_EARTH_EXCEPTION', 'aesthetic acceptance must remain pending');
 assert(exception.createsPrecedent === false && exception.appliesToOtherProducts === false, 'H_EARTH_EXCEPTION', 'unbounded precedent forbidden');
 assert(exception.releaseAuthorityCreatedByException === false && exception.finalizationRequiresSeparateCanonicalAdmission === true, 'H_EARTH_EXCEPTION', 'admission not a release');

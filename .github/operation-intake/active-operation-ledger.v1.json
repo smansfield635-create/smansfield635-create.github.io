@@ -23611,50 +23611,6 @@
       "scopeHash": "bb638420fe76f1dfd6ab87392ad1fe4b6088121cc7efef2d2a9989cbffe3e570",
       "state": "ADMITTED_LOCKED"
     },
-    "bbf5a899cee8aa8e213dbfbf1b6028e6f3c4a9ef8c36bf0882cca6714be108aa": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "961b9741355b2e3f5f746ff3dd0c239025139796",
-          "lockGeneration": 3263,
-          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:SCULPT_LAB:M162_ORGANIC_FIELD_SESSION_INTEGRATION:20261113",
-          "operationId": "DGB_GRAPHICS_SCULPT_LAB_ORGANIC_FIELD_INTEGRATION_20261113_001",
-          "procedureLocatorDigest": "9894b95782016133a189c8bcc0fe03356f476a6d0f815e7445b89e0174f258c0",
-          "requestDigest": "aca846ad10ce114d3ed850d3854275088117fd5aa79356eb64f9d88b5024eb4f",
-          "scopeHash": "bbf5a899cee8aa8e213dbfbf1b6028e6f3c4a9ef8c36bf0882cca6714be108aa"
-        },
-        "bindingDigest": "4726c0030bfd159b529dc67dda1a1e37e5bbd4b9388ab245a63a6166facec286",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e132efc0f2f5ee98f2dd4393b7b193a593da3a01167a424a1b5ef2156843a6a6",
-          "commentId": 6868119159,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 7108,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 43531739530,
-          "workflowSha": "961b9741355b2e3f5f746ff3dd0c239025139796"
-        },
-        "lineageAnchorCommitSha": "42a02d492f1c810811abb0f85f6aac4d3ac7233c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "961b9741355b2e3f5f746ff3dd0c239025139796",
-      "lockGeneration": 3263,
-      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:SCULPT_LAB:M162_ORGANIC_FIELD_SESSION_INTEGRATION:20261113",
-      "operationId": "DGB_GRAPHICS_SCULPT_LAB_ORGANIC_FIELD_INTEGRATION_20261113_001",
-      "procedureLocatorDigest": "9894b95782016133a189c8bcc0fe03356f476a6d0f815e7445b89e0174f258c0",
-      "released": false,
-      "requestDigest": "aca846ad10ce114d3ed850d3854275088117fd5aa79356eb64f9d88b5024eb4f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "bbf5a899cee8aa8e213dbfbf1b6028e6f3c4a9ef8c36bf0882cca6714be108aa",
-      "state": "ADMITTED_LOCKED"
-    },
     "bc8e70b349c50c6b5dcefbeda1e926bea8ec02bafb40bc4814f16bb68d0e3df3": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -104711,6 +104667,51 @@
       "scopeHash": "a0c7b2c5140971d0438aa02bc64178500e3d1488c9f8bfac9bce6006ea7511e0",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "961b9741355b2e3f5f746ff3dd0c239025139796",
+          "lockGeneration": 3263,
+          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:SCULPT_LAB:M162_ORGANIC_FIELD_SESSION_INTEGRATION:20261113",
+          "operationId": "DGB_GRAPHICS_SCULPT_LAB_ORGANIC_FIELD_INTEGRATION_20261113_001",
+          "procedureLocatorDigest": "9894b95782016133a189c8bcc0fe03356f476a6d0f815e7445b89e0174f258c0",
+          "requestDigest": "aca846ad10ce114d3ed850d3854275088117fd5aa79356eb64f9d88b5024eb4f",
+          "scopeHash": "bbf5a899cee8aa8e213dbfbf1b6028e6f3c4a9ef8c36bf0882cca6714be108aa"
+        },
+        "bindingDigest": "4726c0030bfd159b529dc67dda1a1e37e5bbd4b9388ab245a63a6166facec286",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e132efc0f2f5ee98f2dd4393b7b193a593da3a01167a424a1b5ef2156843a6a6",
+          "commentId": 6868119159,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43531739530,
+          "workflowSha": "961b9741355b2e3f5f746ff3dd0c239025139796"
+        },
+        "lineageAnchorCommitSha": "42a02d492f1c810811abb0f85f6aac4d3ac7233c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "961b9741355b2e3f5f746ff3dd0c239025139796",
+      "lockGeneration": 3263,
+      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:SCULPT_LAB:M162_ORGANIC_FIELD_SESSION_INTEGRATION:20261113",
+      "operationId": "DGB_GRAPHICS_SCULPT_LAB_ORGANIC_FIELD_INTEGRATION_20261113_001",
+      "procedureLocatorDigest": "9894b95782016133a189c8bcc0fe03356f476a6d0f815e7445b89e0174f258c0",
+      "released": true,
+      "requestDigest": "aca846ad10ce114d3ed850d3854275088117fd5aa79356eb64f9d88b5024eb4f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bbf5a899cee8aa8e213dbfbf1b6028e6f3c4a9ef8c36bf0882cca6714be108aa",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

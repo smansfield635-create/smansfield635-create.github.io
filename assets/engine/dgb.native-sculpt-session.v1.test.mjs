@@ -217,6 +217,7 @@ test('original M1.3 read-only handoff separates 1134 masters and 1409 seam recor
   assert.equal(frame.sourceRender.renderTriangles.length,6792);
   assert.equal(frame.sourceRender.readOnlyOriginal,true);
   assert.equal(frame.protectedVertices.length,1134);
+  assert.equal(frame.sourceGuards.readOnlyOriginalBaseline,true);
   assert(frame.regions.every(x=>x==='ORIGINAL_PROTECTED'));
   assert.equal(source.forequarterEditAllowed,false);
   assert.equal(source.state().lastPose,52);
@@ -231,4 +232,26 @@ test('original M1.3 handoff fails closed on incorrect indexed source or pose dat
   assert.throws(()=>createM13OriginalSource({...f,triangles:f.triangles.map((v,i)=>i===0?1409:v)}),/M13_RENDER_TRIANGLES_INVALID/);
   const handoff=createM13OriginalSource(f);
   assert.throws(()=>handoff.pose(64),/M13_POSE_INDEX_INVALID/);
+});
+
+test('original intersecting reference is viewable only if every master is frozen',()=>{
+  // Two independent faces cross in space. An ordinary editable session MUST
+  // reject them; only the explicit all-protected original-reference path may
+  // inspect such a source without claiming its geometry is repair-safe.
+  const positions=new Float32Array([
+    -1,-1,0, 1,-1,0, 0,1,0,
+    0,-.2,-1, 0,-.2,1, 0,.8,0
+  ]),triangles=new Uint16Array([0,1,2,3,4,5]),
+    regions=Array(6).fill('ORIGINAL_PROTECTED'),protectedVertices=[0,1,2,3,4,5];
+  assert.throws(()=>createSculptSession({positions,triangles,regions,protectedVertices}),/SELF_INTERSECTION/);
+  const session=createSculptSession({positions,triangles,regions,protectedVertices,
+    sourceGuards:{readOnlyOriginalBaseline:true}});
+  assert.equal(session.state().originalReferenceReadOnly,true);
+  assert.equal(session.verify().editableMeshSafetyQualified,false);
+  assert.throws(()=>session.beginStroke({position:[0,0,0],normal:[0,0,1],vertexIds:[0,1,2]}),
+    /M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN/);
+  const edited=JSON.parse(session.serialize());edited.positions[0]+=.1;
+  assert.throws(()=>session.restore(JSON.stringify(edited)),/SCULPT_PROTECTED_SOURCE_CHANGED/);
+  assert.throws(()=>createSculptSession({positions,triangles,regions,protectedVertices:[0,1,2,3,4],
+    sourceGuards:{readOnlyOriginalBaseline:true}}),/M13_ORIGINAL_READONLY_FULL_PROTECTION_REQUIRED/);
 });

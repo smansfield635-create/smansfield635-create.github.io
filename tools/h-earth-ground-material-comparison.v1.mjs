@@ -417,7 +417,7 @@ export async function runGen3286(argv){
               globalThis.__HEarthAuditPresent(state);
               await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
               const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
-              const packet=globalThis.__HEarthAuditPacket({deferVegetation:false,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+              const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
               return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1)};
             },{pose,sequence:++sequence});
             stableCount=check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
@@ -429,7 +429,7 @@ export async function runGen3286(argv){
             const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_MATCHED_REAL_WEBGL');
             for(let i=0;i<8;i++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);}
             const g=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
-            const packet=globalThis.__HEarthAuditPacket({deferVegetation:false,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+            const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
             const gl=canvas.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('GEN3286_GL_BUFFER_INVALID');
             const frame=g.frameRecords.at(-1);
             const pngDataUrl=canvas.toDataURL('image/png');

@@ -245,3 +245,12 @@ test('Gen3287 historical source-chain guards remain present and new job has immu
   assert.ok(yaml.includes('gen3142-matched-gpu:'));
   assert.ok(yaml.includes('ground-material-comparison:'));
 });
+
+test('Gen3287 audit packet follows the accepted live route deferVegetation true path; never requests the non-route BARK package',()=>{
+  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  const route=fs.readFileSync(new URL('../showroom/globe/h-earth/vegetation-prototype/route.js',import.meta.url),'utf8');
+  assert.ok(route.includes('createHEarthRun8ER3AFrameUniformPacket({deferVegetation:true,navigationState:state'));
+  assert.equal((comparator.match(/deferVegetation:false/g)||[]).length,0);
+  assert.ok(comparator.includes("GEN3286_MATCHED_REAL_WEBGL"));
+  assert.ok(comparator.includes('deferVegetation:true,navigationState:state'));
+});

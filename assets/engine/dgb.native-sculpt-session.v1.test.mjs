@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSculptSession,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,verifySculptProspectiveBake,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
+import {createSculptSession,createM13OriginalSource,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,verifySculptProspectiveBake,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
 const fixture=()=>({positions:new Float32Array([-1,-1,0, 0,-1,0, 1,-1,0, -1,0,0, 0,0,0, 1,0,0, -1,1,0, 0,1,0, 1,1,0]),triangles:new Uint16Array([0,1,4,0,4,3, 1,2,5,1,5,4, 3,4,7,3,7,6, 4,5,8,4,8,7]),regions:['skull','skull','nape','skull','skull','nape','shoulder','shoulder','shoulder'],protectedVertices:[0,3,6]});
 test('actual ray-to-triangle intersection returns 3D hit and barycentrics',()=>{
   const s=createSculptSession(fixture());const hit=s.pick([0,0,5],[0,0,-1]);assert(hit);assert(Math.abs(hit.position[2])<1e-8);assert(Math.abs(hit.barycentric.reduce((a,b)=>a+b,0)-1)<1e-7);assert.equal(hit.vertexIds.length,3);
@@ -182,4 +182,53 @@ test('source handoff shares geometry doubled-area floor without rejecting valid 
   const h=createSculptSourceHandoff(valid);
   assert.deepEqual([...h.triangles],[0,1,2]);
   assert.equal(h.retopologyBakeAllowed,false);
+});
+
+
+// Generated closed topology has the same public dimensions as M1.3 but contains
+// no owner-private source coordinates, pose weights, atlas or appearance module.
+function syntheticM13(){
+  const rings=4,slices=283,base=[],triangles=[];
+  for(let j=0;j<rings;j++){
+    const phi=Math.PI*(j+1)/(rings+1);
+    for(let k=0;k<slices;k++){const theta=2*Math.PI*k/slices;
+      base.push(Math.sin(phi)*Math.cos(theta),Math.sin(phi)*Math.sin(theta),Math.cos(phi));}
+  }
+  const north=1132,south=1133;base.push(0,0,1,0,0,-1);
+  for(let k=0;k<slices;k++)triangles.push(north,k,(k+1)%slices);
+  for(let j=0;j<rings-1;j++)for(let k=0;k<slices;k++){
+    const a=j*slices+k,b=j*slices+(k+1)%slices,c=a+slices,d=b+slices;
+    triangles.push(a,c,b,b,c,d);
+  }
+  for(let k=0;k<slices;k++)triangles.push((rings-1)*slices+k,south,(rings-1)*slices+(k+1)%slices);
+  return {base,targets:Array.from({length:16},()=>Array(1134*3).fill(0)),
+    weights:Array.from({length:64},()=>Array(16).fill(0)),
+    renderToMaster:Array.from({length:1409},(_,i)=>i<1134?i:i-1134),
+    triangles,uv:Array.from({length:1409},(_,i)=>[i%17/17,i%31/31]).flat()};
+}
+test('original M1.3 read-only handoff separates 1134 masters and 1409 seam records',()=>{
+  const original=syntheticM13(),source=createM13OriginalSource(original);
+  assert.equal(source.morphTargets,16);assert.equal(source.poses,64);
+  const frame=source.pose(52);
+  assert.equal(frame.positions.length,3402);
+  assert.equal(frame.triangles.length,6792);
+  assert.equal(frame.sourceRender.renderToMaster.length,1409);
+  assert.equal(frame.sourceRender.uvs.length,2818);
+  assert.equal(frame.sourceRender.renderTriangles.length,6792);
+  assert.equal(frame.sourceRender.readOnlyOriginal,true);
+  assert.equal(frame.protectedVertices.length,1134);
+  assert(frame.regions.every(x=>x==='ORIGINAL_PROTECTED'));
+  assert.equal(source.forequarterEditAllowed,false);
+  assert.equal(source.state().lastPose,52);
+  // Input ownership: changing the caller's fixture never mutates a frozen pose.
+  original.base[0]=100;original.triangles[0]=0;
+  assert.deepEqual([...source.pose(52).positions],[...frame.positions]);
+});
+test('original M1.3 handoff fails closed on incorrect indexed source or pose data',()=>{
+  const f=syntheticM13();
+  assert.throws(()=>createM13OriginalSource({...f,targets:f.targets.slice(1)}),/M13_TARGET_COUNT_INVALID/);
+  assert.throws(()=>createM13OriginalSource({...f,renderToMaster:f.renderToMaster.map((v,i)=>i===0?1134:v)}),/M13_MASTER_RENDER_MAP_INVALID/);
+  assert.throws(()=>createM13OriginalSource({...f,triangles:f.triangles.map((v,i)=>i===0?1409:v)}),/M13_RENDER_TRIANGLES_INVALID/);
+  const handoff=createM13OriginalSource(f);
+  assert.throws(()=>handoff.pose(64),/M13_POSE_INDEX_INVALID/);
 });

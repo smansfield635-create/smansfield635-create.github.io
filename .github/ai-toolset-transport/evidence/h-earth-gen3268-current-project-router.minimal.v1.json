@@ -1,0 +1,21 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "disposition": "PASS",
+  "governingHead": "db59bc2fc8f83bf0198ad94ba2aea89698f8c776",
+  "mutationIntent": false,
+  "routes": [
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "H_EARTH",
+      "disposition": "PASS"
+    }
+  ],
+  "sourceProvenance": {
+    "method": "EXACT_REGISTERED_ROUTER_PREFIX_RULE_READ_ONLY_RECOMPUTATION",
+    "routerRegistryPath": ".github/ai-router/router.v1.json",
+    "routerRegistryGitBlob": "5c7b4061211dc2f1da171224e5f42fc7e4684999",
+    "sourceMainHead": "db59bc2fc8f83bf0198ad94ba2aea89698f8c776"
+  }
+}

@@ -58,7 +58,7 @@
         "product": {
             "pullRequest": 7399,
             "headSha": "cf8d6acae2e3c095419037556afe9c19a22f6ad2",
-            "rendererBlobSha": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+            "rendererGitObject": "01fc835791064945ad2f1b45fc5d68ae90e81444",
             "rendererSha256": "7de60080bebb1e72cb666ddcc6edab02e8c0e24eb013cc3cd330ab524f5b837f"
         },
         "purpose": "One owner-directed production release of the unchanged exact Gen3273 ground-color correction solely for direct H-Earth visual inspection; not the default pre-publication preview workaround",

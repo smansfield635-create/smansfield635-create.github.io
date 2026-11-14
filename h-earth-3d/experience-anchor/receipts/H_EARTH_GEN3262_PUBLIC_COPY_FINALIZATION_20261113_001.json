@@ -1,0 +1,136 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_GEN3262_PUBLIC_COPY_SOURCE_BOUND_RELEASE_FINALIZATION_20261113_001",
+  "authorityGeneration": 3270,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewMode": "BOUNDED_REAL_WEBGL_PUBLIC_COPY_REPORT_UI_WITH_OWNER_KEEP_AND_INHERITED_UNCHANGED_CANONICAL_WORLD",
+  "comparisonBaseline": "961b9741355b2e3f5f746ff3dd0c239025139796",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+  ],
+  "interactionEvidence": [
+    "tools/h-earth-loading-report.test.mjs",
+    "showroom/globe/h-earth/vegetation-prototype/route.js"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "showroom/globe/h-earth/vegetation-prototype/route.js"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "invariantEvidenceModes": {
+    "SAME_CANONICAL_WORLD_IDENTITY": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": "BOUNDED_REAL_BROWSER_UI_TEST_AND_UNCHANGED_WORLD_PRECEDENT",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": "BOUNDED_REAL_BROWSER_UI_TEST_AND_UNCHANGED_WORLD_PRECEDENT",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": "INHERITED_UNCHANGED_H_EARTH_WORLD_PRECEDENT_NOT_SEPARATELY_REPLAYED"
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "abb596c5bdf69a86e9476dffa17091acc778191b4ba57e6bc34995eb811ee73e",
+      "gitBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "28a1e0a9083aa1f910141f917f6942aad745ce4a2cddabb0a06699c9e0e132d6",
+      "gitBlob": "0e103e4f6834cb5318a37d669c34ba9930ada134"
+    }
+  ],
+  "ownerDisposition": {
+    "value": "KEEP",
+    "ownerCommentId": 6870382183,
+    "ownerAcceptedProductHead": "d4dffa1a80fe9f01a9e4ea65b758592d80678f37",
+    "scope": "Visible Copy loading report on public H-Earth desktop/mobile emulated route before and after Enter, with advanced inspector gated by inspect=1",
+    "finalizationChangeEffect": "No product UI or world behavior changes beyond binding the qualified loader cache identity; original qualified loader/test files remain byte-identical"
+  },
+  "reviewBasis": {
+    "scope": "Exact Gen3262 public Copy loading report restoration, including source-bound cache identity; unchanged canonical H-Earth world, graphics, navigation and ecology carry forward from previously accepted evidence. This is not a new world or renderer acceptance.",
+    "newlyObserved": [
+      "Original qualified draft PR #7389 candidate d4dffa1a80fe9f01a9e4ea65b758592d80678f37 changed exactly the existing public Copy report loader and focused regression tests, preserving advanced spatial tools behind inspect=1.",
+      "Registered first-party full-route workflow #43545879040 reported genuine H-Earth Chromium/WebGL2 PASS across desktop public, desktop inspection, mobile-emulated public and mobile-emulated inspection; native Node 22 11/11 PASS and no reported page/HTTP errors.",
+      "Eight screenshot captures retained by GitHub Actions manifest artifact 14094267218; desktop and mobile public entered-world captures show the same navigable H-Earth world with an accessible Copy report control, not a parallel product or dashboard.",
+      "Owner explicitly accepted this UI as KEEP at PR #7389 comment #6870382183 after viewing authenticated screenshots.",
+      "Gen3270 corrected one old index.html import-map alias from sha-97209f149a56 to sha-0e103e4f6834, binding the exact qualified loader Git blob 0e103e4f6834cb5318a37d669c34ba9930ada134; no JavaScript renderer or scene source modified."
+    ],
+    "inheritedUnchanged": [
+      "Accepted H-Earth visual proxy and full-environment continuity evidence remain the controlling in-repository Anchor comparison baseline; no new render, grass, terrain, camera, navigation, globe, tree or water source mutation is in this bounded PR.",
+      "The original H-Earth Anchor video SHA256 7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573 is preserved but the original video itself was not replayed in Gen3262.",
+      "Full-route native WebGL qualification measured 3,805,291 installed roots and 60,884,656 GPU allocation/upload bytes in each of four configurations, not a physical-device measurement."
+    ],
+    "limitations": [
+      "PHYSICAL_ANDROID_HARDWARE_NOT_TESTED_OR_ACCEPTED",
+      "ORIGINAL_ANCHOR_VIDEO_NOT_REPLAYED",
+      "FULL_ELEVEN_ANCHOR_INVARIANT_INDEPENDENT_REPLAY_NOT_CLAIMED",
+      "CHROMIUM_MOBILE_IS_DEVICE_EMULATION_NOT_PHYSICAL_ANDROID",
+      "HEADLESS_CLIPBOARD_DENIAL_FALLBACK_EXPANDED_IN_ENTERED_SCREENSHOTS_IS_AN_EXERCISED_FALLBACK_STATE",
+      "GPU_FIRST_HIT_AND_MATERIAL_ATTRIBUTION_NOT_MEASURED",
+      "FIRST_PARTY_BROWSER_RUN_IS_FOR_EXACT_ORIGINAL_PRODUCT_HEAD_D4DFFA1A_AND_QUALIFIED_LOADER; CACHE_ONLY_FINALIZATION_IS_NEW_SOURCE_BOUND_DELTA",
+      "NO_NEW_PRODUCT_MERGE_DEPLOYMENT_OR_LIVE_EXACT_HEAD_PROOF_FROM_THIS_RECEIPT",
+      "SEPARATE_RELEASE_REVIEW_AND_PAGES_AUTHORIZATION_STILL_REQUIRED"
+    ],
+    "links": {
+      "productPR": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7389",
+      "ownerKeep": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7389#issuecomment-6870382183",
+      "canonicalAdmission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7388#issuecomment-6870497526",
+      "fullRouteRun": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43545879040",
+      "priorWorldContinuity": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json"
+    }
+  },
+  "qualification": {
+    "originalProductHead": "d4dffa1a80fe9f01a9e4ea65b758592d80678f37",
+    "cacheBindingCommit": "f00a590665f63ab489279cd4b9cf32e782b50f0d",
+    "browserWorkflowRun": 43545879040,
+    "browserManifestArtifactId": 14094267218,
+    "nativeNodeTests": {
+      "passed": 11,
+      "total": 11,
+      "failed": 0
+    },
+    "browserConfigurations": {
+      "passed": 4,
+      "total": 4,
+      "configurations": [
+        "desktop-public",
+        "desktop-inspect",
+        "mobile-public-emulated",
+        "mobile-inspect-emulated"
+      ]
+    },
+    "screenshotsCaptured": 8,
+    "rootCount": 3805291,
+    "gpuAllocationBytes": 60884656,
+    "qualifiedLoaderBlob": "0e103e4f6834cb5318a37d669c34ba9930ada134",
+    "unchangedLoaderSource": true,
+    "clipboardDeniedFallbackExercised": true
+  },
+  "fullElevenInvariantIndependentlyRetested": false,
+  "originalVideoReplayed": false,
+  "physicalAndroidTested": false,
+  "physicalAcceptancePerformed": false,
+  "ownerKeep": true,
+  "releaseAuthorized": false,
+  "deploymentPerformed": false,
+  "publicationAuthorityCreated": false
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_EXACT_GEN3259_ACCEPTED_PRESENTATION_RESTORATION_20261114_001",
+  "canonicalAdmissionGeneration": 3285,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "anchorDispositionScope": "SOURCE_BOUND_HARD_ELEVEN_INVARIANT_RESTORATION_OF_PREVIOUSLY_OWNER_ACCEPTED_GEN3259_NOT_NEW_PERCEPTUAL_ACCEPTANCE",
+  "reviewedBaselineHead": "c9d30ef221d1f85c40072a29d956d31b9b1ca6c5",
+  "productSourceHead": "ea5cbfc11b82e0733473b736fcc8d22303e150e6",
+  "originalAcceptedOwnerVisualCommentId": 6866391850,
+  "reviewScope": "Exact byte-for-byte restoration of the previously owner-kept Gen3259 ground-material renderer and its three existing import-map cache references, with all later unrelated main changes intact. Original 11-invariant H-Earth source-bound world/interaction continuity is inherited from accepted Gen3259; its visual A/B WebGL evidence is historical, not a fresh device test. New owner's rejection of Gen3273 and live report of missing visible grass are recorded honestly. This source receipt neither claims the new device issue is solved nor asserts a root-loading causal mechanism.",
+  "ownerDecision": {
+    "intent": "REJECT_GEN3273_VISUAL_APPROACH_RESTORE_LAST_OWNER_KEPT_GEN3259",
+    "ownerIssue": 7387,
+    "ownerRollbackDirectiveCommentId": 6882282963,
+    "priorGen3259VisualKeepCommentId": 6866391850,
+    "priorAcceptedProductPr": 7384,
+    "priorAcceptedProductMerge": "ea5cbfc11b82e0733473b736fcc8d22303e150e6",
+    "acceptedRendererGitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "rejectedRendererGitBlob": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+    "restoredPresentationStatus": "CANDIDATE_READY_FOR_QUALIFICATION_NOT_YET_LIVE",
+    "ownerVisualAssessmentAfterRestoration": "PENDING_PHYSICAL_DEVICE_REOPEN",
+    "originalPhoneCameraMatched": false,
+    "secondTreeMeadowIndependentlyRetested": false,
+    "originalFilmReplayed": false,
+    "rootLoadingFailureCausationProven": false
+  },
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "abb596c5bdf69a86e9476dffa17091acc778191b4ba57e6bc34995eb811ee73e",
+      "gitBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",
+      "sourceRole": "EXACT_THREE_RENDERER_IMPORT_MAP_REVISIONS_RESTORED_CURRENT_MAIN"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "cdd10525a8cefa164baa31bfc56819212db909a06a802fc8f25b580b7eb331ac",
+      "gitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+      "sourceRole": "IMMUTABLE_OWNER_KEPT_GEN3259_RENDERER"
+    }
+  ],
+  "firstPartyEvidence": {
+    "originalAccepted": {
+      "runId": 43513010013,
+      "sourceIssue": 7359,
+      "ownerVisualKeepCommentId": 6866391850,
+      "qualification": "GEN3259_HISTORICAL_NATIVE_CHROMIUM_WEBGL2_PASS",
+      "rootCount": 3805291,
+      "packedGpuBytes": 60884656
+    },
+    "negativeCurrentOwnerObservation": {
+      "evidence": "2026-11-14 physical device shows bare/grey/tan foreground, no convincing visible grass, distant dark-brown bounded field",
+      "correctiveSource": "REVERT_ACCEPTED_RENDERER_PRESENTATION",
+      "sourceCausation": "NOT_YET_ESTABLISHED"
+    },
+    "freshCurrentBranchWebGl": "NOT_EXECUTED_AT_RECEIPT_CREATION"
+  },
+  "sourceIdentity": {
+    "mainBasedBranch": "h-earth/restore-owner-accepted-gen3259-20261114",
+    "currentMainSourceRendererGitBlob": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+    "exactRestoredRendererGitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "expectedRendererRevision": "?rev=sha-3471d386d720",
+    "threeCacheKeysOnly": true,
+    "otherIndexContentPreserved": true,
+    "vegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "grassRootsUnchanged": 3805291,
+    "grassGpuRootBytesUnchanged": 60884656,
+    "frozenMapSHA256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "treesTerrainWaterCameraNavigationUnchanged": true,
+    "originalTwoTreeMeadowsSourceUnchanged": true
+  },
+  "comparison": {
+    "anchorObserved": "Original owner accepted Gen3259 with real Chromium/WebGL2 matched pose; same-world 11 invariant source identities remain unchanged under this exact rollback.",
+    "sourceDelta": "Revert only Gen3273 renderer albedo change and the three renderer cache bindings; add this truthful source-bound release receipt. No vegetation, trees, water, terrain, navigation, camera or UI changes.",
+    "acceptanceBoundary": "PREVIOUSLY_OWNER_ACCEPTED_PRESENTATION_RESTORED_AS_SOURCE; NEW_RELEASE_MERGE_PAGES_AND_PHYSICAL_ANDROID_REVIEW_NOT_YET_PERFORMED"
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_FILM_NOT_REPLAYED_IN_ROLLBACK",
+    "SECOND_SUCCESSFUL_TREE_MEADOW_NOT_FRESHLY_NATIVE_CAPTURED",
+    "OWNER_ORIGINAL_PHOTO_CAMERA_NOT_BOUND_TO_WORLD_POSE",
+    "NO_PROOF_GEN3273_CAUSED_GRASS_LOADING_FAILURE",
+    "NO_FRESH_PHYSICAL_ANDROID_REVIEW_AFTER_ROLLBACK",
+    "RECEIPT_CREATION_IS_NOT_MERGE_DEPLOYMENT_OR_LIVE_VERIFICATION",
+    "NO_NEW_ECOLOGY_ROOTS_TERRAIN_OR_NAVIGATION_CONSTRUCTION"
+  ],
+  "releaseStatusAtReceiptCreation": "ADMITTED_SOURCE_BRANCH_ONLY_NOT_PUBLISHED"
+}

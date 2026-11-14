@@ -55,7 +55,7 @@ function trianglesIntersect(a,b,c,d,e,f){
   const mn=u=>[Math.min(...u.map(v=>v[0])),Math.min(...u.map(v=>v[1])),Math.min(...u.map(v=>v[2]))];
   const mx=u=>[Math.max(...u.map(v=>v[0])),Math.max(...u.map(v=>v[1])),Math.max(...u.map(v=>v[2]))];
   const aa=[a,b,c],bb=[d,e,f],am=mn(aa),ax=mx(aa),bm=mn(bb),bx=mx(bb);
-  if([0,1,2].some(k=>ax[k]<bm[k]+1e-10||bx[k]<am[k]+1e-10))return false;
+  if([0,1,2].some(k=>ax[k]<bm[k]-1e-10||bx[k]<am[k]-1e-10))return false;
   if(coplanarTrianglesOverlap(a,b,c,d,e,f))return true;
   return [[a,b],[b,c],[c,a]].some(([p,q])=>segmentTriangle(p,q,d,e,f))||
     [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c));

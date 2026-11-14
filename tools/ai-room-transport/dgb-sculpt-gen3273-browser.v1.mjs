@@ -106,11 +106,29 @@ async function oneCase(browser,base,cfg,images){
       const bytes=new Uint8Array(c.width*c.height*4);
       gl.readPixels(0,0,c.width,c.height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);
       const digest=await crypto.subtle.digest('SHA-256',bytes);
-      return {id:c.id,webgl2:!gl.isContextLost(),glError:gl.getError(),sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('')};
+      let nonzeroRgbPixels=0,nonzeroAlphaPixels=0,rgbChannelSum=0;
+      for(let k=0;k<bytes.length;k+=4){
+        if(bytes[k]||bytes[k+1]||bytes[k+2])nonzeroRgbPixels++;
+        if(bytes[k+3])nonzeroAlphaPixels++;
+        rgbChannelSum+=bytes[k]+bytes[k+1]+bytes[k+2];
+      }
+      return {id:c.id,webgl2:!gl.isContextLost(),glError:gl.getError(),
+        sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),
+        pixelCount:c.width*c.height,nonzeroRgbPixels,nonzeroAlphaPixels,rgbChannelSum};
     }));
     const st=studio.status();
     return {positions:Array.from(studio.session.getPositions()),undoDepth:st.undoDepth,redoDepth:st.redoDepth,revision:st.revision,pixels};
   });
+  // Record genuine framebuffer evidence BEFORE a strict test assertion can stop
+  // the case. A failed case must not produce an empty screenshot manifest.
+  const capture=async phase=>{
+    for(const id of ['hero','side','front','rear']){
+      const bytes=await page.locator('#'+id).screenshot({type:'png'});
+      const name=cfg.id+'-'+id+'-'+phase+'.png';
+      images.push({name,caseId:cfg.id,phase,sha256:sha(bytes),bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
+      result.screenshots.push({name,phase,sha256:sha(bytes)});
+    }
+  };
   try{
     const response=await page.goto(base+ROUTE,{waitUntil:'networkidle',timeout:120000});
     check(response?.status()===200,'HTTP_SERVED_ROUTE_NOT_200');
@@ -120,6 +138,8 @@ async function oneCase(browser,base,cfg,images){
     check(boot.views.length===4&&boot.state.vertices===273&&boot.state.triangles===480,'FOUR_VIEW_NEUTRAL_FIXTURE_MISMATCH');
     check(boot.views.every(v=>v.backend==='WEBGL2'),'REAL_WEBGL2_BACKEND_REQUIRED');
     const before=await snapshot();
+    result.gpuBefore=before.pixels;
+    await capture('before');
     check(before.pixels.every(p=>p.webgl2&&p.glError===0),'INITIAL_GPU_VALIDATION_FAILED');
     await page.selectOption('#mode','ORGANIC_INFLATE');
     await page.selectOption('#region','ALL');
@@ -129,6 +149,19 @@ async function oneCase(browser,base,cfg,images){
     const x=r.x+r.width/2,y=r.y+r.height/2;
     await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+12,y-9,{steps:3});await page.mouse.up();
     const after=await snapshot();
+    result.gpuAfter=after.pixels;
+    result.perViewPixelDelta=after.pixels.map((p,i)=>({
+      id:p.id,beforeSha256:before.pixels[i].sha256,afterSha256:p.sha256,
+      differs:p.sha256!==before.pixels[i].sha256,
+      beforeNonzeroRgbPixels:before.pixels[i].nonzeroRgbPixels,
+      afterNonzeroRgbPixels:p.nonzeroRgbPixels,
+      beforeRgbChannelSum:before.pixels[i].rgbChannelSum,
+      afterRgbChannelSum:p.rgbChannelSum,
+      webgl2:p.webgl2,glError:p.glError
+    }));
+    result.geometryAfterPointer={positionsDifferent:JSON.stringify(after.positions)!==JSON.stringify(before.positions),
+      undoDepth:after.undoDepth,redoDepth:after.redoDepth,revision:after.revision};
+    await capture('after');
     check(JSON.stringify(after.positions)!==JSON.stringify(before.positions),'REAL_POINTER_EDIT_MISSING');
     check(after.undoDepth===1,'STROKE_HISTORY_NOT_COMMITTED');
     check(after.pixels.every((p,i)=>p.webgl2&&p.glError===0&&p.sha256!==before.pixels[i].sha256),'FOUR_VIEW_GPU_PIXEL_DELTA_MISSING');
@@ -145,19 +178,19 @@ async function oneCase(browser,base,cfg,images){
     const restored=await snapshot();
     check(JSON.stringify(restored.positions)===JSON.stringify(after.positions)&&restored.undoDepth===0,'PERSISTENT_REOPEN_FAILED');
     check(restored.pixels.every((p,i)=>p.sha256===after.pixels[i].sha256),'PERSISTENT_GPU_REPLAY_FAILED');
-    for(const id of ['hero','side','front','rear']){
-      const bytes=await page.locator('#'+id).screenshot({type:'png'});
-      const name=cfg.id+'-'+id+'-restored.png';
-      images.push({name,caseId:cfg.id,sha256:sha(bytes),bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
-      result.screenshots.push({name,sha256:sha(bytes)});
-    }
+    await capture('restored');
     const htmlBlob=await served.get(ROUTE),controllerBlob=await served.get('/assets/engine/dgb.native-sculpt-browser.v1.mjs');
     check(htmlBlob===blobs[ROUTE.slice(1)]&&controllerBlob===blobs['assets/engine/dgb.native-sculpt-browser.v1.mjs'],'SERVED_ASSET_BYTES_MISMATCH');
     check(!result.jsErrors.length&&!result.httpErrors.length&&!result.requestFailures.length,'BROWSER_ERRORS_PRESENT');
     result.behavior={realWebGL2Views:4,realPixelChangeAllFour:true,undoRedo:true,saveReopen:true,sourceVertexCount:273,sourceTriangles:480};
     result.served={status:response.status(),htmlBlob,controllerBlob};
     result.pass=true;
-  }catch(e){result.error=String(e.stack||e).slice(0,1700);}
+  }catch(e){
+    result.error=String(e.stack||e).slice(0,1700);
+    if(!result.screenshots.some(x=>x.phase==='after')){
+      try{await capture('failure');}catch(captureError){result.screenshotCaptureError=String(captureError).slice(0,300);}
+    }
+  }
   finally{await context.close();}
   return result;
 }
@@ -187,7 +220,7 @@ async function main(){
     receipt.browserVersion=browser.version();receipt.transport='ACTUAL_HTTP_ORIGINAL_MODULE_URLS';
     const base='http://127.0.0.1:'+server.address().port;
     for(const cfg of cases)receipt.cases.push(await oneCase(browser,base,cfg,manifest.images));
-    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===12?'PASS_CLOSED':'FAIL_CLOSED';
+    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===36?'PASS_CLOSED':'FAIL_CLOSED';
   }catch(e){receipt.status='FAIL_CLOSED';receipt.errorCode='FIXED_QUALIFICATION_FAILED';receipt.error=String(e.stack||e).slice(0,1900);}
   finally{
     if(browser)await browser.close().catch(()=>{});

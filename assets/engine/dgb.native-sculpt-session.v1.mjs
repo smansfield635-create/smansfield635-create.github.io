@@ -332,3 +332,54 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
     getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions)}),
     state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3})});
 }
+
+
+/** Read-only original M1.3 archive-derived geometry transfer, with no private
+ * fixture/atlas bytes embedded in this public module. Original masters remain
+ * protected until a separate source-face anatomical admission is qualified. */
+export function createM13OriginalSource(fixture) {
+  if (!fixture || typeof fixture !== 'object') throw new TypeError('M13_FIXTURE_REQUIRED');
+  const dense=(value,n,label)=>{
+    if (!Array.isArray(value)||value.length!==n||value.some(v=>typeof v!=='number'||!Number.isFinite(v)))
+      throw new TypeError('M13_'+label+'_INVALID');
+    return new Float32Array(value);
+  };
+  const base=dense(fixture.base,1134*3,'BASE');
+  if (!Array.isArray(fixture.targets)||fixture.targets.length!==16)throw new TypeError('M13_TARGET_COUNT_INVALID');
+  const targets=fixture.targets.map((values,i)=>dense(values,base.length,'TARGET_'+i));
+  if (!Array.isArray(fixture.weights)||fixture.weights.length!==64)throw new TypeError('M13_POSE_COUNT_INVALID');
+  const weights=fixture.weights.map((values,i)=>dense(values,16,'POSE_'+i));
+  if (!Array.isArray(fixture.renderToMaster)||fixture.renderToMaster.length!==1409||
+      fixture.renderToMaster.some(x=>!Number.isInteger(x)||x<0||x>=1134))throw new TypeError('M13_MASTER_RENDER_MAP_INVALID');
+  const map=Uint32Array.from(fixture.renderToMaster);
+  if (!Array.isArray(fixture.triangles)||fixture.triangles.length!==2264*3||
+      fixture.triangles.some(x=>!Number.isInteger(x)||x<0||x>=1409))throw new TypeError('M13_RENDER_TRIANGLES_INVALID');
+  const renderTriangles=Uint16Array.from(fixture.triangles),masterTriangles=new Uint16Array(renderTriangles.length);
+  for(let i=0;i<renderTriangles.length;i++)masterTriangles[i]=map[renderTriangles[i]];
+  const uvs=dense(fixture.uv,1409*2,'UV');
+  const protectedVertices=Array.from({length:1134},(_,i)=>i);
+  const regions=Array.from({length:1134},()=> 'ORIGINAL_PROTECTED');
+  let lastPose=-1;
+  function pose(index){
+    if(!Number.isInteger(index)||index<0||index>=64)throw new RangeError('M13_POSE_INDEX_INVALID');
+    const out=new Float64Array(base);
+    for(let j=0;j<16;j++){
+      const w=weights[index][j];if(w===0)continue;
+      const delta=targets[j];for(let k=0;k<out.length;k++)out[k]+=w*delta[k];
+    }
+    const sourcePosition=new Float32Array(out);
+    const handoff=createSculptSourceHandoff({positions:sourcePosition,triangles:masterTriangles,
+      renderToMaster:map,uvs});
+    lastPose=index;
+    return {positions:handoff.positionsYUp,triangles:new Uint16Array(masterTriangles),
+      regions:[...regions],protectedVertices:[...protectedVertices],
+      sourceRender:{renderToMaster:new Uint32Array(map),renderTriangles:new Uint16Array(renderTriangles),
+        uvs:new Float32Array(uvs),originalPose:index,sourceMasterCount:1134,sourceRenderCount:1409,
+        readOnlyOriginal:true},
+      sourceMasterPosition:sourcePosition};
+  }
+  return Object.freeze({schema:'DGB_M13_ORIGINAL_READONLY_SOURCE_HANDOFF_v1',
+    masterCount:1134,renderCount:1409,triangleCount:2264,morphTargets:16,poses:64,
+    originalImmutable:true,forequarterEditAllowed:false,pose,
+    state:()=>Object.freeze({lastPose,originalImmutable:true})});
+}

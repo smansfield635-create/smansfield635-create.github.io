@@ -213,6 +213,90 @@ jobs:
             /tmp/remote-router-transport-contract.json
           if-no-files-found: warn
 
+  gen3264-authentic-two-path-runtime:
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/dgb-gen3271-router-positive-runtime-qualification'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: read
+    env:
+      EXACT_ROUTER_HEAD: 80481ad14b5b49d654ec5549c1fcc548a613aae8
+      EXACT_ROUTER_BLOB: da4aa84d660e1476d437e331441beed9cafe0f28
+      TARGET_OPERATION: DGB_GRAPHICS_SCULPT_LAB_M163_GEOMETRY_SAFETY_20261114_001
+      TARGET_PATH_A: assets/engine/dgb.native-sculpt-session.v1.mjs
+      TARGET_PATH_B: assets/engine/dgb.native-sculpt-session.v1.test.mjs
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute real Gen3264 two-path route on immutable unmerged Gen3267 router
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen3264-authentic"
+          cd "$RUNNER_TEMP/gen3264-authentic"
+          git init -q .
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          git -c protocol.version=2 fetch -q --no-tags --depth=1 --filter=blob:none origin "$EXACT_ROUTER_HEAD"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set .github/ai-router .github/operation-intake tools
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_ROUTER_HEAD"
+          test "$(git rev-parse HEAD:tools/repository-ai-entry-router.mjs)" = "$EXACT_ROUTER_BLOB"
+          test -f AI_ENTRYPOINT.json
+          test -f tools/repository-ai-entry-router.v3-legacy.mjs
+          set +e
+          node tools/repository-ai-entry-router.mjs --mutation-intent --task "$TARGET_OPERATION" --path "$TARGET_PATH_A" --path "$TARGET_PATH_B" --output "$RUNNER_TEMP/gen3264-authentic-router.json" > "$RUNNER_TEMP/gen3264-authentic-stdout.log" 2>&1
+          router_status=$?
+          set -e
+          printf '%s\n' "$router_status" > "$RUNNER_TEMP/gen3264-authentic-exit-code.txt"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          test "$router_status" -eq 0
+          test -s "$RUNNER_TEMP/gen3264-authentic-router.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const dir=process.env.RUNNER_TEMP;
+          const r=JSON.parse(fs.readFileSync(dir+'/gen3264-authentic-router.json','utf8'));
+          const expected=['assets/engine/dgb.native-sculpt-session.v1.mjs','assets/engine/dgb.native-sculpt-session.v1.test.mjs'];
+          const p=r.gen3264AdmissionProvenance;
+          const paths=(r.routes||[]).map(x=>x.path).sort();
+          const ok=r.schema==='REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3' && r.disposition==='PASS' &&
+            r.admittedCandidateScopeRecognition==='GEN3264_EXACT_TWO_PATHS_ONLY' &&
+            r.legacyDisposition==='BLOCK' && r.mutationIntent===true &&
+            r.task==='DGB_GRAPHICS_SCULPT_LAB_M163_GEOMETRY_SAFETY_20261114_001' &&
+            r.governingHead==='80481ad14b5b49d654ec5549c1fcc548a613aae8' &&
+            JSON.stringify(paths)===JSON.stringify(expected) &&
+            r.routes.length===2 && r.routes.every(x=>x.routeClass==='AUTHENTIC_GEN3264_ADMITTED_CANDIDATE_PATH' &&
+              x.projectId==='DIAMOND_GATE_GRAPHICS_ENGINE' && x.disposition==='PASS') &&
+            p?.eligible===true && p.operationId===r.task && p.lockGeneration===3264 &&
+            p.projectId==='DIAMOND_GATE_GRAPHICS_ENGINE' && p.sourceCommentId===6869244993 &&
+            p.governingHead==='c36e05af0160f0707dca0e7ee8c5334bc3e5fb52' &&
+            /^[0-9a-f]{40}$/.test(p.lockRefHead??'');
+          const summary={schema:'DGB_GEN3264_TWO_PATH_EXACT_ROUTER_CI_VERIFICATION_v1',result:ok?'PASS':'FAIL_CLOSED',
+            routerSourceHead:'80481ad14b5b49d654ec5549c1fcc548a613aae8',
+            originalSourceHead:'d920485facd7a6231f3a31a99fb47b0243d5dbb0',
+            checkedPaths:expected,routeDisposition:r.disposition,admissionGeneration:p?.lockGeneration??null,
+            ownerCommentId:p?.sourceCommentId??null,canonicalLockRefHead:p?.lockRefHead??null,
+            exactTwoPathRecognition:r.admittedCandidateScopeRecognition??null,
+            sourceMutation:false,productMutation:false,merge:false,deploy:false,publication:false};
+          fs.writeFileSync(dir+'/gen3264-authentic-summary.json',JSON.stringify(summary,null,2)+'\n');
+          if(!ok){console.error(JSON.stringify(summary));process.exit(1);}
+          NODE
+      - name: Preserve authentic router receipt and failure trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen3264-router-positive-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen3264-authentic-router.json
+            ${{ runner.temp }}/gen3264-authentic-stdout.log
+            ${{ runner.temp }}/gen3264-authentic-exit-code.txt
+            ${{ runner.temp }}/gen3264-authentic-summary.json
+          if-no-files-found: warn
+          retention-days: 90
+
   remote-router-receipt:
     if: >-
       github.event_name == 'issue_comment' &&

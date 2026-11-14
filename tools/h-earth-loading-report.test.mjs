@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHEarthLoadingScreen} from '../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js';
-function harness(clipboard){
+function harness(clipboard,search=''){
  const nodes=new Map(),frames=[];let time=100;
  const node=()=>({dataset:{},style:{},hidden:false,disabled:false,value:'',listeners:{},children:[],setAttribute(k,v){this[k]=v;if(k.startsWith('data-'))nodes.set(`[${k}]`,this);},addEventListener(k,f){this.listeners[k]=f;},appendChild(n){this.children.push(n);},focus(){this.focused=true;},select(){this.selected=true;},querySelector(k){if(!nodes.has(k))nodes.set(k,node());return nodes.get(k);}});
  const shell=node();nodes.set('[data-enter]',{...node(),disabled:true});
- const document={createElement:node,getElementById:()=>shell,body:node(),defaultView:{navigator:{clipboard},setInterval:()=>1,clearInterval(){}}};
+ const document={createElement:node,getElementById:()=>shell,body:node(),defaultView:{location:{search},navigator:{clipboard},setInterval:()=>1,clearInterval(){}}};
  const loader=createHEarthLoadingScreen({document,now:()=>time,requestFrame:f=>frames.push(f),schedule:()=>1,cancelSchedule(){}});
- return {loader,nodes,frames,body:document.body,shell,setTime:t=>time=t};
+ const copyButton=nodes.get('[data-copy-loading-report]');
+ const reportPanel=nodes.get('.he-preparation')?.children.find(n=>n.children.includes(copyButton));
+ return {loader,nodes,frames,body:document.body,shell,reportPanel,setTime:t=>time=t};
 }
 const pose=sequence=>({sequence,position:{x:sequence,y:0,z:0},yawDegrees:0,pitchDegrees:0,verticalFovDegrees:60});
 
@@ -58,3 +60,25 @@ test('entry timing remains distinct from copied elapsed and scene resource timin
  const h=harness({});h.setTime(2100);h.loader.enableControls(pose(0));h.setTime(3100);h.loader.observeInput({accepted:true},pose(1));h.setTime(3200);h.loader.observePresentation(pose(1),{navigationSequence:1});h.frames.shift()();h.setTime(4000);h.nodes.get('[data-enter]').listeners.click();h.setTime(9000);
  const r=h.loader.getLoadingReport();assert.equal(r.entryTiming.controlsReady,2000);assert.equal(r.entryTiming.firstChangedViewSubmitted,3100);assert.equal(r.entryTiming.loaderDismissed,3900);assert.equal(r.elapsedMilliseconds,8900);assert.match(r.timingDefinitions.preparation,/does not include all imported plants/);
 });
+
+for(const [name,search] of [['public default',''],['inspection mode','?inspect=1']]){
+ test(`Copy loading report is visible throughout ${name} preparation and entered exploration`,async()=>{
+  let copied=null;const h=harness({writeText:async text=>{copied=text;}},search);
+  const button=h.nodes.get('[data-copy-loading-report]'),panel=h.reportPanel;
+  assert.ok(button?.listeners?.click,'copy button must be keyboard/touch clickable');
+  assert.ok(panel,'copy button must be mounted during loading');
+  assert.equal(panel.hidden,false,'the copy panel must be publicly visible without an inspection query');
+  assert.match(button.style.cssText,/min-height:44px/,'copy control retains mobile tap target');
+  const before=h.loader.getReceipt();assert.equal(await h.loader.copyLoadingReport(),true);
+  assert.equal(JSON.parse(copied).mode,'preparing');assert.deepEqual(h.loader.getReceipt(),before);
+  h.loader.enableControls(pose(0));h.loader.observeInput({accepted:true},pose(1));
+  h.loader.observePresentation(pose(1),{navigationSequence:1});h.frames.shift()();
+  h.nodes.get('[data-enter]').listeners.click();
+  assert.equal(h.shell.hidden,true);
+  assert.equal(panel.hidden,false,'copy control must remain visible after Enter');
+  assert.ok(h.body.children.includes(panel),'the existing panel must be mounted on document body');
+  assert.match(panel.style.cssText,/position:fixed/);
+  const entered=h.loader.getReceipt();assert.equal(await h.loader.copyLoadingReport(),true);
+  assert.equal(JSON.parse(copied).mode,'entered');assert.deepEqual(h.loader.getReceipt(),entered);
+ });
+}

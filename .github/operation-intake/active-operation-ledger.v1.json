@@ -25016,6 +25016,50 @@
       "scopeHash": "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf",
       "state": "ADMITTED_LOCKED"
     },
+    "c4f777f526242cf65911d98c74d974ac3a2db195cf7703cfab3fa0c772b1dfd3": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "060411ac04780828d719b3fe653b8e1a8f10053f",
+          "lockGeneration": 3278,
+          "lockScope": "H_EARTH:GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION:20261114:ONE",
+          "operationId": "H_EARTH_GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION_20261114_001",
+          "procedureLocatorDigest": "7868ab915b772dcf295ae4ebb5b1f0c04310b34cfc3a6f1268d3077ddf85f2a1",
+          "requestDigest": "538b25a863c460c23c3a14f91b1488412185539729c948e8a26b4e567a3149b6",
+          "scopeHash": "c4f777f526242cf65911d98c74d974ac3a2db195cf7703cfab3fa0c772b1dfd3"
+        },
+        "bindingDigest": "64b909cfb8afc57018e3d8b87aea035ca6d799795bde669a1701b038bff99f0e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "591e382aaa94d8776b6ef87b01b4705613d865599b3625f7cbdef050ed04458d",
+          "commentId": 6881181485,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43619359347,
+          "workflowSha": "060411ac04780828d719b3fe653b8e1a8f10053f"
+        },
+        "lineageAnchorCommitSha": "441a601222f1131de4e562af5d65c13e1caa5bf7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "060411ac04780828d719b3fe653b8e1a8f10053f",
+      "lockGeneration": 3278,
+      "lockScope": "H_EARTH:GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION:20261114:ONE",
+      "operationId": "H_EARTH_GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION_20261114_001",
+      "procedureLocatorDigest": "7868ab915b772dcf295ae4ebb5b1f0c04310b34cfc3a6f1268d3077ddf85f2a1",
+      "released": false,
+      "requestDigest": "538b25a863c460c23c3a14f91b1488412185539729c948e8a26b4e567a3149b6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c4f777f526242cf65911d98c74d974ac3a2db195cf7703cfab3fa0c772b1dfd3",
+      "state": "ADMITTED_LOCKED"
+    },
     "c649297d19f45732235bbde22e0a3a300db54eeb334f06a10d8313cced735741": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -32271,7 +32315,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3277,
+  "lockGeneration": 3278,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

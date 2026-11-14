@@ -130,10 +130,10 @@ assert(zOrder.indexOf('EXACT_CANDIDATE_PHYSICAL_PREVIEW_WHEN_PHYSICAL_OR_PERCEPT
 assert(zOrder.indexOf('TERMINAL_MUTATION_CLOSURE_AFTER_KEEP_OR_REJECT') < zOrder.indexOf('SEPARATE_EXACT_HEAD_MERGE_AND_PUBLICATION_AUTHORITY'), 'ZIONTS_SEQUENCE', 'closure must precede release authority');
 
 assert(!community.description.includes('Physical-device lifecycle acceptance occurs only after exact-head publication'), 'COMMUNITY_BINDING', 'historical post-publication-only rule survived');
-assert(community.description.includes('EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1'), 'COMMUNITY_BINDING', 'preview protocol');
-assert(community.description.includes('candidate-finalization'), 'COMMUNITY_BINDING', 'candidate finalization');
-assert(community.description.includes('Production deployment is not a preview workaround'), 'COMMUNITY_BINDING', 'production preview workaround');
-assert(community.description.includes('generic headless evidence never becomes physical-device acceptance'), 'COMMUNITY_BINDING', 'generic headless boundary');
+assert(community.description.includes('exact-head publication verification'), 'COMMUNITY_BINDING', 'published scope');
+assert(contract.candidateFinalization.declaredRequiredPhysicalReviewIsCandidateFinalizationStep === true, 'CONTRACT_BINDING', 'candidate finalization');
+assert(contract.transport.productionDeploymentAsPreviewWorkaroundAllowed === false, 'CONTRACT_BINDING', 'production preview default prohibition');
+assert(applicability.genericHeadlessMayMasqueradeAsPhysicalDeviceAcceptance === false, 'CONTRACT_BINDING', 'generic headless boundary');
 assert(community.description.includes('final authoritative live exact-head verification remains required'), 'COMMUNITY_BINDING', 'live verification');
 
 const gap = gaps.records.find(record => record.gapId === 'EXACT_CANDIDATE_PHYSICAL_PREVIEW_CONTINUITY');

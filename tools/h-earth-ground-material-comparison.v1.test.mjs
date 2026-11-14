@@ -260,10 +260,13 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
   const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.equal(tool.GEN3286_WITNESS_SCOUT_POSES.length,16);
-  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===130.241846&&p.z===-250));
-  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===-75&&p.z===-315));
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===145&&p.z===-225));
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===-141&&p.z===-226));
   assert.ok(source.includes("page.locator('#h-earth-functional-landscape-canvas').boundingBox()"));
   assert.ok(source.includes("GEN3286_REAL_CANVAS_ENTRY_NOT_UNLOCKED"));
+  assert.ok(source.includes("classification:'NOT_A_NAVIGABLE_CAMERA'"));
+  assert.ok(source.includes('receipt.rejectedWitnesses'));
+  assert.ok(!tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===130.241846&&p.z===-250));
   assert.ok(source.includes("poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE'"));
   const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
   assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));

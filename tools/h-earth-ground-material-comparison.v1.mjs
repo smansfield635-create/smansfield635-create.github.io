@@ -339,116 +339,116 @@ export const GEN3286_MATCHED=Object.freeze({
 });
 export const GEN3286_WITNESS_SCOUT_POSES=Object.freeze([
   {
-    "id": "woodland-grove-a",
+    "id": "woodland-grove-a-control",
     "x": -139.40267987050615,
     "z": -194.5,
     "yaw": 0,
     "pitch": 16
   },
   {
-    "id": "woodland-core-b",
+    "id": "woodland-core-b-control",
     "x": -141,
     "z": -226,
     "yaw": 180,
     "pitch": -12
   },
   {
-    "id": "woodland-edge-b",
-    "x": -125,
-    "z": -247,
-    "yaw": 180,
-    "pitch": -11
+    "id": "official-ridge-forward",
+    "x": 145,
+    "z": -225,
+    "yaw": 12,
+    "pitch": -10
   },
   {
-    "id": "woodland-ravine-b",
-    "x": -75,
-    "z": -315,
-    "yaw": 270,
-    "pitch": -13
-  },
-  {
-    "id": "ravine-alt-b",
-    "x": -80,
-    "z": -352,
-    "yaw": 0,
-    "pitch": -12
-  },
-  {
-    "id": "seam-ridge-130-250-north",
-    "x": 130.241846,
-    "z": -250,
-    "yaw": 0,
-    "pitch": -14
-  },
-  {
-    "id": "seam-ridge-130-250-south",
-    "x": 130.241846,
-    "z": -250,
+    "id": "official-ridge-south",
+    "x": 145,
+    "z": -225,
     "yaw": 180,
     "pitch": -14
   },
   {
-    "id": "seam-ridge-130-250-east",
-    "x": 130.241846,
-    "z": -250,
+    "id": "official-ridge-east",
+    "x": 145,
+    "z": -225,
     "yaw": 90,
     "pitch": -14
   },
   {
-    "id": "seam-ridge-130-250-west",
-    "x": 130.241846,
-    "z": -250,
-    "yaw": 270,
+    "id": "mountain-edge-west",
+    "x": 88,
+    "z": -260,
+    "yaw": 95,
+    "pitch": -10
+  },
+  {
+    "id": "mountain-edge-north",
+    "x": 88,
+    "z": -260,
+    "yaw": 0,
+    "pitch": -16
+  },
+  {
+    "id": "mountain-edge-south",
+    "x": 88,
+    "z": -260,
+    "yaw": 180,
     "pitch": -14
   },
   {
-    "id": "meadow-east-130-300",
+    "id": "positive-x-south-looking-north",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 0,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-west",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 270,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-east",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 90,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-south",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 180,
+    "pitch": -12
+  },
+  {
+    "id": "cavern-rear-approach",
+    "x": 40,
+    "z": -264,
+    "yaw": 90,
+    "pitch": -12
+  },
+  {
+    "id": "east-meadow-interior",
     "x": 130,
     "z": -300,
     "yaw": 180,
-    "pitch": -15
+    "pitch": -16
   },
   {
-    "id": "meadow-east-180-320",
+    "id": "east-meadow-perimeter",
     "x": 180,
     "z": -320,
     "yaw": 0,
     "pitch": -14
   },
   {
-    "id": "meadow-east-130-400",
-    "x": 130,
-    "z": -400,
-    "yaw": 0,
-    "pitch": -14
-  },
-  {
-    "id": "meadow-outer-220-300",
-    "x": 220,
-    "z": -300,
-    "yaw": 90,
-    "pitch": -14
-  },
-  {
-    "id": "meadow-edge-40-255",
+    "id": "seam-overlap-edge",
     "x": 40,
     "z": -255,
     "yaw": 90,
     "pitch": -14
-  },
-  {
-    "id": "foothill-preserve",
-    "x": -52,
-    "z": -208,
-    "yaw": 180,
-    "pitch": -12
-  },
-  {
-    "id": "mountain-preserve",
-    "x": 88,
-    "z": -260,
-    "yaw": 95,
-    "pitch": -10
   }
 ].map(Object.freeze));
 export function gen3286VerifySource(dir,label){
@@ -555,6 +555,19 @@ export async function runGen3286(argv){
         runRecord.actualBrowserExecution=true;persist();
         let sequence=30000,previousFrame=0;
         for(const pose of poses){
+          // A source-defined target is not automatically a navigable camera.
+          // Reject it explicitly before browser capture rather than terminating
+          // the whole bounded scout or silently claiming a screenshot.
+          if(scout){
+            const gate=await page.evaluate(({pose})=>{
+              const nav=globalThis.__groundComparisonNav.auditResolvePosition(pose.x,pose.z,pose.yaw,'SURFACE');
+              return {eligible:nav?.eligible===true,issues:nav?.issues??[]};
+            },{pose});
+            if(!gate.eligible){
+              (receipt.rejectedWitnesses??=[]).push({pose,issues:gate.issues,classification:'NOT_A_NAVIGABLE_CAMERA'});
+              persist();continue;
+            }
+          }
           let stableCount=0,priorSignature=null,deadline=Date.now()+120000;
           while(stableCount<2){
             const check=await page.evaluate(async({pose,sequence})=>{
@@ -618,7 +631,7 @@ export async function runGen3286(argv){
       }
     }
     if(scout){
-      if(receipt.views.length!==poses.length||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
+      if(receipt.views.length+(receipt.rejectedWitnesses?.length??0)!==poses.length||receipt.views.length<4||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
       receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
       receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
     }else{

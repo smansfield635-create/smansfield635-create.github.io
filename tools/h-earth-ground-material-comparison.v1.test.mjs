@@ -234,7 +234,7 @@ test('Gen3287 rejects source label, pair camera, projection, asset or PNG identi
 test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
   const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
-  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1'));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
   assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));

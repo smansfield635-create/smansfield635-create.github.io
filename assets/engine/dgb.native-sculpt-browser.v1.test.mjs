@@ -17,3 +17,17 @@ test('studio requires exactly four actual target canvas objects',()=>{
   assert.throws(()=>createNativeSculptStudio({canvases:[]}),/FOUR_CANVASES_REQUIRED/);
   assert.throws(()=>createNativeSculptStudio({canvases:[1,2,3,4],backend:'PDF'}),/STUDIO_OPTIONS_INVALID/);
 });
+
+// M1.6.2: verify integrated UI names and original E1/E2/E3 controller reuse.
+test('existing four-view studio exposes organic controls via the same native session',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const controller=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  for(const mode of ['ORGANIC_INFLATE','ORGANIC_GRAB','ORGANIC_FLATTEN'])assert(html.includes(`value="${mode}"`));
+  for(const id of ['fieldX','fieldY','fieldZ'])assert(html.includes(`id="${id}"`));
+  assert.match(controller,/createSculptSession\(fixture\)/);
+  assert.match(controller,/createNativeFramePipeline\(device\)/);
+  assert.match(controller,/createNativeSpatialScene\(\)/);
+  assert.match(controller,/mode==='ORGANIC_GRAB'/);
+  assert.match(controller,/fieldRadii/);
+});

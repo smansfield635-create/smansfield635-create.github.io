@@ -127,10 +127,32 @@ async function oneCase(browser,base,cfg,images){
       // Playwright captures the composited WebGL canvas, not the cleared
       // default framebuffer returned by readPixels in this SwiftShader run.
       const bytes=await page.locator('#'+id).screenshot({type:'png'});
-      const name=cfg.id+'-'+id+'-'+phase+'.png',digest=sha(bytes);
-      images.push({name,caseId:cfg.id,phase,sha256:digest,bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
-      result.screenshots.push({name,phase,sha256:digest});
-      observed.push({id,sha256:digest});
+      const name=cfg.id+'-'+id+'-'+phase+'.png',rawPngSha256=sha(bytes);
+      // Exact real-browser diagnosis: 12/12 no-edit PNG pairs have identical
+      // interior RGB pixels when only two perimeter pixels are excluded.
+      // The raw forensic PNG is preserved byte-for-byte in the manifest.
+      const normalized=await page.evaluate(async encodedPng=>{
+        const binary=atob(encodedPng),pngBytes=Uint8Array.from(binary,ch=>ch.charCodeAt(0));
+        const bitmap=await createImageBitmap(new Blob([pngBytes],{type:'image/png'}));
+        try{
+          const inset=2,innerWidth=bitmap.width-4,innerHeight=bitmap.height-4;
+          if(innerWidth<16||innerHeight<16)throw Error('PNG_INTERIOR_TOO_SMALL');
+          const target=document.createElement('canvas');target.width=innerWidth;target.height=innerHeight;
+          const ctx=target.getContext('2d',{willReadFrequently:true});
+          if(!ctx)throw Error('PNG_INTERIOR_2D_CONTEXT_MISSING');
+          ctx.drawImage(bitmap,inset,inset,innerWidth,innerHeight,0,0,innerWidth,innerHeight);
+          const pixels=ctx.getImageData(0,0,innerWidth,innerHeight).data;
+          const digest=await crypto.subtle.digest('SHA-256',pixels);
+          return {sha256:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join(''),
+            insetPixels:inset,width:innerWidth,height:innerHeight,pixelCount:innerWidth*innerHeight};
+        }finally{bitmap.close();}
+      },bytes.toString('base64'));
+      images.push({name,caseId:cfg.id,phase,sha256:rawPngSha256,
+        normalizedInteriorSha256:normalized.sha256,perimeterExcludedPixels:normalized.insetPixels,
+        bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
+      result.screenshots.push({name,phase,rawPngSha256,normalizedInteriorSha256:normalized.sha256,
+        perimeterExcludedPixels:normalized.insetPixels,interiorPixelCount:normalized.pixelCount});
+      observed.push({id,sha256:normalized.sha256,rawPngSha256,interiorPixelCount:normalized.pixelCount});
     }
     return observed;
   };

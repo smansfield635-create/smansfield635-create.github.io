@@ -93,10 +93,10 @@ test('invalid organic controls cannot silently mutate a session',()=>{
   s.cancelStroke();assert.equal(s.serialize(),before);
 });
 test('M1.3 +Z-up handoff transforms round-trip and preserves split UV identity',()=>{
-  const src=new Float32Array([1,2,3,4,5,6,7,8,9]),indices=new Uint16Array([0,1,2]);
+  const src=new Float32Array([1,2,3,4,5,6,7,8,10]),indices=new Uint16Array([0,1,2]);
   const seam=new Uint32Array([0,1,1,2]);const uv=new Float32Array([0,0,.4,.1,.6,.2,1,1]);
   const h=createSculptSourceHandoff({positions:src,triangles:indices,renderToMaster:seam,uvs:uv});
-  assert.deepEqual([...h.positionsYUp],[1,3,-2,4,6,-5,7,9,-8]);
+  assert.deepEqual([...h.positionsYUp],[1,3,-2,4,6,-5,7,10,-8]);
   assert.deepEqual([...h.fromSculptYUp(h.positionsYUp)],[...src]);
   assert.deepEqual([...h.renderToMaster],[...seam]);assert.deepEqual([...h.uvs],[...uv]);
   assert.equal(h.retopologyBakeAllowed,false);
@@ -160,4 +160,26 @@ test('prospective bake retains negative inversion receipt and rejects malformed 
   assert.equal(report.lineageAuthenticated,false);
   assert.throws(()=>verifySculptProspectiveBake(params),/SCULPT_BAKE_LINEAGE_REJECTED/);
   assert.throws(()=>verifySculptProspectiveBake({...params,sourceToOutputFaceCounts:[2]}),/SCULPT_BAKE_SOURCE_LINEAGE_INVALID/);
+});
+
+
+// M1.6.3 corrective safety regression: geometry and handoff must agree on area.
+test('source handoff rejects in-range collinear master triangles rejected by the geometry validator',()=>{
+  const positions=new Float32Array([0,0,0,1,0,0,2,0,0]),triangles=new Uint16Array([0,1,2]);
+  const data={positions,triangles,renderToMaster:new Uint32Array([0,1,2]),uvs:new Float32Array([0,0,.5,0,1,0])};
+  assert.throws(()=>verifySculptGeometry(positions,triangles),/DEGENERATE_TRIANGLE/);
+  assert.throws(()=>createSculptSourceHandoff(data),/SCULPT_SOURCE_HANDOFF_DEGENERATE_TRIANGLE/);
+});
+test('source handoff shares geometry doubled-area floor without rejecting valid thin faces',()=>{
+  const makeData=(height)=>({positions:new Float32Array([0,0,0,1,0,0,0,height,0]),
+    triangles:new Uint16Array([0,1,2]),renderToMaster:new Uint32Array([0,1,2]),
+    uvs:new Float32Array([0,0,1,0,0,1])});
+  const tiny=makeData(5e-9);
+  assert.throws(()=>verifySculptGeometry(tiny.positions,tiny.triangles),/DEGENERATE_TRIANGLE/);
+  assert.throws(()=>createSculptSourceHandoff(tiny),/SCULPT_SOURCE_HANDOFF_DEGENERATE_TRIANGLE/);
+  const valid=makeData(1e-4);
+  assert.equal(verifySculptGeometry(valid.positions,valid.triangles).triangleCount,1);
+  const h=createSculptSourceHandoff(valid);
+  assert.deepEqual([...h.triangles],[0,1,2]);
+  assert.equal(h.retopologyBakeAllowed,false);
 });

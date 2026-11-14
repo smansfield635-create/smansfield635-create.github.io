@@ -131,7 +131,7 @@ const canvases=['hero','side','front','rear'].map($),
     'undo','redo','save','load'].map(id=>[id,$(id)]));
 function install(fixture){
   studio?.dispose();studio=null;
-  studio=createNativeSculptStudio({canvases,controls,fixture,backend:'WEBGL2',
+  studio=createNativeSculptStudio({canvases,controls,fixture,backend:source?'WEBGL2':'AUTO',
     onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+
       ' • Triangles '+state.triangles+' • Revision '+state.revision+' • Undo '+state.undoDepth+
       ' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});

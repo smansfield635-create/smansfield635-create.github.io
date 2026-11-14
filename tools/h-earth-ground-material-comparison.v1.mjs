@@ -312,6 +312,7 @@ export async function runGen3142(argv){
 }
 
 export async function run(argv){
+  if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3238_MEADOW_GROUND_FACTOR_V1')return runGen3238Meadow(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
@@ -394,3 +395,239 @@ export async function run(argv){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});
 
+
+/* Gen3241 / Gen3238 visual factor isolation. Entirely read-only on the
+ * immutable published product; all patches are browser response interception. */
+export const GEN3238_MEADOW_FACTOR=Object.freeze({
+  productHead:'ab4b5989a62b216e8aa7015480c957984326843a',
+  rendererBlob:'85ee835060d5106a670077a5f4352b7ad202b49b',
+  vegetationBlob:'7cb62866153d4ceb57b2a2177359bd56a4220d85',
+  frozenMapSha256:'a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015',
+  expectedRoots:3805291,meadowBounds:[16,-559,254,-236],
+  modes:Object.freeze(['normal','no-grass','no-grass-plus-derived-soil','grass-plus-derived-soil']),
+  poses:Object.freeze([
+    Object.freeze({name:'historical-owner-center',x:124.4127167356344,y:9.082148204768242,z:-394.77901544898066,yaw:-58.17022448618572,pitch:-4.2995192852338775,diagnosticObserver:true}),
+    Object.freeze({name:'geographic-left-control',x:69,z:-396,yaw:-58.17022448618572,pitch:-4.2995192852338775}),
+    Object.freeze({name:'geographic-right-control',x:181,z:-387,yaw:-58.17022448618572,pitch:-4.2995192852338775})
+  ])
+});
+export function gen3238InstrumentRenderer(source){
+  const exactly=(s,needle,replacement)=>replaceExactlyOnce(s,needle,replacement);
+  let out=source;
+  out=exactly(out,'uniform int uWoodlandHabitatEnabled;','uniform int uWoodlandHabitatEnabled;\nuniform highp sampler2D uGen3238GroundTex;\nuniform vec4 uGen3238GroundBounds;\nuniform int uGen3238GroundMode;');
+  out=exactly(out,'    base=mix(base,habitatSoil,habitatColorCoverage*.68);',[
+    '    // Browser-only Gen3238 intervention: never mutate source habitat or roots.',
+    '    if(uGen3238GroundMode==1){',
+    '      vec2 uv=(vWorldPosition.xz-uGen3238GroundBounds.xy)/(uGen3238GroundBounds.zw-uGen3238GroundBounds.xy);',
+    '      if(all(greaterThanEqual(uv,vec2(0.0)))&&all(lessThan(uv,vec2(1.0)))){',
+    '        float installedMeadowCover=texture(uGen3238GroundTex,uv).r;',
+    '        habitatColorCoverage=max(habitatColorCoverage,installedMeadowCover);',
+    '      }',
+    '    }',
+    '    base=mix(base,habitatSoil,habitatColorCoverage*.68);'
+  ].join('\n'));
+  out=exactly(out,'const installedHabitat=resources.singleOwnerVegetation.habitat;',[
+    'const installedHabitat=resources.singleOwnerVegetation.habitat;',
+    '      // The exact immutable Gen3238 gzip source is decoded only for this GPU probe.',
+    "      const raw=await fetch('/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz');",
+    "      if(!raw.ok)throw Error('GEN3238_GROUND_MAP_UNAVAILABLE');",
+    '      const originalBytes=new Uint8Array(await raw.arrayBuffer());',
+    "      const originalSha=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',originalBytes)),x=>x.toString(16).padStart(2,'0')).join('');",
+    "      if(originalSha!=='a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015')throw Error('GEN3238_GROUND_MAP_SHA_DRIFT');",
+    "      const map=JSON.parse(await new Response(new Blob([originalBytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text());",
+    "      if(map.cells?.length!==76874)throw Error('GEN3238_GROUND_MAP_CELL_COUNT_DRIFT');",
+    '      const w=238,h=323,bytes=new Uint8Array(w*h);let admitted=0,protectedCount=0;',
+    '      const oldPanel=[[-213,-298,-69,-154],[-298,-570,88,-154],[-448,-283,448,-93]];',
+    '      for(const cell of map.cells){',
+    '        const occupied=cell.sourceRoots+cell.additionalRoots;',
+    "        if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6){protectedCount++;continue;}",
+    '        if(oldPanel.some(r=>cell.x+.5>r[0]&&cell.x+.5<r[2]&&cell.z+.5>r[1]&&cell.z+.5<r[3])){protectedCount++;continue;}',
+    '        const q=Math.max(0,Math.min(1,(occupied-6)/20)),factor=q*q*(3-2*q);',
+    '        bytes[(cell.z+559)*w+(cell.x-16)]=Math.round(255*factor);admitted++;',
+    '      }',
+    "      if(admitted<1)throw Error('GEN3238_GROUND_NO_ELIGIBLE_OCCUPANCY');",
+    '      if(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)<16)throw Error("GEN3238_DIAG_TEXTURE_UNIT_UNAVAILABLE");',
+    '      const t=gl.createTexture();if(!t)throw Error("GEN3238_DIAG_TEXTURE_ALLOCATION");',
+    '      gl.activeTexture(gl.TEXTURE0+15);gl.bindTexture(gl.TEXTURE_2D,t);',
+    '      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,w,h,0,gl.RED,gl.UNSIGNED_BYTE,bytes);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);',
+    '      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);',
+    '      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);',
+    "      if(gl.getError()!==gl.NO_ERROR)throw Error('GEN3238_DIAG_TEXTURE_UPLOAD_GL_ERROR');",
+    '      gl.useProgram(resources.geometryProgram);',
+    "      gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uGen3238GroundTex'),15);",
+    "      gl.uniform4f(gl.getUniformLocation(resources.geometryProgram,'uGen3238GroundBounds'),16,-559,254,-236);",
+    '      gl.activeTexture(gl.TEXTURE0);',
+    '      globalThis.__gen3238GroundAudit={sourceMapSha256:originalSha,admittedCells:admitted,protectedOrInsideOldAtlas:protectedCount,diagnosticTexels:bytes.byteLength,oneTimeTextureUploadCount:1,perFrameUploadBytes:0,immutableRoots:true};'
+  ].join('\n'));
+  const terrainDraw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+  out=exactly(out,terrainDraw,terrainDraw+[
+    "const gen3238Mode=globalThis.__gen3238GroundMode??0;",
+    "if(!Number.isInteger(gen3238Mode)||gen3238Mode<0||gen3238Mode>3)throw Error('GEN3238_DIAG_MODE_INVALID');",
+    "gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uGen3238GroundMode'),gen3238Mode>=2?1:0);",
+    'globalThis.__gen3238GroundApplied=gen3238Mode;'
+  ].join('\n'));
+  out=exactly(out,'resources.singleOwnerVegetation?.draw(packet);',
+    'if(globalThis.__gen3238GroundMode!==1&&globalThis.__gen3238GroundMode!==2)resources.singleOwnerVegetation?.draw(packet);');
+  return Object.freeze({source:out,originalSha256:sha(source),instrumentedSha256:sha(out),interceptedOnly:true});
+}
+function gen3238Parse(argv){
+  if(argv.length!==4||argv[0]!=='--product-dir'||argv[2]!=='--output')throw Error('GEN3238_FIXED_CLI_REQUIRED');
+  const product=path.resolve(argv[1]),output=path.resolve(argv[3]);if(product===output)throw Error('GEN3238_OUTPUT_NOT_DISTINCT');
+  return {product,output};
+}
+export function gen3238FrameComparison(views){
+  const results=[];
+  for(const pose of GEN3238_MEADOW_FACTOR.poses){
+    const group=views.filter(v=>v.pose===pose.name);
+    if(group.length!==4||new Set(group.map(v=>v.mode)).size!==4)throw Error('GEN3238_FACTOR_SET_INCOMPLETE:'+pose.name);
+    const first=group[0];
+    for(const v of group){
+      if(v.productHead!==GEN3238_MEADOW_FACTOR.productHead||v.rendererSha256!==first.rendererSha256||
+        JSON.stringify(v.camera)!==JSON.stringify(first.camera)||
+        JSON.stringify(v.matrix)!==JSON.stringify(first.matrix)||
+        v.assets!==first.assets||v.canvas.width!==384||v.canvas.height!==688||
+        v.appliedMode!==GEN3238_MEADOW_FACTOR.modes.indexOf(v.mode)||
+        v.glError!==0||v.gpuContextLost)throw Error('GEN3238_FACTOR_NOT_MATCHED:'+pose.name+':'+v.mode);
+    }
+    const changes=first.factorDifferences;
+    if(!changes||!['bladePixels','soilPixels','combinedPixels'].every(k=>Number.isFinite(changes[k].fractionChanged)&&Number.isFinite(changes[k].meanAbsRgb)))throw Error('GEN3238_FACTOR_METRICS_MISSING');
+    results.push({pose:pose.name,ownerCameraHistorical:pose.name==='historical-owner-center',geographicFlankNotScreenshotAuthenticated:pose.name!=='historical-owner-center',...changes});
+  }
+  return results;
+}
+export async function runGen3238Meadow(argv){
+  // The legacy CLI starts before the appended profile constant is initialized.
+  await Promise.resolve();
+  const {product,output}=gen3238Parse(argv);
+  const config=GEN3238_MEADOW_FACTOR;
+  assertCheckout(product,config.productHead);
+  fs.mkdirSync(output,{recursive:true});
+  const receipt={schema:'H_EARTH_GEN3238_MATCHED_GROUND_FACTOR_GPU_RECEIPT_v1',result:'INCOMPLETE',sourceProductHead:config.productHead,
+    historicalOwnerCameraNotCurrentScreenshotReconfirmed:true,flankControlsNotOwnerScreenshotAuthenticated:true,
+    productMutated:false,rootPopulationMutated:false,websiteModified:false,physicalAndroidProven:false,ownerAestheticAccepted:false,
+    modes:config.modes,poses:config.poses,views:[],comparisons:[],errors:[],runtimeErrors:[]};
+  const persist=()=>fs.writeFileSync(path.join(output,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+  let server=null,browser=null;persist();
+  try{
+    const rendererPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+    const rendererBlob=execFileSync('git',['-C',product,'hash-object',rendererPath],{encoding:'utf8'}).trim();
+    if(rendererBlob!==config.rendererBlob)throw Error('GEN3238_PUBLISHED_RENDERER_GIT_BLOB_DRIFT:'+rendererBlob);
+    const ownerBlob=execFileSync('git',['-C',product,'hash-object','showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js'],{encoding:'utf8'}).trim();
+    if(ownerBlob!==config.vegetationBlob)throw Error('GEN3238_PUBLISHED_OWNER_GIT_BLOB_DRIFT');
+    const rawRenderer=fs.readFileSync(path.join(product,rendererPath),'utf8'),patched=gen3238InstrumentRenderer(rawRenderer);
+    const originalRoute=fs.readFileSync(path.join(product,ROUTE.slice(1)),'utf8');
+    receipt.source={rendererGitBlob:rendererBlob,vegetationGitBlob:ownerBlob,rendererOriginalSha256:patched.originalSha256,rendererInterceptedSha256:patched.instrumentedSha256,routeOriginalSha256:sha(originalRoute)};
+    persist();
+    server=spawn('python3',['-m','http.server','18903','--bind','127.0.0.1','--directory',product],{stdio:['ignore','ignore','ignore']});
+    const base='http://127.0.0.1:18903';
+    let available=false;
+    for(let i=0;i<90;i++){try{if((await fetch(base+ROOT)).ok){available=true;break}}catch{}await new Promise(r=>setTimeout(r,100))}
+    if(!available)throw Error('GEN3238_LOCAL_IMMUTABLE_SERVER_UNAVAILABLE');
+    const {chromium}=await import('playwright');
+    browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+    const context=await browser.newContext({viewport:{width:384,height:688},deviceScaleFactor:1});
+    const page=await context.newPage();page.setDefaultTimeout(30000);
+    page.on('pageerror',e=>receipt.runtimeErrors.push('PAGE:'+e.message));
+    page.on('console',m=>{if(m.type()==='error')receipt.runtimeErrors.push('CONSOLE:'+m.text())});
+    page.on('response',r=>{if(r.status()>=400)receipt.runtimeErrors.push('HTTP:'+r.status()+':'+r.url())});
+    page.on('requestfailed',r=>receipt.runtimeErrors.push('NETWORK:'+r.url()));
+    await page.addInitScript({content:'globalThis.__gen3238GroundMode=0;globalThis.__gen3238GroundFrames={};globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+    await page.route(url=>url.pathname===RENDERER,route=>route.fulfill({status:200,contentType:'text/javascript',body:patched.source}));
+    await page.route(url=>url.pathname===ROUTE,route=>route.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(originalRoute)}));
+    await page.goto(base+ROOT+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
+    await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000,polling:500});
+    if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('GEN3238_WORLD_STARTUP_FAILED');
+    await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000,polling:500});
+    await page.mouse.move(160,240);await page.mouse.down();await page.mouse.move(220,250,{steps:8});await page.mouse.up();
+    await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000,polling:500});
+    await page.click('[data-enter]');
+    await page.waitForFunction(()=>window.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered',null,{timeout:120000,polling:500});
+    await page.waitForFunction(()=>['OWNER_PREPARED','FAILED'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.().vegetationBackground?.phase),null,{timeout:780000,polling:500});
+    const ready=await page.evaluate(()=>{
+      const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+      return {phase:gpu.vegetationBackground?.phase,ownerReceipt:gpu.vegetationBackground?.ownerReceipt,diagnostic:globalThis.__gen3238GroundAudit,framebufferPresentations:gpu.counters?.gpuFramebufferPresentationCount};
+    });
+    receipt.ownerReady=ready;persist();
+    if(ready.phase!=='OWNER_PREPARED'||ready.diagnostic?.sourceMapSha256!==config.frozenMapSha256||
+      ready.diagnostic.oneTimeTextureUploadCount!==1||ready.diagnostic.diagnosticTexels!==76874)throw Error('GEN3238_PREPARED_OR_DIAGNOSTIC_TEXTURE_NOT_VERIFIED');
+    await page.evaluate(async()=>{
+      const hits=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));
+      const urls=[...new Set(hits)];if(urls.length!==1)throw Error('GEN3238_NAV_MODULE_AMBIGUOUS:'+urls.length);
+      const u=urls[0];let s=await(await fetch(u)).text();
+      s=s.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,u).href));
+      s+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
+      globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([s],{type:'text/javascript'})));
+    });
+    let sequence=55000,previousFrame=0;
+    for(const pose of config.poses){
+      let stable=0,signature=null;
+      for(let attempt=0;attempt<90&&stable<2;attempt++){
+        const seen=await page.evaluate(async({pose,sequence})=>{
+          const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3238_DIAG_SETTLE');
+          globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+          const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),cv=document.querySelector('#h-earth-functional-landscape-canvas');
+          const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:sequence});
+          return {asset:globalThis.__groundAssetReadiness(gpu.resources,packet.camera.position),frame:gpu.frameRecords.at(-1)};
+        },{pose,sequence:sequence+1});
+        stable=seen.asset.ready&&signature===seen.asset.signature&&seen.frame?.navigationSequence===sequence+1?stable+1:0;
+        signature=seen.asset.signature;
+        if(stable<2)await new Promise(r=>setTimeout(r,500));
+      }
+      if(stable<2)throw Error('GEN3238_DIAG_ASSETS_NOT_STABLE:'+pose.name);
+      const group=[];
+      for(let mode=0;mode<4;mode++){
+        const res=await page.evaluate(async({pose,sequence,mode})=>{
+          globalThis.__gen3238GroundMode=mode;
+          const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3238_MATCHED_VISUAL_FACTOR');
+          for(let f=0;f<5;f++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame)}
+          const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),cv=document.querySelector('#h-earth-functional-landscape-canvas');
+          const pkt=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:sequence});
+          const gl=cv.getContext('webgl2');
+          if(!gl||gl.isContextLost()||!gl.getContextAttributes()?.preserveDrawingBuffer)throw Error('GEN3238_GL_CAPTURE_UNAVAILABLE');
+          const px=new Uint8Array(cv.width*cv.height*4);gl.readPixels(0,0,cv.width,cv.height,gl.RGBA,gl.UNSIGNED_BYTE,px);
+          globalThis.__gen3238GroundFrames[pose.name+':'+mode]=px;
+          const before=gpu.frameRecords.at(-1),dataUrl=cv.toDataURL('image/png'),after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+          if(before.frameSequence!==after.frameSequence||before.navigationSequence!==after.navigationSequence)throw Error('GEN3238_FRAME_CHANGED_DURING_CAPTURE');
+          return {dataUrl,pose:pose.name,mode:mode,appliedMode:globalThis.__gen3238GroundApplied,
+            camera:pkt.camera.position,matrix:Array.from(pkt.camera.viewProjectionMatrix),canvas:{width:cv.width,height:cv.height},asset:globalThis.__groundAssetReadiness(gpu.resources,pkt.camera.position),
+            glError:gl.getError(),gpuContextLost:gl.isContextLost(),frame:before,framebufferPresentations:gpu.counters?.gpuFramebufferPresentationCount};
+        },{pose,sequence:++sequence,mode});
+        if(!res.asset.ready||res.asset.signature!==signature||res.appliedMode!==mode||res.glError!==0||
+          res.canvas.width!==384||res.canvas.height!==688||res.frame.frameSequence<=previousFrame)throw Error('GEN3238_DIAG_CAPTURE_MISMATCH:'+pose.name+':'+mode);
+        previousFrame=res.frame.frameSequence;
+        const bytes=Buffer.from(res.dataUrl.split(',')[1],'base64');
+        if(bytes.length<1024||bytes.toString('ascii',12,16)!=='IHDR'||bytes.readUInt32BE(16)!==384||bytes.readUInt32BE(20)!==688)throw Error('GEN3238_DIAG_PNG_INVALID');
+        const name=pose.name+'-'+config.modes[mode]+'.png';fs.writeFileSync(path.join(output,name),bytes);
+        const v={pose:pose.name,mode:config.modes[mode],productHead:config.productHead,rendererSha256:patched.originalSha256,
+          appliedMode:mode,camera:res.camera,matrix:res.matrix,assets:res.asset.signature,canvas:res.canvas,glError:res.glError,gpuContextLost:res.gpuContextLost,
+          frameSequence:res.frame.frameSequence,framebufferPresentations:res.framebufferPresentations,image:name,imageSha256:sha(bytes),imageBytes:bytes.length};
+        group.push(v);receipt.views.push(v);persist();
+      }
+      const comparisons=await page.evaluate(poseName=>{
+        const frames=[0,1,2,3].map(i=>globalThis.__gen3238GroundFrames[poseName+':'+i]);
+        if(frames.some(f=>!(f instanceof Uint8Array)))throw Error('GEN3238_PIXEL_BUFFER_MISSING');
+        function metric(a,b){
+          let count=0,sum=0,changed=0,partial=0,total=a.length/4;
+          const w=384,h=688;
+          for(let i=0;i<total;i++){
+            const y=Math.floor(i/w),p=4*i,dist=Math.abs(a[p]-b[p])+Math.abs(a[p+1]-b[p+1])+Math.abs(a[p+2]-b[p+2]);
+            sum+=dist/3;if(dist>24)changed++;
+            if(y<h*.60){partial+=dist/3;count++}
+          }
+          return {fractionChanged:changed/total,meanAbsRgb:sum/total,lowerViewportMeanAbsRgb:partial/Math.max(count,1)};
+        }
+        return {bladePixels:metric(frames[0],frames[1]),soilPixels:metric(frames[1],frames[2]),combinedPixels:metric(frames[0],frames[3])};
+      },pose.name);
+      for(const v of group)v.factorDifferences=comparisons;
+    }
+    receipt.comparisons=gen3238FrameComparison(receipt.views);
+    if(receipt.runtimeErrors.length)throw Error('GEN3238_BROWSER_ERRORS:'+receipt.runtimeErrors.join('|'));
+    assertCheckout(product,config.productHead);
+    receipt.result='PASS_MATCHED_BROWSER_FACTOR_CAPTURED_VISUAL_DISPOSITION_PENDING';
+  }catch(error){
+    receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(error?.stack??error));throw error;
+  }finally{
+    persist();server?.kill();if(browser)await browser.close();
+  }
+  return receipt;
+}

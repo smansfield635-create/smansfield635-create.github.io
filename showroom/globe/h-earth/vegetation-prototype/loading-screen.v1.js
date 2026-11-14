@@ -52,10 +52,9 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   if(!existing)document.body.appendChild(shell);
   const activity=shell.querySelector('[data-loading-activity]'),bar=shell.querySelector('[data-loading-progress]'),units=shell.querySelector('[data-loading-units]'),instructions=shell.querySelector('[data-loading-instructions]'),button=shell.querySelector('[data-enter]');
   const reportPanel=document.createElement('div');
-  // Public exploration is immersive by default. Explicit ?inspect=1 retains
-  // owner copy-report and spatial-selection tools without deleting evidence APIs.
-  const ownerInspection=new URLSearchParams(document.defaultView?.location?.search??'').get('inspect')==='1';
-  reportPanel.hidden=!ownerInspection;
+  // A small public copy affordance is always accessible. Advanced spatial
+  // inspection remains separately gated by ?inspect=1 in route.js.
+  reportPanel.hidden=false;
   reportPanel.style.cssText='pointer-events:auto;margin-top:12px;max-width:100%';
   const copyButton=document.createElement('button');copyButton.type='button';copyButton.setAttribute('data-copy-loading-report','');copyButton.textContent='Copy loading report';
   copyButton.style.cssText='padding:10px 14px;min-height:44px;background:#183c34;color:#f4efdc;border:1px solid #718b79;border-radius:3px';
@@ -143,7 +142,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
     if(mode!=='ready'||button.disabled)return;
     stopStories();stopClock();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;
     reportPanel.style.cssText='position:fixed;top:12px;right:12px;z-index:30;max-width:min(340px,85vw);pointer-events:auto';
-    reportPanel.hidden=!ownerInspection;
+    reportPanel.hidden=false;
     document.body.appendChild(reportPanel);onEnter();
   });
   function getLoadingReport(){

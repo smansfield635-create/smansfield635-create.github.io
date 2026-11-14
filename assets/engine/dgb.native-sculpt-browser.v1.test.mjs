@@ -31,3 +31,31 @@ test('existing four-view studio exposes organic controls via the same native ses
   assert.match(controller,/mode==='ORGANIC_GRAB'/);
   assert.match(controller,/fieldRadii/);
 });
+
+
+test('original rabbit import keeps private archive local and M1.3 anatomical edit disabled',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const controller=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  const source=readFileSync(new URL('./dgb.native-sculpt-session.v1.mjs',import.meta.url),'utf8');
+  assert(html.includes('id="m13Archive"'));
+  assert(html.includes('id="m13Pose"'));
+  assert(html.includes("new DecompressionStream('deflate-raw')"));
+  for(const file of ['fixture.json','rabbit_albedo.png','rabbit_visual_appearance.v2.mjs'])
+    assert(html.includes("'"+file+"'"));
+  assert(html.includes('crypto.subtle.digest'));
+  assert(html.includes('M13_ZIP_SHA'));
+  assert(html.includes('M13_MEMBER_HASHES'));
+  assert(html.includes('originalEyeAt'));
+  assert(html.includes('source.pose(index)'));
+  assert(html.includes('source=null'));
+  assert(!html.includes('src="https://drive.google.com'));
+  assert(controller.includes('sourceGeometry(source,positions,session.getNormals())'));
+  assert(controller.includes('source?sourceData.positions:positions'));
+  assert(controller.includes('aUV'));
+  assert(controller.includes('uAtlas'));
+  assert(controller.includes('Original M1.3 is read-only.'));
+  assert(controller.includes('fixture.sourceRender?.readOnlyOriginal'));
+  assert(source.includes('forequarterEditAllowed:false'));
+  assert(source.includes('protectedVertices=Array.from({length:1134}'));
+});

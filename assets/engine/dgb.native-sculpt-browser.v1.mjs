@@ -46,13 +46,56 @@ const shaders=backend=>{
     fragmentSource:p+'precision mediump float;'+inF+' vec3 vNormal;'+inF+' vec3 vPosition;'+(two?'out vec4 outColor;':'')+'void main(){float diffuse=.55+.45*abs(dot(normalize(vNormal),normalize(vec3(.35,.4,.85))));vec3 clay=mix(vec3(.31,.48,.62),vec3(.75,.80,.81),diffuse);'+(two?'outColor':'gl_FragColor')+'=vec4(clay,1.0);}'};
 
 };
+
+/** Original M1.3 has one editing master per anatomical vertex, but separate
+ * seam-expanded render vertices. The original archive/atlas is never embedded. */
+function sourceGeometry(source,p,n){
+  const map=source.renderToMaster;
+  if(!(map instanceof Uint32Array)||map.length!==1409||!(source.uvs instanceof Float32Array)||source.uvs.length!==2818||
+      !(source.renderTriangles instanceof Uint16Array)||source.renderTriangles.length!==6792||
+      !(source.atlasPixels instanceof Uint8Array)||source.atlasPixels.length!==source.atlasWidth*source.atlasHeight*4||
+      source.readOnlyOriginal!==true)throw new TypeError('M13_RENDER_SOURCE_INVALID');
+  const positions=new Float32Array(map.length*3),normals=new Float32Array(map.length*3);
+  for(let i=0;i<map.length;i++){const sourceIndex=map[i];
+    if(sourceIndex>=p.length/3)throw new RangeError('M13_RENDER_MASTER_OUT_OF_RANGE');
+    positions.set(p.subarray(sourceIndex*3,sourceIndex*3+3),i*3);
+    normals.set(n.subarray(sourceIndex*3,sourceIndex*3+3),i*3);
+  }
+  return {positions,normals,uvs:source.uvs,indices:source.renderTriangles};
+}
+function originalTexturedShaders(backend){
+  const is2=backend==='WEBGL2',h=is2?'#version 300 es\n':'',att=is2?'in':'attribute',
+    vary=is2?'out':'varying',inside=is2?'in':'varying',texture=is2?'texture':'texture2D';
+  return {vertexSource:h+att+' vec3 aPosition;'+att+' vec3 aNormal;'+att+' vec2 aUV;uniform mat4 uMVP;'
+      +vary+' vec2 vUV;'+vary+' vec3 vNormal;void main(){vUV=aUV;vNormal=aNormal;gl_Position=uMVP*vec4(aPosition,1.0);}',
+    fragmentSource:h+'precision mediump float;'+inside+' vec2 vUV;'+inside+' vec3 vNormal;uniform sampler2D uAtlas;'
+      +(is2?'out vec4 outColor;':'')+'void main(){vec3 albedo='+texture+'(uAtlas,vUV).rgb;'
+      +'float shade=.52+.48*max(dot(normalize(vNormal),normalize(vec3(-.35,.7,-.66))),0.0);'
+      +(is2?'outColor':'gl_FragColor')+'=vec4(albedo*shade,1.0);}'};
+}
+function originalEyeShaders(backend){
+  const is2=backend==='WEBGL2',h=is2?'#version 300 es\n':'',att=is2?'in':'attribute',
+    vary=is2?'out':'varying',inside=is2?'in':'varying';
+  return {vertexSource:h+att+' vec3 aPosition;'+att+' vec3 aNormal;'+att+' vec3 aColor;'
+      +att+' float aFade;uniform mat4 uMVP;'+vary+' vec3 vNormal;'+vary+' vec3 vColor;'
+      +vary+' float vFade;void main(){vNormal=aNormal;vColor=aColor;vFade=aFade;gl_Position=uMVP*vec4(aPosition,1.0);}',
+    fragmentSource:h+'precision mediump float;'+inside+' vec3 vNormal;'+inside+' vec3 vColor;'+inside+' float vFade;'
+      +(is2?'out vec4 outColor;':'')+'void main(){vec3 N=normalize(vNormal);'
+      +'vec3 L=normalize(vec3(-.35,.9,.65));float diff=.65+.35*max(dot(N,L),0.0);'
+      +'float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.0),22.0);'
+      +(is2?'outColor':'gl_FragColor')+'=vec4(vColor*diff+vec3(spec*vFade),1.0);}'};
+}
+
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
   if(!['AUTO','WEBGL1','WEBGL2'].includes(backend)||typeof onStatus!=='function')throw new TypeError('STUDIO_OPTIONS_INVALID');
   if(!controls||!['radius','strength','falloff','mode','region','undo','redo','save','load'].every(k=>controls[k]))throw new TypeError('STUDIO_CONTROLS_REQUIRED');
   const session=createSculptSession(fixture),positions=session.getPositions(),triangles=session.getTriangles();
-  if(Math.max(...triangles)>65535)throw new Error('WEBGL1_NEUTRAL_FIXTURE_INDEX_LIMIT');
+  const source=fixture.sourceRender?.readOnlyOriginal===true?fixture.sourceRender:null;
+  const sourceData=source?sourceGeometry(source,positions,session.getNormals()):null;
+  const drawIndices=source?sourceData.indices:triangles;
+  if(Math.max(...drawIndices)>65535)throw new Error('WEBGL1_MESH_INDEX_LIMIT');
   let disposed=false,failed=false,active=null;const views=[];const listeners=[];
   function add(el,name,handler){el.addEventListener(name,handler);listeners.push(()=>el.removeEventListener(name,handler));}
   function status(message){onStatus(message,{...session.state(),failed,viewCount:views.length});}
@@ -61,10 +104,41 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     for(let i=0;i<4;i++){
       const canvas=expectCanvas(canvases[i],i),be=backend==='AUTO'?(canvas.getContext('webgl2')?'WEBGL2':'WEBGL1'):backend;
       const device=createNativeWebGLDevice(canvas,{backend:be,contextAttributes:{alpha:false,antialias:true,depth:true,preserveDrawingBuffer:true}}),pipeline=createNativeFramePipeline(device);
-      const program=device.createProgram(shaders(be)),mesh=device.createMesh({attributes:[{name:'aPosition',data:positions,size:3,dynamic:true},{name:'aNormal',data:session.getNormals(),size:3,dynamic:true}],indices:new Uint16Array(triangles),vertexCount:positions.length/3});
-      const scene=createNativeSpatialScene(),eye=eyes[i],basis=lookAtQuaternion(eye),camera=scene.createCamera({position:eye,rotation:basis.rotation,projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,orthoHeight:3.15});
-      const node=scene.createNode();scene.setRenderable(node,{program,mesh,pass:'OPAQUE',cull:'NONE',bounds:{center:[0,0,0],radius:3}});
-      const view={name:names[i],canvas,device,pipeline,program,mesh,scene,camera,basis};views.push(view);
+      const program=device.createProgram(source?originalTexturedShaders(be):shaders(be));
+      const attributes=[{name:'aPosition',data:source?sourceData.positions:positions,size:3,dynamic:true},
+        {name:'aNormal',data:source?sourceData.normals:session.getNormals(),size:3,dynamic:true}];
+      if(source)attributes.push({name:'aUV',data:sourceData.uvs,size:2});
+      const mesh=device.createMesh({attributes,indices:new Uint16Array(drawIndices),
+        vertexCount:source?sourceData.positions.length/3:positions.length/3});
+      const texture=source?device.createTexture2D({width:source.atlasWidth,height:source.atlasHeight,
+        pixels:source.atlasPixels,filter:'LINEAR'}):null;
+      const scene=createNativeSpatialScene(),eye=source?
+        [[2.4,1.25,3.5],[0,.3,4.8],[4.8,.15,0],[-2.4,1.3,-3.5]][i]:eyes[i];
+      const basis=lookAtQuaternion(eye),center=source?[.37,.48,-.03]:[0,0,0];
+      const camera=scene.createCamera({position:eye.map((v,k)=>v+center[k]),rotation:basis.rotation,
+        projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,
+        orthoHeight:source?2.05:3.15});
+      const node=scene.createNode();scene.setRenderable(node,{program,mesh,pass:'OPAQUE',cull:'NONE',bounds:{center:[0,0,0],radius:3},
+        beforeDraw:source?(gl,handle)=>{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture.gpu);
+          gl.uniform1i(gl.getUniformLocation(handle,'uAtlas'),0);}:null});
+      let eyeMesh=null;
+      if(source?.eye){
+        const e=source.eye;
+        if(!(e.positions instanceof Float32Array)||!(e.normals instanceof Float32Array)||
+          !(e.colors instanceof Float32Array)||!(e.fade instanceof Float32Array)||
+          e.positions.length!==e.normals.length||e.positions.length!==e.colors.length||
+          e.positions.length!==e.fade.length*3)throw new TypeError('M13_ORIGINAL_EYE_MESH_INVALID');
+        const ep=device.createProgram(originalEyeShaders(be));
+        eyeMesh=device.createMesh({vertexCount:e.positions.length/3,attributes:[
+          {name:'aPosition',size:3,data:e.positions,dynamic:true},
+          {name:'aNormal',size:3,data:e.normals},
+          {name:'aColor',size:3,data:e.colors},
+          {name:'aFade',size:1,data:e.fade}
+        ]});
+        const enode=scene.createNode();scene.setRenderable(enode,{program:ep,mesh:eyeMesh,pass:'OPAQUE',
+          cull:'NONE',bounds:{center:[0,0,0],radius:3}});
+      }
+      const view={name:names[i],canvas,device,pipeline,program,mesh,scene,camera,basis,eyeMesh};views.push(view);
       add(canvas,'webglcontextlost',event=>{event.preventDefault();failed=true;status('WebGL context lost. Reload studio; no edit published.');});
     }
   }catch(e){for(const v of views){try{v.device.dispose();}catch{}}throw e;}
@@ -81,14 +155,16 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     return {views:views.length,revision:session.state().revision};
   }
   function updateAll(){assertReady();const p=session.getPositions(),n=session.getNormals();
+    const data=source?sourceGeometry(source,p,n):null;
     try{
-      for(const view of views){view.device.updateMeshAttribute(view.mesh,'aPosition',p);view.device.updateMeshAttribute(view.mesh,'aNormal',n);}
+      for(const view of views){view.device.updateMeshAttribute(view.mesh,'aPosition',source?data.positions:p);
+        view.device.updateMeshAttribute(view.mesh,'aNormal',source?data.normals:n);}
       return drawAll();
     }catch(e){failed=true;status('GPU update failed; studio quarantined: '+e.message);throw e;}
   }
   function localPointer(event,canvas){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};}
   function pointerDown(event,v){try{
-    assertReady();if(event.button!==undefined&&event.button!==0||active)return;
+    assertReady();if(source){status('Original M1.3 is read-only. Anatomical editing requires separate approval.');return;}if(event.button!==undefined&&event.button!==0||active)return;
     const local=localPointer(event,v.canvas),vp=v.scene.collect(v.camera).viewProjectionMatrix;
     const ray=sculptScreenRay({...local,width:v.canvas.width,height:v.canvas.height,viewProjection:vp});
     const hit=session.pick(ray.origin,ray.direction);if(!hit){status('No surface intersected.');return;}
@@ -125,8 +201,9 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     const file=event.target.files?.[0];if(!file)return;
     try{assertReady();const source=await file.text();session.restore(source);updateAll();status('Reloaded verified editable mesh.');}catch(e){status('Reload rejected: '+e.message);}finally{event.target.value='';}
   });
-  drawAll();status('Ready: four actual synchronized engine WebGL views.');
+  drawAll();status(source?'Original M1.3 read-only source: four actual textured WebGL views.':'Ready: four actual synchronized engine WebGL views.');
   return Object.freeze({session,drawAll,updateAll,views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
-    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length}),
+    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,
+      originalM13ReadOnly:Boolean(source),originalPose:source?.originalPose??null,originalAtlasMapped:Boolean(source)}),
     dispose(){if(disposed)return;for(const f of listeners)f();for(const v of views){try{v.scene.dispose();v.device.dispose();}catch{}}disposed=true;}});
 }

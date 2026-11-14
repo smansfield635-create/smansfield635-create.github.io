@@ -1023,7 +1023,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "DGB_SCULPT_GEN3273_SERVED_WEBGL2_QUALIFIER_V1",
-      "exactToolingHead": "a8a68c9638315d69ca45e02ab675ed0449c35ecc",
+      "exactToolingHead": "9dfae0f7c9542ac74c60984499b4f3d4c5fe9a3f",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [

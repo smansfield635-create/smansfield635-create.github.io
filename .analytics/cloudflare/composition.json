@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-14T09:24:57Z",
+  "generatedAt": "2026-11-14T10:24:03Z",
   "window": {
-    "start": "2026-10-15T09:24:57Z",
-    "end": "2026-11-14T09:24:57Z"
+    "start": "2026-10-15T10:24:03Z",
+    "end": "2026-11-14T10:24:03Z"
   },
   "dimensions": {
     "requestPath": [
@@ -218,12 +218,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },

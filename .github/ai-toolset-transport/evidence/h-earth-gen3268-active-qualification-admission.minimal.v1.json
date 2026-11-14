@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "35081a6a4c71f6ee1393e4d9b4ab70e572093d59",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "c2311c55290039d851d7ca85cb63f08f88d8f997",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3268,
+    "lockScope": "H_EARTH:GEN3262_FIXED_FULL_ROUTE_QUALIFIER_EXACT_CANDIDATE_EXECUTION:20261113:ONE",
+    "observedBranchHead": "61ffb88ef986fe14aae9480621f8d5b17bd1b180",
+    "observedLedgerBlobSha": "6b705fde788d0b19c9e0271ff63e03ea18fdec0b",
+    "operationId": "H_EARTH_GEN3262_FULL_ROUTE_FIXED_QUALIFIER_REGISTRATION_20261113_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "72c61980e3a101a1f2b6a9ecdb12d7ef6cc4715c1945b073fc182ff2cc8d6f72"
+  },
+  "operationId": "H_EARTH_GEN3262_FULL_ROUTE_FIXED_QUALIFIER_REGISTRATION_20261113_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "a4a1df9b1888930f06ad0b6792a22f0a905825c94a355e0f59fac293639047f1",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "a638b4eeaa7caf7b91f118ffea67eaf9ad9aa2ecd09e11a6dc9ef83c7454fee5",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

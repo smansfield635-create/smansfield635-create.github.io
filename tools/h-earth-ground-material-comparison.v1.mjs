@@ -470,6 +470,27 @@ export function gen3288CausalShaderSource(source,mode){
   return mode==='baseline'?source:replaceExactlyOnce(source,...choices[mode]);
 }
 
+
+export const GEN3288_EDGE_HANDOFF_MODES=Object.freeze(['baseline','primitive-id','combined-off','grass-off']);
+// No product mutation: all modes intercept the immutable accepted renderer
+// through the original Gen3287 browser source-response route.
+export function gen3288HandoffSource(source,mode){
+  if(!GEN3288_EDGE_HANDOFF_MODES.includes(mode))throw Error('GEN3288_HANDOFF_MODE_UNKNOWN:'+mode);
+  const habitat='base=mix(base,habitatSoil,habitatColorCoverage*.68);';
+  const ground='palette=mix(palette,groundcoverTone,groundcoverWeight);';
+  const color='outColor=vec4(lit,outputAlpha);';
+  const draw='resources.singleOwnerVegetation?.draw(packet);';
+  for(const [label,needle] of Object.entries({habitat,ground,color,draw}))if(source.split(needle).length!==2)throw Error('GEN3288_HANDOFF_ANCHOR_NOT_UNIQUE:'+label);
+  if(mode==='combined-off')return replaceExactlyOnce(replaceExactlyOnce(source,habitat,'base=mix(base,habitatSoil,0.0);'),ground,'palette=mix(palette,groundcoverTone,0.0);');
+  if(mode==='primitive-id'){
+    // Raw 24-bit primitive index in the output colors, no gamma/fog.
+    // Decode a ground pixel: r + 256*g + 65536*b, from PNG channels.
+    return replaceExactlyOnce(source,color,'outColor=vec4(float(vPrimitiveIndex&255u)/255.0,float((vPrimitiveIndex>>8u)&255u)/255.0,float((vPrimitiveIndex>>16u)&255u)/255.0,1.0);');
+  }
+  if(mode==='grass-off')return replaceExactlyOnce(source,draw,'if(false)resources.singleOwnerVegetation?.draw(packet);');
+  return source;
+}
+
 export function gen3286VerifySource(dir,label){
   if(!['baseline','candidate'].includes(label))throw Error('GEN3286_UNKNOWN_SOURCE_LABEL');
   assertCheckout(dir,GEN3286_MATCHED.heads[label]);
@@ -493,14 +514,16 @@ export async function runGen3286(argv){
   const args=parseArgs(argv),out=args['--output'];fs.mkdirSync(out,{recursive:true});
   const scout=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_WITNESS_SCOUT_V1';
   const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
-  const viewports=(scout||isolation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
-  const poses=isolation?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
-  const labels=isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']);
+  const handoff=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_HANDOFF_EDGE_V1';
+  const browserVariation=isolation||handoff;
+  const viewports=(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
+  const poses=browserVariation?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
+  const labels=handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']));
   const receipt={
-    schema:isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    schema:handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
     heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
-    witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:isolation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
+    witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:browserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
     runs:[],views:[],comparisons:[],errors:[]};
   const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   let browser=null,server=null;persist();
@@ -513,8 +536,8 @@ export async function runGen3286(argv){
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
     for(const viewport of viewports){
       for(const [index,label] of labels.entries()){
-        const dir=args[isolation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
-        const runRecord={label,viewport,head:isolation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label],actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
+        const dir=args[browserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
+        const runRecord={label,viewport,head:browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label],actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
         receipt.runs.push(runRecord);persist();
         server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
         let listening=false;
@@ -530,9 +553,9 @@ export async function runGen3286(argv){
         const originalRoute=fs.readFileSync(path.join(dir,ROUTE.slice(1)),'utf8');
         await page.route(url=>url.pathname===ROUTE,route=>route.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(originalRoute)}));
         runRecord.routeUnchangedSha256=sha(originalRoute);
-        if(isolation){
+        if(browserVariation){
           const rendererSource=fs.readFileSync(path.join(dir,RENDERER.slice(1)),'utf8');
-          const override=gen3288CausalShaderSource(rendererSource,label);
+          const override=handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label);
           runRecord.rendererOriginalSha256=sha(rendererSource);
           runRecord.rendererServedSha256=sha(override);
           runRecord.browserOnlyMaterialOperand=label;
@@ -584,7 +607,7 @@ export async function runGen3286(argv){
           source+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
           globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([source],{type:'text/javascript'})));
         });
-        if(isolation&&runRecord.shaderInterceptions<1)throw Error('GEN3288_SHADER_NOT_ACTUALLY_INTERCEPTED:'+label);
+        if(browserVariation&&runRecord.shaderInterceptions<1)throw Error('GEN3288_SHADER_NOT_ACTUALLY_INTERCEPTED:'+label);
         runRecord.actualBrowserExecution=true;persist();
         let sequence=30000,previousFrame=0;
         for(const pose of poses){
@@ -632,7 +655,7 @@ export async function runGen3286(argv){
               glError:gl.getError(),contextLost:gl.isContextLost(),drawnFrameCount:g.counters?.gpuFramebufferPresentationCount,
               grassResidency:g.resources?.vegetationResidency??null,assetSignature:asset.signature,assetsReady:asset.ready,
               canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},pngDataUrl};
-          },{pose,sequence:++sequence,passes:isolation?3:8});
+          },{pose,sequence:++sequence,passes:browserVariation?3:8});
           if(result.frame?.navigationSequence!==sequence||result.frame.frameSequence<=previousFrame||!result.assetsReady||result.assetSignature!==priorSignature)throw Error('GEN3286_FRAME_OR_ASSET_MISMATCH:'+pose.id);
           if(!result.glVersion.includes('WebGL 2.0')||!result.glslVersion.includes('WebGL GLSL ES 3.00')||result.glError!==0||result.contextLost!==false)throw Error('GEN3286_GPU_INVALID:'+pose.id);
           if(!sameFinite(result.state.position.x,pose.x,1e-6)||!sameFinite(result.state.position.z,pose.z,1e-6)||!sameHeading(result.state.yawDegrees,pose.yaw)||!sameFinite(result.state.pitchDegrees,pose.pitch,1e-7))throw Error('GEN3286_NAVIGATION_MISMATCH:'+pose.id);
@@ -643,18 +666,18 @@ export async function runGen3286(argv){
           const filename=label+'-'+viewport.id+'-'+pose.id+'.png';
           fs.writeFileSync(path.join(out,filename),bytes);
           const {pngDataUrl,...observation}=result;
-          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:isolation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]});
+          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]});
           previousFrame=result.frame.frameSequence;persist();
         }
         runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
-        await context.close();server.kill();server=null;gen3286VerifySource(dir,isolation?'baseline':label);
+        await context.close();server.kill();server=null;gen3286VerifySource(dir,browserVariation?'baseline':label);
       }
-      if(isolation)for(const pose of poses){
+      if(browserVariation)for(const pose of poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
-        if(views.length!==GEN3288_CAUSAL_MODES.length)throw Error('GEN3288_INCOMPLETE_OPERAND_SET:'+pose.id);
+        if(views.length!==labels.length)throw Error('GEN3288_INCOMPLETE_OPERAND_SET:'+pose.id);
         const A=views.find(v=>v.label==='baseline');
-        for(const mode of GEN3288_CAUSAL_MODES.filter(v=>v!=='baseline')){
+        for(const mode of labels.filter(v=>v!=='baseline')){
           const B=views.find(v=>v.label===mode);
           if(!A||!B||A.sourceHead!==B.sourceHead||A.assetSignature!==B.assetSignature)throw Error('GEN3288_MATERIAL_SOURCE_ASSET_PARITY:'+pose.id+':'+mode);
           for(const k of ['x','y','z'])if(!sameFinite(A.camera.position[k],B.camera.position[k],2e-5))throw Error('GEN3288_CAMERA_MISMATCH:'+pose.id+':'+mode+':'+k);
@@ -687,10 +710,10 @@ export async function runGen3286(argv){
       if(receipt.views.length+(receipt.rejectedWitnesses?.length??0)!==poses.length||receipt.views.length<4||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
       receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
       receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
-    }else if(isolation){
+    }else if(browserVariation){
       if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
-      receipt.result='ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION';
+      receipt.result=handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION';
     }else{
       if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
@@ -702,7 +725,7 @@ export async function runGen3286(argv){
 }
 
 export async function run(argv){
-  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

@@ -234,7 +234,7 @@ test('Gen3287 rejects source label, pair camera, projection, asset or PNG identi
 test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
   const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
-  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1'));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
   assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
@@ -271,7 +271,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
   assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
-  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1'));
+  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1'));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
   assert.ok(workflow.includes('ref: 676cb926180219d62ff4fd4a356d8360ff66d99b'));
 });
@@ -286,13 +286,28 @@ test('Gen3288 four exact-source material operands preserve product bytes',async(
   assert.deepEqual(m.GEN3288_CAUSAL_POSES.map(p=>p.id),['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge']);
   assert.equal(m.gen3288CausalShaderSource(baseline,'baseline'),baseline);
   const matcher=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
-  assert.ok(matcher.includes("gen3286VerifySource(dir,isolation?'baseline':label)"));
-  assert.ok(matcher.includes('passes:isolation?3:8'));
-  assert.ok(matcher.includes("(scout||isolation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
+  assert.ok(matcher.includes("gen3286VerifySource(dir,browserVariation?'baseline':label)"));
+  assert.ok(matcher.includes('passes:browserVariation?3:8'));
+  assert.ok(matcher.includes("(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
   assert.ok(matcher.includes('receipt.views.length!==16||receipt.comparisons.length!==12'));
   for(const mode of m.GEN3288_CAUSAL_MODES.slice(1)){
     const candidate=m.gen3288CausalShaderSource(baseline,mode);
     assert.notEqual(candidate,baseline);
     assert.equal(candidate.length>100000,true);
   }
+});
+
+
+test('Gen3288 same-camera primitive ID and combined treatments are browser-only',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const renderer=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+  assert.deepEqual(m.GEN3288_EDGE_HANDOFF_MODES,['baseline','primitive-id','combined-off','grass-off']);
+  assert.equal(m.gen3288HandoffSource(renderer,'baseline'),renderer);
+  for(const mode of m.GEN3288_EDGE_HANDOFF_MODES.slice(1)){
+    const candidate=m.gen3288HandoffSource(renderer,mode);
+    assert.notEqual(candidate,renderer);
+    assert.ok(candidate.length>100000);
+  }
+  assert.ok(m.gen3288HandoffSource(renderer,'primitive-id').includes('vPrimitiveIndex>>16u'));
+  assert.ok(m.gen3288HandoffSource(renderer,'grass-off').includes('if(false)resources.singleOwnerVegetation?.draw(packet);'));
 });

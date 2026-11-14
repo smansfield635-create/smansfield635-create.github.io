@@ -337,6 +337,120 @@ export const GEN3286_MATCHED=Object.freeze({
     {id:'far-transition-observer',x:-200,z:-656,y:18.793665,yaw:0,pitch:-2,diagnosticObserver:true}
   ].map(Object.freeze))
 });
+export const GEN3286_WITNESS_SCOUT_POSES=Object.freeze([
+  {
+    "id": "woodland-grove-a",
+    "x": -139.40267987050615,
+    "z": -194.5,
+    "yaw": 0,
+    "pitch": 16
+  },
+  {
+    "id": "woodland-core-b",
+    "x": -141,
+    "z": -226,
+    "yaw": 180,
+    "pitch": -12
+  },
+  {
+    "id": "woodland-edge-b",
+    "x": -125,
+    "z": -247,
+    "yaw": 180,
+    "pitch": -11
+  },
+  {
+    "id": "woodland-ravine-b",
+    "x": -75,
+    "z": -315,
+    "yaw": 270,
+    "pitch": -13
+  },
+  {
+    "id": "ravine-alt-b",
+    "x": -80,
+    "z": -352,
+    "yaw": 0,
+    "pitch": -12
+  },
+  {
+    "id": "seam-ridge-130-250-north",
+    "x": 130.241846,
+    "z": -250,
+    "yaw": 0,
+    "pitch": -14
+  },
+  {
+    "id": "seam-ridge-130-250-south",
+    "x": 130.241846,
+    "z": -250,
+    "yaw": 180,
+    "pitch": -14
+  },
+  {
+    "id": "seam-ridge-130-250-east",
+    "x": 130.241846,
+    "z": -250,
+    "yaw": 90,
+    "pitch": -14
+  },
+  {
+    "id": "seam-ridge-130-250-west",
+    "x": 130.241846,
+    "z": -250,
+    "yaw": 270,
+    "pitch": -14
+  },
+  {
+    "id": "meadow-east-130-300",
+    "x": 130,
+    "z": -300,
+    "yaw": 180,
+    "pitch": -15
+  },
+  {
+    "id": "meadow-east-180-320",
+    "x": 180,
+    "z": -320,
+    "yaw": 0,
+    "pitch": -14
+  },
+  {
+    "id": "meadow-east-130-400",
+    "x": 130,
+    "z": -400,
+    "yaw": 0,
+    "pitch": -14
+  },
+  {
+    "id": "meadow-outer-220-300",
+    "x": 220,
+    "z": -300,
+    "yaw": 90,
+    "pitch": -14
+  },
+  {
+    "id": "meadow-edge-40-255",
+    "x": 40,
+    "z": -255,
+    "yaw": 90,
+    "pitch": -14
+  },
+  {
+    "id": "foothill-preserve",
+    "x": -52,
+    "z": -208,
+    "yaw": 180,
+    "pitch": -12
+  },
+  {
+    "id": "mountain-preserve",
+    "x": 88,
+    "z": -260,
+    "yaw": 95,
+    "pitch": -10
+  }
+].map(Object.freeze));
 export function gen3286VerifySource(dir,label){
   if(!['baseline','candidate'].includes(label))throw Error('GEN3286_UNKNOWN_SOURCE_LABEL');
   assertCheckout(dir,GEN3286_MATCHED.heads[label]);
@@ -358,10 +472,15 @@ export function gen3286ValidatePair(base,candidate){
 }
 export async function runGen3286(argv){
   const args=parseArgs(argv),out=args['--output'];fs.mkdirSync(out,{recursive:true});
+  const scout=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_WITNESS_SCOUT_V1';
+  const viewports=scout?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
+  const poses=scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses;
+  const labels=scout?['baseline']:['baseline','candidate'];
   const receipt={
     schema:'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
     heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
+    witnessScoutOnly:scout,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
     runs:[],views:[],comparisons:[],errors:[]};
   const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   let browser=null,server=null;persist();
@@ -372,8 +491,8 @@ export async function runGen3286(argv){
     const {chromium}=await import('playwright');
     const {PNG}=await import('pngjs');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const viewport of GEN3286_MATCHED.viewports){
-      for(const [index,label] of ['baseline','candidate'].entries()){
+    for(const viewport of viewports){
+      for(const [index,label] of labels.entries()){
         const dir=args['--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
         const runRecord={label,viewport,head:GEN3286_MATCHED.heads[label],actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
         receipt.runs.push(runRecord);persist();
@@ -395,8 +514,34 @@ export async function runGen3286(argv){
         await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
         if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('GEN3286_RENDERER_STARTUP_ERROR');
         await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
-        await page.mouse.move(160,240);await page.mouse.down();await page.mouse.move(220,240,{steps:8});await page.mouse.up();
-        await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});
+        // Exact native entry contract: real canvas-relative pointer gestures
+        // must produce a changed accepted navigation view before Enter unlocks.
+        // Never programmatically enable the button or bypass loader state.
+        const control=page.locator('[data-enter]');
+        const canvasBounds=await page.locator('#h-earth-functional-landscape-canvas').boundingBox();
+        if(!canvasBounds||canvasBounds.width<200||canvasBounds.height<150)throw Error('GEN3286_CANVAS_ENTRY_BOUNDS_INVALID:'+viewport.id);
+        runRecord.canvasEntryBounds=canvasBounds;
+        for(let attempt=0;attempt<8&&await control.isDisabled();attempt++){
+          const baseX=canvasBounds.x+canvasBounds.width*(attempt%2?.40:.55);
+          const baseY=canvasBounds.y+canvasBounds.height*(.35+.08*(attempt%3));
+          const delta=canvasBounds.width*(attempt%2?-.19:.19);
+          await page.mouse.move(baseX,baseY);
+          await page.mouse.down();
+          await page.mouse.move(baseX+delta,baseY,{steps:12});
+          await page.mouse.up();
+          await page.waitForTimeout(400);
+          runRecord.entryAttempts=attempt+1;
+          runRecord.entryLoader=await page.evaluate(()=>globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()??null);
+          persist();
+        }
+        if(await control.isDisabled()){
+          const shot='failed-enter-'+label+'-'+viewport.id+'.png';
+          await page.screenshot({path:path.join(out,shot)});
+          runRecord.entryFailureScreenshot=shot;
+          runRecord.entryIntake=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()??null);
+          persist();
+          throw Error('GEN3286_REAL_CANVAS_ENTRY_NOT_UNLOCKED:'+viewport.id+':'+label);
+        }
         await page.click('[data-enter]');
         await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&loader?.dataset.mode==='ready'&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
         await page.evaluate(async()=>{
@@ -409,7 +554,7 @@ export async function runGen3286(argv){
         });
         runRecord.actualBrowserExecution=true;persist();
         let sequence=30000,previousFrame=0;
-        for(const pose of GEN3286_MATCHED.poses){
+        for(const pose of poses){
           let stableCount=0,priorSignature=null,deadline=Date.now()+120000;
           while(stableCount<2){
             const check=await page.evaluate(async({pose,sequence})=>{
@@ -459,7 +604,7 @@ export async function runGen3286(argv){
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
         await context.close();server.kill();server=null;gen3286VerifySource(dir,label);
       }
-      for(const pose of GEN3286_MATCHED.poses){
+      if(!scout)for(const pose of GEN3286_MATCHED.poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
         if(views.length!==2)throw Error('GEN3286_INCOMPLETE_AB_PAIR:'+pose.id);
         const A=views.find(v=>v.label==='baseline'),B=views.find(v=>v.label==='candidate');
@@ -472,16 +617,22 @@ export async function runGen3286(argv){
         persist();
       }
     }
-    if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
-    receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
-    receipt.result='ACTUAL_WEBGL2_DESKTOP_MOBILE_MATCHED_PNGS_CAPTURED_VISUAL_OWNER_PENDING';
+    if(scout){
+      if(receipt.views.length!==poses.length||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
+      receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
+      receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
+    }else{
+      if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
+      receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
+      receipt.result='ACTUAL_WEBGL2_DESKTOP_MOBILE_MATCHED_PNGS_CAPTURED_VISUAL_OWNER_PENDING';
+    }
   }catch(error){receipt.errors.push(String(error?.stack??error));throw error;}
   finally{persist();if(server)server.kill();if(browser)await browser.close();}
   return receipt;
 }
 
 export async function run(argv){
-  if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_MATERIAL_AB_V1')return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

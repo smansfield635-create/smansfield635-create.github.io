@@ -254,3 +254,19 @@ test('Gen3287 audit packet follows the accepted live route deferVegetation true 
   assert.ok(comparator.includes("GEN3286_MATCHED_REAL_WEBGL"));
   assert.ok(comparator.includes('deferVegetation:true,navigationState:state'));
 });
+
+test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and refuses invented meadow/seam acceptance',async()=>{
+  const tool=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.equal(tool.GEN3286_WITNESS_SCOUT_POSES.length,16);
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===130.241846&&p.z===-250));
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===-75&&p.z===-315));
+  assert.ok(source.includes("page.locator('#h-earth-functional-landscape-canvas').boundingBox()"));
+  assert.ok(source.includes("GEN3286_REAL_CANVAS_ENTRY_NOT_UNLOCKED"));
+  assert.ok(source.includes("poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE'"));
+  assert.ok(!source.includes('page.mouse.move(160,240);await page.mouse.down()'));
+  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1'));
+  assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
+  assert.ok(workflow.includes('ref: 676cb926180219d62ff4fd4a356d8360ff66d99b'));
+});

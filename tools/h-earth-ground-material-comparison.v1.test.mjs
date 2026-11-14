@@ -196,3 +196,52 @@ test('Gen3147 entry proof follows actual immutable loader internal mode rather t
   assert.ok(comparator.includes("loaderDomMode:loading?.dataset.mode"));
   assert.ok(!comparator.includes("dataset.mode==='entered'"));
 });
+
+test('Gen3287 exact material comparison binds restored Gen3259 against immutable Gen3286 only',async()=>{
+  const x=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const p=x.GEN3286_MATCHED;
+  assert.equal(p.heads.baseline,'f05d97d402f27b640e8776a0c9f0851524db0fa0');
+  assert.equal(p.heads.candidate,'676cb926180219d62ff4fd4a356d8360ff66d99b');
+  assert.equal(p.renderer.baseline,'3471d386d720382b1b55b146fef6fa0af61f0d36');
+  assert.equal(p.renderer.candidate,'38def850ac126f2766aec7bab3b43efea8f04ccc');
+  assert.equal(x.HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');
+  assert.equal(p.viewports.length,2);
+  assert.deepEqual(p.viewports.map(v=>v.id),['mobile-sized','desktop']);
+  assert.equal(p.poses.length,8);
+  assert.ok(p.poses.some(v=>v.id==='defective-open-grassland'));
+  assert.equal(Object.keys(p.protectedBlobs).length,4);
+  for(const value of Object.values(p.protectedBlobs))assert.match(value,/^[a-f0-9]{40}$/);
+});
+test('Gen3287 rejects source label, pair camera, projection, asset or PNG identity mismatch',async()=>{
+  const x=await import('./h-earth-ground-material-comparison.v1.mjs');
+  assert.throws(()=>x.gen3286VerifySource('/absent','unknown'),/SOURCE_LABEL/);
+  const view=label=>({
+    label,pose:{id:'reference'},viewport:{id:'desktop'},
+    assetSignature:'same-assets',
+    camera:{position:{x:18,y:20,z:-226},matrix:Array.from({length:16},(_,i)=>i/16)},
+    png:{width:1024,height:768},image:label+'.png',imageSha256:'test',frame:{responseMs:12}
+  });
+  const good=x.gen3286ValidatePair(view('baseline'),view('candidate'));
+  assert.equal(good.cameraMatched,true);assert.equal(good.projectionMatched,true);
+  for(const change of [
+    v=>v.assetSignature='different',
+    v=>v.camera.position.y+=0.1,
+    v=>v.camera.matrix[5]+=0.02,
+    v=>v.png.width--,
+    v=>v.pose.id='wrong'
+  ]){const candidate=view('candidate');change(candidate);assert.throws(()=>x.gen3286ValidatePair(view('baseline'),candidate));}
+});
+test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
+  const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1'));
+  assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
+  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b"));
+  assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
+  assert.ok(yaml.includes("test \"$sector_blob\" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5"));
+  assert.ok(yaml.includes('node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only'));
+  assert.ok(yaml.includes('H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1'));
+  assert.ok(yaml.includes('h-earth/gen3286-matched-webgl-verifier-20261114'));
+  assert.ok(yaml.includes('gen3142-matched-gpu:'));
+  assert.ok(yaml.includes('ground-material-comparison:'));
+});

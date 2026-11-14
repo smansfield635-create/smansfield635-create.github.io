@@ -93,7 +93,7 @@ jobs:
             # Exact candidate only; historical and unknown heads keep the old guard.
             # Gen3143: the immutable Gen3142 material candidate retains the accepted Gen2854 A08 sector.
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ] || [ "$EXACT_TARGET_SHA" = '676cb926180219d62ff4fd4a356d8360ff66d99b' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
@@ -389,6 +389,26 @@ jobs:
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ] || [ "$EXACT_TARGET_SHA" = '676cb926180219d62ff4fd4a356d8360ff66d99b' ]; then
+              # Exact newer product heads retain the accepted P2/rock/tree;
+              # old Gen2694 cache chain is not a modern shader invariant.
+              node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              node --check showroom/globe/h-earth/functional-landscape/navigation.js
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+              if [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ]; then
+                test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 3471d386d720382b1b55b146fef6fa0af61f0d36
+              else
+                test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 38def850ac126f2766aec7bab3b43efea8f04ccc
+              fi
+              jq -n --arg target "$EXACT_TARGET_SHA" --arg sector "$sector_blob" --arg rock "$rock_blob" --arg tree "$tree_blob" '{
+                schema:"H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                exactHead:$target,sectorBlob:$sector,rockBlob:$rock,treeBlob:$tree,
+                oldGen2694SourceChain:"NOT_APPLICABLE_TO_ACCEPTED_MODERN_RENDERER",
+                unchangedGrassSource:true,ownerVisualAcceptance:false,releaseAuthorized:false,
+                browserDrawExecuted:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1" and .unchangedGrassSource==true and .browserDrawExecuted==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -1180,6 +1200,61 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+
+  # Gen3287: independently admitted Gen3259/Gen3286 visual comparator.
+  gen3287-matched-material-gpu:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout separately admitted verifier tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout immutable accepted Gen3259 source
+        uses: actions/checkout@v4
+        with:
+          ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
+          path: baseline
+          persist-credentials: false
+      - name: Checkout immutable unmerged Gen3286 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 676cb926180219d62ff4fd4a356d8360ff66d99b
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve historical tests and require both exact product source heads
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          test "$(git -C ../baseline rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
+          test "$(git -C ../candidate rev-parse HEAD)" = 676cb926180219d62ff4fd4a356d8360ff66d99b
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install Chromium and PNG decoder for actual pixels
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture matched desktop and mobile-size real WebGL2 PNG pairs
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen3286-material-ab"
+      - name: Preserve images and truthful complete or partial receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3286-material-ab-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3286-material-ab
+          if-no-files-found: warn
+          retention-days: 30
 
   # Gen3147 PR source qualification is native-only; GPU runs only after
   # separate reviewed/adopted tooling under the registered dispatch route.

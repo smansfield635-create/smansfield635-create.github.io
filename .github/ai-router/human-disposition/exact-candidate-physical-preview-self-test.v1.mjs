@@ -61,13 +61,12 @@ assert(binding.productionDeploymentAsPreviewWorkaroundAllowed === false, 'ENTRYP
 assert(binding.publicationBoundary === 'PUBLICATION_RELEASE_CONTRACT_UNCHANGED', 'ENTRYPOINT_BINDING', 'publication boundary');
 
 for (const marker of [
-  '### Exact-candidate physical preview as candidate finalization',
-  'CANDIDATE_PERCEPTUAL_ACCEPTANCE',
-  'KEEP',
-  'ONE_REPAIR',
-  'REJECT',
+  'If physical/perceptual review is an admitted candidate-finalization gate',
+  'preserve exact-candidate identity',
+  'KEEP | ONE_REPAIR | REJECT',
   'MUTATION_CLOSED_EVIDENCE_CONTINUES',
-  'production deployment merely as a preview workaround'
+  'Preview unavailability preserves the candidate',
+  'it does not authorize production deployment'
 ]) {
   assert(agents.includes(marker), 'AGENTS_DISCOVERY', marker);
 }

@@ -493,7 +493,7 @@ export async function runGen3286(argv){
   const args=parseArgs(argv),out=args['--output'];fs.mkdirSync(out,{recursive:true});
   const scout=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_WITNESS_SCOUT_V1';
   const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
-  const viewports=scout?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
+  const viewports=(scout||isolation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
   const poses=isolation?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
   const labels=isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']);
   const receipt={
@@ -688,7 +688,7 @@ export async function runGen3286(argv){
       receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
       receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
     }else if(isolation){
-      if(receipt.views.length!==32||receipt.comparisons.length!==24)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
+      if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
       receipt.result='ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION';
     }else{

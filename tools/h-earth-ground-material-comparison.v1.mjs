@@ -616,9 +616,9 @@ export async function runGen3286(argv){
             if(Date.now()>deadline)throw Error('GEN3286_ASSETS_NOT_SETTLED:'+label+':'+viewport.id+':'+pose.id);
             if(stableCount<2)await new Promise(resolve=>setTimeout(resolve,250));
           }
-          const result=await page.evaluate(async({pose,sequence})=>{
+          const result=await page.evaluate(async({pose,sequence,passes})=>{
             const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_MATCHED_REAL_WEBGL');
-            for(let i=0;i<8;i++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);}
+            for(let i=0;i<passes;i++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);}
             const g=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
             const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
             const gl=canvas.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('GEN3286_GL_BUFFER_INVALID');
@@ -632,7 +632,7 @@ export async function runGen3286(argv){
               glError:gl.getError(),contextLost:gl.isContextLost(),drawnFrameCount:g.counters?.gpuFramebufferPresentationCount,
               grassResidency:g.resources?.vegetationResidency??null,assetSignature:asset.signature,assetsReady:asset.ready,
               canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},pngDataUrl};
-          },{pose,sequence:++sequence});
+          },{pose,sequence:++sequence,passes:isolation?3:8});
           if(result.frame?.navigationSequence!==sequence||result.frame.frameSequence<=previousFrame||!result.assetsReady||result.assetSignature!==priorSignature)throw Error('GEN3286_FRAME_OR_ASSET_MISMATCH:'+pose.id);
           if(!result.glVersion.includes('WebGL 2.0')||!result.glslVersion.includes('WebGL GLSL ES 3.00')||result.glError!==0||result.contextLost!==false)throw Error('GEN3286_GPU_INVALID:'+pose.id);
           if(!sameFinite(result.state.position.x,pose.x,1e-6)||!sameFinite(result.state.position.z,pose.z,1e-6)||!sameHeading(result.state.yawDegrees,pose.yaw)||!sameFinite(result.state.pitchDegrees,pose.pitch,1e-7))throw Error('GEN3286_NAVIGATION_MISMATCH:'+pose.id);
@@ -648,7 +648,7 @@ export async function runGen3286(argv){
         }
         runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
-        await context.close();server.kill();server=null;gen3286VerifySource(dir,label);
+        await context.close();server.kill();server=null;gen3286VerifySource(dir,isolation?'baseline':label);
       }
       if(isolation)for(const pose of poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);

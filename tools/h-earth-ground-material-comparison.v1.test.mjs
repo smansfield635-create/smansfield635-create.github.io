@@ -285,6 +285,9 @@ test('Gen3288 four exact-source material operands preserve product bytes',async(
   assert.deepEqual(m.GEN3288_CAUSAL_MODES,['baseline','occupancy-off','habitat-off','groundcover-off']);
   assert.deepEqual(m.GEN3288_CAUSAL_POSES.map(p=>p.id),['official-ridge-east','seam-overlap-edge','woodland-grove-a-control','woodland-core-b-control']);
   assert.equal(m.gen3288CausalShaderSource(baseline,'baseline'),baseline);
+  const matcher=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  assert.ok(matcher.includes("gen3286VerifySource(dir,isolation?'baseline':label)"));
+  assert.ok(matcher.includes('passes:isolation?3:8'));
   for(const mode of m.GEN3288_CAUSAL_MODES.slice(1)){
     const candidate=m.gen3288CausalShaderSource(baseline,mode);
     assert.notEqual(candidate,baseline);

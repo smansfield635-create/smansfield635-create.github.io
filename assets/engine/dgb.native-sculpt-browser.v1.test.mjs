@@ -55,7 +55,7 @@ test('original rabbit import keeps private archive local and M1.3 anatomical edi
   assert(controller.includes('aUV'));
   assert(controller.includes('uAtlas'));
   assert(controller.includes('Original M1.3 is read-only.'));
-  assert(controller.includes('sourceRender.readOnlyOriginal'));
+  assert(controller.includes('fixture.sourceRender?.readOnlyOriginal'));
   assert(source.includes('forequarterEditAllowed:false'));
   assert(source.includes('protectedVertices=Array.from({length:1134}'));
 });

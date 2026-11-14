@@ -32551,6 +32551,50 @@
       "scopeHash": "fde80f06feb51ca5120d5540dbd89c2ec9c8ce47c449872163b97f434a97d674",
       "state": "ADMITTED_LOCKED"
     },
+    "fdf474d92f969c74234886b1846a2a75b28e5aa71ffb55c8128fe27d4586ca07": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "95085e4ecb4e36b2c896581c4bfbd88189046170",
+          "lockGeneration": 3289,
+          "lockScope": "H_EARTH:GEN3288:ONE_TARGETED_SOIL_HANDOFF:20261114",
+          "operationId": "H_EARTH_GEN3288_SINGLE_MATERIAL_SEAM_REPAIR_20261114_001",
+          "procedureLocatorDigest": "7ef654271c1035a3c53a7f9ae461bf934dc0d7962a9960ec852613ee75cf766a",
+          "requestDigest": "f9b96e6c4b5dac70055313c49c5e9e1c9140afd82080558b12ac8c186dc975ca",
+          "scopeHash": "fdf474d92f969c74234886b1846a2a75b28e5aa71ffb55c8128fe27d4586ca07"
+        },
+        "bindingDigest": "53b28e67871f4add17b3d2890fc863f6ce0d9d440f6243bcded67da59efeb58a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "48f5c58636256dcc42137c8b6c6ea4dc43dd6526dd22fde64a9906d0796acdf5",
+          "commentId": 6884376233,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43642342927,
+          "workflowSha": "95085e4ecb4e36b2c896581c4bfbd88189046170"
+        },
+        "lineageAnchorCommitSha": "1109bf5b87521b168a98a4d17a282909dde2d2ad",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "95085e4ecb4e36b2c896581c4bfbd88189046170",
+      "lockGeneration": 3289,
+      "lockScope": "H_EARTH:GEN3288:ONE_TARGETED_SOIL_HANDOFF:20261114",
+      "operationId": "H_EARTH_GEN3288_SINGLE_MATERIAL_SEAM_REPAIR_20261114_001",
+      "procedureLocatorDigest": "7ef654271c1035a3c53a7f9ae461bf934dc0d7962a9960ec852613ee75cf766a",
+      "released": false,
+      "requestDigest": "f9b96e6c4b5dac70055313c49c5e9e1c9140afd82080558b12ac8c186dc975ca",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fdf474d92f969c74234886b1846a2a75b28e5aa71ffb55c8128fe27d4586ca07",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff478cca9be7e3723efed8b35afff6bd775f4527c130f91d89603e6c66169fd0": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -32711,7 +32755,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3288,
+  "lockGeneration": 3289,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

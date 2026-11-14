@@ -1244,7 +1244,7 @@ jobs:
       - name: Capture matched desktop and mobile-size real WebGL2 PNG pairs
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1
+          H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1
         run: |
           timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen3286-material-ab"
       - name: Preserve images and truthful complete or partial receipt

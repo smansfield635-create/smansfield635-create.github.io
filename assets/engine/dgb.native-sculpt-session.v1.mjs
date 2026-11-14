@@ -141,6 +141,11 @@ export function createSculptSourceHandoff({positions,triangles,renderToMaster,uv
   for(let t=0;t<idx.length;t+=3){
     const ids=[idx[t],idx[t+1],idx[t+2]];
     if(ids.some(i=>i>=n)||new Set(ids).size!==3)throw new RangeError('SCULPT_SOURCE_HANDOFF_TRIANGLE_INDEX_INVALID');
+    // Apply the same doubled-area threshold as verifySculptGeometry before
+    // exposing any fixed-topology handoff, even with distinct in-range IDs.
+    const [a,b,c]=ids.map(i=>pos(src,i));
+    const doubleArea=Math.hypot(...cross(sub(b,a),sub(c,a)));
+    if(!finite(doubleArea)||doubleArea<1e-8)throw new Error('SCULPT_SOURCE_HANDOFF_DEGENERATE_TRIANGLE');
     const faceKey=[...ids].sort((a,b)=>a-b).join(':');
     if(seenFaces.has(faceKey))throw new Error('SCULPT_SOURCE_HANDOFF_DUPLICATE_FACE');
     seenFaces.add(faceKey);

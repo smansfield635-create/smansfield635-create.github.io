@@ -1,0 +1,80 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_ENVIRONMENT_WIDE_GROUND_MATERIAL_CONSISTENCY_20261114_001",
+  "canonicalAdmissionGeneration": 3286,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "anchorDispositionScope": "SOURCE_BOUND_HARD_ELEVEN_INVARIANT_WORLD_CONTINUITY_ONLY_NOT_AESTHETIC_ACCEPTANCE",
+  "reviewScope": "Only the late occupancy-raster-driven meadow under-color mix is removed from the existing shader. Graded woodland/ravine/coast habitat color mix, world soil albedo, grass root source, frozen occupancy map/eligibility, terrain, trees, water, camera, navigation and public interaction code are untouched. The functional same-world invariants are source-bound only; this receipt does not claim browser visual improvement or owner perceptual KEEP.",
+  "aestheticDisposition": "PENDING_OWNER_VISUAL_REVIEW",
+  "visualKeepClaimed": false,
+  "originalAnchorFilmReplayed": false,
+  "physicalAndroidPerformanceMeasured": false,
+  "bothMeadowsNativeABVerified": false,
+  "firstPartyBrowserAB": "NOT_EXECUTED_AT_RECEIPT_CREATION",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "72385e1dd39feaff75d2856f4185e472b2b3a625c75abebf8d87dfdce72cf33c",
+      "gitBlob": "a6619566d10a60d59c8bd65c059fa28f57de725e",
+      "sourceRole": "EXACT_THREE_EXISTING_RENDERER_IMPORT_MAP_REVISIONS_TO_CANDIDATE"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "efd583354c56fb3866e06191393f5e6d17d7f0d0c413cd58d9b47d9304d44b9f",
+      "gitBlob": "38def850ac126f2766aec7bab3b43efea8f04ccc",
+      "sourceRole": "EXISTING_GROUNDMATERIAL_SHADER_SECONDARY_R8_COLOR_RETIREMENT"
+    }
+  ],
+  "sourceIdentity": {
+    "governingHead": "f05d97d402f27b640e8776a0c9f0851524db0fa0",
+    "restoredAcceptedBaselineRendererBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "newRendererBlob": "38def850ac126f2766aec7bab3b43efea8f04ccc",
+    "previousIndexBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",
+    "newIndexBlob": "a6619566d10a60d59c8bd65c059fa28f57de725e",
+    "vegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "grassRootsUnchangedBySource": 3805291,
+    "originalRootGpuBytesUnchangedBySource": 60884656,
+    "frozenMeadowMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "rootAdmissionUntouched": true,
+    "geometryAndNavigationUntouched": true
+  },
+  "limitations": [
+    "NO_GENUINE_SAME_CAMERA_WEBGL_BEFORE_AFTER_AT_RECEIPT_CREATION",
+    "OWNER_PHYSICAL_ANDROID_PERFORMANCE_UNMEASURED",
+    "SECOND_GOOD_MEADOW_NOT_YET_NATIVE_CAPTURED",
+    "NO_MATERIAL_SEAM_PIXEL_CAUSALITY_PROVEN_YET",
+    "NO_NEW_OWNER_AESTHETIC_KEEP_GRANTED",
+    "NO_MERGE_DEPLOY_OR_PUBLICATION_AUTHORITY"
+  ],
+  "releaseStatusAtReceiptCreation": "IMMUTABLE_DRAFT_CANDIDATE_PENDING_BROWSER_EVIDENCE_AND_OWNER_KEEP"
+}

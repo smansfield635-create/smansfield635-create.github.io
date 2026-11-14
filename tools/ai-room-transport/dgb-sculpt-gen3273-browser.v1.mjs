@@ -122,12 +122,17 @@ async function oneCase(browser,base,cfg,images){
   // Record genuine framebuffer evidence BEFORE a strict test assertion can stop
   // the case. A failed case must not produce an empty screenshot manifest.
   const capture=async phase=>{
+    const observed=[];
     for(const id of ['hero','side','front','rear']){
+      // Playwright captures the composited WebGL canvas, not the cleared
+      // default framebuffer returned by readPixels in this SwiftShader run.
       const bytes=await page.locator('#'+id).screenshot({type:'png'});
-      const name=cfg.id+'-'+id+'-'+phase+'.png';
-      images.push({name,caseId:cfg.id,phase,sha256:sha(bytes),bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
-      result.screenshots.push({name,phase,sha256:sha(bytes)});
+      const name=cfg.id+'-'+id+'-'+phase+'.png',digest=sha(bytes);
+      images.push({name,caseId:cfg.id,phase,sha256:digest,bytes:bytes.length,encoding:'base64',image:bytes.toString('base64')});
+      result.screenshots.push({name,phase,sha256:digest});
+      observed.push({id,sha256:digest});
     }
+    return observed;
   };
   try{
     const response=await page.goto(base+ROUTE,{waitUntil:'networkidle',timeout:120000});
@@ -139,7 +144,13 @@ async function oneCase(browser,base,cfg,images){
     check(boot.views.every(v=>v.backend==='WEBGL2'),'REAL_WEBGL2_BACKEND_REQUIRED');
     const before=await snapshot();
     result.gpuBefore=before.pixels;
-    await capture('before');
+    const beforeRendered=await capture('before');
+    const noEditRendered=await capture('no-edit');
+    result.noEditCanvasStability=noEditRendered.map((p,i)=>({
+      id:p.id,firstSha256:beforeRendered[i].sha256,secondSha256:p.sha256,
+      stable:p.sha256===beforeRendered[i].sha256
+    }));
+    check(result.noEditCanvasStability.every(p=>p.stable),'NO_EDIT_CANVAS_SCREENSHOT_UNSTABLE');
     check(before.pixels.every(p=>p.webgl2&&p.glError===0),'INITIAL_GPU_VALIDATION_FAILED');
     await page.selectOption('#mode','ORGANIC_INFLATE');
     await page.selectOption('#region','ALL');
@@ -161,15 +172,29 @@ async function oneCase(browser,base,cfg,images){
     }));
     result.geometryAfterPointer={positionsDifferent:JSON.stringify(after.positions)!==JSON.stringify(before.positions),
       undoDepth:after.undoDepth,redoDepth:after.redoDepth,revision:after.revision};
-    await capture('after');
+    const afterRendered=await capture('after');
+    result.perViewRenderedCanvasDelta=afterRendered.map((p,i)=>({
+      id:p.id,beforePngSha256:beforeRendered[i].sha256,afterPngSha256:p.sha256,
+      changed:p.sha256!==beforeRendered[i].sha256,
+      stableNoEdit:result.noEditCanvasStability[i].stable,
+      nativeReadPixelsBeforeSha256:before.pixels[i].sha256,
+      nativeReadPixelsAfterSha256:after.pixels[i].sha256,
+      nativeReadPixelsWasAllZero:before.pixels[i].nonzeroRgbPixels===0&&after.pixels[i].nonzeroRgbPixels===0
+    }));
     check(JSON.stringify(after.positions)!==JSON.stringify(before.positions),'REAL_POINTER_EDIT_MISSING');
     check(after.undoDepth===1,'STROKE_HISTORY_NOT_COMMITTED');
-    check(after.pixels.every((p,i)=>p.webgl2&&p.glError===0&&p.sha256!==before.pixels[i].sha256),'FOUR_VIEW_GPU_PIXEL_DELTA_MISSING');
+    check(after.pixels.every(p=>p.webgl2&&p.glError===0),'FOUR_VIEW_WEBGL_STATUS_INVALID');
+    check(result.perViewRenderedCanvasDelta.every(p=>p.changed&&p.stableNoEdit),'FOUR_VIEW_RENDERED_CANVAS_PIXEL_DELTA_MISSING');
     await page.locator('#undo').click();const undone=await snapshot();
     check(JSON.stringify(undone.positions)===JSON.stringify(before.positions)&&undone.redoDepth===1,'UNDO_ROUNDTRIP_FAILED');
+    const undoneRendered=await capture('undone');
+    result.undoCanvasReplay=undoneRendered.map((p,i)=>({id:p.id,matched:p.sha256===beforeRendered[i].sha256}));
+    check(result.undoCanvasReplay.every(p=>p.matched),'UNDO_RENDERED_CANVAS_REPLAY_FAILED');
     await page.locator('#redo').click();const redone=await snapshot();
     check(JSON.stringify(redone.positions)===JSON.stringify(after.positions),'REDO_ROUNDTRIP_FAILED');
-    check(redone.pixels.every((p,i)=>p.sha256===after.pixels[i].sha256),'REDO_PIXEL_REPLAY_FAILED');
+    const redoneRendered=await capture('redone');
+    result.redoCanvasReplay=redoneRendered.map((p,i)=>({id:p.id,matched:p.sha256===afterRendered[i].sha256}));
+    check(result.redoCanvasReplay.every(p=>p.matched),'REDO_RENDERED_CANVAS_REPLAY_FAILED');
     const saved=await page.evaluate(()=>window.__dgbSculptLab.studio.session.serialize());
     check(JSON.parse(saved).schema==='DGB_NATIVE_SCULPT_MESH_V1','SERIALIZATION_SCHEMA_MISSING');
     await page.locator('#undo').click();
@@ -177,12 +202,13 @@ async function oneCase(browser,base,cfg,images){
     await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('Reloaded verified editable mesh.'));
     const restored=await snapshot();
     check(JSON.stringify(restored.positions)===JSON.stringify(after.positions)&&restored.undoDepth===0,'PERSISTENT_REOPEN_FAILED');
-    check(restored.pixels.every((p,i)=>p.sha256===after.pixels[i].sha256),'PERSISTENT_GPU_REPLAY_FAILED');
-    await capture('restored');
+    const restoredRendered=await capture('restored');
+    result.restoredCanvasReplay=restoredRendered.map((p,i)=>({id:p.id,matched:p.sha256===afterRendered[i].sha256}));
+    check(result.restoredCanvasReplay.every(p=>p.matched),'PERSISTENT_RENDERED_CANVAS_REPLAY_FAILED');
     const htmlBlob=await served.get(ROUTE),controllerBlob=await served.get('/assets/engine/dgb.native-sculpt-browser.v1.mjs');
     check(htmlBlob===blobs[ROUTE.slice(1)]&&controllerBlob===blobs['assets/engine/dgb.native-sculpt-browser.v1.mjs'],'SERVED_ASSET_BYTES_MISMATCH');
     check(!result.jsErrors.length&&!result.httpErrors.length&&!result.requestFailures.length,'BROWSER_ERRORS_PRESENT');
-    result.behavior={realWebGL2Views:4,realPixelChangeAllFour:true,undoRedo:true,saveReopen:true,sourceVertexCount:273,sourceTriangles:480};
+    result.behavior={realWebGL2Views:4,strictNoEditCanvasStability:true,realPixelChangeAllFour:true,renderedCanvasPixelChangeAllFour:true,undoRedo:true,saveReopen:true,sourceVertexCount:273,sourceTriangles:480};
     result.served={status:response.status(),htmlBlob,controllerBlob};
     result.pass=true;
   }catch(e){
@@ -220,7 +246,7 @@ async function main(){
     receipt.browserVersion=browser.version();receipt.transport='ACTUAL_HTTP_ORIGINAL_MODULE_URLS';
     const base='http://127.0.0.1:'+server.address().port;
     for(const cfg of cases)receipt.cases.push(await oneCase(browser,base,cfg,manifest.images));
-    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===36?'PASS_CLOSED':'FAIL_CLOSED';
+    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===72?'PASS_CLOSED':'FAIL_CLOSED';
   }catch(e){receipt.status='FAIL_CLOSED';receipt.errorCode='FIXED_QUALIFICATION_FAILED';receipt.error=String(e.stack||e).slice(0,1900);}
   finally{
     if(browser)await browser.close().catch(()=>{});

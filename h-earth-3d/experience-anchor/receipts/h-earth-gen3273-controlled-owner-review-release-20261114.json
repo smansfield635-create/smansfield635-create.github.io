@@ -1,0 +1,125 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3273_EXACT_RENDERER_OWNER_PRODUCTION_REVIEW_RELEASE_20261114_001",
+  "canonicalAdmissionGeneration": 3280,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "anchorDispositionScope": "HARD_ELEVEN_INVARIANT_SOURCE_BOUND_SAME_WORLD_CONTINUITY_ONLY_NOT_AESTHETIC_ACCEPTANCE",
+  "reviewedBaselineHead": "1c428c4ef7bc5e7b7b73ede8ad50916dff3e7da4",
+  "productSourceHead": "cf8d6acae2e3c095419037556afe9c19a22f6ad2",
+  "reviewScope": "Source-bound functional Experience Anchor review against the existing accepted 11-invariant canonical world, historical proxy and OW01 evidence. The exact Gen3273 renderer alters only existing positive-X occupied meadow ground-color eligibility, not the world, terrain geometry, grass roots, trees, water, camera, navigation, route, globe or UI. The prior physical perception gate is subject to a formally adopted one-time H-Earth Gen3273 production-review exception. This receipt does not assert that the owner's two successful tree meadows have both been independently captured, that the problematic original phone mountainside camera pose was reproduced, that the original 32-second anchor film was replayed, or that ground-color naturalness is accepted. Aesthetic decision remains PENDING_OWNER_REVIEW after actual Pages publication.",
+  "ownerDecision": {
+    "intent": "PUBLISH_EXISTING_GEN3273_GROUND_COLOR_FOR_LIVE_OWNER_VISUAL_INSPECTION_NOT_KEEP",
+    "ownerAuthorizationSource": "2026-11-14 current user directive",
+    "issue": 7387,
+    "ownerAuthorizationCommentId": 6881124887,
+    "policyPr": 7405,
+    "policyMergeCommit": "1c428c4ef7bc5e7b7b73ede8ad50916dff3e7da4",
+    "policyAdmissionGeneration": 3279,
+    "sourceProductPr": 7399,
+    "sourceProductHead": "cf8d6acae2e3c095419037556afe9c19a22f6ad2",
+    "aestheticDisposition": "PENDING_OWNER_REVIEW",
+    "aestheticAccepted": false,
+    "originalPhoneMountainsidePoseTested": false,
+    "secondSuccessfulTreeMeadowIndependentlyTested": false,
+    "physicalAndroidPerformanceMeasured": false,
+    "publicationPerformedAtReceiptCreation": false
+  },
+  "aestheticDisposition": "PENDING_OWNER_REVIEW",
+  "visualKeepClaimed": false,
+  "fullOriginalFilmReplayed": false,
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "invariantEvidenceMode": "HISTORICAL_ACCEPTED_ANCHOR_PROXY_PLUS_GEN3273_UNCHANGED_WORLD_SOURCE_IDENTITY",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "71a2c677e73f955abc9fee64d6aa439ac53c6c9fffe520892adf70b3d7b14c8d",
+      "gitBlob": "4d4d162c97825fcf2a4affab1faf245168d4f949",
+      "sourceRole": "EXACT_THREE_RENDERER_IMPORT_MAP_CONTENT_HASH_REBINDS_ONLY"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7de60080bebb1e72cb666ddcc6edab02e8c0e24eb013cc3cd330ab524f5b837f",
+      "gitBlob": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+      "sourceRole": "BIT_IDENTICAL_EXISTING_GEN3273_PR7399_SOURCE"
+    }
+  ],
+  "firstPartyEvidence": {
+    "nativeChromiumWebglComparison": {
+      "runId": 43614173988,
+      "artifactId": 14122415799,
+      "result": "PASS_NATIVE_CHROMIUM_WEBGL2_SAME_POSE_AB",
+      "meadowGroundPixelsChanged": 68293,
+      "oneWoodlandControlPixelIdenticalCount": 518400,
+      "protectedSecondTreeMeadowIndependentlyChecked": false,
+      "originalOwnerPhonePoseMatched": false
+    },
+    "protectedGrassSource": {
+      "retainedGrassRootCount": 3805291,
+      "gpuRootAllocationBytes": 60884656,
+      "vegetationGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+      "frozenMapGitBlob": "9139e9c429957679c6e30001ea0e0fb95fbc45fc",
+      "frozenMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015"
+    },
+    "historicalAnchorReference": {
+      "acceptedReceipt": "h-earth-3d/experience-anchor/receipts/h-earth-gen3259-meadow-material-release-20261113.json",
+      "originalVideoReplayedInCurrentReview": false
+    }
+  },
+  "sourceIdentity": {
+    "sourceRendererPr": 7399,
+    "originalMainRendererGitBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "adoptedExactRendererGitBlob": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+    "adoptedExactRendererSha256": "7de60080bebb1e72cb666ddcc6edab02e8c0e24eb013cc3cd330ab524f5b837f",
+    "originalIndexGitBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",
+    "newIndexGitBlob": "4d4d162c97825fcf2a4affab1faf245168d4f949",
+    "rendererImportRevision": "?rev=sha-01fc83579106",
+    "rendererImportBindingsChanged": 3,
+    "noRendererSourceRewrite": true,
+    "noGrassRootChange": true,
+    "noTerrainTreeWaterCameraOrNavigationMutation": true
+  },
+  "comparison": {
+    "anchorObserved": "Prior 11-invariant functional same-world baseline and historical visual proxy; current candidate's exact source diff confined to existing renderer ground-color shader, and first-party WebGL supports actual unchanged root residency plus one woodland control. Not a new film replay or owner aesthetic acceptance.",
+    "sourceDelta": "Clean main-derived three-path release adopts exact existing renderer Git blob plus three content-hashed import references and one source-bound Anchor receipt. No planting, grass reconstruction, terrain reconstruction, trees, water, navigation, or other landscape modifications.",
+    "acceptanceBoundary": "SOURCE_BOUND_HARD_ANCHOR_FUNCTIONAL_CONTINUITY_PASS; FINAL_AESTHETICS_PENDING_OWNER_REVIEW"
+  },
+  "limitations": [
+    "ORIGINAL_ANCHOR_FILM_NOT_REPLAYED",
+    "SECOND_SUCCESSFUL_TREE_MEADOW_NOT_INDEPENDENTLY_NATIVE_CAPTURED",
+    "ORIGINAL_PROBLEM_MOUNTAINSIDE_PHONE_POSE_NOT_MATCHED",
+    "AESTHETIC_GROUND_COLOR_NOT_ACCEPTED_BY_OWNER",
+    "PHYSICAL_ANDROID_HARDWARE_PERFORMANCE_NOT_MEASURED",
+    "RECEIPT_DOES_NOT_CREATE_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+    "NO_NEW_GRASS_PLANTING_OR_TERRAIN_TREE_WATER_CHANGES"
+  ],
+  "releaseStatusAtReceiptCreation": "PENDING_APPROVED_PR_CHECKS_MERGE_DEPLOY_AND_LIVE_EXACT_VERIFICATION"
+}

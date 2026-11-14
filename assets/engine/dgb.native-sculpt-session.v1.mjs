@@ -28,11 +28,35 @@ function segmentTriangle(a,b,p,q,r){
   const k=cross(s,u),t=f*dot(dir,k);if(t<=1e-8||w+t>=1-1e-8)return false;
   const along=f*dot(v,k);return along>1e-8&&along<1-1e-8;
 }
+// Coplanar triangles can overlap without an edge crossing a triangle plane.
+// Require positive projected interior area: touching at an edge/vertex is lawful,
+// including true adjacent faces, but overlapping adjacent faces are not.
+function coplanarTrianglesOverlap(a,b,c,d,e,f){
+  const n0=cross(sub(b,a),sub(c,a)),n1=cross(sub(e,d),sub(f,d));
+  const l0=Math.hypot(...n0),l1=Math.hypot(...n1);
+  if(l0<1e-12||l1<1e-12)return false;
+  if(Math.hypot(...cross(n0,n1))>1e-8*l0*l1)return false;
+  if([d,e,f].some(p=>Math.abs(dot(n0,sub(p,a)))>1e-8*l0))return false;
+  const dominant=n0.map(Math.abs).indexOf(Math.max(...n0.map(Math.abs)));
+  const project=p=>dominant===0?[p[1],p[2]]:dominant===1?[p[0],p[2]]:[p[0],p[1]];
+  const aa=[a,b,c].map(project),bb=[d,e,f].map(project);
+  for(const triangle of [aa,bb])for(let i=0;i<3;i++){
+    const p=triangle[i],q=triangle[(i+1)%3],axis=[p[1]-q[1],q[0]-p[0]];
+    const axisLength=Math.hypot(...axis);
+    if(axisLength<1e-12)return false;
+    const projected=t=>t.map(v=>v[0]*axis[0]+v[1]*axis[1]);
+    const ap=projected(aa),bp=projected(bb);
+    if(Math.min(Math.max(...ap),Math.max(...bp))<=
+       Math.max(Math.min(...ap),Math.min(...bp))+1e-10*axisLength)return false;
+  }
+  return true;
+}
 function trianglesIntersect(a,b,c,d,e,f){
   const mn=u=>[Math.min(...u.map(v=>v[0])),Math.min(...u.map(v=>v[1])),Math.min(...u.map(v=>v[2]))];
   const mx=u=>[Math.max(...u.map(v=>v[0])),Math.max(...u.map(v=>v[1])),Math.max(...u.map(v=>v[2]))];
   const aa=[a,b,c],bb=[d,e,f],am=mn(aa),ax=mx(aa),bm=mn(bb),bx=mx(bb);
   if([0,1,2].some(k=>ax[k]<bm[k]+1e-10||bx[k]<am[k]+1e-10))return false;
+  if(coplanarTrianglesOverlap(a,b,c,d,e,f))return true;
   return [[a,b],[b,c],[c,a]].some(([p,q])=>segmentTriangle(p,q,d,e,f))||
     [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c));
 }
@@ -64,7 +88,12 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
       const a=[idx[3*i],idx[3*i+1],idx[3*i+2]];
       for(let j=i+1;j<faces;j++){
         const b=[idx[3*j],idx[3*j+1],idx[3*j+2]];
-        if(a.some(k=>b.includes(k)))continue;
+        // Index adjacency alone does not excuse two coplanar face interiors
+        // occupying the same area. Ordinary edge/vertex contact remains legal.
+        if(a.some(k=>b.includes(k))){
+          if(coplanarTrianglesOverlap(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
+          continue;
+        }
         if(trianglesIntersect(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
       }
     }
@@ -105,6 +134,23 @@ export function createSculptSourceHandoff({positions,triangles,renderToMaster,uv
   if(!(renderToMaster instanceof Int32Array||renderToMaster instanceof Uint32Array)||
      !renderToMaster.length||renderToMaster.some(x=>x<0||x>=n))throw new TypeError('SCULPT_RENDER_MASTER_MAPPING_INVALID');
   if(!(uvs instanceof Float32Array)||uvs.length!==renderToMaster.length*2||uvs.some(v=>!finite(v)))throw new TypeError('SCULPT_SOURCE_UV_INVALID');
+  // A typed triangle buffer is not proof of valid source-master topology.
+  // Validate every master index and the indexed face/edge incidence before
+  // handing off render/UV identity; do not silently repair or remesh.
+  const seenFaces=new Set(),edgeCounts=new Map();
+  for(let t=0;t<idx.length;t+=3){
+    const ids=[idx[t],idx[t+1],idx[t+2]];
+    if(ids.some(i=>i>=n)||new Set(ids).size!==3)throw new RangeError('SCULPT_SOURCE_HANDOFF_TRIANGLE_INDEX_INVALID');
+    const faceKey=[...ids].sort((a,b)=>a-b).join(':');
+    if(seenFaces.has(faceKey))throw new Error('SCULPT_SOURCE_HANDOFF_DUPLICATE_FACE');
+    seenFaces.add(faceKey);
+    for(let k=0;k<3;k++){
+      const a=ids[k],b=ids[(k+1)%3],edgeKey=a<b?a+':'+b:b+':'+a;
+      const count=(edgeCounts.get(edgeKey)||0)+1;
+      if(count>2)throw new Error('SCULPT_SOURCE_HANDOFF_NONMANIFOLD_EDGE');
+      edgeCounts.set(edgeKey,count);
+    }
+  }
   const sourceToSculpt=p=>{const out=new Float32Array(p.length);
     for(let i=0;i<p.length;i+=3){out[i]=p[i];out[i+1]=p[i+2];out[i+2]=-p[i+1];}return out;};
   const sculptToSource=p=>{const q=floatPositions(p);if(q.length!==src.length)throw new Error('SCULPT_SOURCE_MAPPING_VERTEX_COUNT_CHANGED');
@@ -150,13 +196,18 @@ export function verifySculptProspectiveBake({sourcePositions,sourceTriangles,
     const ratio=total/l0;minRatio=Math.min(minRatio,ratio);maxRatio=Math.max(maxRatio,ratio);
     if(ratio<minAreaRatio||ratio>maxAreaRatio)area++;
   }
+  // Face-count alignment is not authenticated child-to-parent correspondence.
+  // A numerically clean preflight therefore remains diagnostic only. Never
+  // promote it to an accepted bake or proof of source-face lineage.
+  const poseScreenPass=weak===0&&area===0;
   const receipt=Object.freeze({schema:'DGB_SCULPT_BAKE_PREFLIGHT_v1',sourceFaceCount:counts.length,
     outputFaceCount:b.length/3,reversedChildFaces:reverse,weakChildFaces:weak,
     areaOutlierSourceFaces:area,minimumNormalCosine:minCos,
     minimumSourceFaceAreaRatio:minRatio,maximumSourceFaceAreaRatio:maxRatio,
-    result:weak===0&&area===0?'PASS_SOURCE_POSE_ONLY':'REJECT_SOURCE_POSE',
+    poseScreenPass,lineageAuthenticated:false,lineageBasis:'FACE_COUNTS_ONLY_UNVERIFIED_CORRESPONDENCE',
+    diagnosticOnly:true,result:poseScreenPass?'DIAGNOSTIC_ONLY_UNVERIFIED_LINEAGE':'REJECT_SOURCE_POSE',
     surfaceAccepted:false,animationQualified:false,bakePerformed:false});
-  if(receipt.result!=='PASS_SOURCE_POSE_ONLY'&&!diagnosticOnly){
+  if(!poseScreenPass&&!diagnosticOnly){
     const error=new Error('SCULPT_BAKE_LINEAGE_REJECTED');error.receipt=receipt;throw error;
   }
   return receipt;

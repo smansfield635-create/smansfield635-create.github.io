@@ -89,50 +89,50 @@
     "publicationReleaseContractUnchanged": true,
     "finalPagesExactHeadVerificationRequired": true
   },
-  "standingBoundary": {  "ownerDirectedProductionReviewExceptions": {
+  "ownerDirectedProductionReviewExceptions": {
     "H_EARTH_GEN3273_PR7399_20261114": {
-        "schema": "EXACT_CANDIDATE_OWNER_DIRECTED_PRODUCTION_REVIEW_EXCEPTION_v1",
-        "status": "AUTHORIZED_ONE_TIME_PENDING_RELEASE_GATES",
-        "scope": "H_EARTH_CORE",
-        "operationId": "H_EARTH_GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION_20261114_001",
-        "canonicalAdmission": {
-            "issue": 7387,
-            "commentId": 6881187887,
-            "lockGeneration": 3278
-        },
-        "ownerAuthorization": {
-            "issue": 7387,
-            "commentId": 6881124887
-        },
-        "product": {
-            "pullRequest": 7399,
-            "headSha": "cf8d6acae2e3c095419037556afe9c19a22f6ad2",
-            "rendererGitObject": "01fc835791064945ad2f1b45fc5d68ae90e81444",
-            "rendererSha256": "7de60080bebb1e72cb666ddcc6edab02e8c0e24eb013cc3cd330ab524f5b837f"
-        },
-        "purpose": "One owner-directed production release of the unchanged exact Gen3273 ground-color correction solely for direct H-Earth visual inspection; not the default pre-publication preview workaround",
-        "appliesToOtherProducts": false,
-        "createsPrecedent": false,
-        "ownerVisualDisposition": "PENDING_OWNER_REVIEW",
-        "artisticKeepDeclared": false,
-        "globalPreviewDefaultUnchanged": true,
-        "experienceAnchorHardGateRequired": true,
-        "sourceIntegrityAndAssetGatesRequired": true,
-        "selectedPreflightPassBeforeDeploymentRequired": true,
-        "explicitExactHeadPagesDeploymentRequired": true,
-        "liveExactHeadVerificationRequired": true,
-        "physicalDeviceAcceptanceClaimed": false,
-        "secondProtectedMeadowIndependentlyTested": false,
-        "originalProblemPhoneCameraPoseMatched": false,
-        "grassRootCount": 3805291,
-        "grassGpuBytes": 60884656,
-        "releaseAuthorityCreatedByException": false,
-        "finalizationRequiresSeparateCanonicalAdmission": true,
-        "rollback": "Existing governed exact-head release process; no automatic revert or replacement",
-        "endCondition": "Owner decides KEEP, ONE_REPAIR, or REJECT for the deployed exact Gen3273 correction, after genuine live review"
+      "schema": "EXACT_CANDIDATE_OWNER_DIRECTED_PRODUCTION_REVIEW_EXCEPTION_v1",
+      "status": "AUTHORIZED_ONE_TIME_PENDING_RELEASE_GATES",
+      "scope": "H_EARTH_CORE",
+      "operationId": "H_EARTH_GEN3276_ONE_TIME_PRODUCTION_REVIEW_POLICY_EXCEPTION_20261114_001",
+      "canonicalAdmission": {
+        "issue": 7387,
+        "commentId": 6881187887,
+        "lockGeneration": 3278
+      },
+      "ownerAuthorization": {
+        "issue": 7387,
+        "commentId": 6881124887
+      },
+      "product": {
+        "pullRequest": 7399,
+        "headSha": "cf8d6acae2e3c095419037556afe9c19a22f6ad2",
+        "rendererGitObject": "01fc835791064945ad2f1b45fc5d68ae90e81444",
+        "rendererSha256": "7de60080bebb1e72cb666ddcc6edab02e8c0e24eb013cc3cd330ab524f5b837f"
+      },
+      "purpose": "One owner-directed production release of the unchanged exact Gen3273 ground-color correction solely for direct H-Earth visual inspection; not the default pre-publication preview workaround",
+      "appliesToOtherProducts": false,
+      "createsPrecedent": false,
+      "ownerVisualDisposition": "PENDING_OWNER_REVIEW",
+      "artisticKeepDeclared": false,
+      "globalPreviewDefaultUnchanged": true,
+      "experienceAnchorHardGateRequired": true,
+      "sourceIntegrityAndAssetGatesRequired": true,
+      "selectedPreflightPassBeforeDeploymentRequired": true,
+      "explicitExactHeadPagesDeploymentRequired": true,
+      "liveExactHeadVerificationRequired": true,
+      "physicalDeviceAcceptanceClaimed": false,
+      "secondProtectedMeadowIndependentlyTested": false,
+      "originalProblemPhoneCameraPoseMatched": false,
+      "grassRootCount": 3805291,
+      "grassGpuBytes": 60884656,
+      "releaseAuthorityCreatedByException": false,
+      "finalizationRequiresSeparateCanonicalAdmission": true,
+      "rollback": "Existing governed exact-head release process; no automatic revert or replacement",
+      "endCondition": "Owner decides KEEP, ONE_REPAIR, or REJECT for the deployed exact Gen3273 correction, after genuine live review"
     }
   },
-
+  "standingBoundary": {
     "previewCreatesScientificStanding": false,
     "previewCreatesEmpiricalStanding": false,
     "previewCreatesClaimAuthority": false,

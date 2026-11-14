@@ -92,7 +92,10 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     const local=localPointer(event,v.canvas),vp=v.scene.collect(v.camera).viewProjectionMatrix;
     const ray=sculptScreenRay({...local,width:v.canvas.width,height:v.canvas.height,viewProjection:vp});
     const hit=session.pick(ray.origin,ray.direction);if(!hit){status('No surface intersected.');return;}
-    const response=session.beginStroke(hit,{radius:Number(controls.radius.value),strength:Number(controls.strength.value),falloff:Number(controls.falloff.value),region:controls.region.value});
+    const mode=controls.mode.value, organic=mode.startsWith('ORGANIC_');
+    const radius=Number(controls.radius.value);
+    const fieldRadii=organic?['fieldX','fieldY','fieldZ'].map(k=>radius*Number(controls[k]?.value??1)):null;
+    const response=session.beginStroke(hit,{radius,strength:Number(controls.strength.value),falloff:Number(controls.falloff.value),region:controls.region.value,fieldRadii});
     active={view:v,pointerId:event.pointerId,lastX:event.clientX,lastY:event.clientY};v.canvas.setPointerCapture?.(event.pointerId);
     status(v.name+': selected triangle '+hit.triangle+', '+response.affectedVertexIds.length+' editable vertices. Drag to sculpt.');
     event.preventDefault?.();
@@ -102,7 +105,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       const dx=event.clientX-active.lastX,dy=event.clientY-active.lastY;active.lastX=event.clientX;active.lastY=event.clientY;
       if(dx===0&&dy===0)return;
       const mode=controls.mode.value;let update;
-      if(mode==='MOVE'){
+      if(mode==='MOVE'||mode==='ORGANIC_GRAB'){
         const size=v.canvas.getBoundingClientRect(),scale=3.15/Math.max(size.width,size.height);
         const right=v.basis.right,up=v.basis.up;
         update={mode:'MOVE',delta:right.map((x,k)=>x*dx*scale-up[k]*dy*scale)};

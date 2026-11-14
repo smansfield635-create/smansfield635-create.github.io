@@ -71,6 +71,96 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
   }
   return Object.freeze({vertexCount:n,triangleCount:idx.length/3,openBoundaryEdges:[...edges.values()].filter(x=>x===1).length,minDoubleArea});
 }
+/** Fixed-topology source-relative quality. This is stricter than manifoldness:
+ * M1.6 showed that valid indexed triangles may rotate or inflate excessively. */
+export function verifySculptSourceRelative(reference, candidate, triangles,
+  {minNormalCosine=0.2,minAreaRatio=0.5,maxAreaRatio=2,protectedVertices=[]}={}){
+  const src=floatPositions(reference),out=floatPositions(candidate),idx=intTriangles(triangles);
+  if(src.length!==out.length)throw new Error('SCULPT_SOURCE_VERTEX_COUNT_CHANGED_REQUIRES_SEPARATE_BAKE');
+  if(![minNormalCosine,minAreaRatio,maxAreaRatio].every(finite)||minNormalCosine<0||minNormalCosine>1||
+     minAreaRatio<=0||minAreaRatio>1||maxAreaRatio<1)throw new TypeError('SCULPT_SOURCE_GUARDS_INVALID');
+  if(!Array.isArray(protectedVertices)||protectedVertices.some(x=>!Number.isInteger(x)||x<0||3*x+2>=src.length))throw new TypeError('SCULPT_PROTECTED_IDS_INVALID');
+  for(const id of protectedVertices)for(let k=0;k<3;k++)if(src[3*id+k]!==out[3*id+k])throw new Error('SCULPT_PROTECTED_SOURCE_CHANGED');
+  let minimumCosine=1,minimumAreaRatio=Infinity,maximumAreaRatio=0;
+  for(let i=0;i<idx.length;i+=3){
+    const [a,b,c]=[idx[i],idx[i+1],idx[i+2]];
+    if([a,b,c].some(v=>v*3+2>=src.length)||new Set([a,b,c]).size!==3)throw new Error('SCULPT_SOURCE_TOPOLOGY_INVALID');
+    const normal=p=>cross(sub(pos(p,b),pos(p,a)),sub(pos(p,c),pos(p,a)));
+    const n0=normal(src),n1=normal(out),l0=Math.hypot(...n0),l1=Math.hypot(...n1);
+    if(l0<=1e-12||l1<=1e-12)throw new Error('SCULPT_SOURCE_TRIANGLE_DEGENERATE');
+    const cosine=dot(n0,n1)/(l0*l1),ratio=l1/l0;
+    minimumCosine=Math.min(minimumCosine,cosine);
+    minimumAreaRatio=Math.min(minimumAreaRatio,ratio);
+    maximumAreaRatio=Math.max(maximumAreaRatio,ratio);
+    if(cosine<minNormalCosine)throw new Error('SCULPT_SOURCE_NORMAL_GUARD_REJECTED');
+    if(ratio<minAreaRatio||ratio>maxAreaRatio)throw new Error('SCULPT_SOURCE_AREA_GUARD_REJECTED');
+  }
+  return Object.freeze({minimumCosine,minimumAreaRatio,maximumAreaRatio,sourceRelativePass:true,
+    triangleCount:idx.length/3,fixedTopology:true,animation64Qualified:false});
+}
+/** Source-space handoff: preserve source-master IDs and UV splits, never remesh on load.
+ * A right-handed -90° X rotation converts M1.3 +Z-up to Sculpt Lab +Y-up. */
+export function createSculptSourceHandoff({positions,triangles,renderToMaster,uvs}={}){
+  const src=floatPositions(positions),idx=intTriangles(triangles),n=src.length/3;
+  if(!(renderToMaster instanceof Int32Array||renderToMaster instanceof Uint32Array)||
+     !renderToMaster.length||renderToMaster.some(x=>x<0||x>=n))throw new TypeError('SCULPT_RENDER_MASTER_MAPPING_INVALID');
+  if(!(uvs instanceof Float32Array)||uvs.length!==renderToMaster.length*2||uvs.some(v=>!finite(v)))throw new TypeError('SCULPT_SOURCE_UV_INVALID');
+  const sourceToSculpt=p=>{const out=new Float32Array(p.length);
+    for(let i=0;i<p.length;i+=3){out[i]=p[i];out[i+1]=p[i+2];out[i+2]=-p[i+1];}return out;};
+  const sculptToSource=p=>{const q=floatPositions(p);if(q.length!==src.length)throw new Error('SCULPT_SOURCE_MAPPING_VERTEX_COUNT_CHANGED');
+    const out=new Float32Array(q.length);
+    for(let i=0;i<q.length;i+=3){out[i]=q[i];out[i+1]=-q[i+2];out[i+2]=q[i+1];}return out;};
+  // The handoff is intentionally fixed-topology; a future bake needs its own
+  // source-face and UV transfer proof, not just a render-vertex array resize.
+  return Object.freeze({schema:'DGB_SCULPT_FIXED_TOPOLOGY_SOURCE_HANDOFF_v1',
+    positionsYUp:sourceToSculpt(src),triangles:new Uint32Array(idx),
+    renderToMaster:new Uint32Array(renderToMaster),uvs:new Float32Array(uvs),
+    originalMasterCount:n,originalRenderVertexCount:renderToMaster.length,
+    fromSculptYUp:sculptToSource,retopologyBakeAllowed:false});
+}
+/** Read-only prospective bake preflight, never a topology-changing session edit.
+ * Exact ordered child-face lineage is required; this catches the archived M1.6
+ * 21 reversed child faces even though its output was manifold. */
+export function verifySculptProspectiveBake({sourcePositions,sourceTriangles,
+  outputPositions,outputTriangles,sourceToOutputFaceCounts,
+  minNormalCosine=0.2,minAreaRatio=0.5,maxAreaRatio=2,diagnosticOnly=false}={}){
+  const src=floatPositions(sourcePositions),out=floatPositions(outputPositions);
+  const a=intTriangles(sourceTriangles),b=intTriangles(outputTriangles);
+  const counts=sourceToOutputFaceCounts;
+  if(!Array.isArray(counts)||counts.length!==a.length/3||counts.some(x=>!Number.isInteger(x)||x<1)||
+     counts.reduce((s,x)=>s+x,0)!==b.length/3)throw new Error('SCULPT_BAKE_SOURCE_LINEAGE_INVALID');
+  if(![minNormalCosine,minAreaRatio,maxAreaRatio].every(finite)||minNormalCosine<0||minNormalCosine>1||
+     minAreaRatio<=0||minAreaRatio>1||maxAreaRatio<1)throw new TypeError('SCULPT_BAKE_GUARDS_INVALID');
+  const normal=(p,t)=>{
+    const [i,j,k]=t;if([i,j,k].some(x=>x*3+2>=p.length)||new Set(t).size!==3)throw new Error('SCULPT_BAKE_TRIANGLE_INVALID');
+    return cross(sub(pos(p,j),pos(p,i)),sub(pos(p,k),pos(p,i)));
+  };
+  let at=0,reverse=0,weak=0,area=0,minCos=1,minRatio=Infinity,maxRatio=0;
+  for(let i=0;i<counts.length;i++){
+    const old=normal(src,[a[3*i],a[3*i+1],a[3*i+2]]),l0=Math.hypot(...old);
+    if(l0<=1e-12)throw new Error('SCULPT_BAKE_SOURCE_DEGENERATE');
+    let total=0;
+    for(let c=0;c<counts[i];c++,at++){
+      const child=normal(out,[b[3*at],b[3*at+1],b[3*at+2]]),l1=Math.hypot(...child);
+      const cos=l1>1e-12?dot(old,child)/(l0*l1):-1;
+      minCos=Math.min(minCos,cos);total+=l1;
+      if(cos<0)reverse++;
+      if(cos<minNormalCosine)weak++;
+    }
+    const ratio=total/l0;minRatio=Math.min(minRatio,ratio);maxRatio=Math.max(maxRatio,ratio);
+    if(ratio<minAreaRatio||ratio>maxAreaRatio)area++;
+  }
+  const receipt=Object.freeze({schema:'DGB_SCULPT_BAKE_PREFLIGHT_v1',sourceFaceCount:counts.length,
+    outputFaceCount:b.length/3,reversedChildFaces:reverse,weakChildFaces:weak,
+    areaOutlierSourceFaces:area,minimumNormalCosine:minCos,
+    minimumSourceFaceAreaRatio:minRatio,maximumSourceFaceAreaRatio:maxRatio,
+    result:weak===0&&area===0?'PASS_SOURCE_POSE_ONLY':'REJECT_SOURCE_POSE',
+    surfaceAccepted:false,animationQualified:false,bakePerformed:false});
+  if(receipt.result!=='PASS_SOURCE_POSE_ONLY'&&!diagnosticOnly){
+    const error=new Error('SCULPT_BAKE_LINEAGE_REJECTED');error.receipt=receipt;throw error;
+  }
+  return receipt;
+}
 export function computeSculptNormals(positions,triangles){
   const n=positions.length/3,normal=new Float32Array(positions.length);
   for(let k=0;k<triangles.length;k+=3){
@@ -111,13 +201,15 @@ export function sculptScreenRay({x,y,width,height,viewProjection}){
   function unproject(z){const p=[ndc[0],ndc[1],z,1],r=Array.from({length:4},(_,i)=>m[i]*p[0]+m[i+4]*p[1]+m[i+8]*p[2]+m[i+12]*p[3]);if(Math.abs(r[3])<1e-12)throw new Error('SCREEN_RAY_INVALID');return r.slice(0,3).map(x=>x/r[3]);}
   const a=unproject(-1),b=unproject(1);return {origin:a,direction:norm(sub(b,a))};
 }
-export function createSculptSession({positions,triangles,regions,protectedVertices=[],maxHistory=40}={}){
+export function createSculptSession({positions,triangles,regions,protectedVertices=[],maxHistory=40,sourceGuards={}}={}){
   let current=floatPositions(positions);const faces=intTriangles(triangles),count=current.length/3;
   if(!Array.isArray(regions)||regions.length!==count||regions.some(x=>typeof x!=='string'||!x))throw new TypeError('REGION_IDS_REQUIRED');
   if(!Array.isArray(protectedVertices)||protectedVertices.some(i=>!Number.isInteger(i)||i<0||i>=count))throw new TypeError('PROTECTED_IDS_INVALID');
   if(!Number.isInteger(maxHistory)||maxHistory<1||maxHistory>100)throw new TypeError('HISTORY_LIMIT_INVALID');
   const originalRegions=[...regions],frozen=new Set(protectedVertices),undo=[],redo=[];
-  verifySculptGeometry(current,faces);let active=null,revision=0;
+  const reference=new Float32Array(current),guardOptions={...sourceGuards,protectedVertices:[...frozen]};
+  verifySculptGeometry(current,faces);
+  verifySculptSourceRelative(reference,current,faces,guardOptions);let active=null,revision=0;
   function pick(origin,direction){
     v3(origin,'PICK_ORIGIN');v3(direction,'PICK_DIRECTION');const ray=norm(direction);let best=null;
     for(let k=0;k<faces.length;k+=3){const ids=[faces[k],faces[k+1],faces[k+2]],h=hitTriangle(origin,ray,...ids.map(i=>pos(current,i)));
@@ -125,30 +217,48 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
     }
     return best?Object.freeze(best):null;
   }
-  function beginStroke(hit,{radius=0.35,strength=1,falloff=1,region='ALL'}={}){
+  function beginStroke(hit,{radius=0.35,strength=1,falloff=1,region='ALL',fieldRadii=null}={}){
     if(active)throw new Error('STROKE_ALREADY_ACTIVE');
     if(!hit||!Array.isArray(hit.position)||!Array.isArray(hit.normal)||!Array.isArray(hit.vertexIds))throw new TypeError('SURFACE_PICK_REQUIRED');
     v3(hit.position,'HIT_POSITION');v3(hit.normal,'HIT_NORMAL');
     if(!finite(radius)||radius<0.02||radius>2.5||!finite(strength)||strength<=0||strength>2||!finite(falloff)||falloff<0.1||falloff>5)throw new RangeError('BRUSH_CONTROLS_INVALID');
     if(region!=='ALL'&&!originalRegions.includes(region))throw new Error('REGION_UNKNOWN');
+    if(fieldRadii!==null){v3(fieldRadii,'SCULPT_FIELD_RADII');if(fieldRadii.some(x=>x<0.02||x>2.5))throw new RangeError('SCULPT_FIELD_RADII_OUT_OF_BOUNDS');}
     const affected=[];for(let i=0;i<count;i++){
       if(frozen.has(i)||region!=='ALL'&&originalRegions[i]!==region)continue;
-      const d=Math.hypot(...sub(pos(current,i),hit.position));if(d>radius)continue;
-      const t=1-d/radius,weight=Math.pow(t*t*(3-2*t),falloff);
+      const offset=sub(pos(current,i),hit.position);
+      const d=fieldRadii?Math.hypot(...offset.map((x,k)=>x/fieldRadii[k])):Math.hypot(...offset)/radius;
+      if(d>=1)continue;
+      const t=1-d,weight=Math.pow(t*t*(3-2*t),falloff);
       if(weight>0)affected.push([i,weight]);
     }
     if(!affected.length)throw new Error('NO_EDITABLE_VERTICES_IN_RADIUS');
     active={before:new Float32Array(current),hit,affected,strength,changed:false};return Object.freeze({selectedTriangle:hit.triangle,affectedVertexIds:affected.map(v=>v[0])});
   }
-  function applyStroke({mode='PULL',amount=0,delta=[0,0,0]}={}){
+  function applyStroke({mode='PULL',amount=0,delta=[0,0,0],planeNormal=null,planeOffset=null}={}){
     if(!active)throw new Error('NO_ACTIVE_STROKE');
-    if(!['PULL','PUSH','MOVE'].includes(mode)||!finite(amount)||Math.abs(amount)>0.4)throw new TypeError('STROKE_MODE_OR_AMOUNT_INVALID');
+    if(!['PULL','PUSH','MOVE','ORGANIC_INFLATE','ORGANIC_GRAB','ORGANIC_FLATTEN'].includes(mode)||
+       !finite(amount)||Math.abs(amount)>0.4)throw new TypeError('STROKE_MODE_OR_AMOUNT_INVALID');
     v3(delta,'STROKE_DELTA');if(delta.some(x=>Math.abs(x)>0.4))throw new RangeError('STROKE_DELTA_EXCESSIVE');
-    const direction=mode==='MOVE'?delta:mul(active.hit.normal,(mode==='PULL'?1:-1)*Math.abs(amount));
-    if(direction.every(x=>x===0))return false;
+    if(planeNormal!==null)v3(planeNormal,'SCULPT_PLANE_NORMAL');
+    if(planeOffset!==null&&!finite(planeOffset))throw new TypeError('SCULPT_PLANE_OFFSET_INVALID');
+    const direction=mode==='MOVE'||mode==='ORGANIC_GRAB'?delta:mul(active.hit.normal,(mode==='PULL'?1:-1)*Math.abs(amount));
+    if((mode==='ORGANIC_INFLATE'||mode==='ORGANIC_FLATTEN')&&amount===0)return false;
+    if(mode!=='ORGANIC_INFLATE'&&mode!=='ORGANIC_FLATTEN'&&direction.every(x=>x===0))return false;
     const candidate=new Float32Array(current);
-    for(const [i,w]of active.affected)for(let j=0;j<3;j++)candidate[3*i+j]+=direction[j]*active.strength*w;
-    try{verifySculptGeometry(candidate,faces);}catch(e){current=new Float32Array(active.before);active=null;throw e;}
+    const unitPlane=mode==='ORGANIC_FLATTEN'?norm(planeNormal??active.hit.normal):null;
+    const planeD=planeOffset??(unitPlane?dot(unitPlane,active.hit.position):0);
+    const normals=mode==='ORGANIC_INFLATE'?computeSculptNormals(current,faces):null;
+    for(const [i,w]of active.affected){
+      let shift=direction;
+      if(mode==='ORGANIC_INFLATE')shift=mul(pos(normals,i),amount);
+      if(mode==='ORGANIC_FLATTEN')shift=mul(unitPlane,-(dot(unitPlane,pos(current,i))-planeD)*Math.abs(amount));
+      for(let j=0;j<3;j++)candidate[3*i+j]+=shift[j]*active.strength*w;
+    }
+    try{
+      verifySculptGeometry(candidate,faces);
+      verifySculptSourceRelative(reference,candidate,faces,guardOptions);
+    }catch(e){current=new Float32Array(active.before);active=null;throw e;}
     current=candidate;active.changed=true;revision++;return true;
   }
   function endStroke(){if(!active)throw new Error('NO_ACTIVE_STROKE');const state=active;active=null;
@@ -160,9 +270,9 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
   function serialize(){if(active)throw new Error('STROKE_ACTIVE');return JSON.stringify({schema:'DGB_NATIVE_SCULPT_MESH_V1',positions:[...current],triangles:[...faces],regions:originalRegions,protectedVertices:[...frozen].sort((a,b)=>a-b)});}
   function restore(text){if(active)throw new Error('STROKE_ACTIVE');let obj;try{obj=JSON.parse(text);}catch{throw new TypeError('SCULPT_SAVE_JSON_INVALID');}
     if(obj?.schema!=='DGB_NATIVE_SCULPT_MESH_V1'||!Array.isArray(obj.positions)||!Array.isArray(obj.triangles)||JSON.stringify(obj.triangles)!==JSON.stringify([...faces])||JSON.stringify(obj.regions)!==JSON.stringify(originalRegions)||JSON.stringify(obj.protectedVertices)!==JSON.stringify([...frozen].sort((a,b)=>a-b)))throw new Error('SCULPT_SAVE_IDENTITY_MISMATCH');
-    const restored=new Float32Array(obj.positions);verifySculptGeometry(restored,faces);current=restored;undo.length=0;redo.length=0;revision++;return true;}
+    const restored=new Float32Array(obj.positions);verifySculptGeometry(restored,faces);verifySculptSourceRelative(reference,restored,faces,guardOptions);current=restored;undo.length=0;redo.length=0;revision++;return true;}
   return Object.freeze({pick,beginStroke,applyStroke,endStroke,cancelStroke,undo:undoStroke,redo:redoStroke,serialize,restore,
     getPositions:()=>new Float32Array(current),getTriangles:()=>new Uint32Array(faces),getRegions:()=>[...originalRegions],
-    getNormals:()=>computeSculptNormals(current,faces),verify:()=>verifySculptGeometry(current,faces),
+    getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions)}),
     state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3})});
 }

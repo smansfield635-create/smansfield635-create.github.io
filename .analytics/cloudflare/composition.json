@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-14T15:23:40Z",
+  "generatedAt": "2026-11-14T16:25:04Z",
   "window": {
-    "start": "2026-10-15T15:23:40Z",
-    "end": "2026-11-14T15:23:40Z"
+    "start": "2026-10-15T16:25:04Z",
+    "end": "2026-11-14T16:25:04Z"
   },
   "dimensions": {
     "requestPath": [
@@ -138,6 +138,11 @@
         "visits": 1
       },
       {
+        "value": "/frontier/vision/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/explore/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
@@ -153,12 +158,12 @@
         "visits": 1
       },
       {
-        "value": "/explore/frontier/lattice/",
+        "value": "/frontier/manual/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/lattice/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -168,17 +173,22 @@
         "visits": 1
       },
       {
+        "value": "/laws/test/result-and-record/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/research/evidence-and-sources/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/core-invariants/",
+        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/frontier/vision/",
+        "value": "/laws/core-invariants/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -213,22 +223,12 @@
         "visits": 1
       },
       {
-        "value": "/frontier/manual/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/prelude/",
         "pageLoads": 1,
         "visits": 0
       },
       {
         "value": "/showroom/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/waste/",
         "pageLoads": 1,
         "visits": 1
       },

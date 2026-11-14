@@ -457,7 +457,7 @@ export const GEN3286_WITNESS_SCOUT_POSES=Object.freeze([
 // the exact accepted Gen3259 renderer, leaves all product files untouched,
 // and alters one GLSL material operand in the browser response only.
 export const GEN3288_CAUSAL_MODES=Object.freeze(['baseline','occupancy-off','habitat-off','groundcover-off']);
-export const GEN3288_CAUSAL_POSES=Object.freeze(['official-ridge-east','seam-overlap-edge','woodland-grove-a-control','woodland-core-b-control'].map(id=>GEN3286_WITNESS_SCOUT_POSES.find(p=>p.id===id)));
+export const GEN3288_CAUSAL_POSES=Object.freeze(['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge'].map(id=>GEN3286_WITNESS_SCOUT_POSES.find(p=>p.id===id)));
 export function gen3288CausalShaderSource(source,mode){
   if(!GEN3288_CAUSAL_MODES.includes(mode))throw Error('GEN3288_UNKNOWN_SHADER_MODE:'+mode);
   // Exactly one anchored edit and no changes outside the first-party GLSL string.

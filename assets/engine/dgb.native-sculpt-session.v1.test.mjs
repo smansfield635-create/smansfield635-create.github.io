@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSculptSession,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
+import {createSculptSession,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,verifySculptProspectiveBake,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
 const fixture=()=>({positions:new Float32Array([-1,-1,0, 0,-1,0, 1,-1,0, -1,0,0, 0,0,0, 1,0,0, -1,1,0, 0,1,0, 1,1,0]),triangles:new Uint16Array([0,1,4,0,4,3, 1,2,5,1,5,4, 3,4,7,3,7,6, 4,5,8,4,8,7]),regions:['skull','skull','nape','skull','skull','nape','shoulder','shoulder','shoulder'],protectedVertices:[0,3,6]});
 test('actual ray-to-triangle intersection returns 3D hit and barycentrics',()=>{
   const s=createSculptSession(fixture());const hit=s.pick([0,0,5],[0,0,-1]);assert(hit);assert(Math.abs(hit.position[2])<1e-8);assert(Math.abs(hit.barycentric.reduce((a,b)=>a+b,0)-1)<1e-7);assert.equal(hit.vertexIds.length,3);
@@ -93,12 +93,93 @@ test('invalid organic controls cannot silently mutate a session',()=>{
   s.cancelStroke();assert.equal(s.serialize(),before);
 });
 test('M1.3 +Z-up handoff transforms round-trip and preserves split UV identity',()=>{
-  const src=new Float32Array([1,2,3,4,5,6,7,8,9]),indices=new Uint16Array([0,1,2]);
+  const src=new Float32Array([1,2,3,4,5,6,7,8,10]),indices=new Uint16Array([0,1,2]);
   const seam=new Uint32Array([0,1,1,2]);const uv=new Float32Array([0,0,.4,.1,.6,.2,1,1]);
   const h=createSculptSourceHandoff({positions:src,triangles:indices,renderToMaster:seam,uvs:uv});
-  assert.deepEqual([...h.positionsYUp],[1,3,-2,4,6,-5,7,9,-8]);
+  assert.deepEqual([...h.positionsYUp],[1,3,-2,4,6,-5,7,10,-8]);
   assert.deepEqual([...h.fromSculptYUp(h.positionsYUp)],[...src]);
   assert.deepEqual([...h.renderToMaster],[...seam]);assert.deepEqual([...h.uvs],[...uv]);
   assert.equal(h.retopologyBakeAllowed,false);
   assert.throws(()=>h.fromSculptYUp(new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0])),/VERTEX_COUNT_CHANGED/);
+});
+
+
+// M1.6.3: source-handoff topology and geometric self-intersection gaps.
+test('coplanar non-adjacent overlapping faces are rejected, not missed by segment-plane tests',()=>{
+  const positions=new Float32Array([0,0,0, 2,0,0, 0,2,0, .2,.2,0, 1.2,.2,0, .2,1.2,0]);
+  assert.throws(()=>verifySculptGeometry(positions,new Uint16Array([0,1,2,3,4,5])),/SELF_INTERSECTION/);
+});
+test('coplanar edge-adjacent faces with only boundary contact remain valid',()=>{
+  const positions=new Float32Array([0,0,0, 2,0,0, 0,2,0, 1,-1,0]);
+  assert.equal(verifySculptGeometry(positions,new Uint16Array([0,1,2,0,3,1])).triangleCount,2);
+});
+test('coplanar adjacent faces with overlapping interiors are rejected',()=>{
+  const positions=new Float32Array([0,0,0, 2,0,0, 0,2,0, 1,1,0]);
+  assert.throws(()=>verifySculptGeometry(positions,new Uint16Array([0,1,2,0,1,3])),/SELF_INTERSECTION/);
+});
+test('coplanar overlap remains prohibited when two faces share only a vertex',()=>{
+  const positions=new Float32Array([0,0,0, 2,0,0, 0,2,0, 1,0,0, 0,1,0]);
+  assert.throws(()=>verifySculptGeometry(positions,new Uint16Array([0,1,2,0,3,4])),/SELF_INTERSECTION/);
+});
+test('source handoff rejects out-of-range, repeated and duplicate master triangle identities',()=>{
+  const sourcePositions=new Float32Array([0,0,0, 1,0,0, 0,1,0]);
+  const data={positions:sourcePositions,renderToMaster:new Uint32Array([0,1,2]),uvs:new Float32Array([0,0,1,0,0,1])};
+  assert.throws(()=>createSculptSourceHandoff({...data,triangles:new Uint16Array([0,1,3])}),/SCULPT_SOURCE_HANDOFF_TRIANGLE_INDEX_INVALID/);
+  assert.throws(()=>createSculptSourceHandoff({...data,triangles:new Uint16Array([0,1,1])}),/SCULPT_SOURCE_HANDOFF_TRIANGLE_INDEX_INVALID/);
+  assert.throws(()=>createSculptSourceHandoff({...data,triangles:new Uint16Array([0,1,2,2,1,0])}),/SCULPT_SOURCE_HANDOFF_DUPLICATE_FACE/);
+  assert.equal(createSculptSourceHandoff({...data,triangles:new Uint16Array([0,1,2])}).retopologyBakeAllowed,false);
+});
+test('source handoff rejects nonmanifold master edge incidence without rewriting the source',()=>{
+  const data={positions:new Float32Array([0,0,0, 1,0,0, 0,1,0, 0,-1,0, 0,0,1]),
+    triangles:new Uint16Array([0,1,2, 1,0,3, 0,1,4]),renderToMaster:new Uint32Array([0,1,2,3,4]),
+    uvs:new Float32Array([0,0,1,0,0,1,1,1,.5,.5])};
+  assert.throws(()=>createSculptSourceHandoff(data),/SCULPT_SOURCE_HANDOFF_NONMANIFOLD_EDGE/);
+});
+test('prospective bake with plausible face counts cannot claim authenticated parent-child lineage',()=>{
+  const sourcePositions=new Float32Array([0,0,0, 1,0,0, 1,1,0, 0,1,0]);
+  const r=verifySculptProspectiveBake({sourcePositions,sourceTriangles:new Uint16Array([0,1,2,0,2,3]),
+    outputPositions:sourcePositions,outputTriangles:new Uint16Array([0,2,3,0,1,2]),
+    sourceToOutputFaceCounts:[1,1]});
+  assert.equal(r.poseScreenPass,true);
+  assert.equal(r.result,'DIAGNOSTIC_ONLY_UNVERIFIED_LINEAGE');
+  assert.equal(r.lineageAuthenticated,false);
+  assert.equal(r.diagnosticOnly,true);
+  assert.equal(r.surfaceAccepted,false);
+  assert.equal(r.bakePerformed,false);
+  assert.equal(r.animationQualified,false);
+});
+test('prospective bake retains negative inversion receipt and rejects malformed face counts',()=>{
+  const positions=new Float32Array([0,0,0,1,0,0,0,1,0]),triangles=new Uint16Array([0,1,2]);
+  const reversed=new Float32Array([0,0,0,1,0,0,0,-1,0]);
+  const params={sourcePositions:positions,sourceTriangles:triangles,outputPositions:reversed,
+    outputTriangles:triangles,sourceToOutputFaceCounts:[1]};
+  const report=verifySculptProspectiveBake({...params,diagnosticOnly:true});
+  assert.equal(report.result,'REJECT_SOURCE_POSE');
+  assert.equal(report.reversedChildFaces,1);
+  assert.equal(report.weakChildFaces,1);
+  assert.equal(report.lineageAuthenticated,false);
+  assert.throws(()=>verifySculptProspectiveBake(params),/SCULPT_BAKE_LINEAGE_REJECTED/);
+  assert.throws(()=>verifySculptProspectiveBake({...params,sourceToOutputFaceCounts:[2]}),/SCULPT_BAKE_SOURCE_LINEAGE_INVALID/);
+});
+
+
+// M1.6.3 corrective safety regression: geometry and handoff must agree on area.
+test('source handoff rejects in-range collinear master triangles rejected by the geometry validator',()=>{
+  const positions=new Float32Array([0,0,0,1,0,0,2,0,0]),triangles=new Uint16Array([0,1,2]);
+  const data={positions,triangles,renderToMaster:new Uint32Array([0,1,2]),uvs:new Float32Array([0,0,.5,0,1,0])};
+  assert.throws(()=>verifySculptGeometry(positions,triangles),/DEGENERATE_TRIANGLE/);
+  assert.throws(()=>createSculptSourceHandoff(data),/SCULPT_SOURCE_HANDOFF_DEGENERATE_TRIANGLE/);
+});
+test('source handoff shares geometry doubled-area floor without rejecting valid thin faces',()=>{
+  const makeData=(height)=>({positions:new Float32Array([0,0,0,1,0,0,0,height,0]),
+    triangles:new Uint16Array([0,1,2]),renderToMaster:new Uint32Array([0,1,2]),
+    uvs:new Float32Array([0,0,1,0,0,1])});
+  const tiny=makeData(5e-9);
+  assert.throws(()=>verifySculptGeometry(tiny.positions,tiny.triangles),/DEGENERATE_TRIANGLE/);
+  assert.throws(()=>createSculptSourceHandoff(tiny),/SCULPT_SOURCE_HANDOFF_DEGENERATE_TRIANGLE/);
+  const valid=makeData(1e-4);
+  assert.equal(verifySculptGeometry(valid.positions,valid.triangles).triangleCount,1);
+  const h=createSculptSourceHandoff(valid);
+  assert.deepEqual([...h.triangles],[0,1,2]);
+  assert.equal(h.retopologyBakeAllowed,false);
 });

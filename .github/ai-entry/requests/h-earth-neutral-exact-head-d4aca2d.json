@@ -1,0 +1,13 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
+  "capability": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d4aca2d88629452e61728f18b766f22259bce34d",
+    "route_path": "/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/",
+    "route_query": "visual=terrain-relief-v2",
+    "apply_timing_shim": "false"
+  },
+  "disposition": "EXECUTION_ONLY_DO_NOT_MERGE"
+}

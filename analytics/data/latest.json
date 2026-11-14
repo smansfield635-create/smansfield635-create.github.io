@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-14T19:24:52Z",
+  "generatedAt": "2026-11-14T20:24:08Z",
   "window30d": {
-    "start": "2026-10-15T19:24:52Z",
-    "end": "2026-11-14T19:24:52Z"
+    "start": "2026-10-15T20:24:08Z",
+    "end": "2026-11-14T20:24:08Z"
   },
   "daily": [
     {
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 45
+      "pageLoads": 48
     }
   ],
   "summary": {
-    "pageLoads": 1473,
-    "botPageLoads": 738,
-    "nonBotPageLoads": 735
+    "pageLoads": 1476,
+    "botPageLoads": 739,
+    "nonBotPageLoads": 737
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1330,
-      "visits": 1330
+      "pageLoads": 1332,
+      "visits": 1332
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 125,
+      "pageLoads": 126,
       "visits": 0
     },
     {
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 556,
-      "visits": 556
+      "pageLoads": 557,
+      "visits": 557
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 417,
-      "visits": 341
+      "pageLoads": 419,
+      "visits": 342
     },
     {
       "path": "/",
@@ -176,12 +176,12 @@
       "visits": 64
     },
     {
-      "path": "/products/education/personal-training/",
+      "path": "/products/education/personal-training/course.html",
       "pageLoads": 80,
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/course.html",
+      "path": "/products/education/personal-training/",
       "pageLoads": 80,
       "visits": 80
     },

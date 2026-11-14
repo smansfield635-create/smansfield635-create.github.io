@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-14T19:24:52Z",
+  "generatedAt": "2026-11-14T20:24:08Z",
   "window": {
-    "start": "2026-10-15T19:24:52Z",
-    "end": "2026-11-14T19:24:52Z"
+    "start": "2026-10-15T20:24:08Z",
+    "end": "2026-11-14T20:24:08Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 556,
-        "visits": 556
+        "pageLoads": 557,
+        "visits": 557
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 417,
-        "visits": 341
+        "pageLoads": 419,
+        "visits": 342
       },
       {
         "value": "/",
@@ -23,12 +23,12 @@
         "visits": 64
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
@@ -203,12 +203,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/test/result-and-record/",
+        "value": "/explore/frontier/energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/explore/frontier/energy/",
+        "value": "/laws/test/result-and-record/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -258,6 +258,11 @@
         "visits": 1
       },
       {
+        "value": "/explore/frontier/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/products/five-flags/",
         "pageLoads": 1,
         "visits": 1
@@ -271,11 +276,6 @@
         "value": "/products/archcoin/payable/",
         "pageLoads": 1,
         "visits": 0
-      },
-      {
-        "value": "/explore/frontier/",
-        "pageLoads": 1,
-        "visits": 1
       },
       {
         "value": "/products/archcoin/contract/overview/",
@@ -311,12 +311,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1330,
-        "visits": 1330
+        "pageLoads": 1332,
+        "visits": 1332
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 125,
+        "pageLoads": 126,
         "visits": 0
       },
       {
@@ -338,8 +338,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1392,
-        "visits": 1264
+        "pageLoads": 1393,
+        "visits": 1277
       },
       {
         "value": "CN",
@@ -365,8 +365,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1225,
-        "visits": 1147
+        "pageLoads": 1228,
+        "visits": 1149
       },
       {
         "value": "mobile",
@@ -382,8 +382,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 738,
-        "visits": 737
+        "pageLoads": 739,
+        "visits": 738
       },
       {
         "value": "Chrome",
@@ -397,8 +397,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 96,
-        "visits": 66
+        "pageLoads": 98,
+        "visits": 67
       },
       {
         "value": "Unknown",
@@ -429,13 +429,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 885,
-        "visits": 884
+        "pageLoads": 886,
+        "visits": 885
       },
       {
         "value": "Windows",
-        "pageLoads": 234,
-        "visits": 161
+        "pageLoads": 236,
+        "visits": 162
       },
       {
         "value": "Android",
@@ -461,24 +461,24 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 738,
-        "visits": 737
+        "pageLoads": 739,
+        "visits": 738
       },
       {
         "value": "0",
-        "pageLoads": 735,
-        "visits": 611
+        "pageLoads": 737,
+        "visits": 612
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1418,
-        "visits": 1348
+        "pageLoads": 1420,
+        "visits": 1350
       },
       {
         "value": "routing-apis",
-        "pageLoads": 54,
+        "pageLoads": 55,
         "visits": 0
       },
       {
@@ -490,8 +490,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1437,
-        "visits": 1347
+        "pageLoads": 1440,
+        "visits": 1349
       },
       {
         "value": "cache",
@@ -502,15 +502,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1473,
-        "visits": 1348
+        "pageLoads": 1476,
+        "visits": 1350
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1473,
-        "visits": 1348
+        "pageLoads": 1476,
+        "visits": 1350
       }
     ]
   }

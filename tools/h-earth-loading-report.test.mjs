@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createHEarthLoadingScreen} from '../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js';
+import {createHEarthLoadingScreen} from '../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js?sha-0e103e4f6834';
 function harness(clipboard,search=''){
  const nodes=new Map(),frames=[];let time=100;
  const node=()=>({dataset:{},style:{},hidden:false,disabled:false,value:'',listeners:{},children:[],setAttribute(k,v){this[k]=v;if(k.startsWith('data-'))nodes.set(`[${k}]`,this);},addEventListener(k,f){this.listeners[k]=f;},appendChild(n){this.children.push(n);},focus(){this.focused=true;},select(){this.selected=true;},querySelector(k){if(!nodes.has(k))nodes.set(k,node());return nodes.get(k);}});

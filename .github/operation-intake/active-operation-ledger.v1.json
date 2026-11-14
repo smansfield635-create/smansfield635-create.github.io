@@ -31304,6 +31304,50 @@
       "scopeHash": "f3ff96242a47e8402a273c61b312376ff746a55fd65c9d7a3ba5d5219baa830a",
       "state": "ADMITTED_LOCKED"
     },
+    "f3fff8372d0850c9fcb8567cb3e13a48c49d71019936542cd36025934029ccdd": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1c428c4ef7bc5e7b7b73ede8ad50916dff3e7da4",
+          "lockGeneration": 3282,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SCULPT_GEN3273:GPU_PIXEL_OBSERVABILITY_DIAGNOSTIC:20261114",
+          "operationId": "DGB_SCULPT_GEN3273_GPU_PIXEL_OBSERVABILITY_DIAGNOSTIC_20261114_001",
+          "procedureLocatorDigest": "e316c2e1050c0c6e5be14c7022380818272392ad5fa15fe2917ba16373064096",
+          "requestDigest": "7a19a0832514a6199c0812040cc4030ba8a349cea9943cba718ac9f94f91e407",
+          "scopeHash": "f3fff8372d0850c9fcb8567cb3e13a48c49d71019936542cd36025934029ccdd"
+        },
+        "bindingDigest": "7a5d0e5f1a38d214aa289263416cbca4646dd8db88ac6ec80daea288b90e2858",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "19528223b3736d68e2047210a63913e526229fbfe6f7323cb44ea586d37c3ed7",
+          "commentId": 6881801982,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7408,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43623786713,
+          "workflowSha": "4114f7ce1adeae53827af4efea5a7921c2d681b6"
+        },
+        "lineageAnchorCommitSha": "246d67f6414c43b873722819ef24d2f72757c328",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1c428c4ef7bc5e7b7b73ede8ad50916dff3e7da4",
+      "lockGeneration": 3282,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SCULPT_GEN3273:GPU_PIXEL_OBSERVABILITY_DIAGNOSTIC:20261114",
+      "operationId": "DGB_SCULPT_GEN3273_GPU_PIXEL_OBSERVABILITY_DIAGNOSTIC_20261114_001",
+      "procedureLocatorDigest": "e316c2e1050c0c6e5be14c7022380818272392ad5fa15fe2917ba16373064096",
+      "released": false,
+      "requestDigest": "7a19a0832514a6199c0812040cc4030ba8a349cea9943cba718ac9f94f91e407",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f3fff8372d0850c9fcb8567cb3e13a48c49d71019936542cd36025934029ccdd",
+      "state": "ADMITTED_LOCKED"
+    },
     "f40432f2260e65b545e56c4d50082ecab59cb65edd9a0d4afe7ca930a69abc4a": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -32447,7 +32491,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3281,
+  "lockGeneration": 3282,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

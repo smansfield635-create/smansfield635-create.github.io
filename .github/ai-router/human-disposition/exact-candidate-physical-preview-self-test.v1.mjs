@@ -23,7 +23,7 @@ const community = readJson('.github/ai-router/publication-surfaces/consider-the-
 
 assert(contract.schema === 'EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1', 'CONTRACT_SCHEMA', contract.schema);
 assert(contract.status === 'ACTIVE_FAIL_CLOSED', 'CONTRACT_STATUS', contract.status);
-assert(contract.transport.providerNeutral === true, 'TRANSPORT', 'providerNeutral');
+assert(contract.transport.providerNeutral === false, 'TRANSPORT', 'providerNeutral: preserve existing first-party/owner-controlled policy');
 assert(contract.transport.readOnly === true, 'TRANSPORT', 'readOnly');
 assert(contract.transport.repositoryMutation === false, 'TRANSPORT', 'repositoryMutation');
 assert(contract.transport.productionMutation === false, 'TRANSPORT', 'productionMutation');
@@ -61,13 +61,12 @@ assert(binding.productionDeploymentAsPreviewWorkaroundAllowed === false, 'ENTRYP
 assert(binding.publicationBoundary === 'PUBLICATION_RELEASE_CONTRACT_UNCHANGED', 'ENTRYPOINT_BINDING', 'publication boundary');
 
 for (const marker of [
-  '### Exact-candidate physical preview as candidate finalization',
-  'CANDIDATE_PERCEPTUAL_ACCEPTANCE',
-  'KEEP',
-  'ONE_REPAIR',
-  'REJECT',
+  'If physical/perceptual review is an admitted candidate-finalization gate',
+  'preserve exact-candidate identity',
+  'KEEP | ONE_REPAIR | REJECT',
   'MUTATION_CLOSED_EVIDENCE_CONTINUES',
-  'production deployment merely as a preview workaround'
+  'Preview unavailability preserves the candidate',
+  'it does not authorize production deployment'
 ]) {
   assert(agents.includes(marker), 'AGENTS_DISCOVERY', marker);
 }
@@ -131,10 +130,10 @@ assert(zOrder.indexOf('EXACT_CANDIDATE_PHYSICAL_PREVIEW_WHEN_PHYSICAL_OR_PERCEPT
 assert(zOrder.indexOf('TERMINAL_MUTATION_CLOSURE_AFTER_KEEP_OR_REJECT') < zOrder.indexOf('SEPARATE_EXACT_HEAD_MERGE_AND_PUBLICATION_AUTHORITY'), 'ZIONTS_SEQUENCE', 'closure must precede release authority');
 
 assert(!community.description.includes('Physical-device lifecycle acceptance occurs only after exact-head publication'), 'COMMUNITY_BINDING', 'historical post-publication-only rule survived');
-assert(community.description.includes('EXACT_CANDIDATE_PHYSICAL_PREVIEW_V1'), 'COMMUNITY_BINDING', 'preview protocol');
-assert(community.description.includes('candidate-finalization'), 'COMMUNITY_BINDING', 'candidate finalization');
-assert(community.description.includes('Production deployment is not a preview workaround'), 'COMMUNITY_BINDING', 'production preview workaround');
-assert(community.description.includes('generic headless evidence never becomes physical-device acceptance'), 'COMMUNITY_BINDING', 'generic headless boundary');
+assert(community.description.includes('exact-head publication verification'), 'COMMUNITY_BINDING', 'published scope');
+assert(contract.candidateFinalization.declaredRequiredPhysicalReviewIsCandidateFinalizationStep === true, 'CONTRACT_BINDING', 'candidate finalization');
+assert(contract.transport.productionDeploymentAsPreviewWorkaroundAllowed === false, 'CONTRACT_BINDING', 'production preview default prohibition');
+assert(applicability.genericHeadlessMayMasqueradeAsPhysicalDeviceAcceptance === false, 'CONTRACT_BINDING', 'generic headless boundary');
 assert(community.description.includes('final authoritative live exact-head verification remains required'), 'COMMUNITY_BINDING', 'live verification');
 
 const gap = gaps.records.find(record => record.gapId === 'EXACT_CANDIDATE_PHYSICAL_PREVIEW_CONTINUITY');
@@ -142,5 +141,26 @@ assert(Boolean(gap), 'GAP_REGISTRY', 'missing exact-candidate preview gap');
 assert(gap.status === 'OPEN', 'GAP_REGISTRY', `unexpected status ${gap.status}`);
 assert(gap.authorityCreated === false, 'GAP_REGISTRY', 'authorityCreated');
 assert(gap.coordinationIssue === 3464, 'GAP_REGISTRY', 'coordination issue');
+
+
+// Gen3273 one-time exception: keep the global fail-closed prohibition and all hard gates.
+const exceptionKey = 'H_EARTH_GEN3273_PR7399_20261114';
+const contractExceptions = contract.ownerDirectedProductionReviewExceptions || {};
+const applicabilityExceptions = applicability.ownerDirectedProductionReviewExceptions || {};
+assert(Object.keys(contractExceptions).length === 1, 'H_EARTH_EXCEPTION', 'one exact exception only');
+assert(Object.keys(applicabilityExceptions).length === 1, 'H_EARTH_EXCEPTION', 'one exact applicability exception only');
+const exception = contractExceptions[exceptionKey];
+assert(Boolean(exception), 'H_EARTH_EXCEPTION', 'missing one-time exception');
+assert(JSON.stringify(exception) === JSON.stringify(applicabilityExceptions[exceptionKey]), 'H_EARTH_EXCEPTION', 'contract/applicability identity drift');
+assert(exception.scope === 'H_EARTH_CORE' && exception.product.pullRequest === 7399, 'H_EARTH_EXCEPTION', 'scope or PR drift');
+assert(exception.product.headSha === 'cf8d6acae2e3c095419037556afe9c19a22f6ad2', 'H_EARTH_EXCEPTION', 'product head drift');
+assert(exception.product.rendererGitObject === '01fc835791064945ad2f1b45fc5d68ae90e81444', 'H_EARTH_EXCEPTION', 'renderer digest drift');
+assert(exception.ownerVisualDisposition === 'PENDING_OWNER_REVIEW' && exception.artisticKeepDeclared === false, 'H_EARTH_EXCEPTION', 'aesthetic acceptance must remain pending');
+assert(exception.createsPrecedent === false && exception.appliesToOtherProducts === false, 'H_EARTH_EXCEPTION', 'unbounded precedent forbidden');
+assert(exception.releaseAuthorityCreatedByException === false && exception.finalizationRequiresSeparateCanonicalAdmission === true, 'H_EARTH_EXCEPTION', 'admission not a release');
+assert(exception.experienceAnchorHardGateRequired === true && exception.sourceIntegrityAndAssetGatesRequired === true && exception.selectedPreflightPassBeforeDeploymentRequired === true, 'H_EARTH_EXCEPTION', 'hard gates must remain');
+assert(exception.liveExactHeadVerificationRequired === true && exception.explicitExactHeadPagesDeploymentRequired === true, 'H_EARTH_EXCEPTION', 'exact Pages proof required');
+assert(exception.grassRootCount === 3805291 && exception.grassGpuBytes === 60884656, 'H_EARTH_EXCEPTION', 'grass source identity drift');
+assert(contract.transport.productionDeploymentAsPreviewWorkaroundAllowed === false && applicability.productionDeploymentAsPreviewWorkaroundAllowed === false, 'H_EARTH_EXCEPTION', 'default prohibition remains');
 
 console.log('EXACT_CANDIDATE_PHYSICAL_PREVIEW_SELF_TEST_PASS');

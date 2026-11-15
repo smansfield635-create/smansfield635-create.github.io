@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/** Sculpt Lab Gen3273: fixed, read-only HTTP/WebGL2 qualification.
+/** Graphics Engine C2-B Gen3298: fixed, read-only HTTP/WebGL2 qualification.
  * The existing closed-world transport owns invocation. This tool never changes
  * the candidate, branch refs, applications, production or acceptance state.
  */
@@ -73,11 +73,15 @@ function checkout(root){
 }
 function nativeTests(root){
   const files=['dgb.native-webgl-device.v1.test.mjs','dgb.native-sculpt-browser.v1.test.mjs','dgb.native-sculpt-session.v1.test.mjs','dgb.native-creation-integration.v1.test.mjs'].map(s=>'assets/engine/'+s);
-  const tap=run(process.execPath,['--test',...files],root);
-  check(/^# fail 0$/m.test(tap),'NATIVE_FAIL_NOT_ZERO');
-  const matches=tap.match(/^# pass (\d+)$/m);
-  check(matches&&Number(matches[1])>=100,'NATIVE_TEST_POPULATION_INCOMPLETE');
-  return {pass:Number(matches[1]),fail:0,selectedFiles:files,tapSha256:sha(tap),tapTail:tap.slice(-2500)};
+  // Preserve the original native process output even when Node tests fail.
+  // Do not use run(), which discards the complete stdout on nonzero exit.
+  const r=spawnSync(process.execPath,['--test',...files],{cwd:root,encoding:'utf8',timeout:360000,maxBuffer:32*1024*1024});
+  const stdout=r.stdout??'',stderr=r.stderr??'';
+  const pass=stdout.match(/^# pass (\d+)$/m),fail=stdout.match(/^# fail (\d+)$/m);
+  const firstFailure=stdout.split('\n').find(line=>/^not ok \d+ /.test(line))??null;
+  return {selectedFiles:files,exitStatus:r.status,signal:r.signal??null,processError:r.error?.message??null,
+    pass:pass?Number(pass[1]):null,fail:fail?Number(fail[1]):null,
+    firstFailure,tapSha256:sha(stdout),stdout,stderr};
 }
 function serverFor(root){
   const mime={'.html':'text/html; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8'};
@@ -95,6 +99,20 @@ async function oneCase(browser,base,cfg,images){
   const result={id:cfg.id,viewport:{width:cfg.w,height:cfg.h},mobileEmulation:cfg.mobile,jsErrors:[],httpErrors:[],requestFailures:[],screenshots:[],pass:false};
   const context=await browser.newContext({viewport:{width:cfg.w,height:cfg.h},isMobile:cfg.mobile,hasTouch:cfg.mobile,deviceScaleFactor:1,reducedMotion:'reduce'});
   const page=await context.newPage();page.setDefaultTimeout(30000);
+  // Observe real WebGL2 indexed draw calls before app modules initialize.
+  // Recording does not substitute a fake GL context or bypass any draw.
+  await page.addInitScript(()=>{
+    const trace=Object.create(null),proto=WebGL2RenderingContext.prototype,original=proto.drawElements;
+    let sequence=0;
+    proto.drawElements=function(mode,count,type,offset){
+      const id=this.canvas?.id;
+      if(id)trace[id]={mode,count,type,offset,sequence:++sequence};
+      return original.call(this,mode,count,type,offset);
+    };
+    Object.defineProperty(window,'__dgbC2BDrawTrace',{value:trace});
+  });
+  const drawTrace=()=>page.evaluate(()=>Object.fromEntries(
+    ['hero','side','front','rear'].map(id=>[id,window.__dgbC2BDrawTrace?.[id]??null])));
   const served=new Map();
   page.on('pageerror',e=>result.jsErrors.push(e.message));
   page.on('requestfailed',r=>result.requestFailures.push(r.url()));
@@ -169,6 +187,11 @@ async function oneCase(browser,base,cfg,images){
     check(boot.views.length===4&&boot.state.vertices===273&&boot.state.triangles===480,'FOUR_VIEW_NEUTRAL_FIXTURE_MISMATCH');
     check(boot.views.every(v=>v.backend==='WEBGL2'),'REAL_WEBGL2_BACKEND_REQUIRED');
     const before=await snapshot();
+    const neutralLegacy=await page.evaluate(()=>window.__dgbSculptLab.studio.session.serialize());
+    const initialDraws=await drawTrace();
+    result.initialDraws=initialDraws;
+    check(Object.values(initialDraws).every(d=>d?.count===before.state.triangles*3),
+      'INITIAL_FOUR_VIEW_INDEXED_DRAW_COUNT_MISMATCH');
     result.gpuBefore=before.pixels;
     const beforeRendered=await capture('before');
     const noEditRendered=await capture('no-edit');
@@ -243,25 +266,63 @@ async function oneCase(browser,base,cfg,images){
     await page.locator('#subdivide').click();
     await page.waitForFunction(()=>window.__dgbSculptLab.studio?.status().topologyDepth===1,null,{timeout:30000});
     const afterTopology=await snapshot();
+    const topologyDraws=await drawTrace();
     result.topology={selectedFace:selected,beforeVertices:priorTopology.state.vertices,afterVertices:afterTopology.state.vertices,
       beforeFaces:priorTopology.state.triangles,afterFaces:afterTopology.state.triangles,
-      depth:afterTopology.state.topologyDepth,allFourWebgl2:afterTopology.pixels.every(p=>p.webgl2&&p.glError===0)};
+      depth:afterTopology.state.topologyDepth,allFourWebgl2:afterTopology.pixels.every(p=>p.webgl2&&p.glError===0),
+      indexedDraws:topologyDraws};
     check(afterTopology.state.vertices===priorTopology.state.vertices+1&&
       afterTopology.state.triangles===priorTopology.state.triangles+2&&
       result.topology.allFourWebgl2,'C2B_TOPOLOGY_UI_OR_GPU_REPLACEMENT_FAILED');
+    check(Object.values(topologyDraws).every(d=>d?.count===afterTopology.state.triangles*3)&&
+      Object.values(topologyDraws).every(d=>d.sequence>0),
+      'C2B_TOPOLOGY_FOUR_VIEW_NEW_INDEXED_DRAW_MISSING');
     const topologyRendered=await capture('topology');
+    // A subdivision can preserve the surface exactly, so require an actual
+    // visible post-subdivision deformation on the new indexed mesh.
+    const topoRect=await page.locator('#front').boundingBox();
+    check(topoRect&&topoRect.width>50&&topoRect.height>50,'C2B_POST_TOPOLOGY_CANVAS_MISSING');
+    const tx=topoRect.x+topoRect.width/2,ty=topoRect.y+topoRect.height/2;
+    await page.mouse.move(tx,ty);await page.mouse.down();
+    await page.mouse.move(tx+12,ty-9,{steps:3});await page.mouse.up();
+    const topologyEdited=await snapshot();
+    result.topology.editedPositionsChanged=JSON.stringify(topologyEdited.positions)!==JSON.stringify(afterTopology.positions);
+    check(result.topology.editedPositionsChanged&&topologyEdited.state.topologyDepth===1&&
+      JSON.stringify(topologyEdited.triangles)===JSON.stringify(afterTopology.triangles)&&
+      topologyEdited.pixels.every(p=>p.webgl2&&p.glError===0),
+      'C2B_POST_TOPOLOGY_GEOMETRY_EDIT_MISSING');
+    const editedDraws=await drawTrace();
+    check(Object.values(editedDraws).every(d=>d?.count===topologyEdited.state.triangles*3),
+      'C2B_POST_TOPOLOGY_DRAW_COUNT_MISMATCH');
+    const topologyStrokeRendered=await capture('topology-stroke');
+    result.topology.postEditPixelChanges=topologyStrokeRendered.map((p,i)=>({
+      id:p.id,before:topologyRendered[i].sha256,after:p.sha256,changed:p.sha256!==topologyRendered[i].sha256}));
+    check(result.topology.postEditPixelChanges.every(p=>p.changed),
+      'C2B_POST_TOPOLOGY_FOUR_VIEW_PIXEL_DELTA_MISSING');
     const topologySaved=await page.evaluate(()=>window.__dgbSculptLab.studio.saveState());
     const topologyJson=JSON.parse(topologySaved);
     check(topologyJson.schema==='DGB_SCULPT_LAB_TOPOLOGY_CHAIN_V2'&&
       topologyJson.stages?.length===1,'C2B_TOPOLOGY_V2_SAVE_LINEAGE_MISSING');
+    // Reset to demonstrably different legacy geometry BEFORE testing v2 reload.
+    await page.locator('#load').setInputFiles({name:'c2b-neutral-reset-v1.json',
+      mimeType:'application/json',buffer:Buffer.from(neutralLegacy)});
+    await page.waitForFunction(()=>{const s=window.__dgbSculptLab.studio.status();
+      return s.topologyDepth===0&&s.vertices===273&&s.triangles===480;});
+    const topologyReset=await snapshot(),topologyResetPixels=await capture('topology-reset');
+    result.topology.reset={depth:topologyReset.state.topologyDepth,
+      exactOriginal:JSON.stringify(topologyReset.positions)===JSON.stringify(before.positions),
+      distinctFromSaved:JSON.stringify(topologyReset.positions)!==JSON.stringify(topologyEdited.positions),
+      screenshotsChanged:topologyResetPixels.every((p,i)=>p.sha256!==topologyStrokeRendered[i].sha256)};
+    check(result.topology.reset.exactOriginal&&result.topology.reset.distinctFromSaved&&
+      result.topology.reset.screenshotsChanged,'C2B_TOPOLOGY_RESET_NOT_DEMONSTRATED');
     await page.locator('#load').setInputFiles({name:'c2b-topology-v2.json',mimeType:'application/json',buffer:Buffer.from(topologySaved)});
-    await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('Reloaded verified editable mesh and topology lineage.'));
+    await page.waitForFunction(()=>window.__dgbSculptLab.studio?.status().topologyDepth===1);
     const topologyRestored=await snapshot();
     const topologyReplayed=await capture('topology-restored');
-    result.topology.replay=topologyReplayed.map((v,i)=>({id:v.id,matched:v.sha256===topologyRendered[i].sha256}));
+    result.topology.replay=topologyReplayed.map((v,i)=>({id:v.id,matched:v.sha256===topologyStrokeRendered[i].sha256}));
     check(topologyRestored.state.topologyDepth===1&&
-      JSON.stringify(topologyRestored.positions)===JSON.stringify(afterTopology.positions)&&
-      JSON.stringify(topologyRestored.triangles)===JSON.stringify(afterTopology.triangles)&&
+      JSON.stringify(topologyRestored.positions)===JSON.stringify(topologyEdited.positions)&&
+      JSON.stringify(topologyRestored.triangles)===JSON.stringify(topologyEdited.triangles)&&
       result.topology.replay.every(v=>v.matched),'C2B_TOPOLOGY_RELOAD_RENDER_OR_LINEAGE_MISMATCH');
 
     // Reference image is converted by the actual HTML file input and browser
@@ -285,10 +346,32 @@ async function oneCase(browser,base,cfg,images){
       result.reference.topologyDepth===0&&result.reference.allFourWebgl2,
       'C2B_REFERENCE_IMAGE_SOURCE_OR_RENDER_FAILED');
     const refRendered=await capture('reference');
+    result.reference.beforeAfterPixelChanges=refRendered.map((p,i)=>({
+      id:p.id,changed:p.sha256!==topologyReplayed[i].sha256,
+      previous:topologyReplayed[i].sha256,reference:p.sha256}));
+    check(result.reference.beforeAfterPixelChanges.every(p=>p.changed),
+      'C2B_REFERENCE_FOUR_VIEW_PIXEL_DELTA_MISSING');
+    const referenceDraws=await drawTrace();
+    check(Object.values(referenceDraws).every(d=>d?.count===refState.state.triangles*3),
+      'C2B_REFERENCE_FOUR_VIEW_INDEXED_DRAW_MISSING');
     const refSaved=await page.evaluate(()=>window.__dgbSculptLab.studio.saveState());
+    // A no-op load must fail the test: first replace the reference mesh with
+    // the original legacy fixture and verify all four canvases changed.
+    await page.locator('#load').setInputFiles({name:'c2b-reference-reset-v1.json',
+      mimeType:'application/json',buffer:Buffer.from(neutralLegacy)});
+    await page.waitForFunction(()=>{const s=window.__dgbSculptLab.studio.status();
+      return s.topologyDepth===0&&s.vertices===273&&s.triangles===480;});
+    const refReset=await snapshot(),refResetRendered=await capture('reference-reset');
+    result.reference.reset={exactOriginal:JSON.stringify(refReset.positions)===JSON.stringify(before.positions),
+      geometryChanged:JSON.stringify(refReset.positions)!==JSON.stringify(refState.positions),
+      screenshotChanges:refResetRendered.map((p,i)=>({id:p.id,changed:p.sha256!==refRendered[i].sha256}))};
+    check(result.reference.reset.exactOriginal&&result.reference.reset.geometryChanged&&
+      result.reference.reset.screenshotChanges.every(p=>p.changed),
+      'C2B_REFERENCE_RESET_NOT_DEMONSTRATED');
     await page.locator('#load').setInputFiles({name:'c2b-reference-v2.json',
       mimeType:'application/json',buffer:Buffer.from(refSaved)});
-    await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('Reloaded verified editable mesh and topology lineage.'));
+    await page.waitForFunction(()=>{const saved=window.__dgbSculptLab.studio?.saveState();
+      return saved&&JSON.parse(saved).source?.kind==='SILHOUETTE_HEURISTIC_PRIOR';});
     const refRestored=await snapshot(),refReplayed=await capture('reference-restored');
     result.reference.replay=refReplayed.map((v,i)=>({id:v.id,matched:v.sha256===refRendered[i].sha256}));
     check(JSON.stringify(refRestored.positions)===JSON.stringify(refState.positions)&&
@@ -327,6 +410,10 @@ async function main(){
   try{
     receipt.changedPaths=checkout(root);receipt.sourceBlobs={...blobs,...protectedBlobs};
     receipt.native=nativeTests(root);
+    check(receipt.native.exitStatus===0&&receipt.native.processError===null,
+      'NATIVE_PROCESS_FAILED:'+receipt.native.exitStatus+':'+receipt.native.signal);
+    check(receipt.native.fail===0,'NATIVE_ASSERTION_FAILURE:'+receipt.native.firstFailure);
+    check(receipt.native.pass!==null&&receipt.native.pass>=100,'NATIVE_TEST_POPULATION_INCOMPLETE');
     fs.mkdirSync(deps,{recursive:true});
     run('npm',['install','--prefix',deps,'--no-save','--no-package-lock','--no-audit','playwright@1.56.1'],tmp,400000);
     run(process.execPath,[path.join(deps,'node_modules/playwright/cli.js'),'install','--with-deps','chromium'],tmp,400000);
@@ -337,7 +424,7 @@ async function main(){
     receipt.browserVersion=browser.version();receipt.transport='ACTUAL_HTTP_ORIGINAL_MODULE_URLS';
     const base='http://127.0.0.1:'+server.address().port;
     for(const cfg of cases)receipt.cases.push(await oneCase(browser,base,cfg,manifest.images));
-    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===120?'PASS_CLOSED':'FAIL_CLOSED';
+    receipt.status=receipt.cases.length===3&&receipt.cases.every(v=>v.pass)&&manifest.images.length===156?'PASS_CLOSED':'FAIL_CLOSED';
   }catch(e){receipt.status='FAIL_CLOSED';receipt.errorCode='FIXED_QUALIFICATION_FAILED';receipt.error=String(e.stack||e).slice(0,1900);}
   finally{
     if(browser)await browser.close().catch(()=>{});

@@ -107,10 +107,18 @@ async function texturePixels(png){
     return {width:c.width,height:c.height,pixels:flipped};
   }finally{bitmap.close();}
 }
-function originalEyeAt(module,raw,frame){
-  const map=frame.sourceRender.renderToMaster,masters=frame.sourceMasterPosition,
-    originalXYZ=new Float32Array(map.length*3);
-  for(let i=0;i<map.length;i++)originalXYZ.set(masters.subarray(3*map[i],3*map[i]+3),3*i);
+function originalEyeAt(module,raw,frame,restFrame){
+  // Original eye V2 resolves its one head triangle on the resting pose and
+  // tracks that same triangle through subsequent poses. Resolving a NEW
+  // eye surface at each animated pose can reject lawful movement when the
+  // resting eye's fixed X/Z anchor no longer intersects the moving head.
+  const map=frame.sourceRender.renderToMaster;
+  const expanded=sourceFrame=>{
+    const masters=sourceFrame.sourceMasterPosition,xyz=new Float32Array(map.length*3);
+    for(let i=0;i<map.length;i++)xyz.set(masters.subarray(3*map[i],3*map[i]+3),3*i);
+    return xyz;
+  };
+  const restXYZ=expanded(restFrame),posedXYZ=expanded(frame);
   let eyeAttributes=null;
   const captureDevice={
     createMesh({attributes}){eyeAttributes=Object.fromEntries(attributes.map(a=>[a.name,new Float32Array(a.data)]));return {};},
@@ -120,7 +128,8 @@ function originalEyeAt(module,raw,frame){
   };
   if(typeof module.createRabbitVisualAppearance!=='function')throw Error('M13_EYE_MODULE_EXPORT_MISSING');
   const appearance=module.createRabbitVisualAppearance({device:captureDevice,backend:'WEBGL2',
-    bridge:{snapshot:()=>({positions:originalXYZ})},fixture:raw,atlas:{}});
+    bridge:{snapshot:()=>({positions:restXYZ})},fixture:raw,atlas:{}});
+  if(frame.sourceRender.originalPose!==52)appearance.update({positions:posedXYZ});
   if(appearance.status().furFins!==0||appearance.status().tailIncluded!==false)
     throw Error('M13_REJECTED_FUR_OR_TAIL_PRESENT');
   const convert=a=>{const b=new Float32Array(a.length);
@@ -148,11 +157,11 @@ function install(fixture){
 function showOriginalPose(index,original={source,rawM13,eyeModule,atlas}){
   const {source:nextSource,rawM13:nextRaw,eyeModule:nextEyeModule,atlas:nextAtlas}=original;
   if(!nextSource||!nextRaw||!nextEyeModule||!nextAtlas)throw Error('M13_SOURCE_NOT_LOADED');
-  const frame=nextSource.pose(index);
+  const restFrame=nextSource.pose(52),frame=index===52?restFrame:nextSource.pose(index);
   frame.sourceRender.atlasPixels=nextAtlas.pixels;
   frame.sourceRender.atlasWidth=nextAtlas.width;
   frame.sourceRender.atlasHeight=nextAtlas.height;
-  frame.sourceRender.eye=originalEyeAt(nextEyeModule,nextRaw,frame);
+  frame.sourceRender.eye=originalEyeAt(nextEyeModule,nextRaw,frame,restFrame);
   install(frame);
   // Publish source-mode state only after the replacement studio exists.
   source=nextSource;rawM13=nextRaw;eyeModule=nextEyeModule;atlas=nextAtlas;

@@ -473,6 +473,10 @@ async function webgl1FallbackCase(browser,base,images) {
     check(changed.state.vertices===274&&changed.state.triangles===482&&
       changed.gl.every(g=>g.actualWebGL1&&g.glError===0)&&
       changed.draws.every(d=>d.trace?.count===1446),'WEBGL1_KEYBOARD_TOPOLOGY_FAILURE');
+    // Subdivision itself can change the rendered image. Isolate the later
+    // brush stroke against the actual post-subdivision four-view baseline.
+    const postSubdivisionImages=await capture('post-subdivision');
+    await page.locator('#front').scrollIntoViewIfNeeded();
     const box=await page.locator('#front').boundingBox();
     check(box&&box.width>50&&box.height>50,'WEBGL1_FRONT_CANVAS_NOT_VISIBLE');
     const x=box.x+box.width/2,y=box.y+box.height/2;
@@ -481,7 +485,7 @@ async function webgl1FallbackCase(browser,base,images) {
     check(JSON.stringify(edited.positions)!==JSON.stringify(changed.positions)&&
       edited.gl.every(g=>g.actualWebGL1&&g.glError===0),'WEBGL1_POST_TOPOLOGY_POINTER_EDIT_FAILED');
     const changedImages=await capture('after');
-    check(changedImages.every((digest,i)=>digest!==beforeImages[i]),'WEBGL1_FOUR_VIEW_VISIBLE_PIXEL_CHANGE_MISSING');
+    check(changedImages.every((digest,i)=>digest!==postSubdivisionImages[i]),'WEBGL1_POST_SUBDIVISION_BRUSH_PIXEL_CHANGE_MISSING');
     const refInput=page.locator('#reference');
     await refInput.focus();
     check(await page.evaluate(()=>document.activeElement?.id==='reference'),'WEBGL1_KEYBOARD_REFERENCE_INPUT_UNFOCUSABLE');
@@ -543,7 +547,7 @@ async function main(){
     const base='http://127.0.0.1:'+server.address().port;
     for(const cfg of cases)receipt.cases.push(await oneCase(browser,base,cfg,manifest.images));
     receipt.cases.push(await webgl1FallbackCase(browser,base,manifest.images));
-    receipt.status=receipt.cases.length===4&&receipt.cases.every(v=>v.pass)&&manifest.images.length===168?'PASS_CLOSED':'FAIL_CLOSED';
+    receipt.status=receipt.cases.length===4&&receipt.cases.every(v=>v.pass)&&manifest.images.length===172?'PASS_CLOSED':'FAIL_CLOSED';
   }catch(e){receipt.status='FAIL_CLOSED';receipt.errorCode='FIXED_QUALIFICATION_FAILED';receipt.error=String(e.stack||e).slice(0,1900);}
   finally{
     if(browser)await browser.close().catch(()=>{});

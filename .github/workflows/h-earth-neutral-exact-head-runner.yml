@@ -1247,16 +1247,16 @@ jobs:
           const archive=JSON.parse(gunzipSync(archiveBytes).toString('utf8'));
           if(!archive.canonical?.buffers?.indices||!archive.raw?.buffers?.indices)throw Error('CANONICAL_ARCHIVE_SCHEMA_INVALID');
           const mod=rel=>import(pathToFileURL(path.join(root,rel)).href);
-          const [pkgModule,gpuModule,matModule,soilModule]=await Promise.all([
-            mod('showroom/globe/h-earth/render/live-render-package.run8e-r2.js'),
-            mod('showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js'),
+          // The immutable verified archive is the exact binary source; do not
+          // reconstruct the separate Gen2515 planting adapter in bare Node.
+          // That adapter needs the browser/hydrated template lifecycle.
+          const [matModule,soilModule]=await Promise.all([
             mod('h-earth-3d/environment/h-earth.successor-surface-material.run8c.js'),
             mod('showroom/globe/h-earth/render/geometry-landscape-cover.js')
           ]);
-          const actual=pkgModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
-          if(actual?.eligible!==true)throw Error('RUNTIME_PACKAGE_INELIGIBLE:'+JSON.stringify(actual?.issues));
-          const gpu=gpuModule.createHEarthRun8ER2DCanonicalGPUUploadViews(actual,{enableWoodlandClearing:true});
-          const archived=archive.canonical.buffers,source=actual.buffers;
+          const actual=archive.canonical;
+          const gpu=actual.buffers;
+          const archived=archive.raw.buffers,source=actual.buffers;
           const spans=(actual.primitiveSpans||[]).filter(x=>x.role==='TERRAIN');
           if(spans.length!==1||spans[0].primitiveIndex!==0||spans[0].vertexStart!==0)throw Error('TERRAIN_PRIMITIVE_NOT_ORIGINAL_ZERO');
           const W=97,X0=-384,Z0=-736,S=8,row=64,col=67,index=row*W+col;
@@ -1310,7 +1310,7 @@ jobs:
           const authoringR=R*Math.atan2(radial,R+p[1]);
           const unprojectedXZ=radial>0?[p[0]*authoringR/radial,p[2]*authoringR/radial]:[0,0];
           const report={schema:'H_EARTH_GEN3287_SOURCE_VERTEX_NATIVE_READONLY_v1',sourceHead,archiveSha256,
-            status:'EXACT_ACCEPTED_RUNTIME_SOURCE_INSPECTED',productMutation:false,rendererMutation:false,ownerAcceptance:false,
+            status:'EXACT_ACCEPTED_CANONICAL_BINARY_SOURCE_INSPECTED',productMutation:false,rendererMutation:false,ownerAcceptance:false,
             packageIdentity:actual.packageIdentity,packageContentDigest:actual.contentDigest,
             terrainSpan:{primitiveIndex:spans[0].primitiveIndex,primitiveId:spans[0].primitiveId,
               vertexStart:spans[0].vertexStart,indexStart:spans[0].indexStart,vertexCount:spans[0].vertexCount},
@@ -1318,7 +1318,7 @@ jobs:
             allIncidentIndexTripletsMatch:incident.every(x=>x.exactMatch),
             unprojectedAuthoringXZ:unprojectedXZ,vertexXZMatchesProjection:Math.abs(unprojectedXZ[0]-152)<0.01&&Math.abs(unprojectedXZ[1]+224)<0.01,
             neighborhood,meadowReferenceSamples:meadow,largestAdjacentColorDeltas:edges.slice(0,20),
-            claimCeiling:'Native archive + approved deferred runtime/GPU attribute values, not a verified owner-specific fragment/triangle or visual repair.'};
+            claimCeiling:'Verified immutable canonical archive original terrain vertex/index values and source-calculated material classification; NOT an independently instantiated accepted runtime/GPU upload buffer or uniquely identified screen triangle.'};
           const file=path.join(out,'source-vertex-native.json');
           fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
           console.log(JSON.stringify({file,status:report.status,candidateY:report.candidate.position[1],material:report.candidate.material.surfaceClass,

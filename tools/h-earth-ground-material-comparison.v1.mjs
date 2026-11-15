@@ -88,8 +88,20 @@ export function assetReadiness(resources,camera){
   const all=[jac,...tree.entries];
   if(all.some(x=>!['IDLE','LOADING','READY'].includes(x.state)||x.failure)||Object.keys(tree.queue.failures??{}).length)throw Error('ASSET_FAILURE');
   const near=(e,inclusive)=>{const a=inclusive?e.targetAnchor:e;if(!Number.isFinite(a.x)||!Number.isFinite(a.z))throw Error('ASSET_ANCHOR_MISSING');const d=Math.hypot(camera.x-a.x,camera.z-a.z);return inclusive?d<=180:d<180;};
-  const pending=tree.queue.loading||all.some(x=>x.state==='LOADING')||(jac.state==='IDLE'&&near(jac,true))||tree.entries.some(e=>e.state==='IDLE'&&near(e,false));
-  return {ready:!pending,signature:JSON.stringify(all.map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready}))),queue:tree.queue};
+  // Preserve the same fail-closed readiness rule; identify the exact blocking assets.
+  const loading=all.filter(e=>e.state==='LOADING');
+  const jacarandaIdleNear=jac.state==='IDLE'&&near(jac,true);
+  const nearbyIdle=tree.entries.filter(e=>e.state==='IDLE'&&near(e,false));
+  const pending=Boolean(tree.queue.loading)||loading.length>0||jacarandaIdleNear||nearbyIdle.length>0;
+  return {ready:!pending,signature:JSON.stringify(all.map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready}))),queue:tree.queue,
+    pendingReasons:{queueLoading:Boolean(tree.queue.loading),loadingCount:loading.length,
+      loadingIds:loading.slice(0,24).map(e=>e.focusId??e.id),jacarandaIdleNear,
+      nearbyIdleCount:nearbyIdle.length,nearbyIdleIds:nearbyIdle.slice(0,24).map(e=>e.focusId??e.id)}};
+}
+// Gen3287: avoid forcing costly WebGL frames while the approved sequential
+// tree loader is working. The original readiness predicate and deadline stay intact.
+export function shouldPresentAssetSettleFrame(surfaceAttribution,queue){
+  return surfaceAttribution!==true||queue?.loading!==true;
 }
 export function decodeCanvasCapture(capture,expectedFrame){
   for(const frame of [capture.before,capture.after])if(!frame||frame.navigationSequence!==expectedFrame.navigationSequence||frame.frameSequence!==expectedFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
@@ -311,7 +323,571 @@ export async function runGen3142(argv){
   return receipt;
 }
 
+
+// Gen3287: distinct exact-pair native WebGL2 capture, not a rebind of the
+// historical 60b3c07f factor-study baseline or Gen3142 owner-frame test.
+export const GEN3286_MATCHED=Object.freeze({
+  profile:'GEN3286_MATERIAL_AB_V1',
+  heads:Object.freeze({baseline:'f05d97d402f27b640e8776a0c9f0851524db0fa0',candidate:'676cb926180219d62ff4fd4a356d8360ff66d99b'}),
+  renderer:Object.freeze({baseline:'3471d386d720382b1b55b146fef6fa0af61f0d36',candidate:'38def850ac126f2766aec7bab3b43efea8f04ccc'}),
+  index:Object.freeze({baseline:'8e5bb97d74308ac8a54db73b5d232d8b09cd13f5',candidate:'a6619566d10a60d59c8bd65c059fa28f57de725e'}),
+  protectedBlobs:Object.freeze({
+    'showroom/globe/h-earth/render/geometry-landscape-sector.p2.js':'edd3c2047d3d062eb8d60325410af8ae8f3a6fa5',
+    'showroom/globe/h-earth/render/woodland-rock-presentation.v1.js':'77e7038d27862a39c31676d1d9a1ee9a84d5f267',
+    'showroom/globe/h-earth/render/geometry-woodland-tree-trial.js':'3958513dec53aa27f4216388a190f772e71fb9b0',
+    'showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js':'7cb62866153d4ceb57b2a2177359bd56a4220d85'
+  }),
+  viewports:Object.freeze([{id:'mobile-sized',width:384,height:688},{id:'desktop',width:1024,height:768}].map(Object.freeze)),
+  poses:Object.freeze([
+    {id:'tree-grove-reference',x:-139.40267987050615,z:-194.5,yaw:0,pitch:16},
+    {id:'tree-river-reference',x:18,z:-226,yaw:210,pitch:-14},
+    {id:'natural-foothill-reference',x:-52,z:-208,yaw:180,pitch:-12},
+    {id:'defective-open-grassland',x:124.4127167356344,z:-394.77901544898066,yaw:-58.17022448618572,pitch:-4.2995192852338775},
+    {id:'mountain-slope',x:88,z:-260,yaw:95,pitch:-10},
+    {id:'coastal-transition',x:0,z:-110,yaw:170,pitch:-8},
+    {id:'near-transition-observer',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
+    {id:'far-transition-observer',x:-200,z:-656,y:18.793665,yaw:0,pitch:-2,diagnosticObserver:true}
+  ].map(Object.freeze))
+});
+export const GEN3286_WITNESS_SCOUT_POSES=Object.freeze([
+  {
+    "id": "woodland-grove-a-control",
+    "x": -139.40267987050615,
+    "z": -194.5,
+    "yaw": 0,
+    "pitch": 16
+  },
+  {
+    "id": "woodland-core-b-control",
+    "x": -141,
+    "z": -226,
+    "yaw": 180,
+    "pitch": -12
+  },
+  {
+    "id": "official-ridge-forward",
+    "x": 145,
+    "z": -225,
+    "yaw": 12,
+    "pitch": -10
+  },
+  {
+    "id": "official-ridge-south",
+    "x": 145,
+    "z": -225,
+    "yaw": 180,
+    "pitch": -14
+  },
+  {
+    "id": "official-ridge-east",
+    "x": 145,
+    "z": -225,
+    "yaw": 90,
+    "pitch": -14
+  },
+  {
+    "id": "mountain-edge-west",
+    "x": 88,
+    "z": -260,
+    "yaw": 95,
+    "pitch": -10
+  },
+  {
+    "id": "mountain-edge-north",
+    "x": 88,
+    "z": -260,
+    "yaw": 0,
+    "pitch": -16
+  },
+  {
+    "id": "mountain-edge-south",
+    "x": 88,
+    "z": -260,
+    "yaw": 180,
+    "pitch": -14
+  },
+  {
+    "id": "positive-x-south-looking-north",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 0,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-west",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 270,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-east",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 90,
+    "pitch": -12
+  },
+  {
+    "id": "positive-x-south-looking-south",
+    "x": 124.4127167356344,
+    "z": -394.77901544898066,
+    "yaw": 180,
+    "pitch": -12
+  },
+  {
+    "id": "cavern-rear-approach",
+    "x": 40,
+    "z": -264,
+    "yaw": 90,
+    "pitch": -12
+  },
+  {
+    "id": "east-meadow-interior",
+    "x": 130,
+    "z": -300,
+    "yaw": 180,
+    "pitch": -16
+  },
+  {
+    "id": "east-meadow-perimeter",
+    "x": 180,
+    "z": -320,
+    "yaw": 0,
+    "pitch": -14
+  },
+  {
+    "id": "seam-overlap-edge",
+    "x": 40,
+    "z": -255,
+    "yaw": 90,
+    "pitch": -14
+  }
+].map(Object.freeze));
+
+
+// Gen3288 temporary browser-only source interception. Every mode starts from
+// the exact accepted Gen3259 renderer, leaves all product files untouched,
+// and alters one GLSL material operand in the browser response only.
+export const GEN3288_CAUSAL_MODES=Object.freeze(['baseline','occupancy-off','habitat-off','groundcover-off']);
+export const GEN3288_CAUSAL_POSES=Object.freeze(['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge'].map(id=>GEN3286_WITNESS_SCOUT_POSES.find(p=>p.id===id)));
+export function gen3288CausalShaderSource(source,mode){
+  if(!GEN3288_CAUSAL_MODES.includes(mode))throw Error('GEN3288_UNKNOWN_SHADER_MODE:'+mode);
+  // Exactly one anchored edit and no changes outside the first-party GLSL string.
+  const choices={
+    'occupancy-off':['gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade','gen3259MeadowExcess*0.0*gen3259RegionalFade'],
+    'habitat-off':['base=mix(base,habitatSoil,habitatColorCoverage*.68);','base=mix(base,habitatSoil,0.0);'],
+    'groundcover-off':['palette=mix(palette,groundcoverTone,groundcoverWeight);','palette=mix(palette,groundcoverTone,0.0);']
+  };
+  for(const [key,[from]] of Object.entries(choices))if(source.split(from).length!==2)throw Error('GEN3288_SHADER_ANCHOR_NOT_UNIQUE:'+key);
+  return mode==='baseline'?source:replaceExactlyOnce(source,...choices[mode]);
+}
+
+
+// Gen3303: original positive-X grassland, not the failed R11 ridge.
+// Browser-response-only material ablations of exact accepted Gen3259.
+export const GEN3303_POSITIVE_X_MATERIAL_MODES=Object.freeze(['baseline','approved-soil-off','identity-off','groundcover-off','habitat-off']);
+// Source-verified successful 16-view scout #43643058946 warmed the original
+// grove first, followed by the original positive-X region. Keep the accepted
+// loader's sequential asset settlement and all 120-second pose guards intact.
+export const GEN3303_POSITIVE_X_WITNESSES=Object.freeze([
+ 'woodland-grove-a-control','east-meadow-interior',
+ 'east-meadow-perimeter','positive-x-south-looking-south'
+].map(id=>{
+ const p=GEN3286_WITNESS_SCOUT_POSES.find(x=>x.id===id);
+ if(!p)throw Error('GEN3303_POSITIVE_X_WITNESS_MISSING:'+id);
+ return p;
+}));
+export function gen3303PositiveXMaterialSource(source,mode){
+ if(!GEN3303_POSITIVE_X_MATERIAL_MODES.includes(mode))throw Error('GEN3303_UNKNOWN_MATERIAL_STAGE:'+mode);
+ const substitutions={
+  // Removes the soil texture family plus its associated material response,
+  // not only isolated color/albedo.
+  'approved-soil-off':['float worldSoilWeight=worldSoilCoverage;','float worldSoilWeight=0.0;'],
+  'identity-off':['float identityWeight=inlandIdentity*\n        (1.0-protectedGrove)*identityContrast;','float identityWeight=0.0;'],
+  'groundcover-off':['palette=mix(palette,groundcoverTone,groundcoverWeight);','palette=mix(palette,groundcoverTone,0.0);'],
+  'habitat-off':['base=mix(base,habitatSoil,habitatColorCoverage*.68);','base=mix(base,habitatSoil,0.0);']
+ };
+ for(const [name,[needle]] of Object.entries(substitutions))
+  if(source.split(needle).length!==2)throw Error('GEN3303_MATERIAL_STAGE_ANCHOR_DRIFT:'+name);
+ return mode==='baseline'?source:replaceExactlyOnce(source,...substitutions[mode]);
+}
+
+export const GEN3288_EDGE_HANDOFF_MODES=Object.freeze(['baseline','primitive-id','combined-off','grass-off']);
+// No product mutation: all modes intercept the immutable accepted renderer
+// through the original Gen3287 browser source-response route.
+export function gen3288HandoffSource(source,mode){
+  if(!GEN3288_EDGE_HANDOFF_MODES.includes(mode))throw Error('GEN3288_HANDOFF_MODE_UNKNOWN:'+mode);
+  const habitat='base=mix(base,habitatSoil,habitatColorCoverage*.68);';
+  const ground='palette=mix(palette,groundcoverTone,groundcoverWeight);';
+  const color='outColor=vec4(lit,outputAlpha);';
+  const draw='resources.singleOwnerVegetation?.draw(packet);';
+  for(const [label,needle] of Object.entries({habitat,ground,color,draw}))if(source.split(needle).length!==2)throw Error('GEN3288_HANDOFF_ANCHOR_NOT_UNIQUE:'+label);
+  if(mode==='combined-off')return replaceExactlyOnce(replaceExactlyOnce(source,habitat,'base=mix(base,habitatSoil,0.0);'),ground,'palette=mix(palette,groundcoverTone,0.0);');
+  if(mode==='primitive-id'){
+    // Raw 24-bit primitive index in the output colors, no gamma/fog.
+    // Decode a ground pixel: r + 256*g + 65536*b, from PNG channels.
+    return replaceExactlyOnce(source,color,'outColor=vec4(float(vPrimitiveIndex&255u)/255.0,float((vPrimitiveIndex>>8u)&255u)/255.0,float((vPrimitiveIndex>>16u)&255u)/255.0,1.0);');
+  }
+  if(mode==='grass-off')return replaceExactlyOnce(source,draw,'if(false)resources.singleOwnerVegetation?.draw(packet);');
+  return source;
+}
+
+
+
+export const GEN3287_SURFACE_ATTRIBUTE_MODES=Object.freeze(['baseline','role-code','surface-normal','vertex-base']);
+export function gen3287SurfaceAttributeSource(source,mode){
+  if(!GEN3287_SURFACE_ATTRIBUTE_MODES.includes(mode))throw Error('GEN3287_UNKNOWN_SURFACE_PROBE:'+mode);
+  const color='outColor=vec4(lit,outputAlpha);';
+  if(source.split(color).length!==2)throw Error('GEN3287_SURFACE_OUTPUT_NOT_UNIQUE');
+  const variants={
+    'role-code':'outColor=vec4(float(vRoleCode)/8.0,0.0,0.0,1.0);',
+    'surface-normal':'outColor=vec4(clamp(normalize(geometricNormal)*0.5+0.5,0.0,1.0),1.0);',
+    'vertex-base':'outColor=vec4(clamp(vBaseColor.rgb,0.0,1.0),1.0);'
+  };
+  return mode==='baseline'?source:replaceExactlyOnce(source,color,variants[mode]);
+}
+
+// Read-only WebGL surface attribution; product source is untouched.
+// Pixel role labels: 1 => red 32; 4 => red 128.
+// Vertex-base and geometric-normal distinguish facet/attribute discontinuity
+// from downstream material shading with the same unchanged camera.
+
+
+export const GEN3287_R10_MODES=Object.freeze(['baseline','prelight-albedo','light-response']);
+// R10 display-only separation. Original stage calculations remain unchanged.
+export function gen3287R10MaterialLightingSource(source,mode){
+  if(!GEN3287_R10_MODES.includes(mode))throw Error('GEN3287_R10_MODE_INVALID:'+mode);
+  const output='outColor=vec4(lit,outputAlpha);';
+  if(source.split(output).length!==2)throw Error('GEN3287_R10_OUTPUT_ANCHOR_DRIFT');
+  if(mode==='baseline')return source;
+  // Neutral response excludes product albedo, specular, fog and contact.
+  const operand=mode==='prelight-albedo'?'base':
+    'vec3(clamp((ambient+directional+rim*0.14*cavernSky)*0.40,0.0,1.0))';
+  const patch=`float r10RidgeDisplayWindow=(vRoleCode==1u && vPrimitiveIndex==0u && vSurfaceClassCode==6u)
+    ?1.0-smoothstep(16.0,44.0,distance(vWorldPosition.xz,vec2(152.0,-224.0))):0.0;
+  if(r10RidgeDisplayWindow>0.0){
+    vec3 r10DiagnosticLinear=${operand};
+    vec3 r10DiagnosticDisplay=pow(clamp(r10DiagnosticLinear*1.12,0.0,1.0),vec3(1.0/2.2));
+    lit=mix(lit,r10DiagnosticDisplay,r10RidgeDisplayWindow);
+  }
+  ${output}`;
+  return replaceExactlyOnce(source,output,patch);
+}
+
+export const GEN3287_R8_SOIL_SLOPE_MODES=Object.freeze(['baseline','ridge-slope-eligibility-neutral']);
+export function gen3287R8SoilSlopeSource(source,mode){
+  if(!GEN3287_R8_SOIL_SLOPE_MODES.includes(mode))throw Error('GEN3287_R8_MODE_INVALID:'+mode);
+  const operand='float worldSoilSlope=geologicalEarthRock?1.0:1.0-smoothstep(0.16,0.59,slope);';
+  if(source.split(operand).length!==2)throw Error('GEN3287_R8_EXACT_SLOPE_SOURCE_DRIFT');
+  if(mode==='baseline')return source;
+  // Ephemeral browser-only slope eligibility test in the certified ridge region.
+  // Preserve normals, rock exposure, authentic relief, all roots and lighting.
+  const replacement=`float gen3287R8RidgeWindow=1.0-smoothstep(
+    16.0,44.0,distance(vWorldPosition.xz,vec2(152.0,-224.0))
+  );
+  float worldSoilSlope=geologicalEarthRock?1.0:mix(
+    1.0-smoothstep(0.16,0.59,slope),1.0,gen3287R8RidgeWindow
+  );`;
+  return replaceExactlyOnce(source,operand,replacement);
+}
+
+export const GEN3288_PRODUCT_AB=Object.freeze({
+  profile:'GEN3288_EXACT_PRODUCT_AB_V1',
+  heads:Object.freeze({baseline:GEN3286_MATCHED.heads.baseline,candidate:'76637b3afbf846746200d78155a36e193de488eb'}),
+  renderer:Object.freeze({baseline:GEN3286_MATCHED.renderer.baseline,candidate:'97114936a17939ebb548074b57193735db17f3cc'}),
+  index:Object.freeze({baseline:GEN3286_MATCHED.index.baseline,candidate:'32a5e2747a74e41e0c379de406ae99f7edeae549'}),
+  candidateRootCount:3805291,
+  viewports:Object.freeze([GEN3286_MATCHED.viewports[1],GEN3286_MATCHED.viewports[0]]),
+  poses:GEN3288_CAUSAL_POSES
+});
+export function gen3288ProductVerifySource(dir,label){
+  if(!['baseline','candidate'].includes(label))throw Error('GEN3288_PRODUCT_UNKNOWN_LABEL');
+  assertCheckout(dir,GEN3288_PRODUCT_AB.heads[label]);
+  const blob=rel=>execFileSync('git',['-C',dir,'hash-object',rel],{encoding:'utf8'}).trim();
+  const got=blob(RENDERER.slice(1)),index=blob('showroom/globe/h-earth/index.html');
+  if(got!==GEN3288_PRODUCT_AB.renderer[label]||index!==GEN3288_PRODUCT_AB.index[label])
+    throw Error('GEN3288_EXACT_PRODUCT_SOURCE_MISMATCH:'+label);
+  for(const [rel,expected] of Object.entries(GEN3286_MATCHED.protectedBlobs))
+    if(blob(rel)!==expected)throw Error('GEN3288_PROTECTED_SCENE_OR_FROZEN_GRASS_CHANGED:'+label+':'+rel);
+  return {head:GEN3288_PRODUCT_AB.heads[label],rendererBlob:got,indexBlob:index,
+    rendererSha256:sha(fs.readFileSync(path.join(dir,RENDERER.slice(1)))),
+    grassRootCountByUnchangedSource:GEN3288_PRODUCT_AB.candidateRootCount,
+    protectedBlobsUnchanged:true};
+}
+
+export function gen3286VerifySource(dir,label){
+  if(!['baseline','candidate'].includes(label))throw Error('GEN3286_UNKNOWN_SOURCE_LABEL');
+  assertCheckout(dir,GEN3286_MATCHED.heads[label]);
+  const blob=rel=>execFileSync('git',['-C',dir,'hash-object',rel],{encoding:'utf8'}).trim();
+  const got=blob(RENDERER.slice(1)),index=blob('showroom/globe/h-earth/index.html');
+  if(got!==GEN3286_MATCHED.renderer[label]||index!==GEN3286_MATCHED.index[label])throw Error('GEN3286_PAIR_PRODUCT_IDENTITY_MISMATCH:'+label);
+  for(const [rel,expected] of Object.entries(GEN3286_MATCHED.protectedBlobs))if(blob(rel)!==expected)throw Error('GEN3286_PROTECTED_SCENE_CHANGED:'+label+':'+rel);
+  return {head:GEN3286_MATCHED.heads[label],rendererBlob:got,rendererSha256:sha(fs.readFileSync(path.join(dir,RENDERER.slice(1)))),indexBlob:index,allFourProtectedSourcesIdentical:true};
+}
+export function gen3286ValidatePair(base,candidate){
+  if(base.label!=='baseline'||candidate.label!=='candidate'||base.pose.id!==candidate.pose.id||base.viewport.id!==candidate.viewport.id)throw Error('GEN3286_PAIR_IDENTITY_INVALID');
+  if(base.assetSignature!==candidate.assetSignature)throw Error('GEN3286_PAIR_ASSET_STATE_CHANGED:'+base.pose.id);
+  for(const k of ['x','y','z'])if(!sameFinite(base.camera.position[k],candidate.camera.position[k],2e-5))throw Error('GEN3286_CAMERA_DIFFERENT:'+base.pose.id+':'+k);
+  gen3142Parity(base.camera.matrix,candidate.camera.matrix,'GEN3286_PROJECTION',2e-4);
+  if(base.png.width!==candidate.png.width||base.png.height!==candidate.png.height)throw Error('GEN3286_PNG_SIZE_DIFFERENT');
+  return {pose:base.pose.id,viewport:base.viewport.id,cameraMatched:true,projectionMatched:true,assetsMatched:true,
+    baselineImage:base.image,candidateImage:candidate.image,baselineImageSha256:base.imageSha256,candidateImageSha256:candidate.imageSha256,
+    baselineFrameResponseMs:base.frame.responseMs??null,candidateFrameResponseMs:candidate.frame.responseMs??null};
+}
+export async function runGen3286(argv){
+  const args=parseArgs(argv),out=args['--output'];fs.mkdirSync(out,{recursive:true});
+  const scout=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_WITNESS_SCOUT_V1';
+  const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
+  const handoff=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_HANDOFF_EDGE_V1';
+  const product=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_EXACT_PRODUCT_AB_V1';
+  const surfaceAttribution=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_SURFACE_ATTRIBUTES_V1';
+  const r8Slope=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R8_SOIL_SLOPE_CAUSAL_V1';
+  const r10=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R10_MATERIAL_LIGHTING_V1';
+  const positiveX=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3303_POSITIVE_X_MATERIAL_STAGE_V1';
+  const browserVariation=isolation||handoff||surfaceAttribution||r8Slope||positiveX;
+  const anyBrowserVariation=browserVariation||r10;
+  const viewports=(product||positiveX)?GEN3288_PRODUCT_AB.viewports:((scout||anyBrowserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
+  const poses=positiveX?GEN3303_POSITIVE_X_WITNESSES:((anyBrowserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses));
+  const labels=positiveX?GEN3303_POSITIVE_X_MATERIAL_MODES:r10?GEN3287_R10_MODES:(r8Slope?GEN3287_R8_SOIL_SLOPE_MODES:(surfaceAttribution?GEN3287_SURFACE_ATTRIBUTE_MODES:(handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate'])))));
+  const receipt={
+    schema:positiveX?'H_EARTH_POSITIVE_X_EFFECTIVE_MATERIAL_STAGE_WEBGL2_v1':r10?'H_EARTH_GEN3287_R10_MATERIAL_LIGHTING_WEBGL_v1':r8Slope?'H_EARTH_GEN3287_R8_SOIL_SLOPE_CAUSAL_WEBGL_v1':surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:positiveX?'GEN3303_POSITIVE_X_MATERIAL_STAGE_V1':r10?'GEN3287_R10_MATERIAL_LIGHTING_V1':r8Slope?'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1':surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    heads:positiveX?{baseline:GEN3286_MATCHED.heads.baseline,candidate:GEN3286_MATCHED.heads.baseline}:(product?GEN3288_PRODUCT_AB.heads:GEN3286_MATCHED.heads),sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
+    physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
+    witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:anyBrowserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
+    runs:[],views:[],comparisons:[],errors:[]};
+  const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+  let browser=null,server=null;persist();
+  try{
+    const identities={};
+    for(const label of ['baseline','candidate']){
+      const useGen3288Source=product||((surfaceAttribution||r8Slope||r10)&&label==='candidate');
+      identities[label]=positiveX?gen3286VerifySource(args['--baseline-dir'],'baseline'):useGen3288Source?
+        gen3288ProductVerifySource(args['--'+label+'-dir'],label):
+        gen3286VerifySource(args['--'+label+'-dir'],label);
+    }
+    receipt.identities=identities;persist();
+    const {chromium}=await import('playwright');
+    const {PNG}=await import('pngjs');
+    browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+    for(const viewport of viewports){
+      for(const [index,label] of labels.entries()){
+        const dir=args[anyBrowserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
+        const runRecord={label,viewport,head:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
+        receipt.runs.push(runRecord);persist();
+        server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
+        let listening=false;
+        for(let i=0;i<100;i++){try{if((await fetch(base+ROOT)).ok){listening=true;break;}}catch{}await new Promise(resolve=>setTimeout(resolve,100));}
+        if(!listening)throw Error('GEN3286_SERVER_UNAVAILABLE:'+label);
+        const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
+        const page=await context.newPage();page.setDefaultTimeout(30000);
+        await page.addInitScript({content:'globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';globalThis.__groundShouldPresentAssetSettleFrame='+shouldPresentAssetSettleFrame.toString()+';'});
+        page.on('pageerror',error=>runRecord.errors.push('PAGE:'+error.message));
+        page.on('console',m=>{if(m.type()==='error')runRecord.errors.push('CONSOLE:'+m.text());});
+        page.on('requestfailed',r=>runRecord.errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
+        page.on('response',r=>{if(r.status()>=400)runRecord.errors.push('HTTP:'+r.status()+':'+r.url());});
+        const originalRoute=fs.readFileSync(path.join(dir,ROUTE.slice(1)),'utf8');
+        await page.route(url=>url.pathname===ROUTE,route=>route.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(originalRoute)}));
+        runRecord.routeUnchangedSha256=sha(originalRoute);
+        if(anyBrowserVariation){
+          const rendererSource=fs.readFileSync(path.join(dir,RENDERER.slice(1)),'utf8');
+          const override=positiveX?gen3303PositiveXMaterialSource(rendererSource,label):r10?gen3287R10MaterialLightingSource(rendererSource,label):r8Slope?gen3287R8SoilSlopeSource(rendererSource,label):(surfaceAttribution?gen3287SurfaceAttributeSource(rendererSource,label):(handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label)));
+          runRecord.rendererOriginalSha256=sha(rendererSource);
+          runRecord.rendererServedSha256=sha(override);
+          runRecord.browserOnlyMaterialOperand=label;
+          runRecord.shaderInterceptions=0;
+          await page.route(url=>url.pathname===RENDERER,route=>{
+            runRecord.shaderInterceptions++;
+            return route.fulfill({status:200,contentType:'text/javascript',body:override});
+          });
+        }
+        await page.goto(base+ROOT+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
+        await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
+        if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('GEN3286_RENDERER_STARTUP_ERROR');
+        await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
+        // Exact native entry contract: real canvas-relative pointer gestures
+        // must produce a changed accepted navigation view before Enter unlocks.
+        // Never programmatically enable the button or bypass loader state.
+        const control=page.locator('[data-enter]');
+        const canvasBounds=await page.locator('#h-earth-functional-landscape-canvas').boundingBox();
+        if(!canvasBounds||canvasBounds.width<200||canvasBounds.height<150)throw Error('GEN3286_CANVAS_ENTRY_BOUNDS_INVALID:'+viewport.id);
+        runRecord.canvasEntryBounds=canvasBounds;
+        for(let attempt=0;attempt<8&&await control.isDisabled();attempt++){
+          const baseX=canvasBounds.x+canvasBounds.width*(attempt%2?.40:.55);
+          const baseY=canvasBounds.y+canvasBounds.height*(.35+.08*(attempt%3));
+          const delta=canvasBounds.width*(attempt%2?-.19:.19);
+          await page.mouse.move(baseX,baseY);
+          await page.mouse.down();
+          await page.mouse.move(baseX+delta,baseY,{steps:12});
+          await page.mouse.up();
+          await page.waitForTimeout(400);
+          runRecord.entryAttempts=attempt+1;
+          runRecord.entryLoader=await page.evaluate(()=>globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()??null);
+          persist();
+        }
+        if(await control.isDisabled()){
+          const shot='failed-enter-'+label+'-'+viewport.id+'.png';
+          await page.screenshot({path:path.join(out,shot)});
+          runRecord.entryFailureScreenshot=shot;
+          runRecord.entryIntake=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()??null);
+          persist();
+          throw Error('GEN3286_REAL_CANVAS_ENTRY_NOT_UNLOCKED:'+viewport.id+':'+label);
+        }
+        await page.click('[data-enter]');
+        await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&loader?.dataset.mode==='ready'&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
+        await page.evaluate(async()=>{
+          const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)),unique=[...new Set(urls)];
+          if(unique.length!==1)throw Error('GEN3286_NAV_MODULE_AMBIGUOUS:'+JSON.stringify(unique));
+          const url=unique[0];let source=await(await fetch(url)).text();
+          source=source.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,quote,relative)=>'from '+JSON.stringify(new URL(relative,url).href));
+          source+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
+          globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([source],{type:'text/javascript'})));
+        });
+        if(anyBrowserVariation&&runRecord.shaderInterceptions<1)throw Error('GEN3288_SHADER_NOT_ACTUALLY_INTERCEPTED:'+label);
+        runRecord.actualBrowserExecution=true;persist();
+        let sequence=30000,previousFrame=0;
+        for(const pose of poses){
+          // A source-defined target is not automatically a navigable camera.
+          // Reject it explicitly before browser capture rather than terminating
+          // the whole bounded scout or silently claiming a screenshot.
+          if(scout){
+            const gate=await page.evaluate(({pose})=>{
+              const nav=globalThis.__groundComparisonNav.auditResolvePosition(pose.x,pose.z,pose.yaw,'SURFACE');
+              return {eligible:nav?.eligible===true,issues:nav?.issues??[]};
+            },{pose});
+            if(!gate.eligible){
+              (receipt.rejectedWitnesses??=[]).push({pose,issues:gate.issues,classification:'NOT_A_NAVIGABLE_CAMERA'});
+              persist();continue;
+            }
+          }
+          let stableCount=0,priorSignature=null,deadline=Date.now()+120000,settleAttempts=0;
+          while(stableCount<2){
+            const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope,r10,positiveX})=>{
+              const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_ASSET_SETTLE');
+              const queue=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt()?.resources?.treeCollection?.queue;
+              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope||r10||positiveX,queue);
+              if(presented){
+                globalThis.__HEarthAuditPresent(state);
+                await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+              }else{
+                // The route's onAssetSettled callback requests a new presentation
+                // when the serial load completes; avoid GPU work contention meanwhile.
+                await new Promise(resolve=>setTimeout(resolve,250));
+              }
+              const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+              const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+              return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1),presented};
+            },{pose,sequence:++sequence,surfaceAttribution,r8Slope,r10,positiveX});
+            stableCount=check.presented&&check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
+            priorSignature=check.asset.signature;
+            // Durable first-pose evidence: keep unchanged 120s guard and actual frame parity.
+            runRecord.lastAssetSettle={
+              poseId:pose.id,viewportId:viewport.id,attempt:++settleAttempts,
+              ready:check.asset.ready,stableCount,presented:check.presented,signatureSha256:sha(check.asset.signature),
+              pendingReasons:check.asset.pendingReasons,
+              queueFailureIds:Object.keys(check.asset.queue?.failures??{}).slice(0,24),
+              frameSequence:check.frame?.frameSequence??null,
+              frameNavigationSequence:check.frame?.navigationSequence??null,
+              expectedNavigationSequence:sequence
+            };
+            if(settleAttempts===1||settleAttempts%40===0)persist();
+            if(Date.now()>deadline){persist();throw Error('GEN3286_ASSETS_NOT_SETTLED:'+label+':'+viewport.id+':'+pose.id);}
+            if(stableCount<2)await new Promise(resolve=>setTimeout(resolve,250));
+          }
+          const result=await page.evaluate(async({pose,sequence,passes})=>{
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_MATCHED_REAL_WEBGL');
+            for(let i=0;i<passes;i++){globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);}
+            const g=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+            const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+            const gl=canvas.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('GEN3286_GL_BUFFER_INVALID');
+            const frame=g.frameRecords.at(-1);
+            const pngDataUrl=canvas.toDataURL('image/png');
+            const latest=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+            if(latest.frameSequence!==frame.frameSequence||latest.navigationSequence!==frame.navigationSequence)throw Error('GEN3286_CAPTURE_FRAME_RACE');
+            const asset=globalThis.__groundAssetReadiness(g.resources,packet.camera.position);
+            return {frame,state,camera:{position:packet.camera.position,matrix:Array.from(packet.camera.viewProjectionMatrix)},
+              glVersion:String(gl.getParameter(gl.VERSION)),glslVersion:String(gl.getParameter(gl.SHADING_LANGUAGE_VERSION)),
+              glError:gl.getError(),contextLost:gl.isContextLost(),drawnFrameCount:g.counters?.gpuFramebufferPresentationCount,
+              grassResidency:g.resources?.vegetationResidency??null,assetSignature:asset.signature,assetsReady:asset.ready,
+              canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},pngDataUrl};
+          },{pose,sequence:++sequence,passes:anyBrowserVariation?3:8});
+          if(result.frame?.navigationSequence!==sequence||result.frame.frameSequence<=previousFrame||!result.assetsReady||result.assetSignature!==priorSignature)throw Error('GEN3286_FRAME_OR_ASSET_MISMATCH:'+pose.id);
+          if(!result.glVersion.includes('WebGL 2.0')||!result.glslVersion.includes('WebGL GLSL ES 3.00')||result.glError!==0||result.contextLost!==false)throw Error('GEN3286_GPU_INVALID:'+pose.id);
+          if(!sameFinite(result.state.position.x,pose.x,1e-6)||!sameFinite(result.state.position.z,pose.z,1e-6)||!sameHeading(result.state.yawDegrees,pose.yaw)||!sameFinite(result.state.pitchDegrees,pose.pitch,1e-7))throw Error('GEN3286_NAVIGATION_MISMATCH:'+pose.id);
+          for(const k of ['x','y','z'])if(!sameFinite(result.frame.cameraPosition?.[k],result.camera.position[k],1e-6))throw Error('GEN3286_GPU_CAMERA_MISMATCH:'+pose.id+':'+k);
+          if(!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(result.pngDataUrl))throw Error('GEN3286_PNG_INVALID');
+          const bytes=Buffer.from(result.pngDataUrl.split(',')[1],'base64'),png=PNG.sync.read(bytes);
+          if(bytes.length<1024||png.width!==result.canvas.width||png.height!==result.canvas.height||png.width<250||png.height<250)throw Error('GEN3286_PNG_SIZE_INVALID');
+          const filename=label+'-'+viewport.id+'-'+pose.id+'.png';
+          fs.writeFileSync(path.join(out,filename),bytes);
+          const {pngDataUrl,...observation}=result;
+          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])});
+          previousFrame=result.frame.frameSequence;persist();
+        }
+        runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
+        if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
+        await context.close();server.kill();server=null;(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,anyBrowserVariation?'baseline':label));
+      }
+      if(anyBrowserVariation)for(const pose of poses){
+        const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
+        if(views.length!==labels.length)throw Error('GEN3288_INCOMPLETE_OPERAND_SET:'+pose.id);
+        const A=views.find(v=>v.label==='baseline');
+        for(const mode of labels.filter(v=>v!=='baseline')){
+          const B=views.find(v=>v.label===mode);
+          if(!A||!B||A.sourceHead!==B.sourceHead||A.assetSignature!==B.assetSignature)throw Error('GEN3288_MATERIAL_SOURCE_ASSET_PARITY:'+pose.id+':'+mode);
+          for(const k of ['x','y','z'])if(!sameFinite(A.camera.position[k],B.camera.position[k],2e-5))throw Error('GEN3288_CAMERA_MISMATCH:'+pose.id+':'+mode+':'+k);
+          gen3142Parity(A.camera.matrix,B.camera.matrix,'GEN3288_PROJECTION',2e-4);
+          const p=PNG.sync.read(fs.readFileSync(path.join(out,A.image))),q=PNG.sync.read(fs.readFileSync(path.join(out,B.image)));
+          if(p.data.length!==q.data.length)throw Error('GEN3288_PIXEL_SHAPE:'+pose.id+':'+mode);
+          let changed=0,stronglyChanged=0,sum=0;
+          for(let i=0;i<p.data.length;i+=4){const d=Math.max(Math.abs(p.data[i]-q.data[i]),Math.abs(p.data[i+1]-q.data[i+1]),Math.abs(p.data[i+2]-q.data[i+2]));if(d>1)changed++;if(d>24)stronglyChanged++;sum+=d;}
+          receipt.comparisons.push({pose:pose.id,viewport:viewport.id,mode,
+            pixelCount:p.width*p.height,changedPixels:changed,stronglyChangedPixels:stronglyChanged,
+            meanMaxChannelDifference:sum/(p.width*p.height),baselineImage:A.image,isolatedImage:B.image,
+            matchingCamera:true,matchingProjection:true,matchingSource:true,visualSeamEliminated:'PENDING_INDEPENDENT_VISUAL_INSPECTION'});
+          persist();
+        }
+      }
+      else if(!scout)for(const pose of (product?poses:GEN3286_MATCHED.poses)){
+        const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
+        if(views.length!==2)throw Error('GEN3286_INCOMPLETE_AB_PAIR:'+pose.id);
+        const A=views.find(v=>v.label==='baseline'),B=views.find(v=>v.label==='candidate');
+        const cmp=gen3286ValidatePair(A,B);
+        const p=PNG.sync.read(fs.readFileSync(path.join(out,A.image))),q=PNG.sync.read(fs.readFileSync(path.join(out,B.image)));
+        if(p.data.length!==q.data.length)throw Error('GEN3286_IMAGE_BUFFER_SIZE_MISMATCH');
+        let changed=0,major=0,sum=0;
+        for(let i=0;i<p.data.length;i+=4){const d=Math.max(Math.abs(p.data[i]-q.data[i]),Math.abs(p.data[i+1]-q.data[i+1]),Math.abs(p.data[i+2]-q.data[i+2]));if(d>1)changed++;if(d>24)major++;sum+=d;}
+        receipt.comparisons.push({...cmp,pixelCount:p.width*p.height,changedPixels:changed,stronglyChangedPixels:major,meanMaxChannelDifference:sum/(p.width*p.height)});
+        persist();
+      }
+    }
+    if(scout){
+      if(receipt.views.length+(receipt.rejectedWitnesses?.length??0)!==poses.length||receipt.views.length<4||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
+      receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
+      receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
+    }else if(anyBrowserVariation){
+      if(positiveX){if(receipt.views.length!==40||receipt.comparisons.length!==32)throw Error('GEN3303_POSITIVE_X_IMAGES_OR_PAIRS_INCOMPLETE');}
+      else if(r10){if(receipt.views.length!==12||receipt.comparisons.length!==8)throw Error('GEN3287_R10_STAGE_IMAGES_INCOMPLETE');}
+       else if(r8Slope){if(receipt.views.length!==8||receipt.comparisons.length!==4)throw Error('GEN3287_R8_SLOPE_IMAGES_INCOMPLETE');}
+      else if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
+      receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
+      receipt.result=positiveX?'ACTUAL_GEN3259_POSITIVE_X_SOIL_STAGE_WEBGL2_CAPTURED_NO_PRODUCT_MUTATION':r10?'ACTUAL_WEBGL2_R10_MATERIAL_LIGHT_SPLIT_CAPTURED_NO_PRODUCT_MUTATION':r8Slope?'ACTUAL_WEBGL2_RIDGE_SLOPE_ELIGIBILITY_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':surfaceAttribution?'ACTUAL_WEBGL2_SURFACE_ATTRIBUTE_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':(handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION');
+    }else if(product){
+      if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');
+      receipt.visualSuccess='PENDING_INDEPENDENT_VISUAL_AND_OWNER_REVIEW';
+      receipt.result='ACTUAL_GEN3259_VS_GEN3288_DESKTOP_MOBILE_SIZED_WEBGL2_PNG_PAIR_CAPTURED';
+    }else{
+      if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
+      receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
+      receipt.result='ACTUAL_WEBGL2_DESKTOP_MOBILE_MATCHED_PNGS_CAPTURED_VISUAL_OWNER_PENDING';
+    }
+  }catch(error){receipt.errors.push(String(error?.stack??error));throw error;}
+  finally{persist();if(server)server.kill();if(browser)await browser.close();}
+  return receipt;
+}
+
 export async function run(argv){
+  if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3303_POSITIVE_X_MATERIAL_STAGE_V1')return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1','GEN3287_R8_SOIL_SLOPE_CAUSAL_V1','GEN3287_R10_MATERIAL_LIGHTING_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

@@ -1947,3 +1947,56 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Gen3311: separate admission, restoration of approved original soil ownership.
+  # Focused native qualification only; never infer WebGL visual KEEP.
+  gen3311-original-soil-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/soil-material-owner-restoration-20261115' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact admitted source candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pin original renderer ancestry, source assets and no extra roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = bc28cda7f9bce783f1c2a8b775aafe1150b0e6a8
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          printf '%s  %s\n' 'a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015' 'h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz' | sha256sum --check --status
+          printf '%s  %s\n' '48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a' 'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz' | sha256sum --check --status
+      - name: Run Gen3311 focused native material-owner tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen3311-native"
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          node --test h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs 2>&1 | tee "$RUNNER_TEMP/gen3311-native/test-output.txt"
+      - name: Preserve exact source candidate and classification
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/gen3311-native"
+          jq -n --arg head "${{ github.event.pull_request.head.sha }}" --arg renderer "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" '{
+            schema:"H_EARTH_GEN3311_ORIGINAL_SOIL_MATERIAL_OWNER_NATIVE_RECEIPT_v1",
+            candidateHead:$head,rendererBlob:$renderer,
+            acceptedGen3259RendererBlob:"3471d386d720382b1b55b146fef6fa0af61f0d36",
+            evidenceScope:"NATIVE_SOURCE_ONLY_NOT_WEBGL_OR_OWNER_KEEP",
+            originalGrassRootCount:3805291,
+            productPublished:false,mergeAuthorized:false,
+            ownerVisualKeep:false
+          }' > "$RUNNER_TEMP/gen3311-native/receipt.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen3311-original-soil-native-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3311-native/
+          if-no-files-found: error
+          retention-days: 30

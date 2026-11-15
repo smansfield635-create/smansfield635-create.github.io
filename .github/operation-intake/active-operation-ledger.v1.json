@@ -15803,6 +15803,50 @@
       "scopeHash": "7bc184a60694a71bd0b9dff9034c341b85e9b8112529cce6e86508a1a3744934",
       "state": "ADMITTED_LOCKED"
     },
+    "7bf9278abe9c428aa33dc1c09cd5896e9781186a1d9fdc75402bd1fe5764ee4a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8e110c2725962c8f4ca24ca10572c9cbc6d99bc5",
+          "lockGeneration": 3296,
+          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:CYCLETWO:C2B:EXISTING_SCULPTLAB_BROWSER_TOPOLOGY_GPU_LIFECYCLE:20261114",
+          "operationId": "DGB_GRAPHICS_CYCLETWO_C2B_NATIVE_SCULPTLAB_BROWSER_TOPOLOGY_20261114_001",
+          "procedureLocatorDigest": "127df587427bb6d9a15978102706517405629018a972833dc2201cba2055c505",
+          "requestDigest": "54a19c5f352470a1c0f8301516bc2f85e7436d5dbed9f0e9fd68156ade5c853f",
+          "scopeHash": "7bf9278abe9c428aa33dc1c09cd5896e9781186a1d9fdc75402bd1fe5764ee4a"
+        },
+        "bindingDigest": "e1281b02753adc5f26772d55af9b6d487e6dcd6b83a61f967e835200d43a342e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6a9f5d315ff61ea0f79cdf7d5296b18021fd629488526763608c871cf6407716",
+          "commentId": 6889106927,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43676498030,
+          "workflowSha": "8e110c2725962c8f4ca24ca10572c9cbc6d99bc5"
+        },
+        "lineageAnchorCommitSha": "90854d98c987d884ae4864fd76d402725dd75879",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8e110c2725962c8f4ca24ca10572c9cbc6d99bc5",
+      "lockGeneration": 3296,
+      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:CYCLETWO:C2B:EXISTING_SCULPTLAB_BROWSER_TOPOLOGY_GPU_LIFECYCLE:20261114",
+      "operationId": "DGB_GRAPHICS_CYCLETWO_C2B_NATIVE_SCULPTLAB_BROWSER_TOPOLOGY_20261114_001",
+      "procedureLocatorDigest": "127df587427bb6d9a15978102706517405629018a972833dc2201cba2055c505",
+      "released": false,
+      "requestDigest": "54a19c5f352470a1c0f8301516bc2f85e7436d5dbed9f0e9fd68156ade5c853f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7bf9278abe9c428aa33dc1c09cd5896e9781186a1d9fdc75402bd1fe5764ee4a",
+      "state": "ADMITTED_LOCKED"
+    },
     "7cbd5a80182415411b3bfff613a405772690633e0af56d691695161bb8342229": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -33019,7 +33063,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3295,
+  "lockGeneration": 3296,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

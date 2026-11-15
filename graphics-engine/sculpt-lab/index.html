@@ -27,11 +27,12 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
   <label class="control">Field X<input id="fieldX" aria-label="Organic field X scale" type="range" min=".5" max="2" step=".1" value="1"></label>
   <label class="control">Field Y<input id="fieldY" aria-label="Organic field Y scale" type="range" min=".5" max="2" step=".1" value="1"></label>
   <label class="control">Field Z<input id="fieldZ" aria-label="Organic field Z scale" type="range" min=".5" max="2" step=".1" value="1"></label>
+  <button id="subdivide" type="button">Subdivide selected face</button>
   <button id="undo" type="button">Undo</button><button id="redo" type="button">Redo</button><button id="save" type="button">Save mesh JSON</button>
   <label class="fileLabel" for="load">Reload mesh JSON<input id="load" type="file" accept="application/json,.json"></label>
   <button id="capture" type="button">Capture four views</button>
 </div>
-<p class="small">Pointer: press directly on the surface and drag to deform. Use a region selector to protect unrelated vertices; exterior boundary vertices stay frozen. Organic modes share this original stroke history and adjustable X/Y/Z influence. Unsafe faces fail closed; undo/redo acts on an entire stroke.</p>
+<p class="small">Pointer: press directly on the surface and drag to deform. Use a region selector to protect unrelated vertices; exterior boundary vertices stay frozen. Organic modes share this original stroke history and adjustable X/Y/Z influence. Unsafe faces fail closed; undo/redo acts on an entire brush stroke. Select a surface triangle in any view, then use Subdivide selected face for a verified connected C2-A topology edit. Original rabbit and worlds remain untouched.</p>
 <div class="views" aria-label="Simultaneous real 3D render views">
   <section class="view"><h2>HERO</h2><canvas id="hero" width="600" height="400" tabindex="0" aria-label="Hero sculpt view"></canvas></section>
   <section class="view"><h2>SIDE</h2><canvas id="side" width="600" height="400" tabindex="0" aria-label="Side sculpt view"></canvas></section>
@@ -39,13 +40,13 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
   <section class="view"><h2>REAR THREE-QUARTER</h2><canvas id="rear" width="600" height="400" tabindex="0" aria-label="Rear three-quarter sculpt view"></canvas></section>
 </div>
 <pre id="status" class="status" role="status" aria-live="polite">Initializing native Graphics Engine WebGL contexts…</pre>
-<footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene.</footer>
+<footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene. Connected edits use deterministic v2 lineage replay; unmodified v1 mesh files remain loadable.</footer>
 <script type="module">
-import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=9c25f4bf72b568067dc967f778cb89bc68075b58';
+import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=dae603d6e6175c70a2d55d2b346be2165a2aa117';
 const $=id=>document.getElementById(id);
 try{
-  const canvases=['hero','side','front','rear'].map($),controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','save','load'].map(id=>[id,$(id)]));
-  const studio=createNativeSculptStudio({canvases,controls,onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+' • Triangles '+state.triangles+' • Revision '+state.revision+' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});
+  const canvases=['hero','side','front','rear'].map($),controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','subdivide','save','load'].map(id=>[id,$(id)]));
+  const studio=createNativeSculptStudio({canvases,controls,onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+' • Triangles '+state.triangles+' • Revision '+state.revision+' • Topology edits '+state.topologyDepth+' • Selected face '+(state.selectedFace??'none')+' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});
   // Inspector exposes real software state for deterministic browser replay only.
   window.__dgbSculptLab={studio,canvases,controls,ready:true};
   $('capture').addEventListener('click',()=>{const c=document.createElement('canvas');c.width=1200;c.height=800;const g=c.getContext('2d');canvases.forEach((v,i)=>g.drawImage(v,600*(i%2),400*Math.floor(i/2),600,400));const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='dgb-sculpt-four-real-webgl-views.png';a.click();});

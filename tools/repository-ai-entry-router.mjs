@@ -270,6 +270,163 @@ async function verifyM163LiveAdmission(paths,task,mutationIntent) {
   if(!proof.eligible) throw new Error('M163_PROVENANCE_INVALID:'+proof.code);
   return proof;
 }
+
+/* Generation 3290: exact, owner-authenticated five-path candidate recognition.
+ * This reuses the existing M163/Gen3096 routing precedent, never registers an
+ * assets/engine prefix, and cannot create or expand repository authority. */
+const GEN3290_SOURCE_OPERATION='DGB_GRAPHICS_CYCLEONE_SOURCE_INTEGRATION_20261114_001';
+const GEN3290_SOURCE_COMMENT=6886436346;
+const GEN3290_SOURCE_HEAD='dcc920791b81d3972661a2e9cfbf3310cb045f77';
+const GEN3290_SOURCE_SCOPE='DIAMOND_GATE_GRAPHICS_ENGINE:CYCLEONE:SHARED_CREATION_AND_RENDER_BINDING:20261114';
+const GEN3290_SOURCE_PATHS=Object.freeze([
+  'assets/engine/dgb.native-volume.v1.mjs',
+  'assets/engine/dgb.native-asset-bridge.v1.mjs',
+  'assets/engine/dgb.native-image-seed.v1.mjs',
+  'assets/engine/dgb.native-asset-render-binding.v1.mjs',
+  'assets/engine/dgb.native-creation-integration.v1.test.mjs'
+]);
+function gen3290Fail(code){return Object.freeze({eligible:false,code,authorityEffect:'NONE'});}
+function verifyGen3290CandidateEvidence({source,ledger,lockRefHead,paths,task,mutationIntent}={}){
+  try{
+    if(mutationIntent!==true||task!==GEN3290_SOURCE_OPERATION||
+       paths?.length!==GEN3290_SOURCE_PATHS.length||
+       !m163Equal([...new Set(paths)].sort(),[...GEN3290_SOURCE_PATHS].sort()))
+      return gen3290Fail('GEN3290_EXACT_OPERATION_AND_PATHS_REQUIRED');
+    if(!/^[a-f0-9]{40}$/.test(lockRefHead??''))
+      return gen3290Fail('GEN3290_LOCK_REF_INVALID');
+    if(source?.id!==GEN3290_SOURCE_COMMENT||
+       source.user?.login!=='smansfield635-create'||
+       source.author_association!=='OWNER'||
+       !String(source.issue_url).endsWith('/7108')||
+       !source.body?.startsWith('CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'))
+      return gen3290Fail('GEN3290_OWNER_COMMENT_INVALID');
+    const packet=JSON.parse(source.body.slice(source.body.indexOf('\n')+1));
+    const r=packet.operationRequest,p=packet.constructionProcedure;
+    if(packet.schema!=='CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1'||
+       !m163Equal(Object.keys(packet).sort(),['constructionProcedure','operationRequest','schema'])||
+       r?.operationId!==GEN3290_SOURCE_OPERATION||
+       r?.projectId!==M163_PROJECT||
+       r?.lockScope!==GEN3290_SOURCE_SCOPE||
+       r?.exactGoverningHead!==GEN3290_SOURCE_HEAD||
+       p?.exactGoverningHead!==GEN3290_SOURCE_HEAD||
+       !m163Equal(r?.allowedPaths,GEN3290_SOURCE_PATHS)||
+       !m163Equal(p?.exactAllowedRepositoryPaths,GEN3290_SOURCE_PATHS)||
+       r?.fingerprintDomain?.adoptedMain!==GEN3290_SOURCE_HEAD||
+       r?.fingerprintDomain?.noMergeNoDeploy!==true||
+       r?.fingerprintDomain?.prohibitRabbitSourceMutation!==true||
+       r?.fingerprintDomain?.prohibitWorldMutation!==true)
+      return gen3290Fail('GEN3290_SOURCE_SCOPE_MISMATCH');
+    const locks=Object.values(ledger?.activeScopes??{}).filter(lock=>lock?.operationId===GEN3290_SOURCE_OPERATION);
+    if(locks.length!==1)return gen3290Fail('GEN3290_ACTIVE_LOCK_NOT_UNIQUE');
+    const lock=locks[0], inv=lock.authorityProvenance?.invocation;
+    if(lock.lockGeneration!==3290||lock.governingHead!==GEN3290_SOURCE_HEAD||
+       lock.lockScope!==GEN3290_SOURCE_SCOPE||
+       !['ADMITTED_LOCKED','EXECUTING'].includes(lock.state)||lock.released!==false||
+       lock.scopeHash!==m163Hash(lock.lockScope.trim().toUpperCase())||
+       lock.requestDigest!==m163Hash(JSON.stringify(m163Stable(r)))||
+       lock.procedureLocatorDigest!==m163Hash(JSON.stringify(m163Stable(p)))||
+       inv?.commentId!==GEN3290_SOURCE_COMMENT||
+       inv?.repository!==M163_REPO||
+       inv?.commentBodySha256!==m163Hash(source.body)||
+       inv?.commentAuthorLogin!=='smansfield635-create'||
+       inv?.commentAuthorAssociation!=='OWNER'||
+       inv?.workflowRunId!==43657260426||
+       inv?.workflowSha!==GEN3290_SOURCE_HEAD)
+      return gen3290Fail('GEN3290_CANONICAL_LOCK_PROVENANCE_MISMATCH');
+    return Object.freeze({eligible:true,operationId:GEN3290_SOURCE_OPERATION,
+      lockGeneration:3290,governingHead:GEN3290_SOURCE_HEAD,
+      sourceCommentId:GEN3290_SOURCE_COMMENT,lockRefHead,
+      projectId:M163_PROJECT,allowedPaths:GEN3290_SOURCE_PATHS,
+      scopeHash:lock.scopeHash,authorityEffect:'NONE_EXACT_CANDIDATE_PATH_RECOGNITION_ONLY'});
+  }catch{return gen3290Fail('GEN3290_INVALID_SOURCE_OR_LEDGER');}
+}
+function promoteGen3290Routes(raw,registry,proof){
+  if(proof?.eligible!==true)throw new Error('GEN3290_AUTHENTIC_PROOF_REQUIRED');
+  const projects=(registry?.projects??[]).filter(p=>p.projectId===M163_PROJECT&&p.status==='ACTIVE_REGISTERED_PROJECT');
+  if(projects.length!==1)throw new Error('GEN3290_REGISTERED_PROJECT_NOT_UNIQUE');
+  if(raw?.disposition!=='BLOCK'||!Array.isArray(raw.routes)||
+     raw.routes.length!==GEN3290_SOURCE_PATHS.length||
+     !m163Equal(raw.routes.map(r=>r.path).sort(),[...GEN3290_SOURCE_PATHS].sort()))
+    throw new Error('GEN3290_RAW_SCOPE_MISMATCH');
+  const routes=raw.routes.map(route=>{
+    if(route.routeClass!=='UNREGISTERED'||route.disposition!=='BLOCK'||route.projectId!=null)
+      throw new Error('GEN3290_RAW_ROUTE_NOT_UNREGISTERED');
+    return {...route,routeClass:'AUTHENTIC_GEN3290_ADMITTED_CANDIDATE_PATH',
+      projectId:M163_PROJECT,disposition:'PASS'};
+  });
+  return {...raw,routes,disposition:'PASS',legacyDisposition:raw.disposition,
+    admittedCandidateScopeRecognition:'GEN3290_EXACT_FIVE_PATHS_ONLY'};
+}
+async function verifyGen3290LiveAdmission(paths,task,mutationIntent){
+  if(task!==GEN3290_SOURCE_OPERATION||mutationIntent!==true||
+     paths.length!==GEN3290_SOURCE_PATHS.length||
+     !m163Equal([...new Set(paths)].sort(),[...GEN3290_SOURCE_PATHS].sort()))
+    throw new Error('GEN3290_EXACT_PATH_SET_REQUIRED');
+  const api='https://api.github.com/repos/'+M163_REPO;
+  const [source,ref]=await Promise.all([
+    fetchM163Json(api+'/issues/comments/'+GEN3290_SOURCE_COMMENT),
+    fetchM163Json(api+'/git/ref/heads/operation-locks/repository-operation-intake-v1')
+  ]);
+  const head=ref?.object?.sha;
+  if(!/^[a-f0-9]{40}$/.test(head??''))throw new Error('GEN3290_LOCK_REF_INVALID');
+  const doc=await fetchM163Json(api+'/contents/.github/operation-intake/active-operation-ledger.v1.json?ref='+head);
+  if(!/^[a-f0-9]{40}$/.test(doc?.sha??''))throw new Error('GEN3290_LEDGER_OBJECT_INVALID');
+  const blob=doc.encoding==='base64'&&typeof doc.content==='string'&&doc.content.trim()
+    ?doc:await fetchM163Json(api+'/git/blobs/'+doc.sha);
+  if(blob?.encoding!=='base64'||typeof blob.content!=='string')
+    throw new Error('GEN3290_LEDGER_CONTENT_INVALID');
+  const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
+  const proof=verifyGen3290CandidateEvidence({source,ledger,lockRefHead:head,paths,task,mutationIntent});
+  if(!proof.eligible)throw new Error('GEN3290_INVALID_PROVENANCE:'+proof.code);
+  return proof;
+}
+function gen3290ScopeSelfTest(){
+  const paths=[...GEN3290_SOURCE_PATHS],task=GEN3290_SOURCE_OPERATION;
+  const r={operationId:task,projectId:M163_PROJECT,lockScope:GEN3290_SOURCE_SCOPE,
+    exactGoverningHead:GEN3290_SOURCE_HEAD,allowedPaths:paths,
+    fingerprintDomain:{adoptedMain:GEN3290_SOURCE_HEAD,noMergeNoDeploy:true,
+      prohibitRabbitSourceMutation:true,prohibitWorldMutation:true}};
+  const p={exactGoverningHead:GEN3290_SOURCE_HEAD,exactAllowedRepositoryPaths:paths};
+  const source={id:GEN3290_SOURCE_COMMENT,user:{login:'smansfield635-create'},
+    author_association:'OWNER',issue_url:'https://api.github.com/repos/'+M163_REPO+'/issues/7108',
+    body:'CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'+JSON.stringify({
+      schema:'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1',
+      constructionProcedure:p,operationRequest:r})+'\n'};
+  const invocation={commentId:GEN3290_SOURCE_COMMENT,repository:M163_REPO,
+    commentBodySha256:m163Hash(source.body),commentAuthorLogin:'smansfield635-create',
+    commentAuthorAssociation:'OWNER',workflowRunId:43657260426,workflowSha:GEN3290_SOURCE_HEAD};
+  const lock={operationId:task,lockGeneration:3290,governingHead:GEN3290_SOURCE_HEAD,
+    lockScope:GEN3290_SOURCE_SCOPE,state:'ADMITTED_LOCKED',released:false,
+    scopeHash:m163Hash(GEN3290_SOURCE_SCOPE),
+    requestDigest:m163Hash(JSON.stringify(m163Stable(r))),
+    procedureLocatorDigest:m163Hash(JSON.stringify(m163Stable(p))),
+    authorityProvenance:{invocation}};
+  const ledger={activeScopes:{candidate:lock}},lockRefHead='a'.repeat(40);
+  const args={source,ledger,lockRefHead,paths,task,mutationIntent:true};
+  const proof=verifyGen3290CandidateEvidence(args);
+  const raw={disposition:'BLOCK',routes:paths.map(path=>({path,
+    routeClass:'UNREGISTERED',projectId:null,disposition:'BLOCK'}))};
+  const registry={projects:[{projectId:M163_PROJECT,status:'ACTIVE_REGISTERED_PROJECT'}]};
+  let promoted;try{promoted=promoteGen3290Routes(raw,registry,proof)}catch{}
+  let rejectsExtra=false;try{promoteGen3290Routes({...raw,routes:[...raw.routes,raw.routes[0]]},registry,proof)}catch{rejectsExtra=true;}
+  let rejectsOtherProject=false;try{promoteGen3290Routes({...raw,routes:[{...raw.routes[0],projectId:'H_EARTH'},...raw.routes.slice(1)]},registry,proof)}catch{rejectsOtherProject=true;}
+  const cases=[
+    proof.eligible===true,
+    promoted?.disposition==='PASS'&&promoted.routes.every(v=>v.projectId===M163_PROJECT),
+    rejectsExtra,rejectsOtherProject,
+    verifyGen3290CandidateEvidence({...args,task:'FOREIGN'}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,paths:[...paths,'unexpected.mjs']}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,source:{...source,id:0}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,source:{...source,author_association:'COLLABORATOR'}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,ledger:{activeScopes:{candidate:{...lock,released:true}}}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,ledger:{activeScopes:{candidate:{...lock,requestDigest:'0'.repeat(64)}}}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,ledger:{activeScopes:{candidate:lock,duplicate:lock}}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,ledger:{activeScopes:{candidate:{...lock,governingHead:'0'.repeat(40)}}}}).eligible===false,
+    verifyGen3290CandidateEvidence({...args,source:{...source,body:source.body+'foreign'}}).eligible===false
+  ];
+  return {result:cases.every(Boolean)?'PASS':'FAIL',passed:cases.filter(Boolean).length,total:cases.length};
+}
+
 function m163ScopeSelfTest() {
   const paths=[...M163_PATHS],task=M163_OPERATION_ID;
   const r={operationId:task,projectId:M163_PROJECT,exactGoverningHead:M163_GOVERNING_HEAD,
@@ -351,7 +508,8 @@ function selfTest(root) {
   try { legacyReceipt=JSON.parse(legacy.stdout||'{}'); } catch {}
   const legacyPass=legacy.status===0&&legacyReceipt?.result==='PASS';
   const m163CandidateScope=m163ScopeSelfTest();
-  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope };
+  const gen3290CandidateScope=gen3290ScopeSelfTest();
+  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'&&gen3290CandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope,gen3290CandidateScope };
 }
 const root = discoverRoot(process.cwd());
 const argv = process.argv.slice(2);
@@ -415,7 +573,19 @@ if(parsed.task===M163_OPERATION_ID && parsed.mutationIntent){
     m163ScopeFailure=String(error.code??error.message??'M163_ADMISSION_INVALID');
   }
 }
-const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof)||routeReceipt.disposition!=='PASS';
+let gen3290ScopeProof=null;
+let gen3290ScopeFailure=null;
+if(parsed.task===GEN3290_SOURCE_OPERATION && parsed.mutationIntent){
+  try{
+    const proof=await verifyGen3290LiveAdmission(paths,parsed.task,parsed.mutationIntent);
+    const registry=JSON.parse(fs.readFileSync(path.join(root,'.github/ai-router/router.v1.json'),'utf8'));
+    routeReceipt=promoteGen3290Routes(rawRouteReceipt,registry,proof);
+    gen3290ScopeProof=proof;
+  }catch(error){
+    gen3290ScopeFailure=String(error.code??error.message??'GEN3290_PROVENANCE_INVALID');
+  }
+}
+const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof&&!gen3290ScopeProof)||routeReceipt.disposition!=='PASS';
 const isStatic = classification.mutationClass==='STATIC_EDITORIAL_MICRO';
 const passResult = isStatic ? 'PASS_STATIC_EDITORIAL_MICRO' : 'PASS_BOUNDED_PAGE_RELEASE';
 const executionResult = isStatic ? 'NOT_REQUIRED_STATIC_EDITORIAL_MICRO' : 'NOT_REQUIRED_BOUNDED_PAGE_RELEASE';
@@ -429,6 +599,8 @@ const receipt={
   ...(gen3096ScopeProof ? {gen3096AdmissionProvenance:gen3096ScopeProof} : {}),
   ...(gen3096ProofFailure ? {gen3096ProvenanceFailure:gen3096ProofFailure} : {}),
   ...(m163ScopeProof ? {gen3264AdmissionProvenance:m163ScopeProof} : {}),
+  ...(gen3290ScopeProof ? {gen3290AdmissionProvenance:gen3290ScopeProof} : {}),
+  ...(gen3290ScopeFailure ? {gen3290ProvenanceFailure:gen3290ScopeFailure} : {}),
   ...(m163ScopeFailure ? {gen3264ProvenanceFailure:m163ScopeFailure} : {}),
   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',

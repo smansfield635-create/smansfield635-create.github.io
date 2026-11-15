@@ -12,18 +12,18 @@ import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 
-const HEAD='8bb5ffa19596ac1829739c402884abfed903dd27';
+const HEAD='2b6052f3b6beac1c6b0793ed8fa5279bea126778';
 const GOVERNING='8e110c2725962c8f4ca24ca10572c9cbc6d99bc5';
 const REPO='https://github.com/smansfield635-create/smansfield635-create.github.io.git';
-const OPERATION='DGB_GRAPHICS_C2B_GEN3302_REPAIRED_WEBGL12_QUALIFIER_BINDING_20261115_001';
+const OPERATION='DGB_GRAPHICS_C2B_GEN3303_REPAIRED_SOURCE_EXACT_BINDING_20261115_001';
 const SCHEMA='DGB_GRAPHICS_C2B_GEN3302_SERVED_BROWSER_QUALIFICATION_RECEIPT_v1';
 const ROUTE='/graphics-engine/sculpt-lab/index.html';
 const blobs=Object.freeze({
   'assets/engine/dgb.native-webgl-device.v1.mjs':'044fc3b67468072ce2574e324c371bb18f4fecc8',
   'assets/engine/dgb.native-webgl-device.v1.test.mjs':'d851aea5d1bef8e57dff29adbbbd904e6a199a66',
-  'assets/engine/dgb.native-sculpt-browser.v1.mjs':'8e2273fed92fb3fbf346cc32b80af79a399903a0',
-  'assets/engine/dgb.native-sculpt-browser.v1.test.mjs':'8397e4ab30490f4b106fc4bc80cb2e4ec85b3069',
-  'graphics-engine/sculpt-lab/index.html':'85d014a21b49f4f861f4b89ed0bcb8421fc42472'
+  'assets/engine/dgb.native-sculpt-browser.v1.mjs':'e9bfb86399797d17ad1c2524056342fea169161b',
+  'assets/engine/dgb.native-sculpt-browser.v1.test.mjs':'f384f1080e71794797c4ceb36a0a6edfc340444f',
+  'graphics-engine/sculpt-lab/index.html':'fd7375a22f4b648ced8fdfb7ecd9575fca9d9484'
 });
 const protectedBlobs=Object.freeze({
   'assets/engine/dgb.native-frame-pipeline.v1.mjs':'c6a5d4081193d27cb364b1d1507218e7227a19ee',

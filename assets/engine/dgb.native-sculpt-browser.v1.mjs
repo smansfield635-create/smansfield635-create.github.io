@@ -52,7 +52,7 @@ const shaders=backend=>{
 // Read bounded image headers BEFORE createImageBitmap allocates decoded pixels.
 // A small compressed image may describe an enormous decoded surface.
 export async function readSculptReferenceImageDimensions(file) {
-  if (!file || !/^image\\/(png|jpeg|webp)$/.test(file.type) ||
+  if (!file || !new RegExp('^image/(png|jpeg|webp)$').test(file.type) ||
     !Number.isSafeInteger(file.size) || file.size < 16 || file.size > 5000000 ||
     typeof file.arrayBuffer !== 'function')
     throw new Error('STUDIO_REFERENCE_IMAGE_TYPE_OR_SIZE_REJECTED');

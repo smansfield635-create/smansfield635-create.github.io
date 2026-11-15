@@ -81,7 +81,7 @@ test('C2-B original Sculpt Lab exposes human topology action and updated source 
   assert.match(html,/id="subdivide"/);
   assert.match(html,/Subdivide selected face/);
   assert.match(browser,/restoreConnectedSculptTopologyCandidate/);
-  assert.match(browser,/view\.device\.replaceMesh\(view\.mesh,replacement\)/);
+  assert.match(browser,/replaceFourSculptViewMeshes\(views,previous,replacement,drawAll/);
   assert.match(browser,/get session\(\)\{return session;/);
 });
 

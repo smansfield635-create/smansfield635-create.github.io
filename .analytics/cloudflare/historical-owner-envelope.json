@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-15T19:24:17Z",
+  "generatedAt": "2026-11-15T20:24:12Z",
   "window": {
-    "start": "2026-08-17T19:24:17Z",
-    "end": "2026-11-15T19:24:17Z"
+    "start": "2026-08-17T20:24:12Z",
+    "end": "2026-11-15T20:24:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3645,
-    "visits": 1102,
+    "pageLoads": 3635,
+    "visits": 1092,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3645,
-        "visits": 1102
+        "pageLoads": 3635,
+        "visits": 1092
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 802,
-        "visits": 612
+        "pageLoads": 792,
+        "visits": 602
       },
       "/laws/": {
         "pageLoads": 50,
@@ -74,6 +74,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -89,10 +93,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 63,
@@ -110,16 +110,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -178,13 +178,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -301,8 +301,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 580,
-        "visits": 580
+        "pageLoads": 570,
+        "visits": 570
       },
       "diamondgatebridge.com": {
         "pageLoads": 2543,

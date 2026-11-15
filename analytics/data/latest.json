@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-15T19:24:17Z",
+  "generatedAt": "2026-11-15T20:24:12Z",
   "window30d": {
-    "start": "2026-10-16T19:24:17Z",
-    "end": "2026-11-15T19:24:17Z"
+    "start": "2026-10-16T20:24:12Z",
+    "end": "2026-11-15T20:24:12Z"
   },
   "daily": [
     {
@@ -44,11 +44,11 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 60
+      "pageLoads": 40
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 10
+      "pageLoads": 50
     },
     {
       "date": "2026-10-28",
@@ -84,15 +84,15 @@
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 170
+      "pageLoads": 150
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 10
+      "pageLoads": 20
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 53
+      "pageLoads": 52
     },
     {
       "date": "2026-11-08",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 29
+      "pageLoads": 31
     }
   ],
   "summary": {
-    "pageLoads": 1477,
-    "botPageLoads": 752,
-    "nonBotPageLoads": 725
+    "pageLoads": 1388,
+    "botPageLoads": 722,
+    "nonBotPageLoads": 666
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1324,
-      "visits": 1324
+      "pageLoads": 1325,
+      "visits": 1325
     },
     {
       "host": "diamondgatebridge.com",
@@ -171,9 +171,9 @@
       "visits": 334
     },
     {
-      "path": "/products/education/personal-training/",
+      "path": "/",
       "pageLoads": 80,
-      "visits": 80
+      "visits": 57
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -181,14 +181,14 @@
       "visits": 80
     },
     {
-      "path": "/",
-      "pageLoads": 79,
-      "visits": 56
+      "path": "/products/education/personal-training/",
+      "pageLoads": 80,
+      "visits": 80
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 52,
-      "visits": 52
+      "pageLoads": 42,
+      "visits": 42
     },
     {
       "path": "/showroom/globe/audralia/",

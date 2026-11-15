@@ -501,3 +501,64 @@ test('M1.1 failed partial GPU update rolls back old bytes and does not commit co
   assert.equal(device.status().restorationError,null);
   device.dispose();
 });
+
+
+test('C2-B owned mesh replacement keeps identity, reclaims old buffers, and preserves drawability', () => {
+  for (const backend of ['WEBGL1','WEBGL2']) {
+    const {canvas,log}=fakeCanvas({webgl2:true});
+    const device=createNativeWebGLDevice(canvas,{backend});
+    const program=device.createProgram(shader);
+    const mesh=device.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const oldGpu=mesh.gpu,oldBytes=device.status().estimatedTotalResourceBytes;
+    const nextPositions=new Float32Array([...positions,0,0,1]);
+    assert.strictEqual(device.replaceMesh(mesh,{attributes:[{name:'a_position',data:nextPositions,size:3,dynamic:true}],
+      indices:new Uint16Array([0,1,2,0,2,3]),vertexCount:4}),mesh);
+    assert.notStrictEqual(mesh.gpu,oldGpu);
+    assert.equal(device.status().meshes,1);
+    assert(device.status().estimatedTotalResourceBytes>oldBytes);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,2);
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,6);
+    assert.equal(device.releaseMesh(mesh),true);
+    assert.equal(device.status().meshes,0);
+    assert.equal(device.status().estimatedTotalResourceBytes,0);
+    assert.throws(()=>device.draw({program,mesh}),/MESH_NOT_OWNED_BY_DEVICE/);
+    assert.throws(()=>device.releaseMesh(mesh),/MESH_NOT_OWNED_BY_DEVICE/);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,4);
+    device.dispose();
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,4);
+  }
+});
+test('C2-B invalid replacement retains old mesh bytes, ownership and drawability', () => {
+  const {canvas,log}=fakeCanvas();
+  const d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader);
+  const m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const before=m.gpu,bytes=d.status().estimatedTotalResourceBytes;
+  assert.throws(()=>d.replaceMesh(m,{attributes:[attrib],indices:new Uint32Array([0,1,2]),vertexCount:3}),
+    /WEBGL1_UINT32_INDICES_EXTENSION_REQUIRED/);
+  assert.strictEqual(m.gpu,before);
+  assert.equal(d.status().meshes,1);
+  assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+  assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+  // Provisional attribute allocation was deleted; original two buffers remain.
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,1);
+  d.dispose();
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,3);
+});
+test('C2-B replaced mesh survives context recovery while released mesh stays retired', () => {
+  const {canvas,log}=fakeCanvas({webgl2:true});
+  const d=createNativeWebGLDevice(canvas,{backend:'WEBGL2'}),p=d.createProgram(shader);
+  const keep=d.createMesh({attributes:[attrib],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const retire=d.createMesh({attributes:[attrib],vertexCount:3});
+  d.replaceMesh(keep,{attributes:[attrib],indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3});
+  d.releaseMesh(retire);
+  const before=log.filter(x=>x==='createBuffer').length;
+  canvas.trigger('webglcontextlost');
+  assert.throws(()=>d.releaseMesh(keep),/GRAPHICS_CONTEXT_LOST/);
+  canvas.trigger('webglcontextrestored');
+  assert.equal(d.status().meshes,1);
+  assert.equal(log.filter(x=>x==='createBuffer').length-before,2);
+  assert.equal(d.draw({program:p,mesh:keep}).verticesOrIndices,6);
+  assert.throws(()=>d.draw({program:p,mesh:retire}),/MESH_NOT_OWNED_BY_DEVICE/);
+  d.dispose();
+});

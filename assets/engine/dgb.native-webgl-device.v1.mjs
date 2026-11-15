@@ -264,6 +264,12 @@ export function createNativeWebGLDevice(canvas, {
     try {
       gl.bindBuffer(target, b);
       gl.bufferData(target, bytes, usage);
+      // WebGL bufferData can report OUT_OF_MEMORY without throwing. A failed
+      // provisional upload must never replace a previously working mesh.
+      if (typeof gl.getError === 'function') {
+        const error = gl.getError();
+        if (error !== gl.NO_ERROR) throw new Error('MESH_BUFFER_UPLOAD_GL_ERROR:' + error);
+      }
       return b;
     } catch (e) {
       gl.deleteBuffer(b);

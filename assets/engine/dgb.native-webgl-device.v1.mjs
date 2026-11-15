@@ -329,11 +329,56 @@ export function createNativeWebGLDevice(canvas, {
     }
     if (indices && (!ArrayBuffer.isView(indices) || !indices.length)) throw new TypeError('INDICES_TYPED_DATA_REQUIRED');
     // Retain private copies so caller mutation cannot corrupt replayed context recovery.
-    const ownedAttributes = attributes.map(a => a.dynamic ? { ...a, data: new Float32Array(a.data) } : a);
-    const definition = { attributes: ownedAttributes, indices, vertexCount, usage };
+    const ownedAttributes = attributes.map(a => ({ ...a, data: new a.data.constructor(a.data) }));
+    const ownedIndices = indices === null ? null : new indices.constructor(indices);
+    const definition = { attributes: ownedAttributes, indices: ownedIndices, vertexCount, usage };
     const record = { definition, gpu: uploadMesh(definition) };
     meshes.add(record);
     return record;
+  }
+  // C2-B: release just one owned indexed/attribute mesh, without disposing
+  // the shared E1 context, shader programs, frame targets, or peer meshes.
+  function deleteMeshGpu(gpu) {
+    if (!gpu) return;
+    for (const attribute of gpu.attributes) gl.deleteBuffer(attribute.buffer);
+    if (gpu.index) gl.deleteBuffer(gpu.index);
+  }
+  function releaseMesh(mesh) {
+    assertActive();
+    requireOwned(meshes, mesh, 'MESH');
+    try {
+      deleteMeshGpu(mesh.gpu);
+    } catch (error) {
+      restorationError = new Error('MESH_RELEASE_UNCERTAIN');
+      throw error;
+    }
+    meshes.delete(mesh);
+    mesh.gpu = null;
+    return true;
+  }
+  // Allocate and validate the replacement before mutating the original record.
+  // Preserve object identity so existing E3 renderable nodes remain bound.
+  // An allocation failure leaves the old GPU buffers and CPU recovery snapshot
+  // untouched. A failed old-buffer release quarantines the device.
+  function replaceMesh(mesh, specification) {
+    assertActive();
+    requireOwned(meshes, mesh, 'MESH');
+    const provisional = createMesh(specification);
+    try {
+      assertActive();
+      deleteMeshGpu(mesh.gpu);
+    } catch (error) {
+      try { if (!gl.isContextLost?.()) deleteMeshGpu(provisional.gpu); } catch (_) {}
+      meshes.delete(provisional);
+      provisional.gpu = null;
+      restorationError = new Error('MESH_REPLACEMENT_RELEASE_UNCERTAIN');
+      throw error;
+    }
+    mesh.definition = provisional.definition;
+    mesh.gpu = provisional.gpu;
+    meshes.delete(provisional);
+    provisional.gpu = null;
+    return mesh;
   }
   /**
    * M1.1: update a device-owned dynamic Float32 vertex attribute in place.
@@ -511,7 +556,7 @@ export function createNativeWebGLDevice(canvas, {
     canvas.removeEventListener?.('webglcontextrestored', onContextRestored, false);
   }
   return Object.freeze({
-    backend, gl, createProgram, createMesh, updateMeshAttribute, createTexture2D, createRenderTarget,
+    backend, gl, createProgram, createMesh, releaseMesh, replaceMesh, updateMeshAttribute, createTexture2D, createRenderTarget,
     bindRenderTarget, resizeRenderTarget, draw, viewport, recover, dispose,
     status() {
       const estimatedTextureBytes = [...textures].reduce((n, t) => n + byteSize(t.definition.width, t.definition.height), 0) +

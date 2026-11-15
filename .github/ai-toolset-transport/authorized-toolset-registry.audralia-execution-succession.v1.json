@@ -1148,6 +1148,145 @@
       "continuationRule": "ONLY_AFTER_INDEPENDENT_SCOPED_TOOLING_REVIEW_AND_SEPARATE_REGISTRY_ADOPTION; RETURN_PASS_CLOSED_RECEIPT_TO_GEN3273_PR7397_REVIEW; NO_AUTOMATIC_RABBIT_IMPORT",
       "terminationRule": "READONLY_EXACT_GEN3273_QUALIFICATION_ONLY_NO_SOURCE_RABBIT_MERGE_DEPLOY_RELEASE_OR_ARTISTIC_ACCEPTANCE",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "DGB_GRAPHICS_C2B_GEN3298_SERVED_WEBGL2_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "DGB_GRAPHICS_C2B_FIXED_BROWSER_QUALIFIER_BINDING_20261115_001",
+      "operationClass": "DGB_GRAPHICS_C2B_GEN3298_FIXED_EXACT_HEAD_HTTP_WEBGL2_READONLY_QUALIFICATION",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "DGB_GRAPHICS_C2B_GEN3298_SERVED_WEBGL2_QUALIFIER_V1",
+      "exactToolingHead": "49d487fb87e91693bc34624651d38d42e66d0163",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/dgb-graphics-c2b-gen3296-browser.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          },
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "DGB_GRAPHICS_C2B_GEN3298_SERVED_WEBGL2_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "bc1e3c4412ea88b11dfdd90738a285500582e764"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "DGB_GRAPHICS_C2B_GEN3298_SERVED_BROWSER_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "governingHead",
+          "status",
+          "cases",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "workflowMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "assets/",
+        "graphics-engine/",
+        "showroom/",
+        "characters/",
+        "h-earth-3d/",
+        "products/",
+        "nine-summits/",
+        "tools/ai-room-transport/dgb-sculpt-gen3273-browser.v1.mjs"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "WORKFLOW_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WEBGL_ENGINE_MUTATION",
+        "RABBIT_SOURCE_MUTATION",
+        "ORIGINAL_GEN3273_QUALIFIER_MUTATION",
+        "C2B_SOURCE_BRANCH_MUTATION",
+        "WORLD_CONSUMER_MUTATION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_EXACT_C2B_HTTP_WEBGL2_FOUR_VIEW_TOPOLOGY_V2_REFERENCE_PIXELS_AND_NATIVE_TAP_WITHOUT_SOURCE_ADOPTION",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_FIRST_BROWSER_OR_NATIVE_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_EXECUTION_SURFACE_BOUNDARY",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "ONLY_AFTER_SEPARATE_GEN3298_TOOLING_REVIEW_AND_ADOPTION; RETURN_ACTUAL_C2B_QUALIFICATION_TO_PR7427_AND_ISSUE7108; NO_AUTO_MERGE_OR_WORLD_INTEGRATION",
+      "terminationRule": "READONLY_EXACT_C2B_GEN3296_SOURCE_QUALIFICATION_ONLY_NO_RABBIT_WORLD_MERGE_DEPLOY_RELEASE_OR_PUBLICATION",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

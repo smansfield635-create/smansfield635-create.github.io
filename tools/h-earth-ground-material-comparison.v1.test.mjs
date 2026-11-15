@@ -261,7 +261,7 @@ test('Gen3287 rejects source label, pair camera, projection, asset or PNG identi
 test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
   const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
-  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1')||(yaml.includes("H_EARTH_COMPARISON_PROFILE: ${{ github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115'")&&yaml.includes("'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'")&&yaml.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1'")));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
   assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 76637b3afbf846746200d78155a36e193de488eb"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
@@ -313,7 +313,7 @@ test('Gen3288 four exact-source material operands preserve product bytes',async(
   assert.deepEqual(m.GEN3288_CAUSAL_POSES.map(p=>p.id),['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge']);
   assert.equal(m.gen3288CausalShaderSource(baseline,'baseline'),baseline);
   const matcher=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
-  assert.ok(matcher.includes("gen3286VerifySource(dir,browserVariation?'baseline':label)"));
+  assert.ok(matcher.includes("gen3286VerifySource(dir,anyBrowserVariation?'baseline':label)"));
   assert.ok(matcher.includes('passes:browserVariation?3:8'));
   assert.ok(matcher.includes("(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
   assert.ok(matcher.includes('receipt.views.length!==16||receipt.comparisons.length!==12'));
@@ -372,7 +372,7 @@ test('Gen3287 surface role, normal and base-color diagnostics are source-only an
 
 test('Gen3287 attribute profile binds baseline Gen3259 and current Gen3288 candidate; historical modes unchanged',()=>{
  const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(source.includes("const useGen3288Source=product||((surfaceAttribution||r8Slope)&&label==='candidate');"));
+ assert.ok(source.includes("const useGen3288Source=product||((surfaceAttribution||r8Slope||r10)&&label==='candidate');"));
  assert.ok(source.includes("gen3288ProductVerifySource(args['--'+label+'-dir'],label)"));
  assert.ok(source.includes("gen3286VerifySource(args['--'+label+'-dir'],label)"));
  assert.ok(source.includes("const browserVariation=isolation||handoff||surfaceAttribution||r8Slope;"));

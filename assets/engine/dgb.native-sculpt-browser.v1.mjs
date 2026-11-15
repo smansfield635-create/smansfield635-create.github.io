@@ -306,13 +306,54 @@ export function createSculptReferenceImportGate(){
   });
 }
 
+/** Original M1.3 has one editing master per anatomical vertex, but separate
+ * seam-expanded render vertices. The original archive/atlas is never embedded. */
+function sourceGeometry(source,p,n){
+  const map=source.renderToMaster;
+  if(!(map instanceof Uint32Array)||map.length!==1409||!(source.uvs instanceof Float32Array)||source.uvs.length!==2818||
+      !(source.renderTriangles instanceof Uint16Array)||source.renderTriangles.length!==6792||
+      !(source.atlasPixels instanceof Uint8Array)||source.atlasPixels.length!==source.atlasWidth*source.atlasHeight*4||
+      source.readOnlyOriginal!==true)throw new TypeError('M13_RENDER_SOURCE_INVALID');
+  const positions=new Float32Array(map.length*3),normals=new Float32Array(map.length*3);
+  for(let i=0;i<map.length;i++){const sourceIndex=map[i];
+    if(sourceIndex>=p.length/3)throw new RangeError('M13_RENDER_MASTER_OUT_OF_RANGE');
+    positions.set(p.subarray(sourceIndex*3,sourceIndex*3+3),i*3);
+    normals.set(n.subarray(sourceIndex*3,sourceIndex*3+3),i*3);
+  }
+  return {positions,normals,uvs:source.uvs,indices:source.renderTriangles};
+}
+function originalTexturedShaders(backend){
+  const is2=backend==='WEBGL2',h=is2?'#version 300 es\n':'',att=is2?'in':'attribute',
+    vary=is2?'out':'varying',inside=is2?'in':'varying',texture=is2?'texture':'texture2D';
+  return {vertexSource:h+att+' vec3 aPosition;'+att+' vec3 aNormal;'+att+' vec2 aUV;uniform mat4 uMVP;'
+      +vary+' vec2 vUV;'+vary+' vec3 vNormal;void main(){vUV=aUV;vNormal=aNormal;gl_Position=uMVP*vec4(aPosition,1.0);}',
+    fragmentSource:h+'precision mediump float;'+inside+' vec2 vUV;'+inside+' vec3 vNormal;uniform sampler2D uAtlas;'
+      +(is2?'out vec4 outColor;':'')+'void main(){vec3 albedo='+texture+'(uAtlas,vUV).rgb;'
+      +'float shade=.52+.48*max(dot(normalize(vNormal),normalize(vec3(-.35,.7,-.66))),0.0);'
+      +(is2?'outColor':'gl_FragColor')+'=vec4(albedo*shade,1.0);}'};
+}
+function originalEyeShaders(backend){
+  const is2=backend==='WEBGL2',h=is2?'#version 300 es\n':'',att=is2?'in':'attribute',
+    vary=is2?'out':'varying',inside=is2?'in':'varying';
+  return {vertexSource:h+att+' vec3 aPosition;'+att+' vec3 aNormal;'+att+' vec3 aColor;'
+      +att+' float aFade;uniform mat4 uMVP;'+vary+' vec3 vNormal;'+vary+' vec3 vColor;'
+      +vary+' float vFade;void main(){vNormal=aNormal;vColor=aColor;vFade=aFade;gl_Position=uMVP*vec4(aPosition,1.0);}',
+    fragmentSource:h+'precision mediump float;'+inside+' vec3 vNormal;'+inside+' vec3 vColor;'+inside+' float vFade;'
+      +(is2?'out vec4 outColor;':'')+'void main(){vec3 N=normalize(vNormal);'
+      +'vec3 L=normalize(vec3(-.35,.9,.65));float diff=.65+.35*max(dot(N,L),0.0);'
+      +'float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.0),22.0);'
+      +(is2?'outColor':'gl_FragColor')+'=vec4(vColor*diff+vec3(spec*vFade),1.0);}'};
+}
+
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
   if(!['AUTO','WEBGL1','WEBGL2'].includes(backend)||typeof onStatus!=='function')throw new TypeError('STUDIO_OPTIONS_INVALID');
   if(!controls||!['radius','strength','falloff','mode','region','undo','redo','save','load'].every(k=>controls[k]))throw new TypeError('STUDIO_CONTROLS_REQUIRED');
+  const originalSource=fixture.sourceRender?.readOnlyOriginal===true?fixture.sourceRender:null;
   let session=createSculptSession(fixture),fixtureSource=fixture,sourceMetadata=null;
-  let uv=makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs??null);
+  let uv=originalSource?null:makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs??null);
+  const originalRender=originalSource?sourceGeometry(originalSource,session.getPositions(),session.getNormals()):null;
   let stages=[],selectedFace=null;
   if(Math.max(...session.getTriangles())>65535)throw new Error('WEBGL1_NEUTRAL_FIXTURE_INDEX_LIMIT');
   let disposed=false,failed=false,active=null;const views=[];const listeners=[];
@@ -324,9 +365,41 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     for(let i=0;i<4;i++){
       const canvas=expectCanvas(canvases[i],i),be=backend==='AUTO'?(canvas.getContext('webgl2')?'WEBGL2':'WEBGL1'):backend;
       const device=createNativeWebGLDevice(canvas,{backend:be,contextAttributes:{alpha:false,antialias:true,depth:true,preserveDrawingBuffer:true}}),pipeline=createNativeFramePipeline(device);
-      const program=device.createProgram(shaders(be)),mesh=device.createMesh(sculptMeshSpecification(session,uv));
-      const scene=createNativeSpatialScene(),eye=eyes[i],basis=lookAtQuaternion(eye),camera=scene.createCamera({position:eye,rotation:basis.rotation,projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,orthoHeight:3.15});
-      const node=scene.createNode();scene.setRenderable(node,{program,mesh,pass:'OPAQUE',cull:'NONE',bounds:{center:[0,0,0],radius:3}});
+      const program=device.createProgram(originalSource?originalTexturedShaders(be):shaders(be));
+      const mesh=originalSource?device.createMesh({attributes:[
+        {name:'aPosition',data:originalRender.positions,size:3,dynamic:true},
+        {name:'aNormal',data:originalRender.normals,size:3,dynamic:true},
+        {name:'aUV',data:originalRender.uvs,size:2}
+      ],indices:new Uint16Array(originalRender.indices),vertexCount:originalRender.positions.length/3})
+        :device.createMesh(sculptMeshSpecification(session,uv));
+      const texture=originalSource?device.createTexture2D({width:originalSource.atlasWidth,height:originalSource.atlasHeight,
+        pixels:originalSource.atlasPixels,filter:'LINEAR'}):null;
+      const scene=createNativeSpatialScene(),eye=originalSource?
+        [[2.4,1.25,3.5],[0,.3,4.8],[4.8,.15,0],[-2.4,1.3,-3.5]][i]:eyes[i];
+      const basis=lookAtQuaternion(eye),center=originalSource?[.37,.48,-.03]:[0,0,0];
+      const camera=scene.createCamera({position:eye.map((v,k)=>v+center[k]),rotation:basis.rotation,
+        projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,orthoHeight:originalSource?2.05:3.15});
+      const node=scene.createNode();
+      scene.setRenderable(node,{program,mesh,pass:'OPAQUE',cull:'NONE',bounds:{center:[0,0,0],radius:3},
+        beforeDraw:originalSource?(gl,handle)=>{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture.gpu);
+          gl.uniform1i(gl.getUniformLocation(handle,'uAtlas'),0);}:null});
+      if(originalSource?.eye){
+        const e=originalSource.eye;
+        if(!(e.positions instanceof Float32Array)||!(e.normals instanceof Float32Array)||
+          !(e.colors instanceof Float32Array)||!(e.fade instanceof Float32Array)||
+          e.positions.length!==e.normals.length||e.positions.length!==e.colors.length||
+          e.positions.length!==e.fade.length*3)throw new TypeError('M13_ORIGINAL_EYE_MESH_INVALID');
+        const ep=device.createProgram(originalEyeShaders(be));
+        const eyeMesh=device.createMesh({vertexCount:e.positions.length/3,attributes:[
+          {name:'aPosition',size:3,data:e.positions,dynamic:true},
+          {name:'aNormal',size:3,data:e.normals},
+          {name:'aColor',size:3,data:e.colors},
+          {name:'aFade',size:1,data:e.fade}
+        ]});
+        const enode=scene.createNode();
+        scene.setRenderable(enode,{program:ep,mesh:eyeMesh,pass:'OPAQUE',
+          cull:'NONE',bounds:{center:[0,0,0],radius:3}});
+      }
       const view={name:names[i],canvas,device,pipeline,program,mesh,scene,camera,basis};views.push(view);
       add(canvas,'webglcontextlost',event=>{event.preventDefault();failed=true;status('WebGL context lost. Reload studio; no edit published.');});
     }
@@ -344,6 +417,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     return {views:views.length,revision:session.state().revision};
   }
   function updateAll(){assertReady();
+    if(originalSource)return drawAll(); // Original M1.3 is a viewing reference, never an editable GPU candidate.
     const spec=sculptMeshSpecification(session,uv),p=spec.attributes[0].data,n=spec.attributes[1].data;
     try{
       for(const view of views){view.device.updateMeshAttribute(view.mesh,'aPosition',p);view.device.updateMeshAttribute(view.mesh,'aNormal',n);}
@@ -355,6 +429,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   // restoration; do not adopt the new session if GPU rollback is uncertain.
   function adoptTopology(nextSession,nextUv,nextStages,nextFixture=fixtureSource,nextSource=sourceMetadata){
     assertReady();
+    if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     const previous=sculptMeshSpecification(session,uv),replacement=sculptMeshSpecification(nextSession,nextUv);
     const result=replaceFourSculptViewMeshes(views,previous,replacement,drawAll,
@@ -369,6 +444,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   }
   function subdivide(faceIndex=selectedFace){
     assertReady();
+    if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     validateSculptFaceIndex(faceIndex,session.getTriangles().length/3);
     referenceImports.cancel(); // A pending image import cannot overwrite this topology edit.
@@ -382,7 +458,8 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   }
   function localPointer(event,canvas){const r=canvas.getBoundingClientRect();return {x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};}
   function pointerDown(event,v){try{
-    assertReady();if(event.button!==undefined&&event.button!==0||active)return;
+    assertReady();if(originalSource){status('Original M1.3 is read-only.');return;}
+    if(event.button!==undefined&&event.button!==0||active)return;
     const local=localPointer(event,v.canvas),vp=v.scene.collect(v.camera).viewProjectionMatrix;
     const ray=sculptScreenRay({...local,width:v.canvas.width,height:v.canvas.height,viewProjection:vp});
     const hit=session.pick(ray.origin,ray.direction);if(!hit){status('No surface intersected.');return;}
@@ -427,7 +504,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       ?'Pointer cancellation recovery uncertain; studio quarantined.'
       :'Pointer cancelled; prior geometry restored.');
   });}
-  function operate(fn,label){try{assertReady();referenceImports.cancel();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
+  function operate(fn,label){try{assertReady();if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');referenceImports.cancel();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
   add(controls.undo,'click',()=>operate(()=>session.undo(),'Undo'));
   add(controls.redo,'click',()=>operate(()=>session.redo(),'Redo'));
   // Keyboard-accessible numeric face selection uses exactly the same
@@ -437,6 +514,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     add(controls.faceIndex,'input',event=>{
       try{
         assertReady();
+        if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
         if(active)throw new Error('STUDIO_STROKE_ACTIVE');
         const raw=String(event.target.value);
         if(!/^(0|[1-9][0-9]*)$/.test(raw))
@@ -458,6 +536,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }catch(error){status('Topology edit rejected: '+error.message);}
   });
   if(controls.reference)add(controls.reference,'change',async event=>{
+    if(originalSource){status('Original M1.3 is read-only; return to neutral before importing a reference.');event.target.value='';return;}
     const token=referenceImports.begin();
     const file=event.target.files?.[0];if(!file)return;
     let bitmap=null;
@@ -490,9 +569,10 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     finally{bitmap?.close?.();if(referenceImports.isCurrent(token))event.target.value='';}
   });
   add(controls.save,'click',()=>{
-    try{assertReady();const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
+    try{assertReady();if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
   });
   add(controls.load,'change',async event=>{
+    if(originalSource){status('Original M1.3 is read-only; native editable JSON reload is unavailable.');event.target.value='';return;}
     // Reloads share the image generation gate: a delayed file.text() may not
     // overwrite a newer reference, subdivision, brush edit, or second reload.
     const token=referenceImports.begin();
@@ -508,11 +588,11 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }catch(e){if(referenceImports.isCurrent(token))status('Reload rejected: '+e.message);}
     finally{if(referenceImports.isCurrent(token))event.target.value='';}
   });
-  drawAll();status('Ready: four actual synchronized engine WebGL views.');
+  drawAll();status(originalSource?'Original M1.3 protected reference: four native WebGL views.':'Ready: four actual synchronized engine WebGL views.');
   return Object.freeze({get session(){return session;},drawAll,updateAll,subdivide,
-    saveState:()=>serializeSculptStudioState(session,stages,sourceMetadata),
-    loadState:text=>{referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
+    saveState:()=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');return serializeSculptStudioState(session,stages,sourceMetadata);},
+    loadState:text=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
     views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
-    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace}),
+    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:originalSource?.originalPose??null,originalAtlasMapped:Boolean(originalSource)}),
     dispose(){if(disposed)return;referenceImports.cancel();for(const f of listeners)f();for(const v of views){try{v.scene.dispose();v.device.dispose();}catch{}}disposed=true;}});
 }

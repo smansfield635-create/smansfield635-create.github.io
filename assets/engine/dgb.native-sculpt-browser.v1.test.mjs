@@ -360,3 +360,20 @@ test('C2-B live file.text reload checks generation before topology adoption and 
   assert.match(source,/const restored=restoreSculptStudioState\(source,fixture\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;\s*adoptTopology\(/);
   assert.match(source,/if\(referenceImports\.isCurrent\(token\)\)event\.target\.value='';/);
 });
+
+test('Gen3310 original M1.3 remains protected while C2-B editing paths survive',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  const session=readFileSync(new URL('./dgb.native-sculpt-session.v1.mjs',import.meta.url),'utf8');
+  for(const id of ['m13Archive','m13Pose','returnNeutral','reference','subdivide','faceIndex','load'])
+    assert(html.includes('id="'+id+'"'),id);
+  for(const marker of ["new DecompressionStream('deflate-raw')","crypto.subtle.digest","M13_ZIP_SHA","M13_MEMBER_HASHES","originalEyeAt","source.pose(index)"])
+    assert(html.includes(marker),marker);
+  assert(!html.includes('src="https://drive.google.com'));
+  for(const marker of ['sourceGeometry(originalSource','originalTexturedShaders','originalEyeShaders','originalSource?device.createMesh','Original M1.3 is read-only','restoreSculptStudioState','replaceFourSculptViewMeshes','createSculptReferenceImportGate'])
+    assert(browser.includes(marker),marker);
+  assert(browser.includes('if(originalSource)throw new Error(\'M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN\')'));
+  assert(session.includes('forequarterEditAllowed:false'));
+  assert(session.includes('originalReferenceSelfIntersectionNotAdjudicated'));
+});

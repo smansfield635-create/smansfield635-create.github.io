@@ -33,7 +33,11 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
   <button id="undo" type="button">Undo</button><button id="redo" type="button">Redo</button><button id="save" type="button">Save mesh JSON</button>
   <label class="fileLabel" for="load">Reload mesh JSON<input id="load" type="file" accept="application/json,.json"></label>
   <button id="capture" type="button">Capture four views</button>
+  <label class="fileLabel" for="m13Archive">Open protected original M1.3 ZIP<input id="m13Archive" type="file" accept=".zip,application/zip"></label>
+  <label class="control">Original M1.3 pose<select id="m13Pose" disabled><option value="52">52 · Rest</option></select></label>
+  <button id="returnNeutral" type="button">Return to neutral editing</button>
 </div>
+<p class="small" id="m13Notice">The original M1.3 ZIP remains on this device. Its complete SHA-256 and original fixture, atlas and eye-only appearance are verified locally. Rabbit anatomy is read-only.</p>
 <p class="small">Reference image: load a high-contrast PNG/JPEG/WebP. The studio derives a 24×24 binary silhouette and heuristic depth, not trained photo-to-3D reconstruction. Pointer: press directly on the surface and drag to deform. Use a region selector to protect unrelated vertices; exterior boundary vertices stay frozen. Organic modes share this original stroke history and adjustable X/Y/Z influence. Unsafe faces fail closed; undo/redo acts on an entire brush stroke. Select a surface triangle in any view or enter its index in the keyboard-operable Face index field, then use Subdivide selected face for a verified connected C2-A topology edit. Original rabbit and worlds remain untouched.</p>
 <div class="views" aria-label="Simultaneous real 3D render views">
   <section class="view"><h2>HERO</h2><canvas id="hero" width="600" height="400" tabindex="0" aria-label="Hero sculpt view"></canvas></section>
@@ -44,14 +48,163 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
 <pre id="status" class="status" role="status" aria-live="polite">Initializing native Graphics Engine WebGL contexts…</pre>
 <footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene. Connected edits use deterministic v2 lineage replay; unmodified v1 mesh files remain loadable.</footer>
 <script type="module">
-import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=e9bfb86399797d17ad1c2524056342fea169161bb';
+import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=df9908060bda4d24b478160a85f62a66b9c9cd8d';
+import {createM13OriginalSource} from '../../assets/engine/dgb.native-sculpt-session.v1.mjs?asset=c3e0bc555d5376eb53bc1b8cf27f988a88c0e6fb';
 const $=id=>document.getElementById(id);
+const M13_ZIP_SHA='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
+const M13_MEMBER_HASHES={
+  'fixture.json':'96724e85f7d6c0a60acea4776a6f1d36e9ecb0c66c89182ce307a881a6590725',
+  'rabbit_albedo.png':'986cc7e868e27d1d550b1e324171760c1f6e6f6e318ba32127eb7da4cb1e7b23',
+  'rabbit_visual_appearance.v2.mjs':'6003ba8a4f465443a6c30f7e356fb4085332f8913b02670652d31e3458b03126'
+};
+const hex=bytes=>Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('');
+async function assertHash(bytes,expected,name){
+  if(hex(await crypto.subtle.digest('SHA-256',bytes))!==expected)throw Error('M13_SOURCE_SHA256_MISMATCH:'+name);
+}
+async function zipEntries(bytes,names){
+  // Read ONLY the three known, hashed original members. No ZIP extraction to disk,
+  // network access, or third-party decompressor; ZIP32 archive identity is pinned.
+  const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+  const u16=x=>view.getUint16(x,true),u32=x=>view.getUint32(x,true);
+  let end=-1;
+  for(let k=bytes.length-22;k>=Math.max(0,bytes.length-65557);k--)
+    if(u32(k)===0x06054b50){end=k;break;}
+  if(end<0)throw Error('M13_ZIP_DIRECTORY_MISSING');
+  const entries=new Map(),count=u16(end+10);
+  let cursor=u32(end+16);
+  for(let k=0;k<count;k++){
+    if(u32(cursor)!==0x02014b50)throw Error('M13_ZIP_CENTRAL_ENTRY_INVALID');
+    const length=u16(cursor+28),extra=u16(cursor+30),note=u16(cursor+32),
+      name=new TextDecoder().decode(bytes.subarray(cursor+46,cursor+46+length));
+    if(names.includes(name)){
+      const method=u16(cursor+10),compressed=u32(cursor+20),uncompressed=u32(cursor+24),
+        local=u32(cursor+42);
+      if(u16(cursor+8)&1||method!==8||compressed>2_000_000||uncompressed>2_000_000||
+          u32(local)!==0x04034b50)throw Error('M13_ZIP_MEMBER_UNSUPPORTED:'+name);
+      const start=local+30+u16(local+26)+u16(local+28);
+      if(start+compressed>bytes.length)throw Error('M13_ZIP_MEMBER_OUT_OF_RANGE:'+name);
+      const stream=new Blob([bytes.subarray(start,start+compressed)]).stream()
+        .pipeThrough(new DecompressionStream('deflate-raw'));
+      const extracted=new Uint8Array(await new Response(stream).arrayBuffer());
+      if(extracted.length!==uncompressed)throw Error('M13_ZIP_MEMBER_LENGTH_MISMATCH:'+name);
+      await assertHash(extracted,M13_MEMBER_HASHES[name],name);
+      entries.set(name,extracted);
+    }
+    cursor+=46+length+extra+note;
+  }
+  if(entries.size!==names.length)throw Error('M13_ZIP_REQUIRED_MEMBER_MISSING');
+  return entries;
+}
+async function texturePixels(png){
+  const bitmap=await createImageBitmap(new Blob([png],{type:'image/png'}));
+  try{
+    const c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;
+    const cx=c.getContext('2d',{willReadFrequently:true});cx.drawImage(bitmap,0,0);
+    const rgba=cx.getImageData(0,0,c.width,c.height).data;
+    const flipped=new Uint8Array(rgba.length),stride=c.width*4;
+    for(let y=0;y<c.height;y++)
+      flipped.set(rgba.subarray((c.height-1-y)*stride,(c.height-y)*stride),y*stride);
+    return {width:c.width,height:c.height,pixels:flipped};
+  }finally{bitmap.close();}
+}
+function originalEyeAt(module,raw,frame){
+  const map=frame.sourceRender.renderToMaster,masters=frame.sourceMasterPosition,
+    originalXYZ=new Float32Array(map.length*3);
+  for(let i=0;i<map.length;i++)originalXYZ.set(masters.subarray(3*map[i],3*map[i]+3),3*i);
+  let eyeAttributes=null;
+  const captureDevice={
+    createMesh({attributes}){eyeAttributes=Object.fromEntries(attributes.map(a=>[a.name,new Float32Array(a.data)]));return {};},
+    createProgram(){return {};},
+    updateMeshAttribute(_mesh,name,data){if(!eyeAttributes)throw Error('M13_EYE_CAPTURE_MISSING');
+      eyeAttributes[name]=new Float32Array(data);}
+  };
+  if(typeof module.createRabbitVisualAppearance!=='function')throw Error('M13_EYE_MODULE_EXPORT_MISSING');
+  const appearance=module.createRabbitVisualAppearance({device:captureDevice,backend:'WEBGL2',
+    bridge:{snapshot:()=>({positions:originalXYZ})},fixture:raw,atlas:{}});
+  if(appearance.status().furFins!==0||appearance.status().tailIncluded!==false)
+    throw Error('M13_REJECTED_FUR_OR_TAIL_PRESENT');
+  const convert=a=>{const b=new Float32Array(a.length);
+    for(let k=0;k<a.length;k+=3){b[k]=a[k];b[k+1]=a[k+2];b[k+2]=-a[k+1];}return b;};
+  return {positions:convert(eyeAttributes.a_position),normals:convert(eyeAttributes.a_normal),
+    colors:eyeAttributes.a_color,fade:eyeAttributes.a_fade};
+}
+let studio=null,source=null,rawM13=null,eyeModule=null,atlas=null,originalImportGeneration=0;
+const canvases=['hero','side','front','rear'].map($);
+const controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','subdivide','faceIndex','reference','save','load'].map(id=>[id,$(id)]));
+function install(fixture){
+  studio?.dispose();studio=null;
+  studio=createNativeSculptStudio({canvases,controls,fixture,backend:source?'WEBGL2':'AUTO',
+    onStatus:(message,state)=>{$('status').textContent=message+'\\nVertices '+state.vertices+
+      ' • Triangles '+state.triangles+' • Revision '+state.revision+
+      ' • Topology edits '+state.topologyDepth+' • Selected face '+(state.selectedFace??'none')+
+      ' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});
+  window.__dgbSculptLab={get studio(){return studio;},canvases,controls,ready:true,
+    get originalM13(){return Boolean(source);}};
+}
+function showOriginalPose(index){
+  if(!source||!rawM13||!eyeModule||!atlas)throw Error('M13_SOURCE_NOT_LOADED');
+  const frame=source.pose(index);
+  frame.sourceRender.atlasPixels=atlas.pixels;
+  frame.sourceRender.atlasWidth=atlas.width;
+  frame.sourceRender.atlasHeight=atlas.height;
+  frame.sourceRender.eye=originalEyeAt(eyeModule,rawM13,frame);
+  install(frame);
+  $('m13Notice').textContent='Original M1.3 imported locally, immutable reference pose '+index+
+    ' of 63. Master vertices 1,134; UV-split render vertices 1,409; original 16 morph targets and 64 pose rows retained. Anatomical editing remains disabled.';
+}
+async function importOriginalZip(file,generation){
+  if(file.size!==11170040)throw Error('M13_ORIGINAL_ARCHIVE_SIZE_MISMATCH');
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  if(generation!==originalImportGeneration)return;
+  await assertHash(bytes,M13_ZIP_SHA,'original_archive');
+  const entries=await zipEntries(bytes,Object.keys(M13_MEMBER_HASHES));
+  const nextRaw=JSON.parse(new TextDecoder().decode(entries.get('fixture.json')));
+  const nextSource=createM13OriginalSource(nextRaw);
+  const nextAtlas=await texturePixels(entries.get('rabbit_albedo.png'));
+  const code=new TextDecoder().decode(entries.get('rabbit_visual_appearance.v2.mjs'));
+  const url=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));
+  let nextModule;try{nextModule=await import(url);}finally{URL.revokeObjectURL(url);}
+  if(generation!==originalImportGeneration)return;
+  source=nextSource;rawM13=nextRaw;atlas=nextAtlas;eyeModule=nextModule;
+  $('m13Pose').replaceChildren();
+  for(let i=0;i<64;i++){const option=document.createElement('option');option.value=String(i);
+    option.textContent=i===52?'52 · Rest':i===24?'24 · Hop':String(i);
+    $('m13Pose').append(option);}
+  $('m13Pose').value='52';showOriginalPose(52);$('m13Pose').disabled=false;
+}
 try{
-  const canvases=['hero','side','front','rear'].map($),controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','subdivide','faceIndex','reference','save','load'].map(id=>[id,$(id)]));
-  const studio=createNativeSculptStudio({canvases,controls,onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+' • Triangles '+state.triangles+' • Revision '+state.revision+' • Topology edits '+state.topologyDepth+' • Selected face '+(state.selectedFace??'none')+' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});
-  // Inspector exposes real software state for deterministic browser replay only.
-  window.__dgbSculptLab={studio,canvases,controls,ready:true};
-  $('capture').addEventListener('click',()=>{const c=document.createElement('canvas');c.width=1200;c.height=800;const g=c.getContext('2d');canvases.forEach((v,i)=>g.drawImage(v,600*(i%2),400*Math.floor(i/2),600,400));const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='dgb-sculpt-four-real-webgl-views.png';a.click();});
-}catch(error){$('status').textContent='Native Sculpt Lab blocked: '+error.message;window.__dgbSculptLab={ready:false,error:error.message};}
+  install(undefined);
+  $('capture').addEventListener('click',()=>{
+    const c=document.createElement('canvas');c.width=1200;c.height=800;
+    const g=c.getContext('2d');canvases.forEach((v,i)=>g.drawImage(v,600*(i%2),400*Math.floor(i/2),600,400));
+    const a=document.createElement('a');a.href=c.toDataURL('image/png');
+    a.download=source?'dgb-m13-original-readonly-four-webgl-views.png':'dgb-sculpt-four-real-webgl-views.png';a.click();
+  });
+  $('m13Archive').addEventListener('change',async event=>{
+    const file=event.target.files?.[0];event.target.value='';if(!file)return;
+    const generation=++originalImportGeneration;
+    $('m13Notice').textContent='Verifying original M1.3 archive SHA-256 locally…';
+    try{await importOriginalZip(file,generation);}
+    catch(error){if(generation===originalImportGeneration){
+      $('m13Notice').textContent='Original import rejected: '+error.message;
+      $('status').textContent='M1.3 import fail-closed: '+error.message;
+      window.__dgbSculptLab.importError=error.message;
+    }}
+  });
+  $('m13Pose').addEventListener('change',event=>{
+    try{showOriginalPose(Number(event.target.value));}
+    catch(error){$('status').textContent='Original pose rejected: '+error.message;}
+  });
+  $('returnNeutral').addEventListener('click',()=>{
+    ++originalImportGeneration;source=null;rawM13=null;eyeModule=null;atlas=null;
+    $('m13Pose').disabled=true;
+    $('m13Notice').textContent='Neutral editing restored; private archive remains on this device.';
+    try{install(undefined);}
+    catch(error){$('status').textContent='Neutral reload rejected: '+error.message;}
+  });
+}catch(error){
+  $('status').textContent='Native Sculpt Lab blocked: '+error.message;
+  window.__dgbSculptLab={ready:false,error:error.message};
+}
 </script>
 </body></html>

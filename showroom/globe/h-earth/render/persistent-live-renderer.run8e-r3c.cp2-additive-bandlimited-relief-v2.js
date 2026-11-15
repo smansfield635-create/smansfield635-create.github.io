@@ -1105,6 +1105,21 @@ void main(){
       );
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;
+      // Gen3309: use existing approved soil under low-slope positive-X meadow.
+      // This bounded, feathered weighting protects steep rock and mountains.
+      // ONE_REPAIR: blend outward without stamping a four-sided material edge.
+      // Bind to the existing meadow geography; change no atlas or terrain data.
+      vec2 positiveXMeadowCenter=
+        0.5*(uMeadowGroundBounds.xy+uMeadowGroundBounds.zw);
+      vec2 positiveXMeadowReach=
+        0.5*(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy)+vec2(20.0);
+      float positiveXMeadowNormalizedDistance=
+        length((world-positiveXMeadowCenter)/positiveXMeadowReach);
+      float positiveXIdentityContinuity=
+        (1.0-smoothstep(0.70,1.30,positiveXMeadowNormalizedDistance))*
+        (1.0-smoothstep(0.12,0.35,slope))*
+        (1.0-smoothstep(0.18,0.50,rockExposure));
+      identityWeight*=1.0-0.85*positiveXIdentityContinuity;
       palette=mix(palette,identityBase,identityWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every

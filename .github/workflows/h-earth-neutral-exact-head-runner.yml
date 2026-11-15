@@ -1335,7 +1335,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
   gen3287-matched-material-gpu:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' || github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -1373,10 +1373,10 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
-      - name: Capture same-pose desktop ridge soil-slope eligibility A/B
+      - name: Capture same-pose desktop R8 slope or R10 material-light diagnostic
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1
+          H_EARTH_COMPARISON_PROFILE: ${{ github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115' && 'GEN3287_R10_MATERIAL_LIGHTING_V1' || 'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1' }}
         run: |
           timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen3286-material-ab"
       - name: Preserve images and truthful complete or partial receipt

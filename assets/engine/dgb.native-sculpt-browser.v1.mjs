@@ -49,6 +49,74 @@ const shaders=backend=>{
 };
 
 
+// Read bounded image headers BEFORE createImageBitmap allocates decoded pixels.
+// A small compressed image may describe an enormous decoded surface.
+export async function readSculptReferenceImageDimensions(file) {
+  if (!file || !/^image\\/(png|jpeg|webp)$/.test(file.type) ||
+    !Number.isSafeInteger(file.size) || file.size < 16 || file.size > 5000000 ||
+    typeof file.arrayBuffer !== 'function')
+    throw new Error('STUDIO_REFERENCE_IMAGE_TYPE_OR_SIZE_REJECTED');
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  if (bytes.length !== file.size) throw new Error('STUDIO_REFERENCE_IMAGE_HEADER_INVALID');
+  const ascii = (at, word) => [...word].every((ch, i) => bytes[at + i] === ch.charCodeAt(0));
+  const be16 = at => (bytes[at] << 8) | bytes[at + 1];
+  const be32 = at => (bytes[at] * 16777216 + (bytes[at+1] << 16) +
+    (bytes[at+2] << 8) + bytes[at+3]) >>> 0;
+  const le24 = at => bytes[at] | (bytes[at+1] << 8) | (bytes[at+2] << 16);
+  let width = 0, height = 0;
+  if (file.type === 'image/png') {
+    if (bytes.length < 24 || ![137,80,78,71,13,10,26,10].every((b,i)=>bytes[i]===b) ||
+      !ascii(12, 'IHDR') || be32(8) !== 13)
+      throw new Error('STUDIO_REFERENCE_IMAGE_HEADER_INVALID');
+    width = be32(16); height = be32(20);
+  } else if (file.type === 'image/jpeg') {
+    if (bytes[0] !== 255 || bytes[1] !== 216)
+      throw new Error('STUDIO_REFERENCE_IMAGE_HEADER_INVALID');
+    let at = 2;
+    const sof = new Set([192,193,194,195,197,198,199,201,202,203,205,206,207]);
+    while (at + 4 <= bytes.length) {
+      if (bytes[at] !== 255) break;
+      while (at < bytes.length && bytes[at] === 255) at++;
+      const code = bytes[at++];
+      if (code === 218 || code === 217 || code === undefined) break;
+      if (code === 1 || (code >= 208 && code <= 215)) continue;
+      if (at + 2 > bytes.length) break;
+      const length = be16(at);
+      if (length < 2 || at + length > bytes.length) break;
+      if (sof.has(code)) {
+        if (length < 7) break;
+        height = be16(at + 3); width = be16(at + 5); break;
+      }
+      at += length;
+    }
+  } else if (file.type === 'image/webp') {
+    if (bytes.length < 30 || !ascii(0, 'RIFF') || !ascii(8, 'WEBP'))
+      throw new Error('STUDIO_REFERENCE_IMAGE_HEADER_INVALID');
+    if (ascii(12, 'VP8X')) {
+      width = 1 + le24(24); height = 1 + le24(27);
+    } else if (ascii(12, 'VP8 ') && bytes[23] === 157 && bytes[24] === 1 && bytes[25] === 42) {
+      width = (bytes[26] | (bytes[27] << 8)) & 16383;
+      height = (bytes[28] | (bytes[29] << 8)) & 16383;
+    } else if (ascii(12, 'VP8L') && bytes[20] === 47) {
+      width = 1 + (bytes[21] | ((bytes[22] & 63) << 8));
+      height = 1 + ((bytes[22] >>> 6) | (bytes[23] << 2) | ((bytes[24] & 15) << 10));
+    }
+  }
+  if (!Number.isSafeInteger(width) || !Number.isSafeInteger(height) ||
+    width < 1 || height < 1)
+    throw new Error('STUDIO_REFERENCE_IMAGE_HEADER_INVALID');
+  if (width * height > 16000000)
+    throw new Error('STUDIO_REFERENCE_DECODE_BUDGET_EXCEEDED');
+  return Object.freeze({ width, height });
+}
+
+export function validateSculptFaceIndex(index, faceCount) {
+  if (!Number.isSafeInteger(index) || !Number.isSafeInteger(faceCount) ||
+    faceCount < 1 || index < 0 || index >= faceCount)
+    throw new RangeError('STUDIO_SELECTED_FACE_INVALID');
+  return index;
+}
+
 export function makeReferenceMaskFromRgba({width,height,data}={}){
   if(!Number.isInteger(width)||!Number.isInteger(height)||width<8||height<8||width>64||height>64||
     !(data instanceof Uint8ClampedArray||data instanceof Uint8Array)||data.length!==width*height*4)
@@ -351,10 +419,12 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     let bitmap=null;
     try{
       assertReady();
-      if(!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>5000000)
-        throw new Error('STUDIO_REFERENCE_IMAGE_TYPE_OR_SIZE_REJECTED');
+      // Reject oversized decoded surfaces from compressed headers first.
+      const dimensions=await readSculptReferenceImageDimensions(file);
       bitmap=await createImageBitmap(file);
-      if(bitmap.width*bitmap.height>16000000)throw new Error('STUDIO_REFERENCE_DECODE_BUDGET_EXCEEDED');
+      if(bitmap.width!==dimensions.width||bitmap.height!==dimensions.height ||
+        bitmap.width*bitmap.height>16000000)
+        throw new Error('STUDIO_REFERENCE_DECODE_BUDGET_EXCEEDED');
       const small=document.createElement('canvas');small.width=24;small.height=24;
       const ctx=small.getContext('2d',{willReadFrequently:true});
       if(!ctx)throw new Error('STUDIO_REFERENCE_2D_CONTEXT_MISSING');

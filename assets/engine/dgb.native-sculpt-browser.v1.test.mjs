@@ -83,6 +83,8 @@ test('C2-B original Sculpt Lab exposes human topology action and updated source 
   assert.match(browser,/restoreConnectedSculptTopologyCandidate/);
   assert.match(browser,/replaceFourSculptViewMeshes\(views,previous,replacement,drawAll/);
   assert.match(browser,/get session\(\)\{return session;/);
+  assert.match(browser,/abortRejectedSculptStroke\(session,updateAll,failed\)/);
+  assert.match(browser,/Pointer cancelled; prior geometry restored/);
 });
 
 

@@ -301,3 +301,21 @@ test('C2-A independent review: orphan new geometry rejected, projected parent co
   moved.newVertices[0].barycentric=[.2,.4,.4];
   assert.equal(make(moved).counts.outputFaces,6);
 });
+
+test('C2-A: shared-vertex 3D penetration rejects, but lawful shared-edge contact remains valid',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const crossing=new Float32Array([0,0,0,1,0,0,0,1,0,.5,.25,1,.5,.25,-1]);
+  assert.throws(()=>verifySculptGeometry(crossing,new Uint32Array([0,1,2,0,3,4])),/SELF_INTERSECTION/);
+  const sourcePositions=new Float32Array([0,0,0,1,0,0,0,1,0,.25,.15,.01,.25,.15,.10]);
+  const sourceTriangles=new Uint32Array([0,1,2,0,3,4]);
+  assert.doesNotThrow(()=>verifySculptGeometry(sourcePositions,sourceTriangles));
+  assert.throws(()=>make({
+    sourceId:'shared-vertex-interior-crossing',positions:sourcePositions,triangles:sourceTriangles,
+    regions:Array(5).fill('body'),protectedVertices:[0],selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,5]},{sourceFace:0,indices:[1,2,5]},{sourceFace:0,indices:[2,0,5]}],
+    uvHandoff:null
+  }),/SELF_INTERSECTION/);
+  const lawful=new Float32Array([0,0,0,1,0,0,0,1,0,0,0,1]);
+  assert.doesNotThrow(()=>verifySculptGeometry(lawful,new Uint32Array([0,1,2,1,0,3])));
+});

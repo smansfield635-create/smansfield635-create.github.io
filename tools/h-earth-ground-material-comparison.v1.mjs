@@ -523,6 +523,28 @@ export function gen3287SurfaceAttributeSource(source,mode){
 // Vertex-base and geometric-normal distinguish facet/attribute discontinuity
 // from downstream material shading with the same unchanged camera.
 
+
+export const GEN3287_R10_MODES=Object.freeze(['baseline','prelight-albedo','light-response']);
+// R10 display-only separation. Original stage calculations remain unchanged.
+export function gen3287R10MaterialLightingSource(source,mode){
+  if(!GEN3287_R10_MODES.includes(mode))throw Error('GEN3287_R10_MODE_INVALID:'+mode);
+  const output='outColor=vec4(lit,outputAlpha);';
+  if(source.split(output).length!==2)throw Error('GEN3287_R10_OUTPUT_ANCHOR_DRIFT');
+  if(mode==='baseline')return source;
+  // Neutral response excludes product albedo, specular, fog and contact.
+  const operand=mode==='prelight-albedo'?'base':
+    'vec3(clamp((ambient+directional+rim*0.14*cavernSky)*0.40,0.0,1.0))';
+  const patch=`float r10RidgeDisplayWindow=(vRoleCode==1u && vPrimitiveIndex==0u && vSurfaceClassCode==6u)
+    ?1.0-smoothstep(16.0,44.0,distance(vWorldPosition.xz,vec2(152.0,-224.0))):0.0;
+  if(r10RidgeDisplayWindow>0.0){
+    vec3 r10DiagnosticLinear=${operand};
+    vec3 r10DiagnosticDisplay=pow(clamp(r10DiagnosticLinear*1.12,0.0,1.0),vec3(1.0/2.2));
+    lit=mix(lit,r10DiagnosticDisplay,r10RidgeDisplayWindow);
+  }
+  ${output}`;
+  return replaceExactlyOnce(source,output,patch);
+}
+
 export const GEN3287_R8_SOIL_SLOPE_MODES=Object.freeze(['baseline','ridge-slope-eligibility-neutral']);
 export function gen3287R8SoilSlopeSource(source,mode){
   if(!GEN3287_R8_SOIL_SLOPE_MODES.includes(mode))throw Error('GEN3287_R8_MODE_INVALID:'+mode);
@@ -591,22 +613,24 @@ export async function runGen3286(argv){
   const product=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_EXACT_PRODUCT_AB_V1';
   const surfaceAttribution=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_SURFACE_ATTRIBUTES_V1';
   const r8Slope=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R8_SOIL_SLOPE_CAUSAL_V1';
+  const r10=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R10_MATERIAL_LIGHTING_V1';
   const browserVariation=isolation||handoff||surfaceAttribution||r8Slope;
-  const viewports=product?GEN3288_PRODUCT_AB.viewports:((scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
-  const poses=(browserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
-  const labels=r8Slope?GEN3287_R8_SOIL_SLOPE_MODES:(surfaceAttribution?GEN3287_SURFACE_ATTRIBUTE_MODES:(handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']))));
+  const anyBrowserVariation=browserVariation||r10;
+  const viewports=product?GEN3288_PRODUCT_AB.viewports:((scout||anyBrowserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
+  const poses=(anyBrowserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
+  const labels=r10?GEN3287_R10_MODES:(r8Slope?GEN3287_R8_SOIL_SLOPE_MODES:(surfaceAttribution?GEN3287_SURFACE_ATTRIBUTE_MODES:(handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate'])))));
   const receipt={
-    schema:r8Slope?'H_EARTH_GEN3287_R8_SOIL_SLOPE_CAUSAL_WEBGL_v1':surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:r8Slope?'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1':surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    schema:r10?'H_EARTH_GEN3287_R10_MATERIAL_LIGHTING_WEBGL_v1':r8Slope?'H_EARTH_GEN3287_R8_SOIL_SLOPE_CAUSAL_WEBGL_v1':surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:r10?'GEN3287_R10_MATERIAL_LIGHTING_V1':r8Slope?'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1':surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
     heads:product?GEN3288_PRODUCT_AB.heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
-    witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:browserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
+    witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:anyBrowserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
     runs:[],views:[],comparisons:[],errors:[]};
   const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
   let browser=null,server=null;persist();
   try{
     const identities={};
     for(const label of ['baseline','candidate']){
-      const useGen3288Source=product||((surfaceAttribution||r8Slope)&&label==='candidate');
+      const useGen3288Source=product||((surfaceAttribution||r8Slope||r10)&&label==='candidate');
       identities[label]=useGen3288Source?
         gen3288ProductVerifySource(args['--'+label+'-dir'],label):
         gen3286VerifySource(args['--'+label+'-dir'],label);
@@ -617,8 +641,8 @@ export async function runGen3286(argv){
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
     for(const viewport of viewports){
       for(const [index,label] of labels.entries()){
-        const dir=args[browserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
-        const runRecord={label,viewport,head:product?GEN3288_PRODUCT_AB.heads[label]:(browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
+        const dir=args[anyBrowserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
+        const runRecord={label,viewport,head:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
         receipt.runs.push(runRecord);persist();
         server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
         let listening=false;
@@ -634,9 +658,9 @@ export async function runGen3286(argv){
         const originalRoute=fs.readFileSync(path.join(dir,ROUTE.slice(1)),'utf8');
         await page.route(url=>url.pathname===ROUTE,route=>route.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(originalRoute)}));
         runRecord.routeUnchangedSha256=sha(originalRoute);
-        if(browserVariation){
+        if(anyBrowserVariation){
           const rendererSource=fs.readFileSync(path.join(dir,RENDERER.slice(1)),'utf8');
-          const override=r8Slope?gen3287R8SoilSlopeSource(rendererSource,label):(surfaceAttribution?gen3287SurfaceAttributeSource(rendererSource,label):(handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label)));
+          const override=r10?gen3287R10MaterialLightingSource(rendererSource,label):r8Slope?gen3287R8SoilSlopeSource(rendererSource,label):(surfaceAttribution?gen3287SurfaceAttributeSource(rendererSource,label):(handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label)));
           runRecord.rendererOriginalSha256=sha(rendererSource);
           runRecord.rendererServedSha256=sha(override);
           runRecord.browserOnlyMaterialOperand=label;
@@ -688,7 +712,7 @@ export async function runGen3286(argv){
           source+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
           globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([source],{type:'text/javascript'})));
         });
-        if(browserVariation&&runRecord.shaderInterceptions<1)throw Error('GEN3288_SHADER_NOT_ACTUALLY_INTERCEPTED:'+label);
+        if(anyBrowserVariation&&runRecord.shaderInterceptions<1)throw Error('GEN3288_SHADER_NOT_ACTUALLY_INTERCEPTED:'+label);
         runRecord.actualBrowserExecution=true;persist();
         let sequence=30000,previousFrame=0;
         for(const pose of poses){
@@ -707,10 +731,10 @@ export async function runGen3286(argv){
           }
           let stableCount=0,priorSignature=null,deadline=Date.now()+120000,settleAttempts=0;
           while(stableCount<2){
-            const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope})=>{
+            const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope,r10})=>{
               const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_ASSET_SETTLE');
               const queue=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt()?.resources?.treeCollection?.queue;
-              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope,queue);
+              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope||r10,queue);
               if(presented){
                 globalThis.__HEarthAuditPresent(state);
                 await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
@@ -722,7 +746,7 @@ export async function runGen3286(argv){
               const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
               const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
               return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1),presented};
-            },{pose,sequence:++sequence,surfaceAttribution,r8Slope});
+            },{pose,sequence:++sequence,surfaceAttribution,r8Slope,r10});
             stableCount=check.presented&&check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
             priorSignature=check.asset.signature;
             // Durable first-pose evidence: keep unchanged 120s guard and actual frame parity.
@@ -755,7 +779,7 @@ export async function runGen3286(argv){
               glError:gl.getError(),contextLost:gl.isContextLost(),drawnFrameCount:g.counters?.gpuFramebufferPresentationCount,
               grassResidency:g.resources?.vegetationResidency??null,assetSignature:asset.signature,assetsReady:asset.ready,
               canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},pngDataUrl};
-          },{pose,sequence:++sequence,passes:browserVariation?3:8});
+          },{pose,sequence:++sequence,passes:anyBrowserVariation?3:8});
           if(result.frame?.navigationSequence!==sequence||result.frame.frameSequence<=previousFrame||!result.assetsReady||result.assetSignature!==priorSignature)throw Error('GEN3286_FRAME_OR_ASSET_MISMATCH:'+pose.id);
           if(!result.glVersion.includes('WebGL 2.0')||!result.glslVersion.includes('WebGL GLSL ES 3.00')||result.glError!==0||result.contextLost!==false)throw Error('GEN3286_GPU_INVALID:'+pose.id);
           if(!sameFinite(result.state.position.x,pose.x,1e-6)||!sameFinite(result.state.position.z,pose.z,1e-6)||!sameHeading(result.state.yawDegrees,pose.yaw)||!sameFinite(result.state.pitchDegrees,pose.pitch,1e-7))throw Error('GEN3286_NAVIGATION_MISMATCH:'+pose.id);
@@ -766,14 +790,14 @@ export async function runGen3286(argv){
           const filename=label+'-'+viewport.id+'-'+pose.id+'.png';
           fs.writeFileSync(path.join(out,filename),bytes);
           const {pngDataUrl,...observation}=result;
-          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:product?GEN3288_PRODUCT_AB.heads[label]:(browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])});
+          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])});
           previousFrame=result.frame.frameSequence;persist();
         }
         runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
-        await context.close();server.kill();server=null;(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,browserVariation?'baseline':label));
+        await context.close();server.kill();server=null;(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,anyBrowserVariation?'baseline':label));
       }
-      if(browserVariation)for(const pose of poses){
+      if(anyBrowserVariation)for(const pose of poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
         if(views.length!==labels.length)throw Error('GEN3288_INCOMPLETE_OPERAND_SET:'+pose.id);
         const A=views.find(v=>v.label==='baseline');
@@ -810,11 +834,12 @@ export async function runGen3286(argv){
       if(receipt.views.length+(receipt.rejectedWitnesses?.length??0)!==poses.length||receipt.views.length<4||receipt.comparisons.length!==0)throw Error('GEN3286_SCOUT_INCOMPLETE');
       receipt.result='GEN3286_BASELINE_DESKTOP_WITNESS_IMAGES_CAPTURED_UNQUALIFIED_SCOUT';
       receipt.visualSuccess='WITNESS_ONLY_AWAITING_SCREEN_INSPECTION';
-    }else if(browserVariation){
-      if(r8Slope){if(receipt.views.length!==8||receipt.comparisons.length!==4)throw Error('GEN3287_R8_SLOPE_IMAGES_INCOMPLETE');}
+    }else if(anyBrowserVariation){
+      if(r10){if(receipt.views.length!==12||receipt.comparisons.length!==8)throw Error('GEN3287_R10_STAGE_IMAGES_INCOMPLETE');}
+       else if(r8Slope){if(receipt.views.length!==8||receipt.comparisons.length!==4)throw Error('GEN3287_R8_SLOPE_IMAGES_INCOMPLETE');}
       else if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
-      receipt.result=r8Slope?'ACTUAL_WEBGL2_RIDGE_SLOPE_ELIGIBILITY_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':surfaceAttribution?'ACTUAL_WEBGL2_SURFACE_ATTRIBUTE_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':(handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION');
+      receipt.result=r10?'ACTUAL_WEBGL2_R10_MATERIAL_LIGHT_SPLIT_CAPTURED_NO_PRODUCT_MUTATION':r8Slope?'ACTUAL_WEBGL2_RIDGE_SLOPE_ELIGIBILITY_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':surfaceAttribution?'ACTUAL_WEBGL2_SURFACE_ATTRIBUTE_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':(handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION');
     }else if(product){
       if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_VISUAL_AND_OWNER_REVIEW';
@@ -830,7 +855,7 @@ export async function runGen3286(argv){
 }
 
 export async function run(argv){
-  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1','GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1','GEN3287_R8_SOIL_SLOPE_CAUSAL_V1','GEN3287_R10_MATERIAL_LIGHTING_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

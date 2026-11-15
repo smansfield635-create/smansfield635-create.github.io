@@ -363,3 +363,36 @@ test('C2-A Copilot medium: omitted trusted protectedVertices defaults empty only
   assert.throws(()=>load(saved,{...source,protectedVertices:null}),/TRUSTED_SOURCE_REQUIRED/);
   assert.throws(()=>load(saved,{...source,protectedVertices:[0]}),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
 });
+
+test('C2-A Copilot round-two: detached component original vertex cannot be reused as child parent corner',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'detached-component-reuse',
+    positions:new Float32Array([0,0,0,1,0,0,0,1,0,.25,.25,.08,.18,.23,.18,.25,.18,.18]),
+    triangles:new Uint32Array([0,1,2,3,4,5]),regions:Array(6).fill('body'),protectedVertices:[],selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[.2,.5,.3],normalOffset:.06,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,3]},{sourceFace:0,indices:[1,2,6]},
+      {sourceFace:0,indices:[2,0,3]},{sourceFace:0,indices:[2,3,6]},{sourceFace:0,indices:[3,1,6]}],uvHandoff:null};
+  assert.throws(()=>make(source),/C2A_FALSE_PARENT_SOURCE_VERTEX/);
+  const lawful={...source,replacementFaces:[{sourceFace:0,indices:[0,1,6]},
+    {sourceFace:0,indices:[1,2,6]},{sourceFace:0,indices:[2,0,6]}]};
+  const candidate=make(lawful);
+  assert.equal(candidate.counts.sourceFaces,2);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(load(candidate.serialize(),lawful).serialize(),candidate.serialize());
+});
+
+test('C2-A Copilot round-two: originally referenced protected vertex cannot be orphaned by replacement faces',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'protected-center-fan',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0,.5,.5,0]),
+    triangles:new Uint32Array([0,1,4,1,2,4,2,3,4,3,0,4]),
+    regions:Array(5).fill('body'),protectedVertices:[4],selectedFaces:[0,1,2,3],
+    newVertices:[{sourceFace:0,barycentric:[0,0,1],normalOffset:.08,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,5]},{sourceFace:1,indices:[1,2,5]},
+      {sourceFace:2,indices:[2,3,5]},{sourceFace:3,indices:[3,0,5]}],uvHandoff:null};
+  assert.throws(()=>make(source),/C2A_PROTECTED_SOURCE_VERTEX_REMOVED/);
+  const valid={...source,protectedVertices:[0]};
+  const candidate=make(valid);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(load(candidate.serialize(),valid).serialize(),candidate.serialize());
+});

@@ -30,7 +30,7 @@ test('Stage A patch is one bounded real terrain shader insertion', () => {
   assert.match(stage, /inlandIdentity=smoothstep\(/);
   assert.match(stage, /protectedGrove=1\.0-smoothstep\(/);
   assert.match(stage, /identityWeight=inlandIdentity\*/);
-  assert.match(stage, /palette=mix\(palette,identityBase,identityWeight\)/);
+  assert.match(stage, /palette=mix\(palette,identityBase,\s*identityWeight\*\(1\.0-approvedSoilMaterialProtection\)\)/);
 });
 
 test('Visible ground identities use spatially continuous material mechanisms', () => {
@@ -62,6 +62,39 @@ test('Approved real soil image and independent native shoreline/woodland/plant p
     'WOODLAND_FINE_GRASS_FS',
     'RENDERED_BEACH_GLSL'
   ]) assert.ok(source.includes(token), 'protected renderer marker missing: ' + token);
+});
+
+// Gen3311 checks material ownership, not pixel-level or owner visual acceptance.
+test('Original approved soil remains the substrate after regional and habitat color stages', () => {
+  const soil=source.indexOf('vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;');
+  const owner=source.indexOf('approvedSoilMaterialProtection=smoothstep(');
+  const identity=source.indexOf('palette=mix(palette,identityBase,');
+  const groundcover=source.indexOf('palette=mix(palette,groundcoverTone,');
+  const habitat=source.indexOf('float approvedSoilHabitatProtection=(vRoleCode==1u&&!geologicalEarthRock)?');
+  assert.ok(soil>0&&soil<owner&&owner<identity&&identity<groundcover&&groundcover<habitat);
+  assert.match(source,/approvedSoilMaterialProtection=smoothstep\(\s*0\.12,0\.80,worldSoilWeight\*worldSoilAlbedoAuthority/);
+  assert.match(source,/identityWeight\*\(1\.0-approvedSoilMaterialProtection\)/);
+  assert.match(source,/groundcoverWeight\*\(1\.0-approvedSoilMaterialProtection\)/);
+  assert.match(source,/float nativeHabitatMaterial=clamp\(max\(habitatCoverage,habitatMaterialCoverage\),0\.0,1\.0\)/);
+  assert.match(source,/approvedSoilMaterialProtection\*habitatMaterialProtection\(vWorldPosition\.xz\)\*/);
+  assert.match(source,/\(1\.0-nativeHabitatMaterial\):0\.0/);
+  assert.match(source,/habitatColorCoverage\*\.68\*\(1\.0-approvedSoilHabitatProtection\)/);
+  assert.doesNotMatch(source,/clearingSoilInterior|worldSoilReferenceLink/);
+  assert.ok(source.includes('vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;'));
+});
+
+test('Material-owner protection is continuous and protects native regions', () => {
+  const smoothstep=(lo,hi,v)=>{const t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));return t*t*(3-2*t);};
+  const weights=[0,0.04,0.12,0.22,0.42,0.64,0.80,0.94,1].map(v=>smoothstep(0.12,0.80,v));
+  assert.equal(weights[0],0);
+  assert.equal(weights.at(-1),1);
+  for(let i=1;i<weights.length;i++)assert.ok(weights[i]>=weights[i-1]);
+  for(const owner of [0,0.3,0.7,1]){
+    assert.equal(owner*(1-1),0,'native full habitat retains its existing color');
+    assert.equal(owner*0,0,'protected grove/oasis gate prevents non-native overlay alteration');
+  }
+  assert.ok(source.includes('habitatMaterialProtection(vWorldPosition.xz)'));
+  assert.ok(source.includes('(vRoleCode==1u&&!geologicalEarthRock)?'));
 });
 
 test('Stage A does not alter canonical B2 terrain or successor material source bytes', () => {

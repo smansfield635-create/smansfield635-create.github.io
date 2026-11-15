@@ -493,11 +493,20 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     try{assertReady();const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
   });
   add(controls.load,'change',async event=>{
+    // Reloads share the image generation gate: a delayed file.text() may not
+    // overwrite a newer reference, subdivision, brush edit, or second reload.
+    const token=referenceImports.begin();
     const file=event.target.files?.[0];if(!file)return;
-    try{assertReady();referenceImports.cancel();const source=await file.text(),restored=restoreSculptStudioState(source,fixture);
+    try{
+      assertReady();
+      const source=await file.text();
+      if(!referenceImports.isCurrent(token))return;
+      const restored=restoreSculptStudioState(source,fixture);
+      if(!referenceImports.isCurrent(token))return;
       adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);
       status('Reloaded verified editable mesh and topology lineage.');
-    }catch(e){status('Reload rejected: '+e.message);}finally{event.target.value='';}
+    }catch(e){if(referenceImports.isCurrent(token))status('Reload rejected: '+e.message);}
+    finally{if(referenceImports.isCurrent(token))event.target.value='';}
   });
   drawAll();status('Ready: four actual synchronized engine WebGL views.');
   return Object.freeze({get session(){return session;},drawAll,updateAll,subdivide,

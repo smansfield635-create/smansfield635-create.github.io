@@ -494,9 +494,9 @@ export function gen3288HandoffSource(source,mode){
 
 export const GEN3288_PRODUCT_AB=Object.freeze({
   profile:'GEN3288_EXACT_PRODUCT_AB_V1',
-  heads:Object.freeze({baseline:GEN3286_MATCHED.heads.baseline,candidate:'5e34efff49822073a3335c9797c013fb8f499cd7'}),
-  renderer:Object.freeze({baseline:GEN3286_MATCHED.renderer.baseline,candidate:'1ddf627292372e47feab8e9c9ef183e3aa1a3dc2'}),
-  index:Object.freeze({baseline:GEN3286_MATCHED.index.baseline,candidate:'77a60951dd2368902471d62b160de0ee19329ebf'}),
+  heads:Object.freeze({baseline:GEN3286_MATCHED.heads.baseline,candidate:'76637b3afbf846746200d78155a36e193de488eb'}),
+  renderer:Object.freeze({baseline:GEN3286_MATCHED.renderer.baseline,candidate:'97114936a17939ebb548074b57193735db17f3cc'}),
+  index:Object.freeze({baseline:GEN3286_MATCHED.index.baseline,candidate:'32a5e2747a74e41e0c379de406ae99f7edeae549'}),
   candidateRootCount:3805291,
   viewports:Object.freeze([GEN3286_MATCHED.viewports[1],GEN3286_MATCHED.viewports[0]]),
   poses:GEN3288_CAUSAL_POSES

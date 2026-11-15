@@ -236,7 +236,7 @@ test('Gen3287 historical source-chain guards remain present and new job has immu
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
   assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1'));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
-  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 5e34efff49822073a3335c9797c013fb8f499cd7"));
+  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 76637b3afbf846746200d78155a36e193de488eb"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
   assert.ok(yaml.includes("test \"$sector_blob\" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5"));
   assert.ok(yaml.includes('node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only'));
@@ -273,7 +273,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
   assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1'));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
-  assert.ok(workflow.includes('ref: 5e34efff49822073a3335c9797c013fb8f499cd7'));
+  assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
 });
 
 
@@ -317,9 +317,9 @@ test('Gen3288 exact immutable product A/B source and desktop/mobile witness bind
   const m=await import('./h-earth-ground-material-comparison.v1.mjs');
   const p=m.GEN3288_PRODUCT_AB;
   assert.equal(p.heads.baseline,m.GEN3286_MATCHED.heads.baseline);
-  assert.equal(p.heads.candidate,'5e34efff49822073a3335c9797c013fb8f499cd7');
-  assert.equal(p.renderer.candidate,'1ddf627292372e47feab8e9c9ef183e3aa1a3dc2');
-  assert.equal(p.index.candidate,'77a60951dd2368902471d62b160de0ee19329ebf');
+  assert.equal(p.heads.candidate,'76637b3afbf846746200d78155a36e193de488eb');
+  assert.equal(p.renderer.candidate,'97114936a17939ebb548074b57193735db17f3cc');
+  assert.equal(p.index.candidate,'32a5e2747a74e41e0c379de406ae99f7edeae549');
   assert.equal(p.candidateRootCount,3805291);
   assert.deepEqual(p.viewports.map(v=>v.id),['desktop','mobile-sized']);
   assert.deepEqual(p.poses.map(x=>x.id),['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge']);

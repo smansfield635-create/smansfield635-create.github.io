@@ -1947,3 +1947,102 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Gen3260 admitted two-source published-vs-Gen3259 protected meadow material comparison. PR-only and nonpublished.
+  # Historical neutral runner jobs and the production tree remain unchanged.
+  gen3260-operand-isolation-pr:
+    if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3260-tint-off-guided-native-comparison-20261113'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted two-file diagnostic tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: verifier-tooling
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Confirm frozen Gen3252 source, two-path scope and unchanged historical runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=79065c901af201006192a8df5523d9a0e313ff36
+          test "$(git -C verifier-tooling rev-parse HEAD)" = '${{ github.event.pull_request.head.sha }}'
+          git -C verifier-tooling fetch --no-tags --depth=1 origin "$base"
+          mapfile -t files < <(git -C verifier-tooling diff --name-only "$base" HEAD)
+          test "${#files[@]}" -eq 2
+          printf '%s\n' "${files[@]}" | grep -Fxq 'h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs'
+          printf '%s\n' "${files[@]}" | grep -Fxq '.github/workflows/h-earth-neutral-exact-head-runner.yml'
+          node --check verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs
+          python3 - <<'PY'
+          import pathlib,subprocess
+          base='79065c901af201006192a8df5523d9a0e313ff36'
+          old=subprocess.check_output(['git','-C','verifier-tooling','show',base+':.github/workflows/h-earth-neutral-exact-head-runner.yml'])
+          new=pathlib.Path('verifier-tooling/.github/workflows/h-earth-neutral-exact-head-runner.yml').read_bytes()
+          assert new.startswith(old),'HISTORICAL_RUNNER_PREFIX_MUTATED'
+          assert new[len(old):].startswith(b'\n  # Gen3260 admitted two-source published-vs-Gen3259 protected meadow material comparison')
+          print('GEN3260_TWO_PATH_HISTORICAL_PREFIX_PASS')
+          PY
+      - name: Checkout exact published Gen3252 product, unchanged
+        uses: actions/checkout@v4
+        with:
+          ref: d30a0c6a154b9882e782113730e5fbdcf9366c44
+          path: product
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Checkout separately frozen Gen3259 renderer product
+        uses: actions/checkout@v4
+        with:
+          ref: af9f4ceed411fb4038696628da57dd8d89628d33
+          path: candidate-product
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Verify exact candidate, unchanged roots and map
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C candidate-product rev-parse HEAD)" = af9f4ceed411fb4038696628da57dd8d89628d33
+          test "$(git -C candidate-product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 3471d386d720382b1b55b146fef6fa0af61f0d36
+          test "$(git -C candidate-product hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test "$(git -C candidate-product hash-object h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz)" = 9139e9c429957679c6e30001ea0e0fb95fbc45fc
+
+      - name: Verify exact live product source and immutable grass
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = d30a0c6a154b9882e782113730e5fbdcf9366c44
+          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = c69ef60c6e3126c0267ea60709768c35219f4ee6
+          test "$(git -C product hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test -f product/h-earth-3d/evidence/ecological-meadow-coverage-v1/frozen-map.v1.json.gz
+      - name: Install existing first-party Chromium and PNG reader
+        working-directory: product
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Execute one same-pose real WebGL published and exact Gen3259 same-pose WebGL comparison
+        working-directory: product
+        shell: bash
+        env:
+          H_EARTH_GEN3260_NATIVE_COMPARE: '1'
+        run: |
+          set -euo pipefail
+          export CODEX_PRIMARY_RUNTIME_NODE_MODULES="$PWD/node_modules"
+          export H_EARTH_RUNTIME_SCREENSHOT_DIR="$RUNNER_TEMP/h-earth-gen3260"
+          mkdir -p "$H_EARTH_RUNTIME_SCREENSHOT_DIR"
+          timeout 3300s node ../verifier-tooling/h-earth-3d/evidence/terrain-grass-continuity-v2/runtime.mjs 2>&1 | tee "$H_EARTH_RUNTIME_SCREENSHOT_DIR/runtime.log"
+          test "$(jq -r '.schema' "$H_EARTH_RUNTIME_SCREENSHOT_DIR/receipt.json")" = H_EARTH_GEN3260_FOREGROUND_MATERIAL_OPERAND_ISOLATION_v1
+          test "$(jq -r '.result' "$H_EARTH_RUNTIME_SCREENSHOT_DIR/receipt.json")" = PASS_CAPTURED_EXACT_COMPARISON_VISUAL_DISPOSITION_PENDING
+          test "$(jq -r '.images | length' "$H_EARTH_RUNTIME_SCREENSHOT_DIR/receipt.json")" = 2
+          test "$(jq -r '.head' "$H_EARTH_RUNTIME_SCREENSHOT_DIR/receipt.json")" = d30a0c6a154b9882e782113730e5fbdcf9366c44
+      - name: Preserve both genuine WebGL frames and disposition evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3260-material-exact-pair-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3260/
+          retention-days: 30
+          if-no-files-found: warn

@@ -586,6 +586,23 @@ export function gen3288ProductVerifySource(dir,label){
     protectedBlobsUnchanged:true};
 }
 
+// R11: immutable branch-head / Git-blob product source proof. No new browser architecture.
+export const GEN3287_R11_RENDERER_BLOB='f74bc85fb5df5df0063f0b64bf5e63e4e73c6668';
+export const GEN3287_R11_PROFILE='GEN3287_R11_CLASS6_PRODUCT_AB_V1';
+export function gen3287R11ProductVerifySource(dir,label,expectedCandidateHead){
+  if(!['baseline','candidate'].includes(label))throw Error('R11_SOURCE_LABEL_INVALID');
+  if(!/^[0-9a-f]{40}$/.test(expectedCandidateHead||''))throw Error('R11_EXACT_CANDIDATE_HEAD_REQUIRED');
+  const head=label==='baseline'?GEN3286_MATCHED.heads.baseline:expectedCandidateHead;
+  assertCheckout(dir,head);
+  const blob=rel=>execFileSync('git',['-C',dir,'hash-object',rel],{encoding:'utf8'}).trim();
+  const rendererBlob=blob(RENDERER.slice(1)),indexBlob=blob('showroom/globe/h-earth/index.html');
+  if(rendererBlob!==(label==='baseline'?GEN3286_MATCHED.renderer.baseline:GEN3287_R11_RENDERER_BLOB)
+      ||indexBlob!==GEN3286_MATCHED.index.baseline)throw Error('R11_EXACT_SOURCE_OR_INDEX_MISMATCH:'+label);
+  for(const [rel,expected] of Object.entries(GEN3286_MATCHED.protectedBlobs))
+    if(blob(rel)!==expected)throw Error('R11_PROTECTED_ASSET_OR_GRASS_CHANGED:'+label+':'+rel);
+  return {head,rendererBlob,indexBlob,rendererSha256:sha(fs.readFileSync(path.join(dir,RENDERER.slice(1)))),
+    grassRootCountByUnchangedSource:3805291,protectedSceneSourcesIdentical:true};
+}
 export function gen3286VerifySource(dir,label){
   if(!['baseline','candidate'].includes(label))throw Error('GEN3286_UNKNOWN_SOURCE_LABEL');
   assertCheckout(dir,GEN3286_MATCHED.heads[label]);
@@ -611,17 +628,20 @@ export async function runGen3286(argv){
   const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
   const handoff=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_HANDOFF_EDGE_V1';
   const product=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_EXACT_PRODUCT_AB_V1';
+  const r11=process.env.H_EARTH_COMPARISON_PROFILE===GEN3287_R11_PROFILE;
+  const r11Head=r11?process.env.H_EARTH_R11_EXACT_HEAD:null;
+  if(r11&&!/^[0-9a-f]{40}$/.test(r11Head||''))throw Error('R11_EXACT_CANDIDATE_HEAD_REQUIRED');
   const surfaceAttribution=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_SURFACE_ATTRIBUTES_V1';
   const r8Slope=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R8_SOIL_SLOPE_CAUSAL_V1';
   const r10=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_R10_MATERIAL_LIGHTING_V1';
   const browserVariation=isolation||handoff||surfaceAttribution||r8Slope;
   const anyBrowserVariation=browserVariation||r10;
-  const viewports=product?GEN3288_PRODUCT_AB.viewports:((scout||anyBrowserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
-  const poses=(anyBrowserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
+  const viewports=(product||r11)?GEN3288_PRODUCT_AB.viewports:((scout||anyBrowserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
+  const poses=(anyBrowserVariation||product||r11)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
   const labels=r10?GEN3287_R10_MODES:(r8Slope?GEN3287_R8_SOIL_SLOPE_MODES:(surfaceAttribution?GEN3287_SURFACE_ATTRIBUTE_MODES:(handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate'])))));
   const receipt={
-    schema:r10?'H_EARTH_GEN3287_R10_MATERIAL_LIGHTING_WEBGL_v1':r8Slope?'H_EARTH_GEN3287_R8_SOIL_SLOPE_CAUSAL_WEBGL_v1':surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:r10?'GEN3287_R10_MATERIAL_LIGHTING_V1':r8Slope?'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1':surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
-    heads:product?GEN3288_PRODUCT_AB.heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
+    schema:r11?'H_EARTH_R11_CLASS6_SOURCE_MATERIAL_WEBGL2_CANDIDATE_v1':r10?'H_EARTH_GEN3287_R10_MATERIAL_LIGHTING_WEBGL_v1':r8Slope?'H_EARTH_GEN3287_R8_SOIL_SLOPE_CAUSAL_WEBGL_v1':surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:r11?GEN3287_R11_PROFILE:r10?'GEN3287_R10_MATERIAL_LIGHTING_V1':r8Slope?'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1':surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    heads:r11?{baseline:GEN3286_MATCHED.heads.baseline,candidate:r11Head}:(product?GEN3288_PRODUCT_AB.heads:GEN3286_MATCHED.heads),sourceOnlyNoProductMutation:!r11,unmergedCandidateOnly:r11,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
     witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:anyBrowserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
     runs:[],views:[],comparisons:[],errors:[]};
@@ -631,7 +651,7 @@ export async function runGen3286(argv){
     const identities={};
     for(const label of ['baseline','candidate']){
       const useGen3288Source=product||((surfaceAttribution||r8Slope||r10)&&label==='candidate');
-      identities[label]=useGen3288Source?
+      identities[label]=r11?gen3287R11ProductVerifySource(args['--'+label+'-dir'],label,r11Head):useGen3288Source?
         gen3288ProductVerifySource(args['--'+label+'-dir'],label):
         gen3286VerifySource(args['--'+label+'-dir'],label);
     }
@@ -642,7 +662,7 @@ export async function runGen3286(argv){
     for(const viewport of viewports){
       for(const [index,label] of labels.entries()){
         const dir=args[anyBrowserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
-        const runRecord={label,viewport,head:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
+        const runRecord={label,viewport,head:r11?receipt.heads[label]:(product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
         receipt.runs.push(runRecord);persist();
         server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
         let listening=false;
@@ -790,12 +810,12 @@ export async function runGen3286(argv){
           const filename=label+'-'+viewport.id+'-'+pose.id+'.png';
           fs.writeFileSync(path.join(out,filename),bytes);
           const {pngDataUrl,...observation}=result;
-          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])});
+          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:r11?receipt.heads[label]:(product?GEN3288_PRODUCT_AB.heads[label]:(anyBrowserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]))});
           previousFrame=result.frame.frameSequence;persist();
         }
         runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
-        await context.close();server.kill();server=null;(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,anyBrowserVariation?'baseline':label));
+        await context.close();server.kill();server=null;(r11?gen3287R11ProductVerifySource(dir,label,r11Head):(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,anyBrowserVariation?'baseline':label)));
       }
       if(anyBrowserVariation)for(const pose of poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
@@ -817,7 +837,7 @@ export async function runGen3286(argv){
           persist();
         }
       }
-      else if(!scout)for(const pose of (product?poses:GEN3286_MATCHED.poses)){
+      else if(!scout)for(const pose of ((product||r11)?poses:GEN3286_MATCHED.poses)){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
         if(views.length!==2)throw Error('GEN3286_INCOMPLETE_AB_PAIR:'+pose.id);
         const A=views.find(v=>v.label==='baseline'),B=views.find(v=>v.label==='candidate');
@@ -840,10 +860,10 @@ export async function runGen3286(argv){
       else if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
       receipt.result=r10?'ACTUAL_WEBGL2_R10_MATERIAL_LIGHT_SPLIT_CAPTURED_NO_PRODUCT_MUTATION':r8Slope?'ACTUAL_WEBGL2_RIDGE_SLOPE_ELIGIBILITY_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':surfaceAttribution?'ACTUAL_WEBGL2_SURFACE_ATTRIBUTE_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':(handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION');
-    }else if(product){
+    }else if(product||r11){
       if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_VISUAL_AND_OWNER_REVIEW';
-      receipt.result='ACTUAL_GEN3259_VS_GEN3288_DESKTOP_MOBILE_SIZED_WEBGL2_PNG_PAIR_CAPTURED';
+      receipt.result=r11?'ACTUAL_R11_GEN3259_VS_CLASS6_SOURCE_MATERIAL_WEBGL2_IMAGES_CAPTURED_OWNER_KEEP_PENDING':'ACTUAL_GEN3259_VS_GEN3288_DESKTOP_MOBILE_SIZED_WEBGL2_PNG_PAIR_CAPTURED';
     }else{
       if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
@@ -855,7 +875,7 @@ export async function runGen3286(argv){
 }
 
 export async function run(argv){
-  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1','GEN3287_R8_SOIL_SLOPE_CAUSAL_V1','GEN3287_R10_MATERIAL_LIGHTING_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1','GEN3287_R8_SOIL_SLOPE_CAUSAL_V1','GEN3287_R10_MATERIAL_LIGHTING_V1',GEN3287_R11_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

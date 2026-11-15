@@ -490,7 +490,7 @@ test('Gen3303 binds accepted Gen3259, original geography, exact native browser p
  assert.ok(comparator.includes("if(positiveX){if(receipt.views.length!==40||receipt.comparisons.length!==32)"));
  assert.ok(workflow.includes('h-earth/positive-x-effective-soil-stage-20261115'));
  assert.ok(workflow.includes('GEN3303_POSITIVE_X_MATERIAL_STAGE_V1'));
- assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 110 || 45"));
+ assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 110 || (github.event.pull_request.head.ref == 'h-earth/positive-x-identity-blend-repair-20261115' && 80 || 45)"));
  assert.ok(workflow.includes("if: ${{ github.event.pull_request.head.ref != 'h-earth/positive-x-effective-soil-stage-20261115' && github.event.pull_request.head.ref != 'h-earth/positive-x-identity-blend-repair-20261115' }}"));
  assert.ok(workflow.includes('test ! -e ../candidate'));
  assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));

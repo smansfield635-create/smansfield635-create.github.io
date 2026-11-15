@@ -452,8 +452,10 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       // Reject oversized decoded surfaces from compressed headers first.
       const dimensions=await readSculptReferenceImageDimensions(file);
       bitmap=await createImageBitmap(file);
-      if(bitmap.width!==dimensions.width||bitmap.height!==dimensions.height ||
-        bitmap.width*bitmap.height>16000000)
+      // JPEG EXIF orientation can swap width and height during decode.
+      const same=bitmap.width===dimensions.width&&bitmap.height===dimensions.height;
+      const rotated=bitmap.width===dimensions.height&&bitmap.height===dimensions.width;
+      if((!same&&!rotated)||bitmap.width*bitmap.height>16000000)
         throw new Error('STUDIO_REFERENCE_DECODE_BUDGET_EXCEEDED');
       const small=document.createElement('canvas');small.width=24;small.height=24;
       const ctx=small.getContext('2d',{willReadFrequently:true});

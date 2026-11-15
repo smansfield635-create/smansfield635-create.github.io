@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-15T13:24:15Z",
+  "generatedAt": "2026-11-15T14:23:40Z",
   "window30d": {
-    "start": "2026-10-16T13:24:15Z",
-    "end": "2026-11-15T13:24:15Z"
+    "start": "2026-10-16T14:23:40Z",
+    "end": "2026-11-15T14:23:40Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 49
+      "pageLoads": 48
     },
     {
       "date": "2026-11-08",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 22
+      "pageLoads": 23
     }
   ],
   "summary": {
@@ -135,23 +135,23 @@
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1313,
-      "visits": 1313
+      "pageLoads": 1423,
+      "visits": 1423
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 124,
+      "pageLoads": 114,
       "visits": 0
     },
     {
-      "host": "www.facebook.com",
-      "pageLoads": 12,
-      "visits": 12
+      "host": "bing.com",
+      "pageLoads": 16,
+      "visits": 16
     },
     {
-      "host": "bing.com",
-      "pageLoads": 6,
-      "visits": 6
+      "host": "www.facebook.com",
+      "pageLoads": 2,
+      "visits": 2
     },
     {
       "host": "www.google.com",
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 561,
-      "visits": 561
+      "pageLoads": 651,
+      "visits": 651
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 409,
-      "visits": 334
+      "pageLoads": 419,
+      "visits": 344
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 52,
-      "visits": 52
+      "pageLoads": 72,
+      "visits": 72
     },
     {
       "path": "/showroom/globe/audralia/",

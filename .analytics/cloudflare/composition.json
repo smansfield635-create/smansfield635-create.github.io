@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-15T13:24:15Z",
+  "generatedAt": "2026-11-15T14:23:40Z",
   "window": {
-    "start": "2026-10-16T13:24:15Z",
-    "end": "2026-11-15T13:24:15Z"
+    "start": "2026-10-16T14:23:40Z",
+    "end": "2026-11-15T14:23:40Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 561,
-        "visits": 561
+        "pageLoads": 651,
+        "visits": 651
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 409,
-        "visits": 334
+        "pageLoads": 419,
+        "visits": 344
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -34,8 +34,8 @@
       },
       {
         "value": "/nine-summits/universe/",
-        "pageLoads": 52,
-        "visits": 52
+        "pageLoads": 72,
+        "visits": 72
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -286,23 +286,23 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1313,
-        "visits": 1313
+        "pageLoads": 1423,
+        "visits": 1423
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 124,
+        "pageLoads": 114,
         "visits": 0
       },
       {
-        "value": "www.facebook.com",
-        "pageLoads": 12,
-        "visits": 12
+        "value": "bing.com",
+        "pageLoads": 16,
+        "visits": 16
       },
       {
-        "value": "bing.com",
-        "pageLoads": 6,
-        "visits": 6
+        "value": "www.facebook.com",
+        "pageLoads": 2,
+        "visits": 2
       },
       {
         "value": "www.google.com",
@@ -340,8 +340,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1225,
-        "visits": 1147
+        "pageLoads": 1215,
+        "visits": 1137
       },
       {
         "value": "mobile",
@@ -357,28 +357,28 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 741,
-        "visits": 740
+        "pageLoads": 711,
+        "visits": 710
       },
       {
         "value": "Chrome",
-        "pageLoads": 289,
-        "visits": 240
+        "pageLoads": 269,
+        "visits": 220
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 153,
-        "visits": 141
+        "pageLoads": 143,
+        "visits": 131
       },
       {
         "value": "Edge",
-        "pageLoads": 97,
-        "visits": 66
+        "pageLoads": 117,
+        "visits": 76
       },
       {
         "value": "Unknown",
-        "pageLoads": 82,
-        "visits": 70
+        "pageLoads": 92,
+        "visits": 80
       },
       {
         "value": "Firefox",

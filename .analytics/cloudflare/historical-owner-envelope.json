@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-15T13:24:15Z",
+  "generatedAt": "2026-11-15T14:23:40Z",
   "window": {
-    "start": "2026-08-17T13:24:15Z",
-    "end": "2026-11-15T13:24:15Z"
+    "start": "2026-08-17T14:23:40Z",
+    "end": "2026-11-15T14:23:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -182,6 +182,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
@@ -199,10 +203,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },

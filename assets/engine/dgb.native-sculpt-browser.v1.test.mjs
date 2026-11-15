@@ -368,7 +368,7 @@ test('Gen3310 original M1.3 remains protected while C2-B editing paths survive',
   const session=readFileSync(new URL('./dgb.native-sculpt-session.v1.mjs',import.meta.url),'utf8');
   for(const id of ['m13Archive','m13Pose','returnNeutral','reference','subdivide','faceIndex','load'])
     assert(html.includes('id="'+id+'"'),id);
-  for(const marker of ["new DecompressionStream('deflate-raw')","crypto.subtle.digest","M13_ZIP_SHA","M13_MEMBER_HASHES","originalEyeAt","source.pose(index)"])
+  for(const marker of ["new DecompressionStream('deflate-raw')","crypto.subtle.digest","M13_ZIP_SHA","M13_MEMBER_HASHES","originalEyeAt","nextSource.pose(index)"])
     assert(html.includes(marker),marker);
   assert(!html.includes('src="https://drive.google.com'));
   for(const marker of ['sourceGeometry(originalSource','originalTexturedShaders','originalEyeShaders','originalSource?device.createMesh','Original M1.3 is read-only','restoreSculptStudioState','replaceFourSculptViewMeshes','createSculptReferenceImportGate'])

@@ -321,3 +321,42 @@ test('C2-B source uses current-token checks after each await and before four-vie
   assert.match(source,/if\(!referenceImports\.isCurrent\(token\)\)return;\s*adoptTopology\(nextSession/);
   assert.match(source,/if\(referenceImports\.isCurrent\(token\)\)event\.target\.value='';/);
 });
+
+test('C2-B delayed JSON reload cannot overwrite a newer topology edit or reference',async()=>{
+  const gate=createSculptReferenceImportGate();
+  const deferred=()=>{
+    let resolve;
+    const promise=new Promise(done=>{resolve=done;});
+    return {promise,resolve};
+  };
+  let current='neutral',cleared=[];
+  const a=deferred();
+  async function reload(name,wait){
+    const token=gate.begin();
+    try{
+      const json=await wait.promise;
+      if(!gate.isCurrent(token))return;
+      current=JSON.parse(json).mesh;
+    }finally{if(gate.isCurrent(token))cleared.push(name);}
+  }
+  const first=reload('older-json',a);
+  current='subdivided';gate.cancel(); // actual subdivision invalidates pending file.text()
+  a.resolve('{"mesh":"neutral"}');await first;
+  assert.equal(current,'subdivided');
+  assert.deepEqual(cleared,[]);
+  const b=deferred(),second=reload('newer-json',b);
+  const reference=gate.begin(); // newer imported image supersedes JSON reload
+  current='reference-image';
+  b.resolve('{"mesh":"old-topology"}');await second;
+  assert.equal(gate.isCurrent(reference),true);
+  assert.equal(current,'reference-image');
+  assert.deepEqual(cleared,[]);
+});
+test('C2-B live file.text reload checks generation before topology adoption and clearing',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const source=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  assert.match(source,/add\(controls\.load,'change',async event=>\{\s*\/\/[^\n]*\n[^\n]*\n\s*const token=referenceImports\.begin\(\)/);
+  assert.match(source,/const source=await file\.text\(\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;/);
+  assert.match(source,/const restored=restoreSculptStudioState\(source,fixture\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;\s*adoptTopology\(/);
+  assert.match(source,/if\(referenceImports\.isCurrent\(token\)\)event\.target\.value='';/);
+});

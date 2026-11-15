@@ -179,6 +179,39 @@ export function restoreSculptStudioState(text,fixture){
   return {session,uv,stages,fixture:sourceFixture,source};
 }
 
+/** One draw per topology transaction; CPU session commits only after this succeeds.
+ * If any GPU replacement or render fails, restore all touched E1 records and
+ * redraw the original geometry. Uncertain state is quarantined by the caller. */
+export function replaceFourSculptViewMeshes(views,oldSpec,newSpec,draw,quarantine=()=>{}){
+  if(!Array.isArray(views)||views.length!==4||typeof draw!=='function'||typeof quarantine!=='function')
+    throw new TypeError('STUDIO_FOUR_VIEW_SWAP_INVALID');
+  const replaced=[];
+  try {
+    for(const view of views){
+      view.device.replaceMesh(view.mesh,newSpec);
+      replaced.push(view);
+    }
+    return draw();
+  } catch(error) {
+    let uncertain=false;
+    for(const view of replaced.reverse()){
+      try { view.device.replaceMesh(view.mesh,oldSpec); }
+      catch (_) { uncertain=true; }
+    }
+    // Replacement itself may have quarantined the failing device without
+    // entering the 'replaced' list.
+    for(const view of views){
+      try {
+        const state=view.device.status?.();
+        if(state?.restorationError||state?.lost||state?.disposed)uncertain=true;
+      } catch (_) { uncertain=true; }
+    }
+    try { draw(); } catch (_) { uncertain=true; }
+    if(uncertain)quarantine();
+    throw error;
+  }
+}
+
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
@@ -229,19 +262,11 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     assertReady();
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     const previous=sculptMeshSpecification(session,uv),replacement=sculptMeshSpecification(nextSession,nextUv);
-    const replaced=[];
-    try{
-      for(const view of views){view.device.replaceMesh(view.mesh,replacement);replaced.push(view);}
-      drawAll();
-    }catch(error){
-      let rollbackFailed=false;
-      for(const view of replaced.reverse())try{view.device.replaceMesh(view.mesh,previous);}catch(_){rollbackFailed=true;}
-      if(rollbackFailed){failed=true;status('GPU mesh rollback failed; studio quarantined.');}
-      throw error;
-    }
+    const result=replaceFourSculptViewMeshes(views,previous,replacement,drawAll,
+      ()=>{failed=true;});
     session=nextSession;uv=nextUv;stages=nextStages;selectedFace=null;
     fixtureSource=nextFixture;sourceMetadata=nextSource;
-    return drawAll();
+    return result;
   }
   function subdivide(faceIndex=selectedFace){
     assertReady();

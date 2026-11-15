@@ -261,9 +261,9 @@ test('Gen3287 rejects source label, pair camera, projection, asset or PNG identi
 test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
   const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
-  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1')||(yaml.includes("H_EARTH_COMPARISON_PROFILE: ${{ github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115'")&&yaml.includes("'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'")&&yaml.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1'")));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1')||(yaml.includes("H_EARTH_COMPARISON_PROFILE: ${{ github.event.pull_request.head.ref == 'h-earth/r11-class6-material-family-20261115'")&&yaml.includes("'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'")&&yaml.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1'")&&yaml.includes("'GEN3287_R11_CLASS6_PRODUCT_AB_V1'")));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
-  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 76637b3afbf846746200d78155a36e193de488eb"));
+  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("|| '76637b3afbf846746200d78155a36e193de488eb'"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
   assert.ok(yaml.includes("test \"$sector_blob\" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5"));
   assert.ok(yaml.includes('node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only'));
@@ -300,7 +300,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
   assert.ok(workflow.includes("'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'"));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
-  assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
+  assert.ok(workflow.includes("|| '76637b3afbf846746200d78155a36e193de488eb'"));
 });
 
 
@@ -449,4 +449,32 @@ test('H-Earth R10 has separate existing-runner profile, 12 genuine WebGL2 frames
  assert.ok(comparator.includes('surfaceAttribution||r8Slope||r10,queue'));
  assert.ok(workflow.includes("GEN3287_R10_MATERIAL_LIGHTING_V1"));
  assert.ok(workflow.includes("h-earth/r10-material-light-separation-20261115"));
+});
+
+
+test('H-Earth R11 binds authored class-6 source material while preserving original meadows and lighting',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const renderer=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.equal(m.GEN3287_R11_PROFILE,'GEN3287_R11_CLASS6_PRODUCT_AB_V1');
+  assert.equal(m.GEN3287_R11_RENDERER_BLOB,'f74bc85fb5df5df0063f0b64bf5e63e4e73c6668');
+  assert.ok(renderer.includes('bool class6StoneSparseSoil=vRoleCode==1u&&vPrimitiveIndex==0u&&vSurfaceClassCode==6u;'));
+  assert.ok(renderer.includes('if(class6StoneSparseSoil){'));
+  assert.ok(renderer.includes('float class6Weathering=clamp('));
+  assert.ok(renderer.includes('vec3 class6MineralSoil=mix(compactEarth,erodedMineral,class6Weathering);'));
+  assert.ok(renderer.includes('palette=mix(class6MineralSoil,erodedMineral*class6StoneGrain,class6ExposedAccent);'));
+  assert.ok(renderer.includes('if(class6StoneSparseSoil)class6SourceSubstrate=palette;'));
+  assert.ok(renderer.includes('base=mix(base,habitatSoil,habitatColorCoverage*.68);'));
+  assert.ok(renderer.includes('if(class6StoneSparseSoil)base=class6SourceSubstrate;'));
+  assert.ok(renderer.includes('vec3 geometricNormal=normalize(vNormal);'));
+  assert.ok(renderer.includes('float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);'));
+  assert.ok(renderer.includes('resources.singleOwnerVegetation?.draw(packet);'));
+  assert.ok(comparator.includes('gen3287R11ProductVerifySource(dir,label,r11Head)'));
+  assert.ok(comparator.includes("const r11Head=r11?process.env.H_EARTH_R11_EXACT_HEAD:null;"));
+  assert.ok(comparator.includes("if(rendererBlob!==(label==='baseline'?GEN3286_MATCHED.renderer.baseline:GEN3287_R11_RENDERER_BLOB)"));
+  assert.ok(workflow.includes("h-earth/r11-class6-material-family-20261115"));
+  assert.ok(workflow.includes("H_EARTH_R11_EXACT_HEAD:"));
+  assert.ok(workflow.includes("GEN3287_R11_CLASS6_PRODUCT_AB_V1"));
+  assert.ok(workflow.includes("test \"$(git -C ../candidate rev-parse HEAD)\" = \"${{ github.event.pull_request.head.sha }}\""));
 });

@@ -1,0 +1,92 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GEN3288_SINGLE_MATERIAL_SEAM_REPAIR_20261114_001",
+  "canonicalAdmissionGeneration": 3289,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "anchorDispositionScope": "SOURCE_BOUND_ELEVEN_INVARIANT_PRESERVATION_REVIEW_ONLY_NOT_VISUAL_ACCEPTANCE",
+  "reviewScope": "One existing world-soil material-authority handoff is reconciled through a smooth position/elevation field at east near/far terrain. Reuses resident approved clearing soil texture and existing shading path; retains all woodland, ravine and coastal habitat blends, ecological sources, roots, original 3,805,291 population, geometry, navigation, trees, water and terrain primitives. Changes no draw ownership or shader resource allocations.",
+  "aestheticDisposition": "PENDING_OWNER_VISUAL_REVIEW",
+  "visualKeepClaimed": false,
+  "originalAnchorFilmReplayed": false,
+  "physicalAndroidPerformanceMeasured": false,
+  "firstPartyBrowserAB": "NOT_EXECUTED_AT_RECEIPT_CREATION",
+  "actualGen3288CandidateQualification": "PENDING",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "235d1fb1e44795df5654bcb37477ba52b66281d781dd299b03b5609fbe8e9864",
+      "gitBlob": "1ddf627292372e47feab8e9c9ef183e3aa1a3dc2",
+      "sourceRole": "EXISTING_WORLD_SOIL_NEAR_FAR_AUTHORITY"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "90a9ca1a7ee8b12e5f00047391b414a01def7293121cc26c5886fbfa885c007f",
+      "gitBlob": "77a60951dd2368902471d62b160de0ee19329ebf",
+      "sourceRole": "EXACT_THREE_EXISTING_RENDERER_IMPORT_REVISIONS"
+    }
+  ],
+  "sourceIdentity": {
+    "governingHead": "dcc920791b81d3972661a2e9cfbf3310cb045f77",
+    "acceptedGen3259RendererBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "candidateRendererBlob": "1ddf627292372e47feab8e9c9ef183e3aa1a3dc2",
+    "acceptedGen3259IndexBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",
+    "candidateIndexBlob": "77a60951dd2368902471d62b160de0ee19329ebf",
+    "frozenGrassSourceGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
+    "grassRootCountUnchanged": 3805291,
+    "originalFrozenMeadowMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
+    "geometryNavigationWaterTreesUnchanged": true
+  },
+  "causalEvidence": {
+    "workflow": 43654982525,
+    "artifact": 14138776165,
+    "baselineRendererBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
+    "actualDesktopWebGLFrames": 16,
+    "actualMatchedComparisons": 12,
+    "materialCausation": "NEAR_FAR_PRIMITIVE_HANDOFF_AND_WITHIN_NEAR_PRIMITIVE_SOIL_COLOR_EDGE_NOT_RESOLVED_BY_HABITAT_AND_GROUNDCOVER_SUPPRESSION",
+    "primitiveObservations": [
+      "seam-overlap-edge: terrain IDs 0 and 62000 flank line",
+      "official-ridge-east: foreground color wedge persists with single-owner grass suppressed and mostly primitive ID 0"
+    ],
+    "limits": [
+      "EXACT_CANDIDATE_VISUAL_OUTCOME_NOT_YET_MEASURED",
+      "FULL_GRASS_RESIDENCY_NOT_CLAIMED"
+    ]
+  },
+  "limitations": [
+    "NO_GEN3288_CANDIDATE_WEBGL_AB_AT_RECEIPT_CREATION",
+    "NO_OWNER_AESTHETIC_KEEP",
+    "NO_PHYSICAL_ANDROID_PERFORMANCE",
+    "NO_MERGE_DEPLOY_OR_PUBLICATION_AUTHORITY",
+    "FULL_VEGETATION_RESIDENCY_NOT_DEMONSTRATED"
+  ],
+  "releaseStatusAtReceiptCreation": "DRAFT_ONLY_NO_RELEASE"
+}

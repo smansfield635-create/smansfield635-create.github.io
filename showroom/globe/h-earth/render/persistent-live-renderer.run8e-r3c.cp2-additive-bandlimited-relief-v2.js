@@ -952,7 +952,20 @@ void main(){
       );
       float worldSoilCoverage=worldSoilEligibility*
         worldSoilPatchiness*mix(0.94,1.0,shelteredSoil);
-      float worldSoilWeight=worldSoilCoverage;
+      // Gen3288: reconcile the actual east upland near/far terrain
+      // handoff with the existing approved continuous world-soil sampler.
+      // Only the authority of the *same* sampled soil material changes.
+      // The broad smooth world-space envelope avoids a new rectangular
+      // raster cutoff; the west accepted woodlands stay outside its extent.
+      // The elevation gate keeps native beaches and coastal contact intact.
+      float gen3288SharedSoilHandoff=
+        smoothstep(-20.0,60.0,vWorldPosition.x)*
+        smoothstep(-350.0,-275.0,vWorldPosition.z)*
+        (1.0-smoothstep(-115.0,-70.0,vWorldPosition.z))*
+        smoothstep(8.0,24.0,vWorldPosition.y);
+      float worldSoilWeight=mix(
+        worldSoilCoverage,1.0,gen3288SharedSoilHandoff
+      );
       if(worldSoilWeight>0.001){
         // Match the actual reference soil UVs across the former box.
         // Regional color variation is applied without breaking its grain.
@@ -995,6 +1008,11 @@ void main(){
         );
         float worldSoilAlbedoAuthority=mix(
           0.14,0.98,worldSoilCoastalAlbedoMix
+        );
+        // The same approved ground texture governs both land primitives
+        // across the former color seam. Preserve ecological overlays below.
+        worldSoilAlbedoAuthority=mix(
+          worldSoilAlbedoAuthority,0.98,gen3288SharedSoilHandoff
         );
         vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);
         palette=mix(palette,worldSoilFinal,worldSoilWeight);

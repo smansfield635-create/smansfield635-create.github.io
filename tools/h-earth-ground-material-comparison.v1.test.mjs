@@ -393,3 +393,20 @@ test('Gen3287 R8 single-factor browser-only ridge soil-slope eligibility preserv
  assert.throws(()=>m.gen3287R8SoilSlopeSource(source,'bad'),/GEN3287_R8_MODE_INVALID/);
  assert.throws(()=>m.gen3287R8SoilSlopeSource(source.replace('float worldSoilSlope=geologicalEarthRock?1.0:1.0-smoothstep(0.16,0.59,slope);',''),'ridge-slope-eligibility-neutral'),/GEN3287_R8_EXACT_SLOPE_SOURCE_DRIFT/);
 });
+
+test('Gen3287 R8 yields WebGL frames while immutable tree queue is loading and maintains readiness gate',()=>{
+ const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ assert.ok(source.includes("const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope,queue);"));
+ assert.ok(source.includes("const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope})=>{"));
+ assert.ok(source.includes("},{pose,sequence:++sequence,surfaceAttribution,r8Slope});"));
+ assert.equal(shouldPresentAssetSettleFrame(true,{loading:true}),false);
+ assert.equal(shouldPresentAssetSettleFrame(true,{loading:false}),true);
+ assert.equal(shouldPresentAssetSettleFrame(false,{loading:true}),true); // preserve historical profile
+ const pending={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},
+  treeCollection:{queue:{loading:true,failures:{}},entries:[{id:'COLLECTION_MAPLE_LARGE',state:'LOADING',ready:false,x:-139,z:-194}]}};
+ assert.equal(assetReadiness(pending,{x:-139,z:-194}).ready,false);
+ pending.treeCollection.queue.loading=false;
+ pending.treeCollection.entries[0].state='READY';
+ pending.treeCollection.entries[0].ready=true;
+ assert.equal(assetReadiness(pending,{x:-139,z:-194}).ready,true);
+});

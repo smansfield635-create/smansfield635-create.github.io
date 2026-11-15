@@ -707,10 +707,10 @@ export async function runGen3286(argv){
           }
           let stableCount=0,priorSignature=null,deadline=Date.now()+120000,settleAttempts=0;
           while(stableCount<2){
-            const check=await page.evaluate(async({pose,sequence,surfaceAttribution})=>{
+            const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope})=>{
               const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_ASSET_SETTLE');
               const queue=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt()?.resources?.treeCollection?.queue;
-              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution,queue);
+              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope,queue);
               if(presented){
                 globalThis.__HEarthAuditPresent(state);
                 await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
@@ -722,7 +722,7 @@ export async function runGen3286(argv){
               const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
               const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
               return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1),presented};
-            },{pose,sequence:++sequence,surfaceAttribution});
+            },{pose,sequence:++sequence,surfaceAttribution,r8Slope});
             stableCount=check.presented&&check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
             priorSignature=check.asset.signature;
             // Durable first-pose evidence: keep unchanged 120s guard and actual frame parity.

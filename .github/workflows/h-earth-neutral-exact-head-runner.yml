@@ -93,7 +93,7 @@ jobs:
             # Exact candidate only; historical and unknown heads keep the old guard.
             # Gen3143: the immutable Gen3142 material candidate retains the accepted Gen2854 A08 sector.
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ] || [ "$EXACT_TARGET_SHA" = '676cb926180219d62ff4fd4a356d8360ff66d99b' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
@@ -389,6 +389,26 @@ jobs:
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ] || [ "$EXACT_TARGET_SHA" = '676cb926180219d62ff4fd4a356d8360ff66d99b' ]; then
+              # Exact newer product heads retain the accepted P2/rock/tree;
+              # old Gen2694 cache chain is not a modern shader invariant.
+              node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              node --check showroom/globe/h-earth/functional-landscape/navigation.js
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+              if [ "$EXACT_TARGET_SHA" = 'f05d97d402f27b640e8776a0c9f0851524db0fa0' ]; then
+                test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 3471d386d720382b1b55b146fef6fa0af61f0d36
+              else
+                test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 38def850ac126f2766aec7bab3b43efea8f04ccc
+              fi
+              jq -n --arg target "$EXACT_TARGET_SHA" --arg sector "$sector_blob" --arg rock "$rock_blob" --arg tree "$tree_blob" '{
+                schema:"H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                exactHead:$target,sectorBlob:$sector,rockBlob:$rock,treeBlob:$tree,
+                oldGen2694SourceChain:"NOT_APPLICABLE_TO_ACCEPTED_MODERN_RENDERER",
+                unchangedGrassSource:true,ownerVisualAcceptance:false,releaseAuthorized:false,
+                browserDrawExecuted:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1" and .unchangedGrassSource==true and .browserDrawExecuted==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -1180,6 +1200,197 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+
+  # Gen3287: independently admitted Gen3259/Gen3286 visual comparator.
+  # Gen3287 exact native source proof: passive same-PR CI, no new dispatch.
+  gen3287-indexed-vertex-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout bounded exact tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout immutable accepted Gen3259 source
+        uses: actions/checkout@v4
+        with:
+          ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read exact native indexed vertex and material attributes
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NATIVE_JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import {gunzipSync} from 'node:zlib';
+          import {execFileSync} from 'node:child_process';
+          import {pathToFileURL} from 'node:url';
+          const root=path.resolve('../baseline'),out=path.resolve(process.env.RUNNER_TEMP,'gen3287-native');
+          fs.mkdirSync(out,{recursive:true});
+          const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+          const expectedHead='f05d97d402f27b640e8776a0c9f0851524db0fa0';
+          const sourceHead=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          if(sourceHead!==expectedHead)throw Error('ACCEPTED_HEAD_NOT_EXACT');
+          const archivePath=path.join(root,'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
+          const archiveBytes=fs.readFileSync(archivePath),archiveSha256=sha(archiveBytes);
+          if(archiveSha256!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_ARCHIVE_SHA_MISMATCH');
+          const archive=JSON.parse(gunzipSync(archiveBytes).toString('utf8'));
+          if(!archive.canonical?.buffers?.indices||!archive.raw?.buffers?.indices)throw Error('CANONICAL_ARCHIVE_SCHEMA_INVALID');
+          const mod=rel=>import(pathToFileURL(path.join(root,rel)).href);
+          // The immutable verified archive is the exact binary source; do not
+          // reconstruct the separate Gen2515 planting adapter in bare Node.
+          // That adapter needs the browser/hydrated template lifecycle.
+          const [matModule,soilModule]=await Promise.all([
+            mod('h-earth-3d/environment/h-earth.successor-surface-material.run8c.js'),
+            mod('showroom/globe/h-earth/render/geometry-landscape-cover.js')
+          ]);
+          const actual=archive.canonical;
+          const gpu=actual.buffers;
+          const archived=archive.raw.buffers,source=actual.buffers;
+          const spans=(actual.primitiveSpans||[]).filter(x=>x.role==='TERRAIN');
+          if(spans.length!==1||spans[0].primitiveIndex!==0||spans[0].vertexStart!==0)throw Error('TERRAIN_PRIMITIVE_NOT_ORIGINAL_ZERO');
+          const W=97,X0=-384,Z0=-736,S=8,row=64,col=67,index=row*W+col;
+          if(index!==6275)throw Error('INDEX_GRID_CANDIDATE_DRIFT');
+          const list=(a,start,count)=>[...a.slice(start,start+count)].map(Number);
+          function point(r,c){
+            const i=r*W+c,x=X0+c*S,z=Z0+r*S;
+            const m=matModule.sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
+            if(m?.valid!==true)throw Error('MATERIAL_SAMPLE_REJECTED:'+i);
+            return {i,r,c,x,z,position:list(gpu.positions,i*3,3),
+              archivePosition:list(archived.positions,i*3,3),
+              archiveNormal:list(archived.normals,i*3,3),
+              archiveBase:list(archived.baseColorsLinear,i*4,4),
+              sourceNormal:list(source.normals,i*3,3),
+              gpuNormal:list(gpu.normals,i*3,3),
+              sourceBase:list(source.baseColorsLinear,i*4,4),
+              gpuBase:list(gpu.baseColorsLinear,i*4,4),
+              role:Number(gpu.roleCodes[i]),sourceClassCode:Number(source.surfaceClassCodes[i]),
+              material:{surfaceClass:m.surfaceClass,landformClass:m.landformClass,
+                slope:m.slope,rockExposure:m.rockExposure,
+                baseColorProfile:m.baseColorProfile,
+                calculatedLandscapeSoilColor:soilModule.landscapeSoilColor(m,x,z)}};
+          }
+          const incident=[
+            [12229,6178,6274,6275],[12230,6178,6275,6179],[12231,6179,6275,6276],
+            [12420,6274,6371,6275],[12421,6275,6371,6372],[12422,6275,6372,6276]
+          ].map(([triangle,...expected])=>{
+            const indexOffset=triangle*3;
+            const actualIds=list(source.indices,indexOffset,3);
+            return {triangle,indexOffset,expected,actualIds,exactMatch:JSON.stringify(expected)===JSON.stringify(actualIds)};
+          });
+          const neighborhood=[];
+          for(let r=row-2;r<=row+2;r++)for(let c=col-2;c<=col+2;c++)neighborhood.push(point(r,c));
+          const meadow=[[-139.40268,-194.5],[-141,-226]].map(([x,z])=>({
+            cameraXZ:[x,z],nearestGridVertex:point(Math.round((z-Z0)/S),Math.round((x-X0)/S))
+          }));
+          const edges=[];
+          for(const a of neighborhood)for(const b of neighborhood){
+            if(a.i>=b.i||Math.hypot(a.x-b.x,a.z-b.z)>S+1e-7)continue;
+            const delta=b.gpuBase.slice(0,3).map((v,i)=>v-a.gpuBase[i]);
+            const nDot=a.gpuNormal.reduce((sum,v,i)=>sum+v*b.gpuNormal[i],0);
+            const norm=Math.hypot(...a.gpuNormal)*Math.hypot(...b.gpuNormal);
+            const angle=Math.acos(Math.min(1,Math.max(-1,nDot/norm)))*180/Math.PI;
+            edges.push({vertices:[a.i,b.i],baseColorDelta:delta,baseDeltaMagnitude:Math.hypot(...delta),
+              normalAngleDegrees:angle,surfaceClassTransition:a.material.surfaceClass!==b.material.surfaceClass,
+              landformTransition:a.material.landformClass!==b.material.landformClass});
+          }
+          edges.sort((a,b)=>b.baseDeltaMagnitude-a.baseDeltaMagnitude);
+          // Invert the accepted exact spherical world-manifold projection.
+          const p=point(row,col).position,R=420000,radial=Math.hypot(p[0],p[2]);
+          const authoringR=R*Math.atan2(radial,R+p[1]);
+          const unprojectedXZ=radial>0?[p[0]*authoringR/radial,p[2]*authoringR/radial]:[0,0];
+          const report={schema:'H_EARTH_GEN3287_SOURCE_VERTEX_NATIVE_READONLY_v1',sourceHead,archiveSha256,
+            status:'EXACT_ACCEPTED_CANONICAL_BINARY_SOURCE_INSPECTED',productMutation:false,rendererMutation:false,ownerAcceptance:false,
+            packageIdentity:actual.packageIdentity,packageContentDigest:actual.contentDigest,
+            terrainSpan:{primitiveIndex:spans[0].primitiveIndex,primitiveId:spans[0].primitiveId,
+              vertexStart:spans[0].vertexStart,indexStart:spans[0].indexStart,vertexCount:spans[0].vertexCount},
+            candidate:point(row,col),incident,
+            allIncidentIndexTripletsMatch:incident.every(x=>x.exactMatch),
+            unprojectedAuthoringXZ:unprojectedXZ,vertexXZMatchesProjection:Math.abs(unprojectedXZ[0]-152)<0.01&&Math.abs(unprojectedXZ[1]+224)<0.01,
+            neighborhood,meadowReferenceSamples:meadow,largestAdjacentColorDeltas:edges.slice(0,20),
+            claimCeiling:'Verified immutable canonical archive original terrain vertex/index values and source-calculated material classification; NOT an independently instantiated accepted runtime/GPU upload buffer or uniquely identified screen triangle.'};
+          const file=path.join(out,'source-vertex-native.json');
+          fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify({file,status:report.status,candidateY:report.candidate.position[1],material:report.candidate.material.surfaceClass,
+            facesExact:report.allIncidentIndexTripletsMatch,xzExact:report.vertexXZMatchesProjection,artifactSha:sha(fs.readFileSync(file))}));
+          if(!report.allIncidentIndexTripletsMatch||!report.vertexXZMatchesProjection||report.candidate.role!==1)throw Error('GEN3287_CANDIDATE_SOURCE_CERTIFICATION_FAILED');
+          
+          NATIVE_JS
+      - name: Preserve source-buffer evidence even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3287-native-vertex-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3287-native
+          if-no-files-found: warn
+          retention-days: 30
+  gen3287-matched-material-gpu:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' || github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115' || github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout separately admitted verifier tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout immutable accepted Gen3259 source
+        uses: actions/checkout@v4
+        with:
+          ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
+          path: baseline
+          persist-credentials: false
+      - name: Checkout immutable unmerged Gen3288 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 'f05d97d402f27b640e8776a0c9f0851524db0fa0' || '76637b3afbf846746200d78155a36e193de488eb' }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve historical tests and require both exact product source heads
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          test "$(git -C ../baseline rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
+          if [ "${{ github.event.pull_request.head.ref }}" = 'h-earth/positive-x-effective-soil-stage-20261115' ]; then
+            test "$(git -C ../candidate rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
+          else
+            test "$(git -C ../candidate rev-parse HEAD)" = 76637b3afbf846746200d78155a36e193de488eb
+          fi
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install Chromium and PNG decoder for actual pixels
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture same-pose desktop R8 slope or R10 material-light diagnostic
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: ${{ github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 'GEN3303_POSITIVE_X_MATERIAL_STAGE_V1' || (github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115' && 'GEN3287_R10_MATERIAL_LIGHTING_V1' || 'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1') }}
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen3286-material-ab"
+      - name: Preserve images and truthful complete or partial receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3286-material-ab-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3286-material-ab
+          if-no-files-found: warn
+          retention-days: 30
 
   # Gen3147 PR source qualification is native-only; GPU runs only after
   # separate reviewed/adopted tooling under the registered dispatch route.

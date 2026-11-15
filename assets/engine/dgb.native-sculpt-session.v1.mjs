@@ -380,8 +380,8 @@ export function createConnectedSculptTopologyCandidate({
   if(animation!==null)throw new Error('C2A_ANIMATED_SOURCE_TRANSFER_UNQUALIFIED');
   if(typeof sourceId!=='string'||!sourceId||sourceId.length>128)throw new TypeError('C2A_SOURCE_ID_REQUIRED');
   const original=floatPositions(positions),faces=intTriangles(triangles),vertexCount=original.length/3,faceCount=faces.length/3;
-  if(!Array.isArray(regions)||regions.length!==vertexCount||regions.some(x=>typeof x!=='string'||!x))throw new TypeError('C2A_REGIONS_INVALID');
-  if(!Array.isArray(protectedVertices)||protectedVertices.some(x=>!Number.isInteger(x)||x<0||x>=vertexCount)||new Set(protectedVertices).size!==protectedVertices.length)throw new TypeError('C2A_PROTECTED_INVALID');
+  if(!Array.isArray(regions)||regions.length!==vertexCount||Array.from(regions).some(x=>typeof x!=='string'||!x))throw new TypeError('C2A_REGIONS_INVALID');
+  if(!Array.isArray(protectedVertices)||Array.from(protectedVertices).some(x=>!Number.isInteger(x)||x<0||x>=vertexCount)||new Set(protectedVertices).size!==protectedVertices.length)throw new TypeError('C2A_PROTECTED_INVALID');
   verifySculptGeometry(original,faces);
   if(!Array.isArray(selectedFaces)||selectedFaces.length<1||selectedFaces.length>2500||
     selectedFaces.some((x,i)=>!Number.isInteger(x)||x<0||x>=faceCount||(i>0&&x<=selectedFaces[i-1])))
@@ -493,9 +493,36 @@ export function createConnectedSculptTopologyCandidate({
   const originallyReferenced=new Set(faces),outputReferenced=new Set(candidateFaces);
   for(const id of protectedVertices)if(originallyReferenced.has(id)&&!outputReferenced.has(id))
     throw new Error('C2A_PROTECTED_SOURCE_VERTEX_REMOVED');
-  const usedVertices=new Set(newFaceIndices);
-  for(let i=vertexCount;i<candidatePos.length/3;i++)if(!usedVertices.has(i))
-    throw new Error('C2A_ORPHAN_NEW_VERTEX');
+  // Edge-manifold geometry may still be nonmanifold at a vertex. For every
+  // introduced vertex, its incident triangles must form ONE edge-connected
+  // fan. Two disconnected sheets meeting only at that point are not a
+  // continuous editable surface and cannot inherit a lawful single parent.
+  const introducedFans=new Map();
+  for(let face=0;face<candidateFaces.length/3;face++){
+    const ids=[candidateFaces[3*face],candidateFaces[3*face+1],candidateFaces[3*face+2]];
+    for(let k=0;k<3;k++)if(ids[k]>=vertexCount){
+      const occurrences=introducedFans.get(ids[k])||[];
+      occurrences.push([ids[(k+1)%3],ids[(k+2)%3]]);
+      introducedFans.set(ids[k],occurrences);
+    }
+  }
+  for(let id=vertexCount;id<candidatePos.length/3;id++){
+    const fan=introducedFans.get(id)||[];
+    if(!fan.length)throw new Error('C2A_ORPHAN_NEW_VERTEX');
+    const edgeUsers=new Map();
+    for(let j=0;j<fan.length;j++)for(const neighbor of fan[j]){
+      const users=edgeUsers.get(neighbor)||[];
+      users.push(j);edgeUsers.set(neighbor,users);
+    }
+    const reached=new Set([0]),queue=[0];
+    while(queue.length){
+      const j=queue.pop();
+      for(const neighbor of fan[j])for(const next of edgeUsers.get(neighbor)){
+        if(!reached.has(next)){reached.add(next);queue.push(next);}
+      }
+    }
+    if(reached.size!==fan.length)throw new Error('C2A_DISCONNECTED_NEW_VERTEX_FAN');
+  }
   verifySculptGeometry(candidatePos,candidateFaces);
 
   let render=null,rawHandoff=null;

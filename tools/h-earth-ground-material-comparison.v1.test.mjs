@@ -298,7 +298,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
   assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
-  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1'));
+  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
   assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
 });
@@ -372,8 +372,24 @@ test('Gen3287 surface role, normal and base-color diagnostics are source-only an
 
 test('Gen3287 attribute profile binds baseline Gen3259 and current Gen3288 candidate; historical modes unchanged',()=>{
  const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(source.includes("const useGen3288Source=product||(surfaceAttribution&&label==='candidate');"));
+ assert.ok(source.includes("const useGen3288Source=product||((surfaceAttribution||r8Slope)&&label==='candidate');"));
  assert.ok(source.includes("gen3288ProductVerifySource(args['--'+label+'-dir'],label)"));
  assert.ok(source.includes("gen3286VerifySource(args['--'+label+'-dir'],label)"));
- assert.ok(source.includes("const browserVariation=isolation||handoff||surfaceAttribution;"));
+ assert.ok(source.includes("const browserVariation=isolation||handoff||surfaceAttribution||r8Slope;"));
+});
+
+test('Gen3287 R8 single-factor browser-only ridge soil-slope eligibility preserves geometry and normals',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.deepEqual(m.GEN3287_R8_SOIL_SLOPE_MODES,['baseline','ridge-slope-eligibility-neutral']);
+ assert.equal(m.gen3287R8SoilSlopeSource(source,'baseline'),source);
+ const edited=m.gen3287R8SoilSlopeSource(source,'ridge-slope-eligibility-neutral');
+ assert.notEqual(edited,source);
+ assert.equal(edited.split('float gen3287R8RidgeWindow=').length,2);
+ assert.ok(edited.includes('distance(vWorldPosition.xz,vec2(152.0,-224.0))'));
+ assert.ok(edited.includes('vec3 geometricNormal=normalize(vNormal);'));
+ assert.ok(edited.includes('float worldSoilRock=geologicalEarthRock?1.0:1.0-smoothstep(0.22,0.66,rockExposure);'));
+ assert.ok(edited.includes('resources.singleOwnerVegetation?.draw(packet);'));
+ assert.throws(()=>m.gen3287R8SoilSlopeSource(source,'bad'),/GEN3287_R8_MODE_INVALID/);
+ assert.throws(()=>m.gen3287R8SoilSlopeSource(source.replace('float worldSoilSlope=geologicalEarthRock?1.0:1.0-smoothstep(0.16,0.59,slope);',''),'ridge-slope-eligibility-neutral'),/GEN3287_R8_EXACT_SLOPE_SOURCE_DRIFT/);
 });

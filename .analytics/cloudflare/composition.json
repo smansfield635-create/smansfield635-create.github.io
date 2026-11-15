@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-15T11:24:33Z",
+  "generatedAt": "2026-11-15T12:27:21Z",
   "window": {
-    "start": "2026-10-16T11:24:33Z",
-    "end": "2026-11-15T11:24:33Z"
+    "start": "2026-10-16T12:27:21Z",
+    "end": "2026-11-15T12:27:21Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 551,
-        "visits": 551
+        "pageLoads": 561,
+        "visits": 561
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -48,6 +48,11 @@
         "visits": 20
       },
       {
+        "value": "/products/education/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
         "value": "/meet-sean-mansfield/",
         "pageLoads": 13,
         "visits": 5
@@ -69,16 +74,6 @@
       },
       {
         "value": "/preflight/app/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/products/education/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/build/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -318,8 +313,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1383,
-        "visits": 1249
+        "pageLoads": 1373,
+        "visits": 1259
       },
       {
         "value": "CN",
@@ -362,8 +357,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 761,
-        "visits": 760
+        "pageLoads": 741,
+        "visits": 740
       },
       {
         "value": "Chrome",
@@ -377,8 +372,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 107,
-        "visits": 76
+        "pageLoads": 97,
+        "visits": 66
       },
       {
         "value": "Unknown",

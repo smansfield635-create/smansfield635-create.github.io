@@ -765,6 +765,7 @@ void main(){
   bool geologicalEarthRock=vPrimitiveIndex==62001u;
   bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||
     int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
+  float gen3288VisualHillsideWeight=0.0;
 
   // FAR continuation is visual context only; invert the spherical projection
   // before sampling its broad landscape palette. No new roots or access rights.
@@ -782,6 +783,18 @@ void main(){
   // One material path across the former reference rectangle.
   if(worldSoilTerrain){
     vec2 world=vWorldPosition.xz;
+    // Gen3288 one-repair: organic visual hillside transition.
+    // Preserve the published ecological admission and frozen root mask.
+    float gen3288VisualBlend=smoothstep(0.0,65.0,world.x);
+    float gen3288HillsideWarp=
+      (noise2(world*0.022+vec2(27.0,-39.0))-0.5)*20.0+
+      (noise2(world*0.067+vec2(-13.0,71.0))-0.5)*5.0;
+    float gen3288NaturalHillsideWeight=smoothstep(
+      -78.0,-8.0,world.y-hillsideDivide(world.x)+gen3288HillsideWarp
+    );
+    gen3288VisualHillsideWeight=mix(
+      hillsideWeight(world),gen3288NaturalHillsideWeight,gen3288VisualBlend
+    );
     float broad=noise2(world*0.035);
     float medium=noise2(world*0.13+vec2(17.0,-9.0));
     float grain=noise2(world*0.55+vec2(-31.0,23.0));
@@ -1218,9 +1231,11 @@ void main(){
     // Actual exposed mesh contacts drive proximity; canonical coast distance
     // retains the existing transition to slope/elevation suitability inland.
     float inlandMeters=vContactDistanceMeters;
-    float sandCoverage=hillsideSandCoverage(world,slope,renderedBeachCoverage(inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope));
+    float sandCoverage=renderedBeachCoverage(
+      inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope
+    )*(1.0-gen3288VisualHillsideWeight*smoothstep(.012,.065,slope));
     // Exposed banks are weathered earth/stone, not the flat beach sand palette.
-    float steepBank=hillsideWeight(world)*smoothstep(.012,.065,slope)*(1.0-smoothstep(10.0,38.0,inlandMeters))*smoothstep(-1.0,0.0,inlandMeters);
+    float steepBank=gen3288VisualHillsideWeight*smoothstep(.012,.065,slope)*(1.0-smoothstep(10.0,38.0,inlandMeters))*smoothstep(-1.0,0.0,inlandMeters);
     vec3 bankEarth=mix(vec3(.20,.17,.115),vec3(.28,.255,.215),smoothstep(.08,.35,slope));
     palette=mix(palette,bankEarth*(.90+.18*grain),steepBank*.78);
     vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
@@ -1321,7 +1336,7 @@ void main(){
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
       habitatMaterialCoverage=max(habitatMaterialCoverage,texture(uHabitatMaterialPresentation,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
-    float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
+    float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),gen3288VisualHillsideWeight*smoothstep(18.0,42.0,vWorldPosition.y));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
     // Occupied meadow soil only; immutable original habitat panels remain dominant.

@@ -8,12 +8,12 @@
   "disposition": "PASS",
   "anchorDispositionScope": "SOURCE_BOUND_ELEVEN_INVARIANT_PRESERVATION_REVIEW_ONLY_NOT_VISUAL_ACCEPTANCE",
   "reviewScope": "One existing world-soil material-authority handoff is reconciled through a smooth position/elevation field at east near/far terrain. Reuses resident approved clearing soil texture and existing shading path; retains all woodland, ravine and coastal habitat blends, ecological sources, roots, original 3,805,291 population, geometry, navigation, trees, water and terrain primitives. Changes no draw ownership or shader resource allocations.",
-  "aestheticDisposition": "PENDING_OWNER_VISUAL_REVIEW",
+  "aestheticDisposition": "ONE_REPAIR_PENDING_NEW_DESKTOP_MOBILE_WEBGL",
   "visualKeepClaimed": false,
   "originalAnchorFilmReplayed": false,
   "physicalAndroidPerformanceMeasured": false,
-  "firstPartyBrowserAB": "NOT_EXECUTED_AT_RECEIPT_CREATION",
-  "actualGen3288CandidateQualification": "PENDING",
+  "firstPartyBrowserAB": "INITIAL_GEN3288_PRODUCT_AB_EXECUTED_VISIBLE_SEAM_RETAINED",
+  "actualGen3288CandidateQualification": "INITIAL_COMMIT_VISUAL_REPAIR_FAILED_ONE_BOUNDED_REPAIR_PENDING",
   "invariants": {
     "SAME_CANONICAL_WORLD_IDENTITY": true,
     "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
@@ -43,23 +43,23 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "235d1fb1e44795df5654bcb37477ba52b66281d781dd299b03b5609fbe8e9864",
-      "gitBlob": "1ddf627292372e47feab8e9c9ef183e3aa1a3dc2",
+      "sha256": "15a3317eabef9662c31b8f6120b52e56f3a41c432d468a880ede2587cc8091e7",
+      "gitBlob": "97114936a17939ebb548074b57193735db17f3cc",
       "sourceRole": "EXISTING_WORLD_SOIL_NEAR_FAR_AUTHORITY"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "90a9ca1a7ee8b12e5f00047391b414a01def7293121cc26c5886fbfa885c007f",
-      "gitBlob": "77a60951dd2368902471d62b160de0ee19329ebf",
+      "sha256": "ab5841f2834cadd4066a7a55c321b4896a42928ff891f99dd27e1ca88198b92a",
+      "gitBlob": "32a5e2747a74e41e0c379de406ae99f7edeae549",
       "sourceRole": "EXACT_THREE_EXISTING_RENDERER_IMPORT_REVISIONS"
     }
   ],
   "sourceIdentity": {
     "governingHead": "dcc920791b81d3972661a2e9cfbf3310cb045f77",
     "acceptedGen3259RendererBlob": "3471d386d720382b1b55b146fef6fa0af61f0d36",
-    "candidateRendererBlob": "1ddf627292372e47feab8e9c9ef183e3aa1a3dc2",
+    "candidateRendererBlob": "97114936a17939ebb548074b57193735db17f3cc",
     "acceptedGen3259IndexBlob": "8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",
-    "candidateIndexBlob": "77a60951dd2368902471d62b160de0ee19329ebf",
+    "candidateIndexBlob": "32a5e2747a74e41e0c379de406ae99f7edeae549",
     "frozenGrassSourceGitBlob": "7cb62866153d4ceb57b2a2177359bd56a4220d85",
     "grassRootCountUnchanged": 3805291,
     "originalFrozenMeadowMapSha256": "a6f408b7375bec5726b9b3931351ddb226f2bbd2606f27fe85f128816bd7e015",
@@ -86,7 +86,17 @@
     "NO_OWNER_AESTHETIC_KEEP",
     "NO_PHYSICAL_ANDROID_PERFORMANCE",
     "NO_MERGE_DEPLOY_OR_PUBLICATION_AUTHORITY",
-    "FULL_VEGETATION_RESIDENCY_NOT_DEMONSTRATED"
+    "FULL_VEGETATION_RESIDENCY_NOT_DEMONSTRATED",
+    "INITIAL_GEN3288_CANDIDATE_VISUALLY_FAILED",
+    "ONE_REPAIR_WEBGL_NOT_YET_RUN"
   ],
-  "releaseStatusAtReceiptCreation": "DRAFT_ONLY_NO_RELEASE"
+  "releaseStatusAtReceiptCreation": "DRAFT_ONLY_NO_RELEASE",
+  "oneRepair": {
+    "priorCandidate": "5e34efff49822073a3335c9797c013fb8f499cd7",
+    "priorWorkflow": 43657879140,
+    "priorArtifact": 14140171929,
+    "priorResult": "OBJECTIONABLE_TRIANGULAR_AND_DIAGONAL_BOUNDARIES_PERSIST",
+    "sourceMechanism": "Reuse the existing hillside divide and sand/bank/habitat soil visual material terms, replacing east-only piecewise-linear visual transition with a wider gently noise-warped continuous blend while protecting negative-X woodland controls and ecological admission",
+    "pending": "MATCHED_DESKTOP_MOBILE_GEN3259_AB_BEFORE_PERCEPTUAL_DECISION"
+  }
 }

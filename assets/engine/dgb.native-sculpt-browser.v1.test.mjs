@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,createSculptReferenceImportGate,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -270,4 +270,54 @@ test('C2-B reference input and numeric face selector are keyboard accessible in 
   assert.match(controller,/add\(controls.faceIndex,'input'/);
   assert.match(controller,/selectedFace=validateSculptFaceIndex\(Number\(raw\)/);
   assert.match(controller,/const dimensions=await readSculptReferenceImageDimensions\(file\);[\s\S]*?bitmap=await createImageBitmap\(file\)/);
+});
+
+test('C2-B overlapping reference imports ignore late image A after B and later edits',async()=>{
+  const gate=createSculptReferenceImportGate();
+  const deferred=()=>{
+    let resolve;
+    const promise=new Promise(done=>{resolve=done;});
+    return {promise,resolve};
+  };
+  const aHeader=deferred(),aDecode=deferred(),bHeader=deferred(),bDecode=deferred();
+  let image='original',edits=0,cleared=[];
+  async function importSource(name,header,decode){
+    const token=gate.begin();
+    let released=0;
+    try{
+      await header.promise;
+      if(!gate.isCurrent(token))return;
+      await decode.promise;
+      if(!gate.isCurrent(token))return;
+      image=name; // same commit gate as the real reference import
+    }finally{
+      released++;
+      if(gate.isCurrent(token))cleared.push(name);
+    }
+    assert.equal(released,1);
+  }
+  const first=importSource('A',aHeader,aDecode);
+  aHeader.resolve();await Promise.resolve(); // A enters decode
+  const second=importSource('B',bHeader,bDecode);
+  bHeader.resolve();await Promise.resolve();
+  bDecode.resolve();await second;
+  assert.equal(image,'B');
+  image+=':sculpt-edit';edits++;
+  aDecode.resolve();await first;
+  assert.equal(image,'B:sculpt-edit');
+  assert.equal(edits,1);
+  assert.deepEqual(cleared,['B']);
+  // Pending work is invalidated on later edits, loads and disposal.
+  const pending=gate.begin();
+  gate.cancel();
+  assert.equal(gate.isCurrent(pending),false);
+});
+test('C2-B source uses current-token checks after each await and before four-view adoption',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const source=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  assert.match(source,/const token=referenceImports\.begin\(\)/);
+  assert.match(source,/const dimensions=await readSculptReferenceImageDimensions\(file\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;/);
+  assert.match(source,/bitmap=await createImageBitmap\(file\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;/);
+  assert.match(source,/if\(!referenceImports\.isCurrent\(token\)\)return;\s*adoptTopology\(nextSession/);
+  assert.match(source,/if\(referenceImports\.isCurrent\(token\)\)event\.target\.value='';/);
 });

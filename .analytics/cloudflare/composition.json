@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-15T16:24:50Z",
+  "generatedAt": "2026-11-15T17:24:42Z",
   "window": {
-    "start": "2026-10-16T16:24:50Z",
-    "end": "2026-11-15T16:24:50Z"
+    "start": "2026-10-16T17:24:42Z",
+    "end": "2026-11-15T17:24:42Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,9 +18,9 @@
         "visits": 334
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/",
         "pageLoads": 80,
-        "visits": 80
+        "visits": 57
       },
       {
         "value": "/products/education/personal-training/",
@@ -28,9 +28,9 @@
         "visits": 80
       },
       {
-        "value": "/",
-        "pageLoads": 79,
-        "visits": 56
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 80,
+        "visits": 80
       },
       {
         "value": "/nine-summits/universe/",
@@ -123,11 +123,6 @@
         "visits": 0
       },
       {
-        "value": "/laws/core-invariants/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/about/",
         "pageLoads": 1,
         "visits": 1
@@ -143,17 +138,7 @@
         "visits": 1
       },
       {
-        "value": "/laws/hybrid-collapse/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/wave/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/test/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -183,22 +168,22 @@
         "visits": 0
       },
       {
-        "value": "/products/five-flags/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/instruments/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
+        "value": "/frontier/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/frontier/",
+        "value": "/products/five-flags/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -246,8 +231,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1315,
-        "visits": 1315
+        "pageLoads": 1313,
+        "visits": 1313
       },
       {
         "value": "diamondgatebridge.com",
@@ -273,8 +258,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1355,
-        "visits": 1241
+        "pageLoads": 1373,
+        "visits": 1259
       },
       {
         "value": "CN",
@@ -300,13 +285,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1257,
-        "visits": 1179
+        "pageLoads": 1224,
+        "visits": 1146
       },
       {
         "value": "mobile",
-        "pageLoads": 196,
-        "visits": 173
+        "pageLoads": 217,
+        "visits": 184
       },
       {
         "value": "tablet",
@@ -327,18 +312,18 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 143,
-        "visits": 131
+        "pageLoads": 153,
+        "visits": 141
       },
       {
         "value": "Edge",
-        "pageLoads": 117,
-        "visits": 76
+        "pageLoads": 97,
+        "visits": 66
       },
       {
         "value": "Unknown",
-        "pageLoads": 74,
-        "visits": 62
+        "pageLoads": 71,
+        "visits": 59
       },
       {
         "value": "Firefox",
@@ -347,8 +332,8 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 22,
-        "visits": 11
+        "pageLoads": 23,
+        "visits": 12
       },
       {
         "value": "Safari",
@@ -364,8 +349,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 864,
-        "visits": 863
+        "pageLoads": 894,
+        "visits": 893
       },
       {
         "value": "Windows",
@@ -379,8 +364,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 74,
-        "visits": 62
+        "pageLoads": 71,
+        "visits": 59
       },
       {
         "value": "MacOSX",
@@ -389,27 +374,27 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 22,
-        "visits": 11
+        "pageLoads": 23,
+        "visits": 12
       }
     ],
     "bot": [
       {
-        "value": "0",
-        "pageLoads": 757,
-        "visits": 624
+        "value": "1",
+        "pageLoads": 751,
+        "visits": 750
       },
       {
-        "value": "1",
-        "pageLoads": 731,
-        "visits": 730
+        "value": "0",
+        "pageLoads": 705,
+        "visits": 582
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1453,
-        "visits": 1384
+        "pageLoads": 1401,
+        "visits": 1332
       },
       {
         "value": "routing-apis",
@@ -425,8 +410,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1402,
-        "visits": 1313
+        "pageLoads": 1420,
+        "visits": 1331
       },
       {
         "value": "cache",
@@ -437,15 +422,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1478,
-        "visits": 1354
+        "pageLoads": 1456,
+        "visits": 1332
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1458,
-        "visits": 1334
+        "pageLoads": 1456,
+        "visits": 1332
       }
     ]
   }

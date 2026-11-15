@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,replaceFourSculptViewMeshes} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -184,4 +184,41 @@ test('C2-B uncertain release or failed rollback quarantines instead of accepting
   assert.throws(()=>replaceFourSculptViewMeshes(views,oldSpec,newSpec,()=>{},()=>{quarantines++;}),
     /INJECT_RELEASE_UNCERTAIN/);
   assert.equal(quarantines,1);
+});
+
+test('C2-B rejected pointer edit cancels active stroke and restores savable session',()=>{
+  const fixture=makeNeutralSculptRegionFixture(),session=createSculptSession(fixture),
+    before=session.getPositions(),hit=session.pick([-.55,.13,4.5],[0,0,-1]);
+  assert(hit);
+  session.beginStroke(hit,{region:'cheek',radius:.45,strength:.8});
+  assert.equal(session.state().active,true);
+  let redraws=0;
+  const recovery=abortRejectedSculptStroke(session,()=>{redraws++;session.verify();});
+  assert.equal(recovery.restored,true);
+  assert.equal(recovery.uncertain,false);
+  assert.equal(redraws,1);
+  assert.equal(session.state().active,false);
+  assert.deepEqual([...session.getPositions()],[...before]);
+  assert.equal(JSON.parse(session.serialize()).schema,'DGB_NATIVE_SCULPT_MESH_V1');
+});
+test('C2-B uncertain rejected stroke GPU redraw does not certify recovery',()=>{
+  const fixture=makeNeutralSculptRegionFixture(),session=createSculptSession(fixture),
+    hit=session.pick([-.55,.13,4.5],[0,0,-1]);
+  assert(hit);session.beginStroke(hit,{radius:.45});
+  const recovery=abortRejectedSculptStroke(session,()=>{throw Error('INJECT_GPU_REDRAW_FAILURE');});
+  assert.equal(recovery.restored,false);
+  assert.equal(recovery.uncertain,true);
+  assert.equal(recovery.recoveryError,'INJECT_GPU_REDRAW_FAILURE');
+  assert.equal(session.state().active,false);
+});
+test('C2-B a quarantined GPU skips redraw but still closes CPU stroke',()=>{
+  const fixture=makeNeutralSculptRegionFixture(),session=createSculptSession(fixture),
+    hit=session.pick([-.55,.13,4.5],[0,0,-1]);
+  assert(hit);session.beginStroke(hit,{radius:.45});
+  let called=false;
+  const recovery=abortRejectedSculptStroke(session,()=>{called=true;},true);
+  assert.equal(called,false);
+  assert.equal(recovery.uncertain,true);
+  assert.equal(recovery.restored,false);
+  assert.equal(session.state().active,false);
 });

@@ -1348,7 +1348,7 @@ void main(){
     // occupancy-driven material color from repainting eligible soil texels.
     // Accepted grove/oasis/route protections retain original color behavior.
     float nativeHabitatMaterial=clamp(max(habitatCoverage,habitatMaterialCoverage),0.0,1.0);
-    float approvedSoilHabitatProtection=vRoleCode==1u?
+    float approvedSoilHabitatProtection=(vRoleCode==1u&&!geologicalEarthRock)?
       approvedSoilMaterialProtection*habitatMaterialProtection(vWorldPosition.xz)*
       (1.0-nativeHabitatMaterial):0.0;
     base=mix(base,habitatSoil,

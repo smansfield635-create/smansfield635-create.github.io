@@ -268,6 +268,7 @@ test('C2-A: forged save geometry and UV lineage cannot change a verified candida
   assert.equal(fixed.serialize(),v1);
 });
 
+
 test('C2-A independent review: validated output buffers remain immutable across external writes',async()=>{
   const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:restore}=await C2A();
   const c=make(square()),saved=c.serialize(),first=c.positions[0],firstUv=c.render.uvs[0],firstIndex=c.triangles[0],firstRenderIndex=c.render.triangles[0];

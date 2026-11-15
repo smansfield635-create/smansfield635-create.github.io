@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -223,4 +223,51 @@ test('C2-B a quarantined GPU skips redraw but still closes CPU stroke',()=>{
   assert.equal(recovery.uncertain,true);
   assert.equal(recovery.restored,false);
   assert.equal(session.state().active,false);
+});
+
+// Independent C2-B review: file-size checks must precede all decoded image allocation.
+test('C2-B PNG JPEG and WebP dimensions are budgeted from compressed headers before decode',async()=>{
+  const makePng=(w,h)=>{
+    const b=new Uint8Array(33);b.set([137,80,78,71,13,10,26,10],0);
+    const v=new DataView(b.buffer);v.setUint32(8,13);b.set([73,72,68,82],12);
+    v.setUint32(16,w);v.setUint32(20,h);
+    return new Blob([b],{type:'image/png'});
+  };
+  const jpeg=new Uint8Array(21);jpeg.set([255,216,255,192,0,17,8,1,44,1,144],0);
+  const webp=new Uint8Array(30);
+  webp.set([82,73,70,70],0);webp.set([87,69,66,80,86,80,56,88],8);webp[16]=10;
+  webp[24]=143;webp[25]=1;webp[27]=199;
+  assert.deepEqual(await readSculptReferenceImageDimensions(makePng(400,300)),{width:400,height:300});
+  assert.deepEqual(await readSculptReferenceImageDimensions(new Blob([jpeg],{type:'image/jpeg'})),{width:400,height:300});
+  assert.deepEqual(await readSculptReferenceImageDimensions(new Blob([webp],{type:'image/webp'})),{width:400,height:200});
+  await assert.rejects(readSculptReferenceImageDimensions(makePng(8000,3000)),/DECODE_BUDGET_EXCEEDED/);
+  await assert.rejects(readSculptReferenceImageDimensions(makePng(0,80)),/HEADER_INVALID/);
+  await assert.rejects(readSculptReferenceImageDimensions(new Blob([new Uint8Array(5000001)],{type:'image/png'})),
+    /TYPE_OR_SIZE_REJECTED/);
+  await assert.rejects(readSculptReferenceImageDimensions(new Blob([new Uint8Array(33)],{type:'image/png'})),
+    /HEADER_INVALID/);
+  await assert.rejects(readSculptReferenceImageDimensions(new Blob([jpeg],{type:'image/gif'})),
+    /TYPE_OR_SIZE_REJECTED/);
+});
+test('C2-B keyboard numeric face selection accepts the same C2-A face range as pointer picking',()=>{
+  const initial=makeNeutralSculptRegionFixture(),faceCount=initial.triangles.length/3;
+  assert.equal(faceCount,480);
+  assert.equal(validateSculptFaceIndex(0,faceCount),0);
+  assert.equal(validateSculptFaceIndex(251,faceCount),251);
+  assert.equal(validateSculptFaceIndex(faceCount-1,faceCount),faceCount-1);
+  for(const x of [-1,faceCount,NaN,1.5,'251',null])assert.throws(
+    ()=>validateSculptFaceIndex(x,faceCount),/STUDIO_SELECTED_FACE_INVALID/);
+});
+test('C2-B reference input and numeric face selector are keyboard accessible in live HTML',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const controller=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  assert.match(html,/<input id="faceIndex" type="number" min="0" step="1"/);
+  assert.match(html,/input\[type=file\]\{display:block;/);
+  assert.doesNotMatch(html,/input\[type=file\]\{display:none/);
+  assert.match(html,/input:focus-visible/);
+  assert.match(html,/id="reference" type="file"/);
+  assert.match(controller,/add\(controls.faceIndex,'input'/);
+  assert.match(controller,/selectedFace=validateSculptFaceIndex\(Number\(raw\)/);
+  assert.match(controller,/const dimensions=await readSculptReferenceImageDimensions\(file\);[\s\S]*?bitmap=await createImageBitmap\(file\)/);
 });

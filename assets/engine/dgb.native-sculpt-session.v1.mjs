@@ -79,8 +79,8 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
       if(edges.get(e)>2)throw new Error('NONMANIFOLD_EDGE');
     }
   }
-  // Conservative positive intersection test for non-adjacent pairs. Shared-vertex
-  // surfaces are checked separately for degeneracy/nonmanifold topology.
+  // Compare even vertex-adjacent faces: a shared vertex allows touching, not
+  // a noncoplanar penetration elsewhere inside the triangles.
   if(checkSelfIntersection){
     const faces=idx.length/3;
     if(faces>3500)throw new RangeError('SELF_INTERSECTION_BUDGET_EXCEEDED');
@@ -90,10 +90,6 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
         const b=[idx[3*j],idx[3*j+1],idx[3*j+2]];
         // Index adjacency alone does not excuse two coplanar face interiors
         // occupying the same area. Ordinary edge/vertex contact remains legal.
-        if(a.some(k=>b.includes(k))){
-          if(coplanarTrianglesOverlap(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
-          continue;
-        }
         if(trianglesIntersect(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
       }
     }

@@ -1337,7 +1337,9 @@ jobs:
   gen3287-matched-material-gpu:
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' || github.event.pull_request.head.ref == 'h-earth/r10-material-light-separation-20261115' || github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115') }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    # Gen3303 demands ten renderer boot/capture sessions; four took ~26 min.
+    # Historical R8/R10 remain 45 min; per-pose 120s readiness remains unchanged.
+    timeout-minutes: ${{ github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 110 || 45 }}
     steps:
       - name: Checkout separately admitted verifier tooling
         uses: actions/checkout@v4

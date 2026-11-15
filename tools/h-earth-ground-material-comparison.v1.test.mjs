@@ -456,8 +456,13 @@ test('Gen3303 original positive-X material modes are source-reversible and no pr
  const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
  assert.deepEqual(m.GEN3303_POSITIVE_X_MATERIAL_MODES,['baseline','approved-soil-off','identity-off','groundcover-off','habitat-off']);
  assert.deepEqual(m.GEN3303_POSITIVE_X_WITNESSES.map(p=>p.id),[
-   'positive-x-south-looking-south','east-meadow-interior','east-meadow-perimeter','woodland-grove-a-control'
+   'woodland-grove-a-control','east-meadow-interior','east-meadow-perimeter','positive-x-south-looking-south'
  ]);
+ // Start at accepted route's natural grove pose, then approach positive-X.
+ assert.equal(m.GEN3303_POSITIVE_X_WITNESSES[0].x,-139.40267987050615);
+ assert.equal(m.GEN3303_POSITIVE_X_WITNESSES[0].z,-194.5);
+ assert.equal(m.GEN3303_POSITIVE_X_WITNESSES.at(-1).x,124.4127167356344);
+ assert.equal(m.GEN3303_POSITIVE_X_WITNESSES.at(-1).z,-394.77901544898066);
  assert.equal(m.gen3303PositiveXMaterialSource(original,'baseline'),original);
  const substitutions={
   'approved-soil-off':['float worldSoilWeight=worldSoilCoverage;','float worldSoilWeight=0.0;'],
@@ -485,6 +490,7 @@ test('Gen3303 binds accepted Gen3259, original geography, exact native browser p
  assert.ok(comparator.includes("if(positiveX){if(receipt.views.length!==40||receipt.comparisons.length!==32)"));
  assert.ok(workflow.includes('h-earth/positive-x-effective-soil-stage-20261115'));
  assert.ok(workflow.includes('GEN3303_POSITIVE_X_MATERIAL_STAGE_V1'));
+ assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 110 || 45"));
  assert.ok(workflow.includes("if: ${{ github.event.pull_request.head.ref != 'h-earth/positive-x-effective-soil-stage-20261115' }}"));
  assert.ok(workflow.includes('test ! -e ../candidate'));
  assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));

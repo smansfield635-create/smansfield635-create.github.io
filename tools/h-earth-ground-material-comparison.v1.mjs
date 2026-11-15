@@ -486,9 +486,12 @@ export function gen3288CausalShaderSource(source,mode){
 // Gen3303: original positive-X grassland, not the failed R11 ridge.
 // Browser-response-only material ablations of exact accepted Gen3259.
 export const GEN3303_POSITIVE_X_MATERIAL_MODES=Object.freeze(['baseline','approved-soil-off','identity-off','groundcover-off','habitat-off']);
+// Source-verified successful 16-view scout #43643058946 warmed the original
+// grove first, followed by the original positive-X region. Keep the accepted
+// loader's sequential asset settlement and all 120-second pose guards intact.
 export const GEN3303_POSITIVE_X_WITNESSES=Object.freeze([
- 'positive-x-south-looking-south','east-meadow-interior',
- 'east-meadow-perimeter','woodland-grove-a-control'
+ 'woodland-grove-a-control','east-meadow-interior',
+ 'east-meadow-perimeter','positive-x-south-looking-south'
 ].map(id=>{
  const p=GEN3286_WITNESS_SCOUT_POSES.find(x=>x.id===id);
  if(!p)throw Error('GEN3303_POSITIVE_X_WITNESS_MISSING:'+id);

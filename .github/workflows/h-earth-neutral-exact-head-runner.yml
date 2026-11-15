@@ -1219,10 +1219,10 @@ jobs:
           ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
           path: baseline
           persist-credentials: false
-      - name: Checkout immutable unmerged Gen3286 candidate
+      - name: Checkout immutable unmerged Gen3288 candidate
         uses: actions/checkout@v4
         with:
-          ref: 676cb926180219d62ff4fd4a356d8360ff66d99b
+          ref: 5e34efff49822073a3335c9797c013fb8f499cd7
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1233,7 +1233,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git -C ../baseline rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
-          test "$(git -C ../candidate rev-parse HEAD)" = 676cb926180219d62ff4fd4a356d8360ff66d99b
+          test "$(git -C ../candidate rev-parse HEAD)" = 5e34efff49822073a3335c9797c013fb8f499cd7
           node --check tools/h-earth-ground-material-comparison.v1.mjs
           node --test --test-skip-pattern='Gen2928 bounded provisional high-patch blend' tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
       - name: Install Chromium and PNG decoder for actual pixels
@@ -1244,7 +1244,7 @@ jobs:
       - name: Capture matched desktop and mobile-size real WebGL2 PNG pairs
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1
+          H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1
         run: |
           timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen3286-material-ab"
       - name: Preserve images and truthful complete or partial receipt

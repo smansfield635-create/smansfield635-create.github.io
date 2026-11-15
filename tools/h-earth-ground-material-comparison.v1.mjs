@@ -491,6 +491,31 @@ export function gen3288HandoffSource(source,mode){
   return source;
 }
 
+
+export const GEN3288_PRODUCT_AB=Object.freeze({
+  profile:'GEN3288_EXACT_PRODUCT_AB_V1',
+  heads:Object.freeze({baseline:GEN3286_MATCHED.heads.baseline,candidate:'5e34efff49822073a3335c9797c013fb8f499cd7'}),
+  renderer:Object.freeze({baseline:GEN3286_MATCHED.renderer.baseline,candidate:'1ddf627292372e47feab8e9c9ef183e3aa1a3dc2'}),
+  index:Object.freeze({baseline:GEN3286_MATCHED.index.baseline,candidate:'77a60951dd2368902471d62b160de0ee19329ebf'}),
+  candidateRootCount:3805291,
+  viewports:Object.freeze([GEN3286_MATCHED.viewports[1],GEN3286_MATCHED.viewports[0]]),
+  poses:GEN3288_CAUSAL_POSES
+});
+export function gen3288ProductVerifySource(dir,label){
+  if(!['baseline','candidate'].includes(label))throw Error('GEN3288_PRODUCT_UNKNOWN_LABEL');
+  assertCheckout(dir,GEN3288_PRODUCT_AB.heads[label]);
+  const blob=rel=>execFileSync('git',['-C',dir,'hash-object',rel],{encoding:'utf8'}).trim();
+  const got=blob(RENDERER.slice(1)),index=blob('showroom/globe/h-earth/index.html');
+  if(got!==GEN3288_PRODUCT_AB.renderer[label]||index!==GEN3288_PRODUCT_AB.index[label])
+    throw Error('GEN3288_EXACT_PRODUCT_SOURCE_MISMATCH:'+label);
+  for(const [rel,expected] of Object.entries(GEN3286_MATCHED.protectedBlobs))
+    if(blob(rel)!==expected)throw Error('GEN3288_PROTECTED_SCENE_OR_FROZEN_GRASS_CHANGED:'+label+':'+rel);
+  return {head:GEN3288_PRODUCT_AB.heads[label],rendererBlob:got,indexBlob:index,
+    rendererSha256:sha(fs.readFileSync(path.join(dir,RENDERER.slice(1)))),
+    grassRootCountByUnchangedSource:GEN3288_PRODUCT_AB.candidateRootCount,
+    protectedBlobsUnchanged:true};
+}
+
 export function gen3286VerifySource(dir,label){
   if(!['baseline','candidate'].includes(label))throw Error('GEN3286_UNKNOWN_SOURCE_LABEL');
   assertCheckout(dir,GEN3286_MATCHED.heads[label]);
@@ -515,12 +540,13 @@ export async function runGen3286(argv){
   const scout=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3286_WITNESS_SCOUT_V1';
   const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
   const handoff=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_HANDOFF_EDGE_V1';
+  const product=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_EXACT_PRODUCT_AB_V1';
   const browserVariation=isolation||handoff;
-  const viewports=(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports;
-  const poses=browserVariation?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
+  const viewports=product?GEN3288_PRODUCT_AB.viewports:((scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
+  const poses=(browserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
   const labels=handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']));
   const receipt={
-    schema:handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    schema:product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
     heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
     witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:browserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
@@ -529,7 +555,7 @@ export async function runGen3286(argv){
   let browser=null,server=null;persist();
   try{
     const identities={};
-    for(const label of ['baseline','candidate'])identities[label]=gen3286VerifySource(args['--'+label+'-dir'],label);
+    for(const label of ['baseline','candidate'])identities[label]=product?gen3288ProductVerifySource(args['--'+label+'-dir'],label):gen3286VerifySource(args['--'+label+'-dir'],label);
     receipt.identities=identities;persist();
     const {chromium}=await import('playwright');
     const {PNG}=await import('pngjs');
@@ -537,7 +563,7 @@ export async function runGen3286(argv){
     for(const viewport of viewports){
       for(const [index,label] of labels.entries()){
         const dir=args[browserVariation?'--baseline-dir':'--'+label+'-dir'],port=18907+index,base='http://127.0.0.1:'+port;
-        const runRecord={label,viewport,head:browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label],actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
+        const runRecord={label,viewport,head:product?GEN3288_PRODUCT_AB.heads[label]:(browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]),actualBrowserExecution:false,errors:[],startedAt:new Date().toISOString()};
         receipt.runs.push(runRecord);persist();
         server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
         let listening=false;
@@ -666,12 +692,12 @@ export async function runGen3286(argv){
           const filename=label+'-'+viewport.id+'-'+pose.id+'.png';
           fs.writeFileSync(path.join(out,filename),bytes);
           const {pngDataUrl,...observation}=result;
-          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label]});
+          receipt.views.push({...observation,label,viewport,pose,image:filename,imageSha256:sha(bytes),imageBytes:bytes.length,png:{width:png.width,height:png.height},sourceHead:product?GEN3288_PRODUCT_AB.heads[label]:(browserVariation?GEN3286_MATCHED.heads.baseline:GEN3286_MATCHED.heads[label])});
           previousFrame=result.frame.frameSequence;persist();
         }
         runRecord.completedAt=new Date().toISOString();runRecord.errorCount=runRecord.errors.length;persist();
         if(runRecord.errors.length)throw Error('GEN3286_BROWSER_ERRORS:'+label+':'+runRecord.errors.join('|'));
-        await context.close();server.kill();server=null;gen3286VerifySource(dir,browserVariation?'baseline':label);
+        await context.close();server.kill();server=null;(product?gen3288ProductVerifySource(dir,label):gen3286VerifySource(dir,browserVariation?'baseline':label));
       }
       if(browserVariation)for(const pose of poses){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
@@ -693,7 +719,7 @@ export async function runGen3286(argv){
           persist();
         }
       }
-      else if(!scout)for(const pose of GEN3286_MATCHED.poses){
+      else if(!scout)for(const pose of (product?poses:GEN3286_MATCHED.poses)){
         const views=receipt.views.filter(v=>v.viewport.id===viewport.id&&v.pose.id===pose.id);
         if(views.length!==2)throw Error('GEN3286_INCOMPLETE_AB_PAIR:'+pose.id);
         const A=views.find(v=>v.label==='baseline'),B=views.find(v=>v.label==='candidate');
@@ -714,6 +740,10 @@ export async function runGen3286(argv){
       if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
       receipt.result=handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION';
+    }else if(product){
+      if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');
+      receipt.visualSuccess='PENDING_INDEPENDENT_VISUAL_AND_OWNER_REVIEW';
+      receipt.result='ACTUAL_GEN3259_VS_GEN3288_DESKTOP_MOBILE_SIZED_WEBGL2_PNG_PAIR_CAPTURED';
     }else{
       if(receipt.views.length!==32||receipt.comparisons.length!==16)throw Error('GEN3286_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_PIXEL_REVIEW';
@@ -725,7 +755,7 @@ export async function runGen3286(argv){
 }
 
 export async function run(argv){
-  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

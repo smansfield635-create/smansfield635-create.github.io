@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-15T04:26:37Z",
+  "generatedAt": "2026-11-15T05:24:46Z",
   "window": {
-    "start": "2026-08-17T04:26:37Z",
-    "end": "2026-11-15T04:26:37Z"
+    "start": "2026-08-17T05:24:46Z",
+    "end": "2026-11-15T05:24:46Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,29 +17,29 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3685,
-    "visits": 1102,
+    "pageLoads": 3745,
+    "visits": 1112,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3685,
-        "visits": 1102
+        "pageLoads": 3745,
+        "visits": 1112
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 822,
-        "visits": 612
+        "pageLoads": 842,
+        "visits": 632
       },
       "/laws/": {
         "pageLoads": 50,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 130,
+        "pageLoads": 140,
         "visits": 10
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 480,
+        "pageLoads": 490,
         "visits": 0
       },
       "/products/": {
@@ -103,7 +103,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 63,
+        "pageLoads": 73,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -187,7 +187,7 @@
         "visits": 20
       },
       "/door/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -199,7 +199,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/wave/": {
@@ -238,13 +238,9 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
+      "/campaigns/wave/mr-lee/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -253,6 +249,10 @@
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 30,
+        "visits": 20
       },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
@@ -301,16 +301,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 580,
-        "visits": 580
+        "pageLoads": 600,
+        "visits": 600
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2583,
+        "pageLoads": 2633,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 512,
-        "visits": 512
+        "pageLoads": 502,
+        "visits": 502
       },
       "raw.githack.com": {
         "pageLoads": 10,

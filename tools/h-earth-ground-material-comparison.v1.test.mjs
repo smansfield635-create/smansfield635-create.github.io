@@ -342,3 +342,11 @@ test('Gen3287 surface role, normal and base-color diagnostics are source-only an
  assert.throws(()=>m.gen3287SurfaceAttributeSource(source,'bad-probe'),/GEN3287_UNKNOWN_SURFACE_PROBE/);
  assert.throws(()=>m.gen3287SurfaceAttributeSource(source.replace('outColor=vec4(lit,outputAlpha);',''),'role-code'),/GEN3287_SURFACE_OUTPUT_NOT_UNIQUE/);
 });
+
+test('Gen3287 attribute profile binds baseline Gen3259 and current Gen3288 candidate; historical modes unchanged',()=>{
+ const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ assert.ok(source.includes("const useGen3288Source=product||(surfaceAttribution&&label==='candidate');"));
+ assert.ok(source.includes("gen3288ProductVerifySource(args['--'+label+'-dir'],label)"));
+ assert.ok(source.includes("gen3286VerifySource(args['--'+label+'-dir'],label)"));
+ assert.ok(source.includes("const browserVariation=isolation||handoff||surfaceAttribution;"));
+});

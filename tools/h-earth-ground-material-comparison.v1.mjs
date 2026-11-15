@@ -574,7 +574,12 @@ export async function runGen3286(argv){
   let browser=null,server=null;persist();
   try{
     const identities={};
-    for(const label of ['baseline','candidate'])identities[label]=product?gen3288ProductVerifySource(args['--'+label+'-dir'],label):gen3286VerifySource(args['--'+label+'-dir'],label);
+    for(const label of ['baseline','candidate']){
+      const useGen3288Source=product||(surfaceAttribution&&label==='candidate');
+      identities[label]=useGen3288Source?
+        gen3288ProductVerifySource(args['--'+label+'-dir'],label):
+        gen3286VerifySource(args['--'+label+'-dir'],label);
+    }
     receipt.identities=identities;persist();
     const {chromium}=await import('playwright');
     const {PNG}=await import('pngjs');

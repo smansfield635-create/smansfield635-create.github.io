@@ -572,10 +572,10 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     try{assertReady();if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
   });
   add(controls.load,'change',async event=>{
-    if(originalSource){status('Original M1.3 is read-only; native editable JSON reload is unavailable.');event.target.value='';return;}
     // Reloads share the image generation gate: a delayed file.text() may not
     // overwrite a newer reference, subdivision, brush edit, or second reload.
     const token=referenceImports.begin();
+    if(originalSource){status('Original M1.3 is read-only; native editable JSON reload is unavailable.');event.target.value='';return;}
     const file=event.target.files?.[0];if(!file)return;
     try{
       assertReady();

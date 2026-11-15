@@ -48,7 +48,7 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
 <pre id="status" class="status" role="status" aria-live="polite">Initializing native Graphics Engine WebGL contexts…</pre>
 <footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene. Connected edits use deterministic v2 lineage replay; unmodified v1 mesh files remain loadable.</footer>
 <script type="module">
-import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=df9908060bda4d24b478160a85f62a66b9c9cd8d';
+import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=d6fdc0c9d6b376456f90a85a2dc18953c109f674';
 import {createM13OriginalSource} from '../../assets/engine/dgb.native-sculpt-session.v1.mjs?asset=c3e0bc555d5376eb53bc1b8cf27f988a88c0e6fb';
 const $=id=>document.getElementById(id);
 const M13_ZIP_SHA='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
@@ -134,7 +134,7 @@ const controls=Object.fromEntries(['radius','strength','falloff','mode','region'
 function install(fixture){
   studio?.dispose();studio=null;
   studio=createNativeSculptStudio({canvases,controls,fixture,backend:source?'WEBGL2':'AUTO',
-    onStatus:(message,state)=>{$('status').textContent=message+'\\nVertices '+state.vertices+
+    onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+
       ' • Triangles '+state.triangles+' • Revision '+state.revision+
       ' • Topology edits '+state.topologyDepth+' • Selected face '+(state.selectedFace??'none')+
       ' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});

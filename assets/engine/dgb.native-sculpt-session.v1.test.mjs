@@ -319,3 +319,47 @@ test('C2-A: shared-vertex 3D penetration rejects, but lawful shared-edge contact
   const lawful=new Float32Array([0,0,0,1,0,0,0,1,0,0,0,1]);
   assert.doesNotThrow(()=>verifySculptGeometry(lawful,new Uint32Array([0,1,2,1,0,3])));
 });
+
+test('C2-A Copilot high: intersecting vertex-adjacent triangles crossing face interior must reject even with boundary-ending intersection',()=>{
+  const positions=new Float32Array([0,0,0,1,0,0,0,1,0,.5,.5,1,.5,.5,-1]);
+  const triangles=new Uint32Array([0,1,2,0,3,4]);
+  assert.throws(()=>verifySculptGeometry(positions,triangles),/SELF_INTERSECTION/);
+});
+
+test('C2-A Copilot high: trusted 64-pose source cannot bypass animation guard during replay',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source=square(),saved=make(source).serialize();
+  assert.throws(()=>load(saved,{...source,animation:{poseCount:64}}),/ANIMATED_SOURCE_TRANSFER_UNQUALIFIED/);
+  assert.equal(load(saved,source).serialize(),saved);
+});
+
+test('C2-A Copilot medium: valid skinny source triangle at shared area floor accepts centroid subdivision',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const input={sourceId:'skinny-face',positions:new Float32Array([0,0,0,1,0,0,0,1e-7,0]),
+    triangles:new Uint32Array([0,1,2]),regions:['body','body','body'],
+    selectedFaces:[0],newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:0,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,3]},{sourceFace:0,indices:[1,2,3]},{sourceFace:0,indices:[2,0,3]}]};
+  assert.doesNotThrow(()=>verifySculptGeometry(input.positions,input.triangles));
+  const candidate=make(input);
+  assert.equal(candidate.counts.outputFaces,3);
+  assert.deepEqual([...candidate.sourceFaceLineage],[0,0,0]);
+});
+
+test('C2-A Copilot medium: untouched source face retains aligned sourceFaceLineage in output',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const s=square();const candidate=make({...s,selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},{sourceFace:0,indices:[2,0,4]}]});
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.deepEqual([...candidate.sourceFaceLineage],[1,0,0,0]);
+  assert.equal(candidate.sourceFaceLineage.length,candidate.triangles.length/3);
+});
+
+test('C2-A Copilot medium: omitted trusted protectedVertices defaults empty only when absent',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source=square();delete source.protectedVertices;
+  const saved=make(source).serialize();
+  assert.equal(load(saved,source).serialize(),saved);
+  assert.throws(()=>load(saved,{...source,protectedVertices:null}),/TRUSTED_SOURCE_REQUIRED/);
+  assert.throws(()=>load(saved,{...source,protectedVertices:[0]}),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+});

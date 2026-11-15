@@ -1352,9 +1352,10 @@ jobs:
           path: baseline
           persist-credentials: false
       - name: Checkout immutable unmerged Gen3288 candidate
+        if: ${{ github.event.pull_request.head.ref != 'h-earth/positive-x-effective-soil-stage-20261115' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref == 'h-earth/positive-x-effective-soil-stage-20261115' && 'f05d97d402f27b640e8776a0c9f0851524db0fa0' || '76637b3afbf846746200d78155a36e193de488eb' }}
+          ref: 76637b3afbf846746200d78155a36e193de488eb
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1366,7 +1367,8 @@ jobs:
           set -euo pipefail
           test "$(git -C ../baseline rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
           if [ "${{ github.event.pull_request.head.ref }}" = 'h-earth/positive-x-effective-soil-stage-20261115' ]; then
-            test "$(git -C ../candidate rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
+            # Browser variations use only ../baseline, never an unrelated product checkout.
+            test ! -e ../candidate
           else
             test "$(git -C ../candidate rev-parse HEAD)" = 76637b3afbf846746200d78155a36e193de488eb
           fi

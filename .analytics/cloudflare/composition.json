@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-15T17:24:42Z",
+  "generatedAt": "2026-11-15T18:25:41Z",
   "window": {
-    "start": "2026-10-16T17:24:42Z",
-    "end": "2026-11-15T17:24:42Z"
+    "start": "2026-10-16T18:25:41Z",
+    "end": "2026-11-15T18:25:41Z"
   },
   "dimensions": {
     "requestPath": [
@@ -23,12 +23,12 @@
         "visits": 57
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
@@ -231,13 +231,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1313,
-        "visits": 1313
+        "pageLoads": 1303,
+        "visits": 1303
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 124,
+        "pageLoads": 134,
         "visits": 0
+      },
+      {
+        "value": "bing.com",
+        "pageLoads": 16,
+        "visits": 16
       },
       {
         "value": "www.facebook.com",
@@ -245,9 +250,9 @@
         "visits": 12
       },
       {
-        "value": "bing.com",
-        "pageLoads": 6,
-        "visits": 6
+        "value": "github.com",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "www.google.com",
@@ -268,8 +273,8 @@
       },
       {
         "value": "CA",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 32,
+        "visits": 32
       },
       {
         "value": "BR",
@@ -410,8 +415,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1420,
-        "visits": 1331
+        "pageLoads": 1410,
+        "visits": 1311
       },
       {
         "value": "cache",
@@ -422,15 +427,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1456,
-        "visits": 1332
+        "pageLoads": 1466,
+        "visits": 1342
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1456,
-        "visits": 1332
+        "pageLoads": 1526,
+        "visits": 1382
       }
     ]
   }

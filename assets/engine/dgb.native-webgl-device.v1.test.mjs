@@ -562,3 +562,46 @@ test('C2-B replaced mesh survives context recovery while released mesh stays ret
   assert.throws(()=>d.draw({program:p,mesh:retire}),/MESH_NOT_OWNED_BY_DEVICE/);
   d.dispose();
 });
+
+test('C2-B repeated indexed replacements have bounded resident GPU bytes and buffers',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const {canvas,log,buffers}=fakeCanvas({webgl2:true});
+    const d=createNativeWebGLDevice(canvas,{backend}),p=d.createProgram(shader),
+      m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const bytes=d.status().estimatedTotalResourceBytes;
+    for(let i=0;i<32;i++){
+      const data=new Float32Array(positions);data[0]+=.01*i;
+      const previous=m.gpu;
+      d.replaceMesh(m,{attributes:[{...attrib,data,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+      assert.notStrictEqual(m.gpu,previous);
+      assert.equal(d.status().meshes,1);
+      assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+      assert.equal(buffers.size,2);
+      assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+    }
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,64);
+    d.releaseMesh(m);
+    assert.equal(buffers.size,0);
+    d.dispose();
+  }
+});
+test('C2-B replacement buffer allocation failure leaves prior E1 mesh usable',()=>{
+  const {canvas,gl,log,buffers}=fakeCanvas();
+  const d=createNativeWebGLDevice(canvas),p=d.createProgram(shader),
+    m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const first=m.gpu,bytes=d.status().estimatedTotalResourceBytes,create=gl.createBuffer.bind(gl);
+  let attempts=0;gl.createBuffer=()=>++attempts===2?null:create();
+  assert.throws(()=>d.replaceMesh(m,{attributes:[
+    {...attrib,dynamic:true},
+    {name:'a_extra',data:new Float32Array([1,2,3,4,5,6,7,8,9]),size:3,dynamic:true}
+    ],indices:new Uint16Array([0,1,2]),vertexCount:3}),/BUFFER_ALLOCATION_FAILED/);
+  gl.createBuffer=create;
+  assert.strictEqual(m.gpu,first);
+  assert.equal(d.status().meshes,1);
+  assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+  assert.equal(buffers.size,2);
+  assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,1);
+  d.dispose();
+  assert.equal(buffers.size,0);
+});

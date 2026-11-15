@@ -219,7 +219,7 @@ test('C2-A: two connected source faces gain actual interior 3D volume and topolo
   assert.equal(candidate.render.triangles.length,18);
   assert.equal(candidate.sourceFaceLineage.length,6);
   assert.doesNotThrow(()=>verifySculptGeometry(candidate.positions,candidate.triangles));
-  const serialized=candidate.serialize(),restored=restoreConnectedSculptTopologyCandidate(serialized);
+  const serialized=candidate.serialize(),restored=restoreConnectedSculptTopologyCandidate(serialized,input);
   assert.equal(restored.serialize(),serialized);
   assert.deepEqual([...restored.positions],[...candidate.positions]);
   assert.deepEqual([...restored.render.uvs],[...candidate.render.uvs]);
@@ -257,13 +257,46 @@ test('C2-A: forged save geometry and UV lineage cannot change a verified candida
   const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
   const candidate=make(square()),save=candidate.serialize(),bad=JSON.parse(save);
   bad.geometry.positions[14]+=.05;
-  assert.throws(()=>load(JSON.stringify(bad)),/SAVE_OR_SOURCE_IDENTITY_DRIFT/);
+  assert.throws(()=>load(JSON.stringify(bad),square()),/SAVE_OR_SOURCE_IDENTITY_DRIFT/);
   const badSeam=JSON.parse(save);badSeam.uvHandoff.faceRenderCorners[0]=3;
-  assert.throws(()=>load(JSON.stringify(badSeam)),/SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
+  assert.throws(()=>load(JSON.stringify(badSeam),square()),/TRUSTED_UV_IDENTITY_MISMATCH|SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
   assert.equal(candidate.serialize(),save);
-  assert.throws(()=>load('not-json'),/SAVE_JSON_INVALID/);
+  assert.throws(()=>load('not-json',square()),/SAVE_JSON_INVALID/);
   const fixed=createSculptSession({positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
     triangles:new Uint32Array([0,1,2,0,2,3]),regions:['a','a','a','a']});
   const v1=fixed.serialize();assert.equal(fixed.restore(v1),true);
   assert.equal(fixed.serialize(),v1);
+});
+
+test('C2-A independent review: validated output buffers remain immutable across external writes',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:restore}=await C2A();
+  const c=make(square()),saved=c.serialize(),first=c.positions[0],firstUv=c.render.uvs[0],firstIndex=c.triangles[0],firstRenderIndex=c.render.triangles[0];
+  c.positions[0]=Infinity;c.triangles[0]=4294967295;c.render.uvs[0]=Infinity;
+  c.render.renderToMaster[0]=4294967295;c.render.triangles[0]=4294967295;
+  assert.equal(c.positions[0],first);assert.equal(c.triangles[0],firstIndex);
+  assert.equal(c.render.uvs[0],firstUv);assert.equal(c.render.renderToMaster[0],0);
+  assert.equal(c.render.triangles[0],firstRenderIndex);assert.equal(c.serialize(),saved);
+  assert.equal(restore(saved,square()).serialize(),saved);
+});
+test('C2-A independent review: forged saved source identity and UV custody fail against trusted external source',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:restore}=await C2A();
+  const clean=make(square()),saved=clean.serialize(),bogus=JSON.parse(saved);
+  assert.throws(()=>restore(saved),/TRUSTED_SOURCE_REQUIRED/);
+  bogus.original.positions[0]=-2;
+  assert.throws(()=>restore(JSON.stringify(bogus),square()),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+  const savedUv=JSON.parse(saved);savedUv.uvHandoff.uvs[0]=.25;
+  assert.throws(()=>restore(JSON.stringify(savedUv),square()),/TRUSTED_UV_IDENTITY_MISMATCH/);
+  const trusted=square();trusted.positions[0]=4;
+  assert.throws(()=>restore(saved,trusted),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+});
+test('C2-A independent review: orphan new geometry rejected, projected parent coverage checked',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const valid=square();
+  const orphan={...valid,newVertices:[...valid.newVertices,{sourceFace:0,barycentric:[.5,.25,.25],normalOffset:.02,region:'floating'}]};
+  assert.throws(()=>make(orphan),/ORPHAN_NEW_VERTEX/);
+  const under={...valid,replacementFaces:valid.replacementFaces.map(x=>({...x,indices:[...x.indices]}))};
+  // Move the first center from a barycentric 1/3 to 1/5: projected partition still exact and should remain valid.
+  const moved={...valid,newVertices:valid.newVertices.map(x=>({...x,barycentric:[...x.barycentric]}))};
+  moved.newVertices[0].barycentric=[.2,.4,.4];
+  assert.equal(make(moved).counts.outputFaces,6);
 });

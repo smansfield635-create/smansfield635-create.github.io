@@ -503,7 +503,10 @@ test('Gen3309 one-source identity continuity and original-positive-X A/B profile
  const candidate=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
  const restored=m.gen3309ReconstructAcceptedRenderer(candidate);
  assert.notEqual(restored,candidate);
- assert.ok(candidate.includes('float positiveXMeadowInwardMeters='));
+ assert.ok(candidate.includes('float positiveXMeadowNormalizedDistance='));
+ assert.ok(candidate.includes('(1.0-smoothstep(0.70,1.30,positiveXMeadowNormalizedDistance))'));
+ assert.ok(!candidate.includes('float positiveXMeadowInwardMeters='));
+ assert.ok(!candidate.includes('smoothstep(0.0,28.0,max(0.0,positiveXMeadowInwardMeters))'));
  assert.ok(candidate.includes('identityWeight*=1.0-0.85*positiveXIdentityContinuity;'));
  assert.ok(candidate.includes('(1.0-smoothstep(0.12,0.35,slope))'));
  assert.ok(candidate.includes('(1.0-smoothstep(0.18,0.50,rockExposure))'));
@@ -516,4 +519,34 @@ test('Gen3309 one-source identity continuity and original-positive-X A/B profile
  assert.ok(workflow.includes('H_EARTH_GEN3309_CANDIDATE_HEAD:'));
  assert.ok(workflow.includes('GEN3309_POSITIVE_X_PRODUCT_AB_V1'));
  assert.ok(workflow.includes('h-earth/positive-x-identity-blend-repair-20261115'));
+});
+
+
+test('Gen3309 ONE_REPAIR has no rectangular identity inset and protects all approved woodland while smoothly crossing original meadow edge',()=>{
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const m=(source.match(/vec2 positiveXMeadowReach=/g)||[]).length;
+ assert.equal(m,1);
+ assert.ok(source.includes('0.5*(uMeadowGroundBounds.zw-uMeadowGroundBounds.xy)+vec2(20.0)'));
+ assert.ok(source.includes('length((world-positiveXMeadowCenter)/positiveXMeadowReach)'));
+ assert.ok(source.includes('identityWeight*=1.0-0.85*positiveXIdentityContinuity;'));
+ const smoothstep=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+ const north=-236,south=-559,west=16,east=254;
+ const center=[(west+east)/2,(south+north)/2],reach=[(east-west)/2+20,(north-south)/2+20];
+ const weight=(x,z)=>1-smoothstep(.70,1.30,Math.hypot((x-center[0])/reach[0],(z-center[1])/reach[1]));
+ // The three originally defective-area witnesses stay in the full eligible interior.
+ for(const [x,z] of [[130,-300],[180,-320],[124.4127167356344,-394.77901544898066]])assert.equal(weight(x,z),1);
+ // Both historic healthy tree-meadow footprints and approved grove remain outside.
+ for(const [x,z] of [[-139.40268,-194.5],[-125,-285],[-65,-315]])assert.equal(weight(x,z),0);
+ // No sudden identity-weight jump at a literal north/west atlas rectangle edge.
+ const eps=0.01;
+ for(const [left,right] of [[[130,north-eps],[130,north+eps]],[[west-eps,-395],[west+eps,-395]]]){
+  const a=weight(...left),b=weight(...right);
+  assert.ok(Math.abs(a-b)<0.001,'continuous at geographic edge');
+  assert.ok(a>0&&a<1&&b>0&&b<1,'atlas border is not a new material discontinuity');
+ }
+ assert.ok(weight(130,-216)>weight(130,-186));
+ assert.ok(weight(130,-186)<0.15);
+ const smoothSlope=smoothstep(.12,.35,.5);
+ const smoothRock=smoothstep(.18,.5,.75);
+ assert.equal((1-smoothSlope)*(1-smoothRock),0,'rock and steep slopes cannot receive correction');
 });

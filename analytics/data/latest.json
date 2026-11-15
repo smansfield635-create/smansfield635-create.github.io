@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-15T18:25:41Z",
+  "generatedAt": "2026-11-15T19:24:17Z",
   "window30d": {
-    "start": "2026-10-16T18:25:41Z",
-    "end": "2026-11-15T18:25:41Z"
+    "start": "2026-10-16T19:24:17Z",
+    "end": "2026-11-15T19:24:17Z"
   },
   "daily": [
     {
@@ -60,15 +60,15 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-11-02",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 43
+      "pageLoads": 53
     },
     {
       "date": "2026-11-08",
@@ -124,29 +124,24 @@
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 28
+      "pageLoads": 29
     }
   ],
   "summary": {
-    "pageLoads": 1456,
-    "botPageLoads": 751,
-    "nonBotPageLoads": 705
+    "pageLoads": 1477,
+    "botPageLoads": 752,
+    "nonBotPageLoads": 725
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1303,
-      "visits": 1303
+      "pageLoads": 1324,
+      "visits": 1324
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 134,
+      "pageLoads": 124,
       "visits": 0
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 16,
-      "visits": 16
     },
     {
       "host": "www.facebook.com",
@@ -154,9 +149,9 @@
       "visits": 12
     },
     {
-      "host": "github.com",
-      "pageLoads": 10,
-      "visits": 10
+      "host": "bing.com",
+      "pageLoads": 6,
+      "visits": 6
     },
     {
       "host": "www.google.com",
@@ -167,8 +162,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 571,
-      "visits": 571
+      "pageLoads": 570,
+      "visits": 570
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -176,9 +171,9 @@
       "visits": 334
     },
     {
-      "path": "/",
+      "path": "/products/education/personal-training/",
       "pageLoads": 80,
-      "visits": 57
+      "visits": 80
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -186,9 +181,9 @@
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 80,
-      "visits": 80
+      "path": "/",
+      "pageLoads": 79,
+      "visits": 56
     },
     {
       "path": "/nine-summits/universe/",

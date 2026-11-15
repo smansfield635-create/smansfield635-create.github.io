@@ -2006,3 +2006,141 @@ jobs:
           path: ${{ runner.temp }}/gen3311-native/
           if-no-files-found: error
           retention-days: 30
+
+  # Gen3311: reuse the immutable first-party Gen3309 real WebGL2 camera/pixel
+  # machinery as runner-local tooling, NOT its failed shader candidate.
+  # Exactly 2 cameras x 2 product heads x 1 mobile viewport = four PNGs.
+  # The owner-device CPU camera is a source-anchored proxy, not phone parity.
+  gen3311-original-soil-mobile-webgl2:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/soil-material-owner-restoration-20261115' }}
+    needs: gen3311-original-soil-native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout frozen genuine matched-browser capture tooling
+        uses: actions/checkout@v4
+        with:
+          ref: 40958cc447982e7354eb4ebe331a1824ad2d0847
+          path: diagnostic
+          persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-ground-material-comparison.v1.mjs
+            tools/h-earth-groundcover-factor-overlay.mjs
+          sparse-checkout-cone-mode: false
+      - name: Checkout immutable accepted Gen3259 world
+        uses: actions/checkout@v4
+        with:
+          ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact Gen3311 candidate unchanged
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify two immutable original source heads and clone-only shader source
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C diagnostic rev-parse HEAD)" = 40958cc447982e7354eb4ebe331a1824ad2d0847
+          test "$(git -C baseline rev-parse HEAD)" = f05d97d402f27b640e8776a0c9f0851524db0fa0
+          test "$(git -C candidate rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git -C diagnostic hash-object tools/h-earth-ground-material-comparison.v1.mjs)" = 6014d23b7177fb812cc56cbf81ca7ba6bb808934
+          test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 3471d386d720382b1b55b146fef6fa0af61f0d36
+          test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = bc28cda7f9bce783f1c2a8b775aafe1150b0e6a8
+          test "$(git -C candidate hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+      - name: Adapt historical matched camera tooling in runner only
+        working-directory: diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen3311-soil-owner-webgl2"
+          node --input-type=module <<'ADAPT_JS'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const file='tools/h-earth-ground-material-comparison.v1.mjs';
+          let source=fs.readFileSync(file,'utf8'),original=source;
+          const changes=[
+            [
+              "export const GEN3303_POSITIVE_X_WITNESSES=Object.freeze([\n 'woodland-grove-a-control','east-meadow-interior',\n 'east-meadow-perimeter','positive-x-south-looking-south'\n].map(id=>{\n const p=GEN3286_WITNESS_SCOUT_POSES.find(x=>x.id===id);\n if(!p)throw Error('GEN3303_POSITIVE_X_WITNESS_MISSING:'+id);\n return p;\n}));",
+              "export const GEN3303_POSITIVE_X_WITNESSES=Object.freeze([\n {id:'woodland-grove-a-control',x:-139.40267987050615,z:-194.5,yaw:0,pitch:16},\n {id:'owner-north-atlas-proxy',x:174.2746928079311,y:34.09040259941361,z:-234.52537960525996,yaw:68.51468063465708,pitch:-27.939944106541187,diagnosticObserver:true}\n].map(Object.freeze));"
+            ],
+            [
+              "poses:GEN3303_POSITIVE_X_WITNESSES,\n viewports:Object.freeze([GEN3286_MATCHED.viewports[1],GEN3286_MATCHED.viewports[0]])",
+              "poses:GEN3303_POSITIVE_X_WITNESSES,\n viewports:Object.freeze([GEN3286_MATCHED.viewports[0]])"
+            ],
+            [
+              "gen3309ReconstructAcceptedRenderer(source);",
+              "// Gen3311 pinned renderer blob checked below; Gen3309 old insertion is not applied."
+            ],
+            [
+              "const rendererBlob=blob(RENDERER.slice(1)),indexBlob=blob('showroom/globe/h-earth/index.html');\n if(indexBlob!==GEN3286_MATCHED.index.baseline)throw Error('GEN3309_INDEX_CHANGED');",
+              "const rendererBlob=blob(RENDERER.slice(1)),indexBlob=blob('showroom/globe/h-earth/index.html');\n if(rendererBlob!=='bc28cda7f9bce783f1c2a8b775aafe1150b0e6a8')throw Error('GEN3311_RENDERER_EXACT_BLOB_MISMATCH');\n if(indexBlob!==GEN3286_MATCHED.index.baseline)throw Error('GEN3311_INDEX_CHANGED');"
+            ],
+            [
+              "if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');",
+              "if(receipt.views.length!==4||receipt.comparisons.length!==2)throw Error('GEN3311_TARGETED_MOBILE_AB_VIEW_SET_INCOMPLETE');"
+            ],
+            [
+              "schema:positiveXProduct?'H_EARTH_GEN3309_POSITIVE_X_IDENTITY_SOURCE_AB_WEBGL2_v1'",
+              "schema:positiveXProduct?'H_EARTH_GEN3311_SOIL_MATERIAL_OWNER_MOBILE_AB_WEBGL2_v1'"
+            ],
+            [
+              "profile:positiveXProduct?'GEN3309_POSITIVE_X_PRODUCT_AB_V1'",
+              "profile:positiveXProduct?'GEN3311_REUSED_MATCHED_CAMERA_ENGINE_V1'"
+            ],
+            [
+              "receipt.result=positiveXProduct?'ACTUAL_GEN3259_VS_GEN3309_IDENTITY_SOURCE_WEBGL2_16_IMAGES_8_PAIRS_CAPTURED'",
+              "receipt.result=positiveXProduct?'ACTUAL_GEN3259_VS_GEN3311_SOIL_OWNER_WEBGL2_4_IMAGES_2_PAIRS_CAPTURED'"
+            ]
+          ];
+          for(const [before,after] of changes){
+            if(source.split(before).length!==2)throw Error('RUNNER_ONLY_ADAPTER_ANCHOR_NOT_UNIQUE:'+before.slice(0,65));
+            source=source.replace(before,after);
+          }
+          fs.writeFileSync(file,source);
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/gen3311-soil-owner-webgl2/runner-local-adapted-tool.mjs',source);
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/gen3311-soil-owner-webgl2/source-adapter.json',
+            JSON.stringify({
+              schema:'H_EARTH_GEN3311_FROZEN_COMPARATOR_RUNNER_LOCAL_ADAPTATION_v1',
+              originalToolingHead:'40958cc447982e7354eb4ebe331a1824ad2d0847',
+              originalToolBlob:'6014d23b7177fb812cc56cbf81ca7ba6bb808934',
+              adaptedToolSha256:crypto.createHash('sha256').update(source).digest('hex'),
+              originalToolUnmodifiedInGit:true,
+              materialCandidateBlob:'bc28cda7f9bce783f1c2a8b775aafe1150b0e6a8',
+              cameraWitness:'OWNER_CPU_NAVIGATION_PROXY_NOT_PHYSICAL_WEBGL_FIRST_HIT',
+              screenshotsExpected:4,matchedPairsExpected:2,
+              actualOwnerPhotoEquivalenceProven:false,ownerVisualKeep:false,
+              productMutationPerformed:false
+            },null,2)+'\n');
+          if(source===original)throw Error('RUNNER_ONLY_ADAPTER_NOT_APPLIED');
+          ADAPT_JS
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+      - name: Install fixed Chromium and PNG decoder
+        working-directory: diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Four real WebGL2 frames on matched mobile sized source witnesses
+        working-directory: diagnostic
+        shell: bash
+        env:
+          H_EARTH_GEN3309_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
+          H_EARTH_COMPARISON_PROFILE: GEN3309_POSITIVE_X_PRODUCT_AB_V1
+        run: |
+          set -euo pipefail
+          timeout 2100s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "$RUNNER_TEMP/gen3311-soil-owner-webgl2"
+      - name: Retain genuine PNGs and truthful partial failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3311-soil-owner-mobile-webgl2-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3311-soil-owner-webgl2
+          if-no-files-found: error
+          retention-days: 30

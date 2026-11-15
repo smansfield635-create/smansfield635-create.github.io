@@ -296,6 +296,16 @@ export function abortRejectedSculptStroke(session, redraw, quarantineAlready=fal
     recoveryError:recoveryError?.message??null});
 }
 
+// An older asynchronously decoded image must never overwrite a newer choice.
+export function createSculptReferenceImportGate(){
+  let generation=0;
+  return Object.freeze({
+    begin(){return ++generation;},
+    isCurrent(token){return Number.isSafeInteger(token)&&token>0&&token===generation;},
+    cancel(){++generation;}
+  });
+}
+
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
@@ -306,6 +316,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   let stages=[],selectedFace=null;
   if(Math.max(...session.getTriangles())>65535)throw new Error('WEBGL1_NEUTRAL_FIXTURE_INDEX_LIMIT');
   let disposed=false,failed=false,active=null;const views=[];const listeners=[];
+  const referenceImports=createSculptReferenceImportGate();
   function add(el,name,handler){el.addEventListener(name,handler);listeners.push(()=>el.removeEventListener(name,handler));}
   function status(message){onStatus(message,{...session.state(),failed,viewCount:views.length,topologyDepth:stages.length,selectedFace});}
   function assertReady(){if(disposed)throw new Error('SCULPT_STUDIO_DISPOSED');if(failed)throw new Error('SCULPT_STUDIO_QUARANTINED');}
@@ -360,6 +371,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     assertReady();
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     validateSculptFaceIndex(faceIndex,session.getTriangles().length/3);
+    referenceImports.cancel(); // A pending image import cannot overwrite this topology edit.
     const before=session.serialize(),candidate=makeSculptSubdivision(session,uv,fixtureSource.protectedVertices??[],faceIndex,stages.length);
     const nextSession=createSculptSession({positions:candidate.positions,triangles:candidate.triangles,
       regions:[...candidate.regions],protectedVertices:[...candidate.protectedVertices]});
@@ -374,6 +386,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     const local=localPointer(event,v.canvas),vp=v.scene.collect(v.camera).viewProjectionMatrix;
     const ray=sculptScreenRay({...local,width:v.canvas.width,height:v.canvas.height,viewProjection:vp});
     const hit=session.pick(ray.origin,ray.direction);if(!hit){status('No surface intersected.');return;}
+    referenceImports.cancel(); // Selection or stroke must not be erased by a stale decode.
     selectedFace=hit.triangle;
     if(controls.faceIndex)controls.faceIndex.value=String(selectedFace);
     const mode=controls.mode.value, organic=mode.startsWith('ORGANIC_');
@@ -414,7 +427,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       ?'Pointer cancellation recovery uncertain; studio quarantined.'
       :'Pointer cancelled; prior geometry restored.');
   });}
-  function operate(fn,label){try{assertReady();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
+  function operate(fn,label){try{assertReady();referenceImports.cancel();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
   add(controls.undo,'click',()=>operate(()=>session.undo(),'Undo'));
   add(controls.redo,'click',()=>operate(()=>session.redo(),'Redo'));
   // Keyboard-accessible numeric face selection uses exactly the same
@@ -445,13 +458,16 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }catch(error){status('Topology edit rejected: '+error.message);}
   });
   if(controls.reference)add(controls.reference,'change',async event=>{
+    const token=referenceImports.begin();
     const file=event.target.files?.[0];if(!file)return;
     let bitmap=null;
     try{
       assertReady();
       // Reject oversized decoded surfaces from compressed headers first.
       const dimensions=await readSculptReferenceImageDimensions(file);
+      if(!referenceImports.isCurrent(token))return;
       bitmap=await createImageBitmap(file);
+      if(!referenceImports.isCurrent(token))return;
       // JPEG EXIF orientation can swap width and height during decode.
       const same=bitmap.width===dimensions.width&&bitmap.height===dimensions.height;
       const rotated=bitmap.width===dimensions.height&&bitmap.height===dimensions.width;
@@ -465,19 +481,20 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       const mask=makeReferenceMaskFromRgba({width:24,height:24,data:ctx.getImageData(0,0,24,24).data});
       const generated=makeSculptReferenceFixture(mask);
       const nextSession=createSculptSession(generated);
+      if(!referenceImports.isCurrent(token))return;
       adoptTopology(nextSession,
         makeSculptUvHandoff(nextSession.getPositions(),nextSession.getTriangles(),generated.uvs),
         [],generated,{kind:'SILHOUETTE_HEURISTIC_PRIOR',...mask});
       status('Reference mask applied using Cycle One silhouette heuristic; not trained image-to-3D.');
-    }catch(error){status('Reference image rejected: '+error.message);}
-    finally{bitmap?.close?.();event.target.value='';}
+    }catch(error){if(referenceImports.isCurrent(token))status('Reference image rejected: '+error.message);}
+    finally{bitmap?.close?.();if(referenceImports.isCurrent(token))event.target.value='';}
   });
   add(controls.save,'click',()=>{
     try{assertReady();const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
   });
   add(controls.load,'change',async event=>{
     const file=event.target.files?.[0];if(!file)return;
-    try{assertReady();const source=await file.text(),restored=restoreSculptStudioState(source,fixture);
+    try{assertReady();referenceImports.cancel();const source=await file.text(),restored=restoreSculptStudioState(source,fixture);
       adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);
       status('Reloaded verified editable mesh and topology lineage.');
     }catch(e){status('Reload rejected: '+e.message);}finally{event.target.value='';}
@@ -485,8 +502,8 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   drawAll();status('Ready: four actual synchronized engine WebGL views.');
   return Object.freeze({get session(){return session;},drawAll,updateAll,subdivide,
     saveState:()=>serializeSculptStudioState(session,stages,sourceMetadata),
-    loadState:text=>{const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
+    loadState:text=>{referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
     views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
     status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace}),
-    dispose(){if(disposed)return;for(const f of listeners)f();for(const v of views){try{v.scene.dispose();v.device.dispose();}catch{}}disposed=true;}});
+    dispose(){if(disposed)return;referenceImports.cancel();for(const f of listeners)f();for(const v of views){try{v.scene.dispose();v.device.dispose();}catch{}}disposed=true;}});
 }

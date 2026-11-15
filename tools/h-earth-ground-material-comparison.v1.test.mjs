@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
+import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,shouldPresentAssetSettleFrame,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
@@ -21,6 +21,21 @@ test('asset readiness rejects asynchronous partial scenes and failed assets',()=
  r.treeCollection.queue.loading=true;assert.equal(assetReadiness(r,{x:0,z:0}).ready,false);r.treeCollection.queue.loading=false;
  r.treeCollection.entries[0].state='FALLBACK';assert.throws(()=>assetReadiness(r,{x:0,z:0}),/ASSET_FAILURE/);
  assert.throws(()=>assetReadiness({},{}),/ASSET_RECEIPT_MISSING/);
+});
+
+test('Gen3287 yields busy tree loads and resumes only when source readiness succeeds',()=>{
+  assert.equal(shouldPresentAssetSettleFrame(true,{loading:true}),false);
+  assert.equal(shouldPresentAssetSettleFrame(true,{loading:false}),true);
+  assert.equal(shouldPresentAssetSettleFrame(true,null),true);
+  assert.equal(shouldPresentAssetSettleFrame(false,{loading:true}),true);
+  const resources={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},
+    treeCollection:{queue:{loading:true,failures:{}},entries:[{id:'maple',state:'LOADING',ready:false,x:10,z:0}]}};
+  assert.equal(assetReadiness(resources,{x:0,z:0}).ready,false);
+  assert.equal(shouldPresentAssetSettleFrame(true,resources.treeCollection.queue),false);
+  resources.treeCollection.entries[0].state='READY';resources.treeCollection.entries[0].ready=true;
+  resources.treeCollection.queue.loading=false;
+  assert.equal(shouldPresentAssetSettleFrame(true,resources.treeCollection.queue),true);
+  assert.equal(assetReadiness(resources,{x:0,z:0}).ready,true);
 });
 
 test('Gen3287 identifies blocking asset IDs, queue state and preserves fail-closed readiness',()=>{

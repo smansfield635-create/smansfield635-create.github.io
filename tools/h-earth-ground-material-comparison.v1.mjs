@@ -98,6 +98,11 @@ export function assetReadiness(resources,camera){
       loadingIds:loading.slice(0,24).map(e=>e.focusId??e.id),jacarandaIdleNear,
       nearbyIdleCount:nearbyIdle.length,nearbyIdleIds:nearbyIdle.slice(0,24).map(e=>e.focusId??e.id)}};
 }
+// Gen3287: avoid forcing costly WebGL frames while the approved sequential
+// tree loader is working. The original readiness predicate and deadline stay intact.
+export function shouldPresentAssetSettleFrame(surfaceAttribution,queue){
+  return surfaceAttribution!==true||queue?.loading!==true;
+}
 export function decodeCanvasCapture(capture,expectedFrame){
   for(const frame of [capture.before,capture.after])if(!frame||frame.navigationSequence!==expectedFrame.navigationSequence||frame.frameSequence!==expectedFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
   if(!/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(capture.dataUrl??''))throw Error('CAPTURE_PNG_INVALID');
@@ -602,7 +607,7 @@ export async function runGen3286(argv){
         if(!listening)throw Error('GEN3286_SERVER_UNAVAILABLE:'+label);
         const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
         const page=await context.newPage();page.setDefaultTimeout(30000);
-        await page.addInitScript({content:'globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+        await page.addInitScript({content:'globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';globalThis.__groundShouldPresentAssetSettleFrame='+shouldPresentAssetSettleFrame.toString()+';'});
         page.on('pageerror',error=>runRecord.errors.push('PAGE:'+error.message));
         page.on('console',m=>{if(m.type()==='error')runRecord.errors.push('CONSOLE:'+m.text());});
         page.on('requestfailed',r=>runRecord.errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
@@ -683,20 +688,28 @@ export async function runGen3286(argv){
           }
           let stableCount=0,priorSignature=null,deadline=Date.now()+120000,settleAttempts=0;
           while(stableCount<2){
-            const check=await page.evaluate(async({pose,sequence})=>{
+            const check=await page.evaluate(async({pose,sequence,surfaceAttribution})=>{
               const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_ASSET_SETTLE');
-              globalThis.__HEarthAuditPresent(state);
-              await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+              const queue=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt()?.resources?.treeCollection?.queue;
+              const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution,queue);
+              if(presented){
+                globalThis.__HEarthAuditPresent(state);
+                await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+              }else{
+                // The route's onAssetSettled callback requests a new presentation
+                // when the serial load completes; avoid GPU work contention meanwhile.
+                await new Promise(resolve=>setTimeout(resolve,250));
+              }
               const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
               const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
-              return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1)};
-            },{pose,sequence:++sequence});
-            stableCount=check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
+              return {asset:globalThis.__groundAssetReadiness(receipt.resources,packet.camera.position),frame:receipt.frameRecords.at(-1),presented};
+            },{pose,sequence:++sequence,surfaceAttribution});
+            stableCount=check.presented&&check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
             priorSignature=check.asset.signature;
             // Durable first-pose evidence: keep unchanged 120s guard and actual frame parity.
             runRecord.lastAssetSettle={
               poseId:pose.id,viewportId:viewport.id,attempt:++settleAttempts,
-              ready:check.asset.ready,stableCount,signatureSha256:sha(check.asset.signature),
+              ready:check.asset.ready,stableCount,presented:check.presented,signatureSha256:sha(check.asset.signature),
               pendingReasons:check.asset.pendingReasons,
               queueFailureIds:Object.keys(check.asset.queue?.failures??{}).slice(0,24),
               frameSequence:check.frame?.frameSequence??null,

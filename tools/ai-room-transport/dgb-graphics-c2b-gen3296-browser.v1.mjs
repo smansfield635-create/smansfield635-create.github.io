@@ -280,6 +280,7 @@ async function oneCase(browser,base,cfg,images){
     const topologyRendered=await capture('topology');
     // A subdivision can preserve the surface exactly, so require an actual
     // visible post-subdivision deformation on the new indexed mesh.
+    await page.locator('#front').scrollIntoViewIfNeeded();
     const topoRect=await page.locator('#front').boundingBox();
     check(topoRect&&topoRect.width>50&&topoRect.height>50,'C2B_POST_TOPOLOGY_CANVAS_MISSING');
     const tx=topoRect.x+topoRect.width/2,ty=topoRect.y+topoRect.height/2;

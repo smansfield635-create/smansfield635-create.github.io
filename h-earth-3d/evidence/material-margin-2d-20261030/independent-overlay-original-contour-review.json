@@ -1,0 +1,13 @@
+{
+  "actualOriginalAtlasHalfContourWitnesses": 3303,
+  "maxDecodedCoverageResidual": 0.0003691642515120379,
+  "maxFirstOrderNormalDisplacementMeters": 0.001995053684748848,
+  "maxWitness": [
+    168.00000000000009,
+    -270.3109879032258,
+    -0.0003691642515120379,
+    0.001995053684748848
+  ],
+  "exactContourPreserved": false,
+  "qualification": "Small measured contour drift, not exact contour preservation; no acceptance tolerance invented."
+}

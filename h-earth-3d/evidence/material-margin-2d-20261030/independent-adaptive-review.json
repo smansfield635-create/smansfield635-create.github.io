@@ -1,0 +1,34 @@
+{
+  "inputSha256": "345b12d18f658d1353570122de1981ee3867c312de84727d77d3421eaaff0814",
+  "format": "FLOAT64_NOT_ENCODED",
+  "geometricCoreQuarterCellWitnesses": 551620,
+  "geometricCoreLeakWitnesses": 2667,
+  "maxGeometricCoreLeak": 0.006114222210069409,
+  "maxLeakWitness": {
+    "x": 178.25,
+    "z": -268.25,
+    "delta": -0.006114222210069409,
+    "signedDistance": 1.780612995931532,
+    "insideBand": 1.6738687313756948,
+    "outsideBand": 3.952583020611662
+  },
+  "activeGradientBaselineQuantiles": [
+    0.05940195223112291,
+    0.1350673621038852,
+    0.18842262557288425
+  ],
+  "activeGradientCandidateQuantiles": [
+    0.06335815226999551,
+    0.11512272517042485,
+    0.20967745239683835
+  ],
+  "selectedGradientBaselineMax": 0.1902167182661763,
+  "selectedGradientCandidateMax": 0.18983647889682556,
+  "selectedGradientWorstIncrease": 0.024526012523503032,
+  "selectedProfileMaxCoverageChange": 0.026435660717411186,
+  "admittedNativeContourVertices": 1971,
+  "candidateMaxHalfcoverageErrorOnAdmittedNativeContour": 0.00720862691258517,
+  "baselineMaxHalfcoverageErrorOnSameContour": 0.09382679738562072,
+  "changedBaselineHalfcoverageClassifications": 752,
+  "disposition": "HOLD_CORE_SUPPORT_AND_JOIN_REVIEW_REQUIRED"
+}

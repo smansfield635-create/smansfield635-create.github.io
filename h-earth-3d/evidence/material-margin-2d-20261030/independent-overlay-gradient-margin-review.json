@@ -1,0 +1,28 @@
+{
+  "inputSha256": "a886ea85799a11adbbcca3347fc8d7e3b04cf48f13ca951917db049e471639ad",
+  "bothPhasesCompleted": true,
+  "unsafeChangedCells": 0,
+  "candidateEnvelope": [
+    0.0,
+    1.0
+  ],
+  "nodeHalfClassChanges": 0,
+  "baselineTopology": {
+    "highComponents": 3,
+    "lowHoles": 11
+  },
+  "candidateTopology": {
+    "highComponents": 3,
+    "lowHoles": 11
+  },
+  "continuousBilinearMaxGradientOnChangedCellsBaseline": 0.19015752712948908,
+  "continuousBilinearMaxGradientOnChangedCellsCandidate": 0.1845471199703833,
+  "exactBilinearContourInteriorWitnesses": 56,
+  "decodedContourMaxResidual": 0.0003132349359056796,
+  "floatContourMaxResidual": 1.3803223852294194e-05,
+  "selectedGradientBaselineMax": 0.1902167182661763,
+  "selectedGradientCandidateMax": 0.18240421826616743,
+  "selectedMaxCoverageChange": 0.007486979166582142,
+  "runtimeOrVisualQualified": false,
+  "disposition": "HOLD_REVIEW_NUMERIC_RESULTS"
+}

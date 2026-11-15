@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_FULL_MATERIAL_MARGIN_RUNTIME_REVIEW_v1",
+  "result": "PASS_BOUNDED_RUNTIME_SOURCE_READY_FOR_QUALIFICATION",
+  "reviewer": "WEST_RUNTIME_REVIEW",
+  "builderSelfApproval": false,
+  "reviewSeparation": "Reviewer built numericdelta; parent independently reviewed it. Parent built runtime integration; this review independently assesses runtime only.",
+  "sourceSha256": {
+    "persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c",
+    "route.js": "3ed89c3287221789ba8eefef59300675e0bf104f0ecc83358bb1772b4a203d7b",
+    "material-margin-field.v1.js": "3392761baed50091c1f5d628cbe9a10df1e819743648835955a3d40ed4ebff19"
+  },
+  "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+  "validation": {
+    "capturesUnmodifiedIncomingPaletteBeforeEcology": true,
+    "appliesDeltaAOriginalPPlusDeltaBAfterExistingAtlasOnce": true,
+    "restrictedToExistingNonGeologicalEcologicalBranch": true,
+    "noCoastalCorrectionIntroduced": true,
+    "fullManifestChartMappingAndMeshAttributeGuard": true,
+    "sourceMismatchesReturnZeroTexture": true,
+    "actualHalfFloatBytesEqualNumericFixture": true,
+    "signedHalfFloatLittleEndianDecodeVerified": true,
+    "textureUnit15NoConflictObservedInSource": true,
+    "RGBA16FHALF_FLOATLinearLevelZeroNoMipmaps": true,
+    "worldGridCenterMappingMatchesNumericBasis": true,
+    "bindsOnceAndEachFrame": true,
+    "startupFailureAndExplicitDisposalDeleteTexture": true,
+    "nativeRootsAndRoughnessUnchanged": true,
+    "javascriptSyntaxPass": true
+  },
+  "limits": [
+    "No GPU shader compilation, upload, render, visual or physical-device acceptance performed by this review.",
+    "Numeric delta is pose-bound source-derived; independent numerical review is supplied by parent, not self-approved here.",
+    "Correction is identity-preserving outside its frozen spatial support. Incoming P remains live across cameras; fixed coefficients retain source sampler limitations.",
+    "Manor, siteB, woodland/oasis and habitat geographic overlays are outside this far window. Contact-driven sand and final lighting were not numerically requalified here; stage algebra is exact regardless of subsequent attenuation.",
+    "No global-landscape repair, merge, deployment or publication approval."
+  ]
+}

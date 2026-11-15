@@ -1,0 +1,183 @@
+{
+  "schema": "H_EARTH_FAR_FULL_COEFFICIENT_SPATIAL_MARGIN_PROTOTYPE_v1",
+  "sourceSha256": "a380f1cb7d8942f633c8cab948e9ce7362022849678c64b8a5f28ea2b3ad3e98",
+  "builderSha256": "579b9806db412cd214be7bf3779b4fed01a6e2117929bfdad4e540c9cad08ac9",
+  "bounds": [
+    -213.0,
+    -759.0,
+    -165.0,
+    -711.0
+  ],
+  "stepMeters": 0.5,
+  "referenceP": [
+    0.106451957,
+    0.072878853,
+    0.034164603
+  ],
+  "maskDefinition": {
+    "detectorGaussianSigmaMeters": 1,
+    "fixedBaselineMedianLuminance": 118.96654352653685,
+    "spatialCoreDistanceMeters": 6.0,
+    "fullWeightInsideMeters": 3.0,
+    "fadeEndsMeters": 5.5,
+    "smallComponentsFrozenWhole": [
+      {
+        "class": "light",
+        "cells": 6
+      }
+    ]
+  },
+  "kernel": "POSITIVE_SEPARABLE_COMPACT_POLYNOMIAL_SQUARE_PLUS_MINUS6M",
+  "encoding": {
+    "format": "RGBA8_SIGNED128",
+    "scale": 1024,
+    "zeroByte": 128,
+    "textureFilterRequired": "LINEAR_LEVEL0_NO_MIPMAP",
+    "maxQuantizationError": 0.00048816000066265186
+  },
+  "darkCoreCells": 2831,
+  "lightCoreCells": 2905,
+  "coresExact": true,
+  "changedVertices": 1866,
+  "activeBeforeQuantization": 2037,
+  "unsafeChangedBilinearCells": 0,
+  "maxDisplayChangeDecoded": 8.550583779439151,
+  "activeMaxGradientBefore": 8.856651296070776,
+  "activeMaxGradientAfterDecoded": 6.2304248002352915,
+  "globalMaxGradientBefore": 8.856651296070776,
+  "globalMaxGradientAfterDecoded": 7.244295719187374,
+  "maxCoefficientCorrectionFloat": 0.03348448776012991,
+  "PProbeResults": [
+    {
+      "P": [
+        0.106451957,
+        0.072878853,
+        0.034164603
+      ],
+      "maxDisplayChange": 8.550583779439151,
+      "minLinearQ": 0.08161985127986165,
+      "maxLinearQ": 0.27301064090829186
+    },
+    {
+      "P": [
+        0.2,
+        0.18,
+        0.12
+      ],
+      "maxDisplayChange": 7.06932121922128,
+      "minLinearQ": 0.10075712132102657,
+      "maxLinearQ": 0.3111628754466505
+    },
+    {
+      "P": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maxDisplayChange": 10.628180264043962,
+      "minLinearQ": 0.07187122963855971,
+      "maxLinearQ": 0.23216796649123583
+    },
+    {
+      "P": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "maxDisplayChange": 6.0989467512984845,
+      "minLinearQ": 0.24179731418128977,
+      "maxLinearQ": 0.6374314605701992
+    }
+  ],
+  "centerProfileX": -189.0,
+  "centerProfile": [
+    {
+      "z": -741.0,
+      "beforeLuminance": 124.66804246688659,
+      "afterLuminance": 124.66804246688659,
+      "weight": 0.011776559171023049,
+      "core": false
+    },
+    {
+      "z": -739.0,
+      "beforeLuminance": 125.24237239926603,
+      "afterLuminance": 124.21107965367389,
+      "weight": 0.9772791389150844,
+      "core": false
+    },
+    {
+      "z": -737.0,
+      "beforeLuminance": 123.70897038793915,
+      "afterLuminance": 121.82901271652906,
+      "weight": 1.0,
+      "core": false
+    },
+    {
+      "z": -735.0,
+      "beforeLuminance": 115.27790811381306,
+      "afterLuminance": 118.73644655023426,
+      "weight": 1.0,
+      "core": false
+    },
+    {
+      "z": -733.0,
+      "beforeLuminance": 115.09127739281215,
+      "afterLuminance": 116.6124271967817,
+      "weight": 1.0,
+      "core": false
+    },
+    {
+      "z": -731.0,
+      "beforeLuminance": 117.99889278699756,
+      "afterLuminance": 116.31424784045711,
+      "weight": 0.9305813663216088,
+      "core": false
+    },
+    {
+      "z": -729.0,
+      "beforeLuminance": 115.24319461361273,
+      "afterLuminance": 115.5676069655609,
+      "weight": 0.31744000000000017,
+      "core": false
+    },
+    {
+      "z": -727.0,
+      "beforeLuminance": 115.14844369812697,
+      "afterLuminance": 115.74014389947364,
+      "weight": 0.31744000000000017,
+      "core": false
+    },
+    {
+      "z": -725.0,
+      "beforeLuminance": 117.4134395488677,
+      "afterLuminance": 117.4134395488677,
+      "weight": 0.16658142132546383,
+      "core": false
+    }
+  ],
+  "disposition": "BUILT_REQUIRES_INDEPENDENT_SOURCE_AND_ORIGINAL_ATLAS_PARTITION_REVIEW",
+  "builderSelfApproval": false,
+  "runtimeIntegrated": false,
+  "visualAcceptance": false,
+  "limits": [
+    "These are source-luminance-defined bounded spatial cores, not universal biome semantics.",
+    "Pose-bound dense source coefficients retain existing sampler limitations, including micro-normal derivatives and omitted later layers.",
+    "Gradient numbers use decoded correction on sampled full source; original atlas/interpolation partition check is still required.",
+    "Exact sampled-coefficient cores and bilinear correction support are preserved; no exact baseline contour claim.",
+    "Detection smoothing is not applied to P; material texture contrast can change through DeltaA inside margins."
+  ],
+  "halfFloatAlternative": {
+    "format": "RGBA16F",
+    "uploadType": "HALF_FLOAT",
+    "zeroRepresentation": 0,
+    "filterRequired": "LINEAR_LEVEL0_NO_MIPMAP",
+    "byteLength": 75272,
+    "changedVertices": 2037,
+    "unsafeChangedBilinearCells": 0,
+    "coresExact": true,
+    "maxQuantizationError": 8.291680871047591e-06,
+    "maxDisplayChangeDecoded": 8.638338354915518,
+    "activeMaxGradientAfterDecoded": 6.180640693877769,
+    "globalMaxGradientAfterDecoded": 7.244295719187374
+  }
+}

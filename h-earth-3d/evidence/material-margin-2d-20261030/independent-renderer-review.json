@@ -1,0 +1,14 @@
+{
+  "embeddedCropMatchesQualifiedRG8": true,
+  "cropDimensions": [
+    89,
+    65
+  ],
+  "cropBoundaryZero": true,
+  "texelCenterMapMaxError": 7.105427357601002e-15,
+  "outsideCropShaderExplicitZero": true,
+  "sourceGuardMismatchZeroTested": true,
+  "correctionSha256": "f957fc37c275ecb6f806ca9fcfbbaaac1e211f0c0325b4043975cde5fc98fff0",
+  "GPUExecution": false,
+  "codeDisposition": "PASS_BOUNDED_COMPARISON_CANDIDATE_NOT_VISUAL_ACCEPTANCE"
+}

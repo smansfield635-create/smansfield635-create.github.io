@@ -51,6 +51,44 @@ function coplanarTrianglesOverlap(a,b,c,d,e,f){
   }
   return true;
 }
+// For noncoplanar triangles, the line of intersection can run through both
+// face interiors even when *every* edge/plane contact ends on a boundary.
+// Clipping both faces against the opposing plane and testing an overlap midpoint
+// closes that gap without rejecting legal shared-edge or shared-vertex contact.
+function noncoplanarInteriorOverlap(a,b,c,d,e,f){
+  const A=[a,b,c],B=[d,e,f],nA=cross(sub(b,a),sub(c,a)),nB=cross(sub(e,d),sub(f,d));
+  const sizeA=Math.hypot(...nA),sizeB=Math.hypot(...nB);
+  const axis=cross(nA,nB),axisLength=Math.hypot(...axis);
+  if(axisLength <= 1e-12*sizeA*sizeB)return false;
+  const direction=mul(axis,1/axisLength);
+  const edges=tri=>Math.max(...tri.map((v,i)=>Math.hypot(...sub(v,tri[(i+1)%3]))));
+  const eps=Math.max(1e-12,1e-10*Math.max(edges(A),edges(B)));
+  function cut(tri,otherNormal,otherOrigin,normalSize){
+    const dist=tri.map(p=>dot(otherNormal,sub(p,otherOrigin))/normalSize),hits=[];
+    function append(q){if(!hits.some(p=>Math.hypot(...sub(p,q))<=eps))hits.push(q);}
+    for(let i=0;i<3;i++){
+      const j=(i+1)%3,di=dist[i],dj=dist[j];
+      if(Math.abs(di)<=eps)append(tri[i]);
+      if((di>eps&&dj< -eps)||(di< -eps&&dj>eps)){
+        const t=di/(di-dj);append(add(tri[i],mul(sub(tri[j],tri[i]),t)));
+      }
+    }
+    return hits.map(point=>({point,t:dot(point,direction)})).sort((x,y)=>x.t-y.t);
+  }
+  const ca=cut(A,nB,d,sizeB),cb=cut(B,nA,a,sizeA);
+  if(ca.length<2||cb.length<2)return false;
+  const low=Math.max(ca[0].t,cb[0].t),high=Math.min(ca.at(-1).t,cb.at(-1).t);
+  if(high-low<=eps)return false;
+  const mid=(low+high)*.5,first=ca[0],last=ca.at(-1);
+  const t=(mid-first.t)/(last.t-first.t),point=add(first.point,mul(sub(last.point,first.point),t));
+  function strictlyInside(tri,normal){
+    const [p,q,r]=tri,den=dot(normal,normal);
+    const weights=[cross(sub(q,point),sub(r,point)),cross(sub(r,point),sub(p,point)),cross(sub(p,point),sub(q,point))]
+      .map(x=>dot(x,normal)/den);
+    return weights.every(w=>w>1e-7);
+  }
+  return strictlyInside(A,nA)&&strictlyInside(B,nB);
+}
 function trianglesIntersect(a,b,c,d,e,f){
   const mn=u=>[Math.min(...u.map(v=>v[0])),Math.min(...u.map(v=>v[1])),Math.min(...u.map(v=>v[2]))];
   const mx=u=>[Math.max(...u.map(v=>v[0])),Math.max(...u.map(v=>v[1])),Math.max(...u.map(v=>v[2]))];
@@ -58,7 +96,8 @@ function trianglesIntersect(a,b,c,d,e,f){
   if([0,1,2].some(k=>ax[k]<bm[k]-1e-10||bx[k]<am[k]-1e-10))return false;
   if(coplanarTrianglesOverlap(a,b,c,d,e,f))return true;
   return [[a,b],[b,c],[c,a]].some(([p,q])=>segmentTriangle(p,q,d,e,f))||
-    [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c));
+    [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c))||
+    noncoplanarInteriorOverlap(a,b,c,d,e,f);
 }
 /** Independent callers can verify each edited geometry before GPU display/export. */
 export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=true}={}){
@@ -79,8 +118,8 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
       if(edges.get(e)>2)throw new Error('NONMANIFOLD_EDGE');
     }
   }
-  // Conservative positive intersection test for non-adjacent pairs. Shared-vertex
-  // surfaces are checked separately for degeneracy/nonmanifold topology.
+  // Compare even vertex-adjacent faces: a shared vertex allows touching, not
+  // a noncoplanar penetration elsewhere inside the triangles.
   if(checkSelfIntersection){
     const faces=idx.length/3;
     if(faces>3500)throw new RangeError('SELF_INTERSECTION_BUDGET_EXCEEDED');
@@ -90,10 +129,6 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
         const b=[idx[3*j],idx[3*j+1],idx[3*j+2]];
         // Index adjacency alone does not excuse two coplanar face interiors
         // occupying the same area. Ordinary edge/vertex contact remains legal.
-        if(a.some(k=>b.includes(k))){
-          if(coplanarTrianglesOverlap(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
-          continue;
-        }
         if(trianglesIntersect(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
       }
     }
@@ -331,4 +366,260 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
     getPositions:()=>new Float32Array(current),getTriangles:()=>new Uint32Array(faces),getRegions:()=>[...originalRegions],
     getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions)}),
     state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3})});
+}
+
+
+/** Cycle Two C2-A, off-product native Sculpt Lab: one connected source-owned
+ * topology transaction. Never mutates the input, the fixed-topology session,
+ * a character, a world, or an animation. Each output face has checked lineage.
+ * Full sculpt UI, production UV bake and 64-pose transfer are NOT qualified. */
+export function createConnectedSculptTopologyCandidate({
+  sourceId,positions,triangles,regions,protectedVertices=[],
+  selectedFaces,newVertices,replacementFaces,uvHandoff=null,animation=null
+}={}){
+  if(animation!==null)throw new Error('C2A_ANIMATED_SOURCE_TRANSFER_UNQUALIFIED');
+  if(typeof sourceId!=='string'||!sourceId||sourceId.length>128)throw new TypeError('C2A_SOURCE_ID_REQUIRED');
+  const original=floatPositions(positions),faces=intTriangles(triangles),vertexCount=original.length/3,faceCount=faces.length/3;
+  if(!Array.isArray(regions)||regions.length!==vertexCount||Array.from(regions).some(x=>typeof x!=='string'||!x))throw new TypeError('C2A_REGIONS_INVALID');
+  if(!Array.isArray(protectedVertices)||Array.from(protectedVertices).some(x=>!Number.isInteger(x)||x<0||x>=vertexCount)||new Set(protectedVertices).size!==protectedVertices.length)throw new TypeError('C2A_PROTECTED_INVALID');
+  verifySculptGeometry(original,faces);
+  if(!Array.isArray(selectedFaces)||selectedFaces.length<1||selectedFaces.length>2500||
+    selectedFaces.some((x,i)=>!Number.isInteger(x)||x<0||x>=faceCount||(i>0&&x<=selectedFaces[i-1])))
+    throw new TypeError('C2A_SELECTED_FACES_INVALID');
+  if(!Array.isArray(newVertices)||newVertices.length<1||newVertices.length>12000||
+    !Array.isArray(replacementFaces)||replacementFaces.length<1||replacementFaces.length>25000)
+    throw new TypeError('C2A_REPLACEMENT_REQUIRED');
+  const selected=new Set(selectedFaces),edgeMap=new Map(),faceLinks=new Map(selectedFaces.map(x=>[x,new Set()]));
+  const ek=(a,b)=>a<b?a+':'+b:b+':'+a;
+  for(const face of selectedFaces){
+    const ids=[faces[3*face],faces[3*face+1],faces[3*face+2]];
+    for(let k=0;k<3;k++){
+      const a=ids[k],b=ids[(k+1)%3],key=ek(a,b),entries=edgeMap.get(key)||[];
+      entries.push({a,b,face});edgeMap.set(key,entries);
+      if(entries.length>2)throw new Error('C2A_SELECTED_NONMANIFOLD');
+      if(entries.length===2){faceLinks.get(entries[0].face).add(face);faceLinks.get(face).add(entries[0].face);}
+    }
+  }
+  const visited=new Set([selectedFaces[0]]),queue=[selectedFaces[0]];
+  while(queue.length){const a=queue.pop();for(const b of faceLinks.get(a))if(!visited.has(b)){visited.add(b);queue.push(b);}}
+  if(visited.size!==selected.size)throw new Error('C2A_DISCONNECTED_REGION');
+  const boundary=[...edgeMap.values()].filter(e=>e.length===1).map(e=>e[0]);
+  if(boundary.length<3)throw new Error('C2A_BOUNDARY_REQUIRED');
+  const outgoing=new Map(),incoming=new Map();
+  for(const e of boundary){
+    if(outgoing.has(e.a)||incoming.has(e.b))throw new Error('C2A_BOUNDARY_NOT_SINGLE_ORIENTED_LOOP');
+    outgoing.set(e.a,e.b);incoming.set(e.b,e.a);
+  }
+  const start=boundary[0].a,walk=new Set();let cursor=start;
+  do{if(walk.has(cursor)||!outgoing.has(cursor))throw new Error('C2A_BOUNDARY_NOT_SINGLE_ORIENTED_LOOP');
+    walk.add(cursor);cursor=outgoing.get(cursor);
+  }while(cursor!==start);
+  if(walk.size!==boundary.length||incoming.size!==boundary.length)throw new Error('C2A_MULTIPLE_BOUNDARY_LOOPS');
+
+  const getFace=(face)=>[faces[3*face],faces[3*face+1],faces[3*face+2]];
+  const faceNormal=(face)=>{const [a,b,c]=getFace(face).map(i=>pos(original,i)),n=cross(sub(b,a),sub(c,a)),length=Math.hypot(...n);
+    if(length<1e-8)throw new Error('C2A_SOURCE_DEGENERATE');return {n:mul(n,1/length),area:length};};
+  const provenance=[],allPositions=[...original],candidateRegions=[...regions];
+  for(const v of newVertices){
+    if(!v||!selected.has(v.sourceFace)||!Array.isArray(v.barycentric)||v.barycentric.length!==3||
+      !v.barycentric.every(x=>finite(x)&&x>=0&&x<=1)||
+      Math.abs(v.barycentric.reduce((a,b)=>a+b,0)-1)>1e-6||
+      !finite(v.normalOffset)||Math.abs(v.normalOffset)>0.4||
+      typeof v.region!=='string'||!v.region)
+      throw new TypeError('C2A_NEW_VERTEX_LINEAGE_INVALID');
+    const source=getFace(v.sourceFace).map(i=>pos(original,i)),normal=faceNormal(v.sourceFace).n;
+    const anchored=[0,1,2].map(k=>source.reduce((s,p,i)=>s+p[k]*v.barycentric[i],0)+normal[k]*v.normalOffset);
+    allPositions.push(...anchored);candidateRegions.push(v.region);
+    provenance.push({sourceFace:v.sourceFace,barycentric:[...v.barycentric],normalOffset:v.normalOffset});
+  }
+  const candidatePos=new Float32Array(allPositions),newFaceIndices=[],outputLineage=[],parentCounts=new Map(selectedFaces.map(i=>[i,0])),parentArea=new Map(selectedFaces.map(i=>[i,0])),projectedArea=new Map(selectedFaces.map(i=>[i,0]));
+  // Project a candidate vertex onto an asserted parent plane, requiring it
+  // to lie inside the ORIGINAL parent triangle in source 2D barycentric space.
+  function baryInFace(face,id){
+    const [i,j,k]=getFace(face),a=pos(original,i),b=pos(original,j),c=pos(original,k),p=pos(candidatePos,id),
+      u=sub(b,a),v=sub(c,a),w=sub(p,a),n=cross(u,v),den=dot(n,n);
+    // Match verifySculptGeometry's doubled-area floor (1e-8); do not
+    // subtract near-equal Gram terms for skinny but valid source faces.
+    if(den<1e-16)throw new Error('C2A_SOURCE_FACE_DEGENERATE');
+    const beta=dot(cross(w,v),n)/den,gamma=dot(cross(u,w),n)/den,alpha=1-beta-gamma;
+    if([alpha,beta,gamma].some(t=>t < -1e-4||t > 1+1e-4))throw new Error('C2A_FALSE_PARENT_FACE_LINEAGE');
+    return [alpha,beta,gamma];
+  }
+  for(const child of replacementFaces){
+    if(!child||!selected.has(child.sourceFace)||!Array.isArray(child.indices)||child.indices.length!==3||
+      child.indices.some(i=>!Number.isInteger(i)||i<0||i>=candidatePos.length/3)||
+      new Set(child.indices).size!==3)throw new TypeError('C2A_REPLACEMENT_FACE_LINEAGE_INVALID');
+    const ids=child.indices,sourceCornerIds=new Set(getFace(child.sourceFace));
+    // An original index from a detached component may project inside this
+    // parent triangle without belonging to it. Never weld by projection.
+    for(const id of ids)if(id<vertexCount&&!sourceCornerIds.has(id))
+      throw new Error('C2A_FALSE_PARENT_SOURCE_VERTEX');
+    ids.forEach(i=>baryInFace(child.sourceFace,i));
+    const p=ids.map(i=>pos(candidatePos,i)),n=cross(sub(p[1],p[0]),sub(p[2],p[0])),
+      area=Math.hypot(...n),src=faceNormal(child.sourceFace);
+    if(area<1e-8||dot(n,src.n)/area<0.2)throw new Error('C2A_REVERSED_OR_DEGENERATE_CHILD');
+    parentCounts.set(child.sourceFace,parentCounts.get(child.sourceFace)+1);
+    parentArea.set(child.sourceFace,parentArea.get(child.sourceFace)+area);
+    projectedArea.set(child.sourceFace,projectedArea.get(child.sourceFace)+dot(n,src.n));
+    newFaceIndices.push(...ids);outputLineage.push(child.sourceFace);
+  }
+  for(const id of selectedFaces){
+    const ratio=parentArea.get(id)/faceNormal(id).area;
+    if(!parentCounts.get(id)||ratio<0.5||ratio>2)throw new Error('C2A_PARENT_FACE_COVERAGE_INVALID');
+    if(Math.abs(projectedArea.get(id)/faceNormal(id).area-1)>1e-3)
+      throw new Error('C2A_PROJECTED_PARENT_COVERAGE_INVALID');
+  }
+  const outputBoundaryCounts=new Map();
+  for(let t=0;t<newFaceIndices.length;t+=3){
+    for(let k=0;k<3;k++){
+      const a=newFaceIndices[t+k],b=newFaceIndices[t+(k+1)%3],key=ek(a,b),
+        entries=outputBoundaryCounts.get(key)||[];
+      entries.push({a,b});outputBoundaryCounts.set(key,entries);
+      if(entries.length>2)throw new Error('C2A_REPLACEMENT_NONMANIFOLD');
+    }
+  }
+  const outBoundary=[...outputBoundaryCounts.values()].filter(x=>x.length===1).map(x=>x[0]);
+  const signature=x=>x.map(e=>e.a+':'+e.b).sort().join(',');
+  if(signature(outBoundary)!==signature(boundary))throw new Error('C2A_REPLACEMENT_BOUNDARY_MISMATCH');
+  for(const entries of outputBoundaryCounts.values())if(entries.length===2&&
+    (entries[0].a!==entries[1].b||entries[0].b!==entries[1].a))
+    throw new Error('C2A_REPLACEMENT_WINDING_INVALID');
+  const remaining=[],remainingLineage=[];
+  for(let f=0;f<faceCount;f++)if(!selected.has(f)){
+    remaining.push(...getFace(f));remainingLineage.push(f);
+  }
+  const candidateFaces=new Uint32Array([...remaining,...newFaceIndices]);
+  const fullOutputLineage=[...remainingLineage,...outputLineage];
+  const originallyReferenced=new Set(faces),outputReferenced=new Set(candidateFaces);
+  for(const id of protectedVertices)if(originallyReferenced.has(id)&&!outputReferenced.has(id))
+    throw new Error('C2A_PROTECTED_SOURCE_VERTEX_REMOVED');
+  // Edge-manifold geometry may still be nonmanifold at a vertex. For every
+  // introduced vertex, its incident triangles must form ONE edge-connected
+  // fan. Two disconnected sheets meeting only at that point are not a
+  // continuous editable surface and cannot inherit a lawful single parent.
+  const introducedFans=new Map();
+  for(let face=0;face<candidateFaces.length/3;face++){
+    const ids=[candidateFaces[3*face],candidateFaces[3*face+1],candidateFaces[3*face+2]];
+    for(let k=0;k<3;k++)if(ids[k]>=vertexCount){
+      const occurrences=introducedFans.get(ids[k])||[];
+      occurrences.push([ids[(k+1)%3],ids[(k+2)%3]]);
+      introducedFans.set(ids[k],occurrences);
+    }
+  }
+  for(let id=vertexCount;id<candidatePos.length/3;id++){
+    const fan=introducedFans.get(id)||[];
+    if(!fan.length)throw new Error('C2A_ORPHAN_NEW_VERTEX');
+    const edgeUsers=new Map();
+    for(let j=0;j<fan.length;j++)for(const neighbor of fan[j]){
+      const users=edgeUsers.get(neighbor)||[];
+      users.push(j);edgeUsers.set(neighbor,users);
+    }
+    const reached=new Set([0]),queue=[0];
+    while(queue.length){
+      const j=queue.pop();
+      for(const neighbor of fan[j])for(const next of edgeUsers.get(neighbor)){
+        if(!reached.has(next)){reached.add(next);queue.push(next);}
+      }
+    }
+    if(reached.size!==fan.length)throw new Error('C2A_DISCONNECTED_NEW_VERTEX_FAN');
+  }
+  verifySculptGeometry(candidatePos,candidateFaces);
+
+  let render=null,rawHandoff=null;
+  if(uvHandoff!==null){
+    const {renderToMaster,uvs,faceRenderCorners}=uvHandoff;
+    if(!(renderToMaster instanceof Uint32Array||renderToMaster instanceof Int32Array)||
+      !(faceRenderCorners instanceof Uint32Array||faceRenderCorners instanceof Int32Array)||
+      !(uvs instanceof Float32Array)||uvs.length!==renderToMaster.length*2||
+      faceRenderCorners.length!==faces.length||
+      Array.from(renderToMaster).some(x=>x<0||x>=vertexCount)||
+      Array.from(faceRenderCorners).some(x=>x<0||x>=renderToMaster.length)||
+      Array.from(uvs).some(x=>!finite(x)))throw new TypeError('C2A_UV_HANDOFF_INVALID');
+    for(let j=0;j<faces.length;j++)if(renderToMaster[faceRenderCorners[j]]!==faces[j])
+      throw new Error('C2A_SOURCE_RENDER_MASTER_SEAM_MISMATCH');
+    const renderIndices=[];
+    for(let f=0;f<faceCount;f++)if(!selected.has(f))renderIndices.push(...faceRenderCorners.slice(3*f,3*f+3));
+    const rm=[...renderToMaster],ru=[...uvs];
+    for(const child of replacementFaces){
+      const corners=Array.from(faceRenderCorners.slice(3*child.sourceFace,3*child.sourceFace+3));
+      for(const id of child.indices){
+        const bary=baryInFace(child.sourceFace,id);renderIndices.push(rm.length);rm.push(id);
+        for(let k=0;k<2;k++)ru.push(bary.reduce((s,b,i)=>s+b*uvs[2*corners[i]+k],0));
+      }
+    }
+    rawHandoff={renderToMaster:[...renderToMaster],uvs:[...uvs],faceRenderCorners:[...faceRenderCorners]};
+    render=Object.freeze({renderToMaster:new Uint32Array(rm),uvs:new Float32Array(ru),
+      triangles:new Uint32Array(renderIndices),originalRenderVertexCount:renderToMaster.length,
+      originalUvPrefixPreserved:true,sourceFaceCornerLineagePreserved:true});
+  }
+  const recipe={schema:'DGB_SCULPT_CONNECTED_TOPOLOGY_EDIT_v2',sourceId,
+    original:{positions:[...original],triangles:[...faces],regions:[...regions],protectedVertices:[...protectedVertices].sort((a,b)=>a-b)},
+    selectedFaces:[...selectedFaces],newVertices:newVertices.map(v=>({sourceFace:v.sourceFace,barycentric:[...v.barycentric],normalOffset:v.normalOffset,region:v.region})),
+    replacementFaces:replacementFaces.map(v=>({sourceFace:v.sourceFace,indices:[...v.indices]})),uvHandoff:rawHandoff,
+    geometry:{positions:[...candidatePos],triangles:[...candidateFaces]}};
+  const serialized=JSON.stringify(recipe);
+  // Freeze an immutable envelope AND do not leak internal typed-array buffers.
+  // Object.freeze({ positions: typedArray }) does NOT freeze typed-array elements.
+  const sealedProvenance=Object.freeze(provenance.map(v=>Object.freeze({
+    sourceFace:v.sourceFace,barycentric:Object.freeze([...v.barycentric]),normalOffset:v.normalOffset})));
+  return Object.freeze({schema:recipe.schema,sourceId,
+    get positions(){return new Float32Array(candidatePos);},
+    get triangles(){return new Uint32Array(candidateFaces);},
+    regions:Object.freeze(candidateRegions),
+    protectedVertices:Object.freeze([...protectedVertices]),sourceFaceLineage:Object.freeze(fullOutputLineage),
+    sourceVertexLineage:sealedProvenance,
+    get render(){return render===null?null:Object.freeze({
+      renderToMaster:new Uint32Array(render.renderToMaster),uvs:new Float32Array(render.uvs),
+      triangles:new Uint32Array(render.triangles),originalRenderVertexCount:render.originalRenderVertexCount,
+      originalUvPrefixPreserved:render.originalUvPrefixPreserved,
+      sourceFaceCornerLineagePreserved:render.sourceFaceCornerLineagePreserved});},
+    counts:Object.freeze({sourceFaces:faceCount,replacedFaces:selectedFaces.length,outputFaces:candidateFaces.length/3,addedVertices:newVertices.length}),
+    serialize:()=>serialized});
+}
+/** Deterministic re-execution of the complete, source-owned edit. A forged geometry
+ * payload, UV seam, parent identity or topology cannot be adopted on load. */
+export function restoreConnectedSculptTopologyCandidate(serialized,trustedSource){
+  let x;try{x=JSON.parse(serialized);}catch{throw new TypeError('C2A_SAVE_JSON_INVALID');}
+  if(x?.schema!=='DGB_SCULPT_CONNECTED_TOPOLOGY_EDIT_v2'||!x.original||!x.geometry||
+    !Array.isArray(x.original.positions)||!Array.isArray(x.original.triangles)||
+    !Array.isArray(x.geometry.positions)||!Array.isArray(x.geometry.triangles)||
+    x.original.positions.some(t=>!finite(t))||x.original.triangles.some(t=>!Number.isSafeInteger(t)||t<0)||
+    x.geometry.positions.some(t=>!finite(t))||x.geometry.triangles.some(t=>!Number.isSafeInteger(t)||t<0))
+    throw new TypeError('C2A_SAVE_SCHEMA_INVALID');
+  // A stored sourceId is a claim, not trust. Compare every original source byte
+  // and UV seam to an independently supplied, trusted source before replay.
+  const trustedProtected=trustedSource?.protectedVertices===undefined?[]:trustedSource.protectedVertices;
+  if(!trustedSource || trustedSource.sourceId!==x.sourceId ||
+    !(trustedSource.positions instanceof Float32Array)||
+    !(trustedSource.triangles instanceof Uint16Array||trustedSource.triangles instanceof Uint32Array)||
+    !Array.isArray(trustedSource.regions)||!Array.isArray(trustedProtected))
+    throw new Error('C2A_TRUSTED_SOURCE_REQUIRED');
+  const exact=(a,b)=>JSON.stringify(Array.from(a))===JSON.stringify(b);
+  if(!exact(trustedSource.positions,x.original.positions)||!exact(trustedSource.triangles,x.original.triangles)||
+    !exact(trustedSource.regions,x.original.regions)||
+    !exact([...trustedProtected].sort((a,b)=>a-b),x.original.protectedVertices))
+    throw new Error('C2A_TRUSTED_SOURCE_IDENTITY_MISMATCH');
+  if((trustedSource.uvHandoff===null||trustedSource.uvHandoff===undefined)!==(x.uvHandoff===null))
+    throw new Error('C2A_TRUSTED_UV_IDENTITY_MISMATCH');
+  let uv=null;
+  if(x.uvHandoff!==null){
+    const originalUv=trustedSource.uvHandoff;
+    if(!originalUv||!exact(originalUv.renderToMaster,x.uvHandoff.renderToMaster)||
+      !exact(originalUv.uvs,x.uvHandoff.uvs)||
+      !exact(originalUv.faceRenderCorners,x.uvHandoff.faceRenderCorners))
+      throw new Error('C2A_TRUSTED_UV_IDENTITY_MISMATCH');
+    const h=x.uvHandoff;if(!h||!Array.isArray(h.renderToMaster)||!Array.isArray(h.uvs)||!Array.isArray(h.faceRenderCorners)||
+      h.renderToMaster.some(t=>!Number.isSafeInteger(t)||t<0)||
+      h.faceRenderCorners.some(t=>!Number.isSafeInteger(t)||t<0)||h.uvs.some(t=>!finite(t)))
+      throw new TypeError('C2A_SAVE_UV_INVALID');
+    uv={renderToMaster:new Uint32Array(h.renderToMaster),uvs:new Float32Array(h.uvs),faceRenderCorners:new Uint32Array(h.faceRenderCorners)};
+  }
+  const result=createConnectedSculptTopologyCandidate({sourceId:x.sourceId,positions:new Float32Array(x.original.positions),
+    triangles:new Uint32Array(x.original.triangles),regions:x.original.regions,protectedVertices:x.original.protectedVertices,
+    selectedFaces:x.selectedFaces,newVertices:x.newVertices,replacementFaces:x.replacementFaces,
+    uvHandoff:uv,animation:trustedSource.animation});
+  if(JSON.stringify([...result.positions])!==JSON.stringify(x.geometry.positions)||
+    JSON.stringify([...result.triangles])!==JSON.stringify(x.geometry.triangles)||
+    result.serialize()!==serialized)throw new Error('C2A_SAVE_OR_SOURCE_IDENTITY_DRIFT');
+  return result;
 }

@@ -183,3 +183,259 @@ test('source handoff shares geometry doubled-area floor without rejecting valid 
   assert.deepEqual([...h.triangles],[0,1,2]);
   assert.equal(h.retopologyBakeAllowed,false);
 });
+
+
+// Cycle Two C2-A: test the real topology-changing transaction and its negative space.
+const square=()=>({
+  sourceId:'connected-square',
+  positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+  triangles:new Uint32Array([0,1,2,0,2,3]),
+  regions:['rim','rim','rim','rim'],protectedVertices:[0],
+  selectedFaces:[0,1],
+  newVertices:[
+    {sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'},
+    {sourceFace:1,barycentric:[1/3,1/3,1/3],normalOffset:.06,region:'interior'}
+  ],
+  replacementFaces:[
+    {sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},{sourceFace:0,indices:[2,0,4]},
+    {sourceFace:1,indices:[0,2,5]},{sourceFace:1,indices:[2,3,5]},{sourceFace:1,indices:[3,0,5]}
+  ],
+  uvHandoff:{renderToMaster:new Uint32Array([0,1,2,3]),uvs:new Float32Array([0,0,1,0,1,1,0,1]),
+    faceRenderCorners:new Uint32Array([0,1,2,0,2,3])}
+});
+const C2A=()=>import('./dgb.native-sculpt-session.v1.mjs');
+test('C2-A: two connected source faces gain actual interior 3D volume and topology with UV seam custody',async()=>{
+  const {createConnectedSculptTopologyCandidate,restoreConnectedSculptTopologyCandidate}=await C2A();
+  const input=square(),before=[...input.positions],bfaces=[...input.triangles],
+    candidate=createConnectedSculptTopologyCandidate(input);
+  assert.equal(candidate.counts.replacedFaces,2);assert.equal(candidate.counts.addedVertices,2);
+  assert.equal(candidate.counts.outputFaces,6);assert.equal(candidate.positions.length/3,6);
+  assert.equal(candidate.positions[4*3+2]>.07,true);
+  assert.deepEqual([...input.positions],before);assert.deepEqual([...input.triangles],bfaces);
+  assert.deepEqual([...candidate.positions.slice(0,12)],before);
+  assert.equal(candidate.render.originalUvPrefixPreserved,true);
+  assert.deepEqual([...candidate.render.renderToMaster.slice(0,4)],[0,1,2,3]);
+  assert.deepEqual([...candidate.render.uvs.slice(0,8)],[0,0,1,0,1,1,0,1]);
+  assert.equal(candidate.render.triangles.length,18);
+  assert.equal(candidate.sourceFaceLineage.length,6);
+  assert.doesNotThrow(()=>verifySculptGeometry(candidate.positions,candidate.triangles));
+  const serialized=candidate.serialize(),restored=restoreConnectedSculptTopologyCandidate(serialized,input);
+  assert.equal(restored.serialize(),serialized);
+  assert.deepEqual([...restored.positions],[...candidate.positions]);
+  assert.deepEqual([...restored.render.uvs],[...candidate.render.uvs]);
+});
+test('C2-A: disconnected selection and region with multiple boundary loops fail closed',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const disconnected={...square(),positions:new Float32Array([0,0,0,1,0,0,0,1,0,3,0,0,4,0,0,3,1,0]),
+    triangles:new Uint32Array([0,1,2,3,4,5]),regions:['a','a','a','b','b','b'],selectedFaces:[0,1],uvHandoff:null};
+  assert.throws(()=>make(disconnected),/DISCONNECTED_REGION/);
+  const verts=[],tris=[];for(let y=0;y<4;y++)for(let x=0;x<4;x++)verts.push(x,y,0);
+  for(let y=0;y<3;y++)for(let x=0;x<3;x++){const a=y*4+x,b=a+1,c=a+4,d=c+1;tris.push(a,b,d,a,d,c);}
+  const holes=Array.from({length:18},(_,i)=>i).filter(i=>i!==8&&i!==9);
+  assert.throws(()=>make({...square(),positions:new Float32Array(verts),triangles:new Uint32Array(tris),
+    regions:Array(16).fill('body'),protectedVertices:[],selectedFaces:holes,uvHandoff:null}),/MULTIPLE_BOUNDARY_LOOPS|BOUNDARY_NOT_SINGLE/);
+});
+test('C2-A: false parent-child identity, inverted topology and changed boundary reject',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const old=square(),bad=old.replacementFaces.map(v=>({...v,indices:[...v.indices]}));
+  bad[0]={sourceFace:0,indices:[0,1,5]};
+  assert.throws(()=>make({...old,replacementFaces:bad}),/FALSE_PARENT_FACE_LINEAGE/);
+  const inverted=old.replacementFaces.map(v=>({...v,indices:[...v.indices]}));
+  inverted[0].indices=[0,4,1];
+  assert.throws(()=>make({...old,replacementFaces:inverted}),/REVERSED_OR_DEGENERATE_CHILD/);
+  assert.throws(()=>make({...old,replacementFaces:old.replacementFaces.slice(1)}),/BOUNDARY_MISMATCH|COVERAGE_INVALID/);
+  assert.throws(()=>make({...old,selectedFaces:[1,0]}),/SELECTED_FACES_INVALID/);
+});
+test('C2-A: inconsistent UV/master seams and unsupported 64-pose transfer are rejected',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const old=square(),seam={...old.uvHandoff,faceRenderCorners:new Uint32Array([0,1,3,0,2,3])};
+  assert.throws(()=>make({...old,uvHandoff:seam}),/SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
+  assert.throws(()=>make({...old,animation:{poseCount:64}}),/ANIMATED_SOURCE_TRANSFER_UNQUALIFIED/);
+  assert.throws(()=>make({...old,newVertices:[{...old.newVertices[0],normalOffset:2},old.newVertices[1]]}),/NEW_VERTEX_LINEAGE_INVALID/);
+});
+test('C2-A: forged save geometry and UV lineage cannot change a verified candidate',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const candidate=make(square()),save=candidate.serialize(),bad=JSON.parse(save);
+  bad.geometry.positions[14]+=.05;
+  assert.throws(()=>load(JSON.stringify(bad),square()),/SAVE_OR_SOURCE_IDENTITY_DRIFT/);
+  const badSeam=JSON.parse(save);badSeam.uvHandoff.faceRenderCorners[0]=3;
+  assert.throws(()=>load(JSON.stringify(badSeam),square()),/TRUSTED_UV_IDENTITY_MISMATCH|SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
+  assert.equal(candidate.serialize(),save);
+  assert.throws(()=>load('not-json',square()),/SAVE_JSON_INVALID/);
+  const fixed=createSculptSession({positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+    triangles:new Uint32Array([0,1,2,0,2,3]),regions:['a','a','a','a']});
+  const v1=fixed.serialize();assert.equal(fixed.restore(v1),true);
+  assert.equal(fixed.serialize(),v1);
+});
+
+
+test('C2-A independent review: validated output buffers remain immutable across external writes',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:restore}=await C2A();
+  const c=make(square()),saved=c.serialize(),first=c.positions[0],firstUv=c.render.uvs[0],firstIndex=c.triangles[0],firstRenderIndex=c.render.triangles[0];
+  c.positions[0]=Infinity;c.triangles[0]=4294967295;c.render.uvs[0]=Infinity;
+  c.render.renderToMaster[0]=4294967295;c.render.triangles[0]=4294967295;
+  assert.equal(c.positions[0],first);assert.equal(c.triangles[0],firstIndex);
+  assert.equal(c.render.uvs[0],firstUv);assert.equal(c.render.renderToMaster[0],0);
+  assert.equal(c.render.triangles[0],firstRenderIndex);assert.equal(c.serialize(),saved);
+  assert.equal(restore(saved,square()).serialize(),saved);
+});
+test('C2-A independent review: forged saved source identity and UV custody fail against trusted external source',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:restore}=await C2A();
+  const clean=make(square()),saved=clean.serialize(),bogus=JSON.parse(saved);
+  assert.throws(()=>restore(saved),/TRUSTED_SOURCE_REQUIRED/);
+  bogus.original.positions[0]=-2;
+  assert.throws(()=>restore(JSON.stringify(bogus),square()),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+  const savedUv=JSON.parse(saved);savedUv.uvHandoff.uvs[0]=.25;
+  assert.throws(()=>restore(JSON.stringify(savedUv),square()),/TRUSTED_UV_IDENTITY_MISMATCH/);
+  const trusted=square();trusted.positions[0]=4;
+  assert.throws(()=>restore(saved,trusted),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+});
+test('C2-A independent review: orphan new geometry rejected, projected parent coverage checked',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const valid=square();
+  const orphan={...valid,newVertices:[...valid.newVertices,{sourceFace:0,barycentric:[.5,.25,.25],normalOffset:.02,region:'floating'}]};
+  assert.throws(()=>make(orphan),/ORPHAN_NEW_VERTEX/);
+  const under={...valid,replacementFaces:valid.replacementFaces.map(x=>({...x,indices:[...x.indices]}))};
+  // Move the first center from a barycentric 1/3 to 1/5: projected partition still exact and should remain valid.
+  const moved={...valid,newVertices:valid.newVertices.map(x=>({...x,barycentric:[...x.barycentric]}))};
+  moved.newVertices[0].barycentric=[.2,.4,.4];
+  assert.equal(make(moved).counts.outputFaces,6);
+});
+
+test('C2-A: shared-vertex 3D penetration rejects, but lawful shared-edge contact remains valid',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const crossing=new Float32Array([0,0,0,1,0,0,0,1,0,.5,.25,1,.5,.25,-1]);
+  assert.throws(()=>verifySculptGeometry(crossing,new Uint32Array([0,1,2,0,3,4])),/SELF_INTERSECTION/);
+  const sourcePositions=new Float32Array([0,0,0,1,0,0,0,1,0,.25,.15,.01,.25,.15,.10]);
+  const sourceTriangles=new Uint32Array([0,1,2,0,3,4]);
+  assert.doesNotThrow(()=>verifySculptGeometry(sourcePositions,sourceTriangles));
+  assert.throws(()=>make({
+    sourceId:'shared-vertex-interior-crossing',positions:sourcePositions,triangles:sourceTriangles,
+    regions:Array(5).fill('body'),protectedVertices:[0],selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,5]},{sourceFace:0,indices:[1,2,5]},{sourceFace:0,indices:[2,0,5]}],
+    uvHandoff:null
+  }),/SELF_INTERSECTION/);
+  const lawful=new Float32Array([0,0,0,1,0,0,0,1,0,0,0,1]);
+  assert.doesNotThrow(()=>verifySculptGeometry(lawful,new Uint32Array([0,1,2,1,0,3])));
+});
+
+test('C2-A Copilot high: intersecting vertex-adjacent triangles crossing face interior must reject even with boundary-ending intersection',()=>{
+  const positions=new Float32Array([0,0,0,1,0,0,0,1,0,.5,.5,1,.5,.5,-1]);
+  const triangles=new Uint32Array([0,1,2,0,3,4]);
+  assert.throws(()=>verifySculptGeometry(positions,triangles),/SELF_INTERSECTION/);
+});
+
+test('C2-A Copilot high: trusted 64-pose source cannot bypass animation guard during replay',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source=square(),saved=make(source).serialize();
+  assert.throws(()=>load(saved,{...source,animation:{poseCount:64}}),/ANIMATED_SOURCE_TRANSFER_UNQUALIFIED/);
+  assert.equal(load(saved,source).serialize(),saved);
+});
+
+test('C2-A Copilot medium: valid skinny source triangle at shared area floor accepts centroid subdivision',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const input={sourceId:'skinny-face',positions:new Float32Array([0,0,0,1,0,0,0,1e-7,0]),
+    triangles:new Uint32Array([0,1,2]),regions:['body','body','body'],
+    selectedFaces:[0],newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:0,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,3]},{sourceFace:0,indices:[1,2,3]},{sourceFace:0,indices:[2,0,3]}]};
+  assert.doesNotThrow(()=>verifySculptGeometry(input.positions,input.triangles));
+  const candidate=make(input);
+  assert.equal(candidate.counts.outputFaces,3);
+  assert.deepEqual([...candidate.sourceFaceLineage],[0,0,0]);
+});
+
+test('C2-A Copilot medium: untouched source face retains aligned sourceFaceLineage in output',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const s=square();const candidate=make({...s,selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},{sourceFace:0,indices:[2,0,4]}]});
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.deepEqual([...candidate.sourceFaceLineage],[1,0,0,0]);
+  assert.equal(candidate.sourceFaceLineage.length,candidate.triangles.length/3);
+});
+
+test('C2-A Copilot medium: omitted trusted protectedVertices defaults empty only when absent',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source=square();delete source.protectedVertices;
+  const saved=make(source).serialize();
+  assert.equal(load(saved,source).serialize(),saved);
+  assert.throws(()=>load(saved,{...source,protectedVertices:null}),/TRUSTED_SOURCE_REQUIRED/);
+  assert.throws(()=>load(saved,{...source,protectedVertices:[0]}),/TRUSTED_SOURCE_IDENTITY_MISMATCH/);
+});
+
+test('C2-A Copilot round-two: detached component original vertex cannot be reused as child parent corner',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'detached-component-reuse',
+    positions:new Float32Array([0,0,0,1,0,0,0,1,0,.25,.25,.08,.18,.23,.18,.25,.18,.18]),
+    triangles:new Uint32Array([0,1,2,3,4,5]),regions:Array(6).fill('body'),protectedVertices:[],selectedFaces:[0],
+    newVertices:[{sourceFace:0,barycentric:[.2,.5,.3],normalOffset:.06,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,3]},{sourceFace:0,indices:[1,2,6]},
+      {sourceFace:0,indices:[2,0,3]},{sourceFace:0,indices:[2,3,6]},{sourceFace:0,indices:[3,1,6]}],uvHandoff:null};
+  assert.throws(()=>make(source),/C2A_FALSE_PARENT_SOURCE_VERTEX/);
+  const lawful={...source,replacementFaces:[{sourceFace:0,indices:[0,1,6]},
+    {sourceFace:0,indices:[1,2,6]},{sourceFace:0,indices:[2,0,6]}]};
+  const candidate=make(lawful);
+  assert.equal(candidate.counts.sourceFaces,2);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(load(candidate.serialize(),lawful).serialize(),candidate.serialize());
+});
+
+test('C2-A Copilot round-two: originally referenced protected vertex cannot be orphaned by replacement faces',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'protected-center-fan',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0,.5,.5,0]),
+    triangles:new Uint32Array([0,1,4,1,2,4,2,3,4,3,0,4]),
+    regions:Array(5).fill('body'),protectedVertices:[4],selectedFaces:[0,1,2,3],
+    newVertices:[{sourceFace:0,barycentric:[0,0,1],normalOffset:.08,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,5]},{sourceFace:1,indices:[1,2,5]},
+      {sourceFace:2,indices:[2,3,5]},{sourceFace:3,indices:[3,0,5]}],uvHandoff:null};
+  assert.throws(()=>make(source),/C2A_PROTECTED_SOURCE_VERTEX_REMOVED/);
+  const valid={...source,protectedVertices:[0]};
+  const candidate=make(valid);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(load(candidate.serialize(),valid).serialize(),candidate.serialize());
+});
+
+test('C2-A Copilot round-three: new vertex joining detached incident fans on a folded strip is rejected',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'folded-u-sheet',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0,1,0,.2,1,1,.2,0,1,.2,0,0,.2]),
+    triangles:new Uint32Array([0,1,2,0,2,3,1,4,5,1,5,2,4,6,5,4,7,6]),
+    regions:Array(8).fill('body'),protectedVertices:[],selectedFaces:[0,1,2,3,4,5],
+    newVertices:[{sourceFace:0,barycentric:[.3,.3,.4],normalOffset:.1,region:'body'}],
+    replacementFaces:[
+      {sourceFace:0,indices:[0,1,8]},{sourceFace:0,indices:[1,2,8]},{sourceFace:0,indices:[2,0,8]},
+      {sourceFace:1,indices:[0,2,3]},{sourceFace:2,indices:[1,4,5]},{sourceFace:3,indices:[1,5,2]},
+      {sourceFace:4,indices:[4,6,8]},{sourceFace:4,indices:[6,5,8]},{sourceFace:4,indices:[5,4,8]},
+      {sourceFace:5,indices:[4,7,6]}],uvHandoff:null};
+  // Source is a single U-shaped connected sheet, while its replacement has two
+  // disconnected triangle fans touching only at newly added vertex 8.
+  assert.doesNotThrow(()=>verifySculptGeometry(source.positions,source.triangles));
+  assert.throws(()=>make(source),/C2A_DISCONNECTED_NEW_VERTEX_FAN/);
+});
+
+test('C2-A Copilot round-three: a legitimately shared new vertex has one connected incident fan and restores',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'shared-edge-subdivision',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+    triangles:new Uint32Array([0,1,2,0,2,3]),regions:Array(4).fill('body'),protectedVertices:[],
+    selectedFaces:[0,1],newVertices:[{sourceFace:0,barycentric:[.5,0,.5],normalOffset:0,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},
+      {sourceFace:1,indices:[0,4,3]},{sourceFace:1,indices:[4,2,3]}],uvHandoff:null};
+  const candidate=make(source);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(candidate.counts.addedVertices,1);
+  assert.equal(load(candidate.serialize(),source).serialize(),candidate.serialize());
+});
+
+test('C2-A Copilot round-three: sparse source regions or protected vertices reject before producing unrestorable saves',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const source=square();
+  const regions=Array(4),protectedVertices=[];protectedVertices.length=1;
+  assert.throws(()=>make({...source,regions}),/C2A_REGIONS_INVALID/);
+  assert.throws(()=>make({...source,protectedVertices}),/C2A_PROTECTED_INVALID/);
+  const partial=['body','body','body'];partial.length=4;
+  assert.throws(()=>make({...source,regions:partial}),/C2A_REGIONS_INVALID/);
+  assert.equal(make({...source,protectedVertices:[]}).counts.outputFaces,6);
+});

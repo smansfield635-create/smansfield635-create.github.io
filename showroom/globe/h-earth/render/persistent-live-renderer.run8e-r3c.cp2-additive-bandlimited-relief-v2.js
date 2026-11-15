@@ -759,12 +759,16 @@ void main(){
   float terrainReflectanceForLighting=0.18;
   float terrainWetnessForLighting=0.0;
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
+  vec3 class6SourceSubstrate=base;
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
   // Gen2646: authored near terrain AND exact far-land continuation share
   // one biome-aware soil material; never affect vegetation or water roles.
   bool geologicalEarthRock=vPrimitiveIndex==62001u;
   bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||
     int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
+  // R11: geology source class, not interpolated per-vertex normal, owns the
+  // stone/sparse-soil family. Other geology, coastal and meadow classes remain native.
+  bool class6StoneSparseSoil=vRoleCode==1u&&vPrimitiveIndex==0u&&vSurfaceClassCode==6u;
 
   // FAR continuation is visual context only; invert the spherical projection
   // before sampling its broad landscape palette. No new roots or access rights.
@@ -1156,6 +1160,22 @@ void main(){
       );
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // R11: the authored STONE_AND_SPARSE_SOIL class has one substrate family.
+      // World-space noise and subdued exposed-mineral weathering remain, but
+      // rapid normal changes cannot switch this same class between unrelated
+      // green groundcover and tan/gray panels. Normals still own actual lighting.
+      if(class6StoneSparseSoil){
+        float class6Weathering=clamp(
+          0.24+0.12*macroField+0.08*materialVariation+0.05*elevationMix,
+          0.18,0.48
+        );
+        vec3 class6MineralSoil=mix(compactEarth,erodedMineral,class6Weathering);
+        float class6StoneGrain=0.86+0.18*triMaterial+0.06*grain;
+        class6MineralSoil*=class6StoneGrain;
+        // A small continuous secondary weathering accent, not a palette change.
+        float class6ExposedAccent=0.10*smoothstep(0.18,0.70,slope);
+        palette=mix(class6MineralSoil,erodedMineral*class6StoneGrain,class6ExposedAccent);
+      }
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
@@ -1255,6 +1275,7 @@ void main(){
       presentationContact=max(presentationContact,max(existingLitter*0.65,canopyLitter*0.10+trunkContact*0.28));
     }
     base=palette;
+    if(class6StoneSparseSoil)class6SourceSubstrate=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
     // A world-space normal is continuous across the coarse ocean triangles.
@@ -1332,6 +1353,9 @@ void main(){
         +gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade;
     }
     base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    // Habitat atlas can shade lowland meadows, but must not replace the
+    // authenticated class-6 geological substrate with unrelated olive panels.
+    if(class6StoneSparseSoil)base=class6SourceSubstrate;
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

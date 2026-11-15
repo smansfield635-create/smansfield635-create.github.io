@@ -331,7 +331,15 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }}
   function pointerUp(event,v){if(!active||active.view!==v||active.pointerId!==event.pointerId)return;
     try{session.endStroke();status('Stroke committed; undo/redo available.');}catch(e){status(e.message);}active=null;}
-  for(const v of views){add(v.canvas,'pointerdown',e=>pointerDown(e,v));add(v.canvas,'pointermove',e=>pointerMove(e,v));add(v.canvas,'pointerup',e=>pointerUp(e,v));add(v.canvas,'pointercancel',e=>{if(active?.view===v){session.cancelStroke();active=null;updateAll();}});}
+  for(const v of views){add(v.canvas,'pointerdown',e=>pointerDown(e,v));add(v.canvas,'pointermove',e=>pointerMove(e,v));add(v.canvas,'pointerup',e=>pointerUp(e,v));add(v.canvas,'pointercancel',e=>{
+    if(active?.view!==v)return;
+    const recovery=abortRejectedSculptStroke(session,updateAll,failed);
+    active=null;
+    if(recovery.uncertain)failed=true;
+    status(recovery.uncertain
+      ?'Pointer cancellation recovery uncertain; studio quarantined.'
+      :'Pointer cancelled; prior geometry restored.');
+  });}
   function operate(fn,label){try{assertReady();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
   add(controls.undo,'click',()=>operate(()=>session.undo(),'Undo'));
   add(controls.redo,'click',()=>operate(()=>session.redo(),'Redo'));

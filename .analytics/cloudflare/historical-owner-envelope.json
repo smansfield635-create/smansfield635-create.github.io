@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-15T01:23:46Z",
+  "generatedAt": "2026-11-15T02:27:26Z",
   "window": {
-    "start": "2026-08-17T01:23:46Z",
-    "end": "2026-11-15T01:23:46Z"
+    "start": "2026-08-17T02:27:26Z",
+    "end": "2026-11-15T02:27:26Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,22 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3705,
-    "visits": 1122,
+    "pageLoads": 3615,
+    "visits": 1112,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3705,
-        "visits": 1122
+        "pageLoads": 3615,
+        "visits": 1112
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 842,
-        "visits": 632
+        "pageLoads": 802,
+        "visits": 622
+      },
+      "/laws/": {
+        "pageLoads": 50,
+        "visits": 0
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 130,
@@ -38,13 +42,13 @@
         "pageLoads": 480,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/evidence/": {
+        "pageLoads": 70,
+        "visits": 0
       },
       "/developer/": {
         "pageLoads": 50,
@@ -58,12 +62,8 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/evidence/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
       "/index.html": {
-        "pageLoads": 90,
+        "pageLoads": 80,
         "visits": 0
       },
       "/showroom/": {
@@ -86,13 +86,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -171,7 +171,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 40,
         "visits": 0
       },
       "/characters/": {
@@ -204,10 +204,6 @@
       },
       "/door/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/jeeves/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -300,17 +296,17 @@
       }
     },
     "byReferer": {
+      "www.google.com": {
+        "pageLoads": 570,
+        "visits": 570
+      },
       "diamondgatebridge.com": {
-        "pageLoads": 2583,
+        "pageLoads": 2503,
         "visits": 0
       },
       "(none)": {
         "pageLoads": 532,
         "visits": 532
-      },
-      "www.google.com": {
-        "pageLoads": 580,
-        "visits": 580
       },
       "raw.githack.com": {
         "pageLoads": 10,

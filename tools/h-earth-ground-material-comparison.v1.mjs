@@ -492,6 +492,24 @@ export function gen3288HandoffSource(source,mode){
 }
 
 
+
+export const GEN3287_SURFACE_ATTRIBUTE_MODES=Object.freeze(['baseline','role-code','surface-normal','vertex-base']);
+export function gen3287SurfaceAttributeSource(source,mode){
+  if(!GEN3287_SURFACE_ATTRIBUTE_MODES.includes(mode))throw Error('GEN3287_UNKNOWN_SURFACE_PROBE:'+mode);
+  const color='outColor=vec4(lit,outputAlpha);';
+  if(source.split(color).length!==2)throw Error('GEN3287_SURFACE_OUTPUT_NOT_UNIQUE');
+  const variants={
+    'role-code':'outColor=vec4(float(vRoleCode)/8.0,0.0,0.0,1.0);',
+    'surface-normal':'outColor=vec4(clamp(normalize(geometricNormal)*0.5+0.5,0.0,1.0),1.0);',
+    'vertex-base':'outColor=vec4(clamp(vBaseColor.rgb,0.0,1.0),1.0);'
+  };
+  return mode==='baseline'?source:replaceExactlyOnce(source,color,variants[mode]);
+}
+
+// Read-only WebGL surface attribution; product source is untouched.
+// Pixel role labels: 1 => red 32; 4 => red 128.
+// Vertex-base and geometric-normal distinguish facet/attribute discontinuity
+// from downstream material shading with the same unchanged camera.
 export const GEN3288_PRODUCT_AB=Object.freeze({
   profile:'GEN3288_EXACT_PRODUCT_AB_V1',
   heads:Object.freeze({baseline:GEN3286_MATCHED.heads.baseline,candidate:'76637b3afbf846746200d78155a36e193de488eb'}),
@@ -541,12 +559,13 @@ export async function runGen3286(argv){
   const isolation=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_CAUSAL_MATERIAL_V1';
   const handoff=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_HANDOFF_EDGE_V1';
   const product=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3288_EXACT_PRODUCT_AB_V1';
-  const browserVariation=isolation||handoff;
+  const surfaceAttribution=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3287_SURFACE_ATTRIBUTES_V1';
+  const browserVariation=isolation||handoff||surfaceAttribution;
   const viewports=product?GEN3288_PRODUCT_AB.viewports:((scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]:GEN3286_MATCHED.viewports);
   const poses=(browserVariation||product)?GEN3288_CAUSAL_POSES:(scout?GEN3286_WITNESS_SCOUT_POSES:GEN3286_MATCHED.poses);
-  const labels=handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate']));
+  const labels=surfaceAttribution?GEN3287_SURFACE_ATTRIBUTE_MODES:(handoff?GEN3288_EDGE_HANDOFF_MODES:(isolation?GEN3288_CAUSAL_MODES:(scout?['baseline']:['baseline','candidate'])));
   const receipt={
-    schema:product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
+    schema:surfaceAttribution?'H_EARTH_GEN3287_SURFACE_ATTRIBUTE_WEBGL_v1':product?'H_EARTH_GEN3288_EXACT_MATCHED_PRODUCT_VISUAL_AB_v1':handoff?'H_EARTH_GEN3288_PRIMITIVE_EDGE_HANDOFF_DIAGNOSTIC_v1':isolation?'H_EARTH_GEN3288_ACTUAL_WEBGL2_MATERIAL_OPERAND_ISOLATION_v1':'H_EARTH_GEN3286_MATCHED_REAL_WEBGL2_MATERIAL_AB_v1',profile:surfaceAttribution?'GEN3287_SURFACE_ATTRIBUTES_V1':product?'GEN3288_EXACT_PRODUCT_AB_V1':handoff?'GEN3288_HANDOFF_EDGE_V1':isolation?'GEN3288_CAUSAL_MATERIAL_V1':GEN3286_MATCHED.profile,result:'INCOMPLETE_OR_FAILED',
     heads:product?GEN3288_PRODUCT_AB.heads:GEN3286_MATCHED.heads,sourceOnlyNoProductMutation:true,originalOwnerPhonePoseReproduced:false,
     physicalAndroidExecuted:false,ownerPerceptualAcceptance:false,visualSuccess:'NOT_DETERMINED',
     witnessScoutOnly:scout,temporaryBrowserOnlyShaderVariations:browserVariation,poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE',
@@ -581,7 +600,7 @@ export async function runGen3286(argv){
         runRecord.routeUnchangedSha256=sha(originalRoute);
         if(browserVariation){
           const rendererSource=fs.readFileSync(path.join(dir,RENDERER.slice(1)),'utf8');
-          const override=handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label);
+          const override=surfaceAttribution?gen3287SurfaceAttributeSource(rendererSource,label):(handoff?gen3288HandoffSource(rendererSource,label):gen3288CausalShaderSource(rendererSource,label));
           runRecord.rendererOriginalSha256=sha(rendererSource);
           runRecord.rendererServedSha256=sha(override);
           runRecord.browserOnlyMaterialOperand=label;
@@ -739,7 +758,7 @@ export async function runGen3286(argv){
     }else if(browserVariation){
       if(receipt.views.length!==16||receipt.comparisons.length!==12)throw Error('GEN3288_CAUSAL_IMAGES_INCOMPLETE');
       receipt.visualSuccess='CAUSAL_VISUAL_INSPECTION_REQUIRED';
-      receipt.result=handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION';
+      receipt.result=surfaceAttribution?'ACTUAL_WEBGL2_SURFACE_ATTRIBUTE_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':(handoff?'ACTUAL_WEBGL2_PRIMITIVE_HANDOFF_IMAGES_CAPTURED_NO_PRODUCT_MUTATION':'ACTUAL_WEBGL2_FOUR_OPERAND_IMAGES_CAPTURED_NO_PRODUCT_MUTATION');
     }else if(product){
       if(receipt.views.length!==16||receipt.comparisons.length!==8)throw Error('GEN3288_PRODUCT_AB_VIEW_SET_INCOMPLETE');
       receipt.visualSuccess='PENDING_INDEPENDENT_VISUAL_AND_OWNER_REVIEW';
@@ -755,7 +774,7 @@ export async function runGen3286(argv){
 }
 
 export async function run(argv){
-  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
+  if(['GEN3286_MATERIAL_AB_V1','GEN3286_WITNESS_SCOUT_V1','GEN3288_CAUSAL_MATERIAL_V1','GEN3288_HANDOFF_EDGE_V1','GEN3288_EXACT_PRODUCT_AB_V1','GEN3287_SURFACE_ATTRIBUTES_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE))return runGen3286(argv);
   if(process.env.H_EARTH_COMPARISON_PROFILE==='GEN3142_OWNER_FRAME_V1')return runGen3142(argv);
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';

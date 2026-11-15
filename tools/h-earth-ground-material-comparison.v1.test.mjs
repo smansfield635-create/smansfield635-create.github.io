@@ -234,7 +234,7 @@ test('Gen3287 rejects source label, pair camera, projection, asset or PNG identi
 test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
   const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
-  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1'));
   assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
   assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 76637b3afbf846746200d78155a36e193de488eb"));
   assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
@@ -271,7 +271,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
   assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
-  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1'));
+  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1'));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
   assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
 });
@@ -326,4 +326,19 @@ test('Gen3288 exact immutable product A/B source and desktop/mobile witness bind
   const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
   assert.ok(comparator.includes('gen3288ProductVerifySource(dir,label)'));
   assert.ok(comparator.includes('receipt.views.length!==16||receipt.comparisons.length!==8'));
+});
+
+test('Gen3287 surface role, normal and base-color diagnostics are source-only and fail closed',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.deepEqual(m.GEN3287_SURFACE_ATTRIBUTE_MODES,['baseline','role-code','surface-normal','vertex-base']);
+ assert.equal(m.gen3287SurfaceAttributeSource(source,'baseline'),source);
+ for(const mode of m.GEN3287_SURFACE_ATTRIBUTE_MODES.slice(1)){
+   const result=m.gen3287SurfaceAttributeSource(source,mode);
+   assert.notEqual(result,source);
+   assert.equal(result.split('outColor=vec4(lit,outputAlpha);').length,1);
+   assert.ok(result.includes("resources.singleOwnerVegetation?.draw(packet);"));
+ }
+ assert.throws(()=>m.gen3287SurfaceAttributeSource(source,'bad-probe'),/GEN3287_UNKNOWN_SURFACE_PROBE/);
+ assert.throws(()=>m.gen3287SurfaceAttributeSource(source.replace('outColor=vec4(lit,outputAlpha);',''),'role-code'),/GEN3287_SURFACE_OUTPUT_NOT_UNIQUE/);
 });

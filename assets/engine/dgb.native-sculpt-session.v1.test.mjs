@@ -183,3 +183,87 @@ test('source handoff shares geometry doubled-area floor without rejecting valid 
   assert.deepEqual([...h.triangles],[0,1,2]);
   assert.equal(h.retopologyBakeAllowed,false);
 });
+
+
+// Cycle Two C2-A: test the real topology-changing transaction and its negative space.
+const square=()=>({
+  sourceId:'connected-square',
+  positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+  triangles:new Uint32Array([0,1,2,0,2,3]),
+  regions:['rim','rim','rim','rim'],protectedVertices:[0],
+  selectedFaces:[0,1],
+  newVertices:[
+    {sourceFace:0,barycentric:[1/3,1/3,1/3],normalOffset:.08,region:'interior'},
+    {sourceFace:1,barycentric:[1/3,1/3,1/3],normalOffset:.06,region:'interior'}
+  ],
+  replacementFaces:[
+    {sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},{sourceFace:0,indices:[2,0,4]},
+    {sourceFace:1,indices:[0,2,5]},{sourceFace:1,indices:[2,3,5]},{sourceFace:1,indices:[3,0,5]}
+  ],
+  uvHandoff:{renderToMaster:new Uint32Array([0,1,2,3]),uvs:new Float32Array([0,0,1,0,1,1,0,1]),
+    faceRenderCorners:new Uint32Array([0,1,2,0,2,3])}
+});
+const C2A=()=>import('./dgb.native-sculpt-session.v1.mjs');
+test('C2-A: two connected source faces gain actual interior 3D volume and topology with UV seam custody',async()=>{
+  const {createConnectedSculptTopologyCandidate,restoreConnectedSculptTopologyCandidate}=await C2A();
+  const input=square(),before=[...input.positions],bfaces=[...input.triangles],
+    candidate=createConnectedSculptTopologyCandidate(input);
+  assert.equal(candidate.counts.replacedFaces,2);assert.equal(candidate.counts.addedVertices,2);
+  assert.equal(candidate.counts.outputFaces,6);assert.equal(candidate.positions.length/3,6);
+  assert.equal(candidate.positions[4*3+2]>.07,true);
+  assert.deepEqual([...input.positions],before);assert.deepEqual([...input.triangles],bfaces);
+  assert.deepEqual([...candidate.positions.slice(0,12)],before);
+  assert.equal(candidate.render.originalUvPrefixPreserved,true);
+  assert.deepEqual([...candidate.render.renderToMaster.slice(0,4)],[0,1,2,3]);
+  assert.deepEqual([...candidate.render.uvs.slice(0,8)],[0,0,1,0,1,1,0,1]);
+  assert.equal(candidate.render.triangles.length,18);
+  assert.equal(candidate.sourceFaceLineage.length,6);
+  assert.doesNotThrow(()=>verifySculptGeometry(candidate.positions,candidate.triangles));
+  const serialized=candidate.serialize(),restored=restoreConnectedSculptTopologyCandidate(serialized);
+  assert.equal(restored.serialize(),serialized);
+  assert.deepEqual([...restored.positions],[...candidate.positions]);
+  assert.deepEqual([...restored.render.uvs],[...candidate.render.uvs]);
+});
+test('C2-A: disconnected selection and region with multiple boundary loops fail closed',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const disconnected={...square(),positions:new Float32Array([0,0,0,1,0,0,0,1,0,3,0,0,4,0,0,3,1,0]),
+    triangles:new Uint32Array([0,1,2,3,4,5]),regions:['a','a','a','b','b','b'],selectedFaces:[0,1],uvHandoff:null};
+  assert.throws(()=>make(disconnected),/DISCONNECTED_REGION/);
+  const verts=[],tris=[];for(let y=0;y<4;y++)for(let x=0;x<4;x++)verts.push(x,y,0);
+  for(let y=0;y<3;y++)for(let x=0;x<3;x++){const a=y*4+x,b=a+1,c=a+4,d=c+1;tris.push(a,b,d,a,d,c);}
+  const holes=Array.from({length:18},(_,i)=>i).filter(i=>i!==8&&i!==9);
+  assert.throws(()=>make({...square(),positions:new Float32Array(verts),triangles:new Uint32Array(tris),
+    regions:Array(16).fill('body'),protectedVertices:[],selectedFaces:holes,uvHandoff:null}),/MULTIPLE_BOUNDARY_LOOPS|BOUNDARY_NOT_SINGLE/);
+});
+test('C2-A: false parent-child identity, inverted topology and changed boundary reject',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const old=square(),bad=old.replacementFaces.map(v=>({...v,indices:[...v.indices]}));
+  bad[0]={sourceFace:0,indices:[0,1,5]};
+  assert.throws(()=>make({...old,replacementFaces:bad}),/FALSE_PARENT_FACE_LINEAGE/);
+  const inverted=old.replacementFaces.map(v=>({...v,indices:[...v.indices]}));
+  inverted[0].indices=[0,4,1];
+  assert.throws(()=>make({...old,replacementFaces:inverted}),/REVERSED_OR_DEGENERATE_CHILD/);
+  assert.throws(()=>make({...old,replacementFaces:old.replacementFaces.slice(1)}),/BOUNDARY_MISMATCH|COVERAGE_INVALID/);
+  assert.throws(()=>make({...old,selectedFaces:[1,0]}),/SELECTED_FACES_INVALID/);
+});
+test('C2-A: inconsistent UV/master seams and unsupported 64-pose transfer are rejected',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const old=square(),seam={...old.uvHandoff,faceRenderCorners:new Uint32Array([0,1,3,0,2,3])};
+  assert.throws(()=>make({...old,uvHandoff:seam}),/SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
+  assert.throws(()=>make({...old,animation:{poseCount:64}}),/ANIMATED_SOURCE_TRANSFER_UNQUALIFIED/);
+  assert.throws(()=>make({...old,newVertices:[{...old.newVertices[0],normalOffset:2},old.newVertices[1]]}),/NEW_VERTEX_LINEAGE_INVALID/);
+});
+test('C2-A: forged save geometry and UV lineage cannot change a verified candidate',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const candidate=make(square()),save=candidate.serialize(),bad=JSON.parse(save);
+  bad.geometry.positions[14]+=.05;
+  assert.throws(()=>load(JSON.stringify(bad)),/SAVE_OR_SOURCE_IDENTITY_DRIFT/);
+  const badSeam=JSON.parse(save);badSeam.uvHandoff.faceRenderCorners[0]=3;
+  assert.throws(()=>load(JSON.stringify(badSeam)),/SOURCE_RENDER_MASTER_SEAM_MISMATCH/);
+  assert.equal(candidate.serialize(),save);
+  assert.throws(()=>load('not-json'),/SAVE_JSON_INVALID/);
+  const fixed=createSculptSession({positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+    triangles:new Uint32Array([0,1,2,0,2,3]),regions:['a','a','a','a']});
+  const v1=fixed.serialize();assert.equal(fixed.restore(v1),true);
+  assert.equal(fixed.serialize(),v1);
+});

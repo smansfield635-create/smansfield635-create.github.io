@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,replaceFourSculptViewMeshes} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -128,4 +128,60 @@ test('C2-B reference source mask persists through v2 save, trusted C2-A edit and
   assert.deepEqual([...restored.uv.uvs],[...edit.render.uvs]);
   const corrupt=JSON.parse(saved);corrupt.source.mask[1]=2;
   assert.throws(()=>restoreSculptStudioState(JSON.stringify(corrupt),neutral),/SILHOUETTE_INVALID/);
+});
+
+test('C2-B four-view swap draws exactly once and retains all mesh identities',()=>{
+  const views=Array.from({length:4},()=>{
+    const mesh={gpu:{}};
+    return {mesh,device:{replaceMesh(m,s){assert.strictEqual(m,mesh);m.spec=s;}}};
+  });
+  let draws=0,quarantines=0;
+  const answer=replaceFourSculptViewMeshes(views,{id:'before'},{id:'after'},
+    ()=>{draws++;return 'DRAWN'},()=>{quarantines++;});
+  assert.equal(answer,'DRAWN');
+  assert.equal(draws,1);
+  assert.equal(quarantines,0);
+  for(const view of views)assert.equal(view.mesh.spec.id,'after');
+});
+test('C2-B third-view GPU failure rolls back prior views and redraws original',()=>{
+  const oldSpec={id:'before'},newSpec={id:'after'};
+  const views=Array.from({length:4},(_,i)=>{
+    const mesh={spec:oldSpec};
+    return {mesh,device:{replaceMesh(m,s){
+      if(i===2&&s===newSpec)throw Error('INJECT_THIRD_VIEW_FAILURE');
+      m.spec=s;
+    },status(){return {restorationError:null,lost:false}}}};
+  });
+  let draws=0,quarantines=0;
+  assert.throws(()=>replaceFourSculptViewMeshes(views,oldSpec,newSpec,()=>{draws++;},()=>{quarantines++;}),
+    /INJECT_THIRD_VIEW_FAILURE/);
+  assert.equal(draws,1); // redraw only: transaction draw never occurred
+  assert.equal(quarantines,0);
+  for(const v of views)assert.strictEqual(v.mesh.spec,oldSpec);
+});
+test('C2-B rendered topology failure rolls back all four views and does not redraw a candidate',()=>{
+  const oldSpec={id:'before'},newSpec={id:'after'};
+  const views=Array.from({length:4},()=>({mesh:{spec:oldSpec},
+    device:{replaceMesh(m,s){m.spec=s;},status(){return {restorationError:null,lost:false}}}}));
+  let draws=0,quarantines=0;
+  assert.throws(()=>replaceFourSculptViewMeshes(views,oldSpec,newSpec,()=>{
+    draws++;
+    if(draws===1)throw Error('INJECT_RENDER_FAILURE');
+  },()=>{quarantines++;}),/INJECT_RENDER_FAILURE/);
+  assert.equal(draws,2); // candidate fails, restored geometry redraw succeeds
+  assert.equal(quarantines,0);
+  for(const v of views)assert.strictEqual(v.mesh.spec,oldSpec);
+});
+test('C2-B uncertain release or failed rollback quarantines instead of accepting partial GPU state',()=>{
+  const oldSpec={id:'before'},newSpec={id:'after'};
+  const views=Array.from({length:4},(_,i)=>({mesh:{spec:oldSpec},
+    device:{replaceMesh(m,s){
+      if(i===2&&s===newSpec)throw Error('INJECT_RELEASE_UNCERTAIN');
+      if(i===0&&s===oldSpec)throw Error('INJECT_ROLLBACK_FAILED');
+      m.spec=s;
+    },status(){return {restorationError:i===2?'MESH_RELEASE_UNCERTAIN':null}}}}));
+  let quarantines=0;
+  assert.throws(()=>replaceFourSculptViewMeshes(views,oldSpec,newSpec,()=>{},()=>{quarantines++;}),
+    /INJECT_RELEASE_UNCERTAIN/);
+  assert.equal(quarantines,1);
 });

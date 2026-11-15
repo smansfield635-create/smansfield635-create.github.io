@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "dfef3a853a8431f04dafb0e649ab3c6886ca6ab2",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "0fd94b70aeeb005841ae496c398e8ed25c137ba0",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3298,
+    "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:GRAPHICS_C2B:FIXED_READONLY_QUALIFIER:20261115",
+    "observedBranchHead": "84fcc44feeb015c17d2eaa1b1829b9db11cf077f",
+    "observedLedgerBlobSha": "7a65a9b2057ebef3d391a24fc8b17b9864a6b2b5",
+    "operationId": "DGB_GRAPHICS_C2B_FIXED_BROWSER_QUALIFIER_BINDING_20261115_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "179e36904836a6a75813cb479a036592ccc9fc600e61b5bf130d3303ff93d53f"
+  },
+  "operationId": "DGB_GRAPHICS_C2B_FIXED_BROWSER_QUALIFIER_BINDING_20261115_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "cfeebfb2eed70209edea23fc64eba9a4815f3fb0cb26434c222758f19c0b7dd0",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "d391c01778b21c0b89715f5ff965e063258ecacac4e27a971f76c6356c71b85a",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

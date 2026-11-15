@@ -8,6 +8,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
   const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4, arrayBuffer: null, elementArrayBuffer: null };
   const buffers = new Map();
   let dynamicFailures = failDynamicUploadOnce ? 1 : 0;
+  let pendingBufferUploadErrors = 0;
   const obj = type => ({ type, id: ++id });
   const gl = {
     VERTEX_SHADER: 1, FRAGMENT_SHADER: 2, COMPILE_STATUS: 3, LINK_STATUS: 4,
@@ -19,7 +20,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     MAX_RENDERBUFFER_SIZE: 25, FRAMEBUFFER: 26, FRAMEBUFFER_BINDING: 27,
     COLOR_ATTACHMENT0: 28, DEPTH_ATTACHMENT: 29, FRAMEBUFFER_COMPLETE: 30,
     FRAMEBUFFER_INCOMPLETE_ATTACHMENT: 31, RENDERBUFFER: 32,
-    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, DEPTH_COMPONENT: 35, NO_ERROR: 0, INVALID_OPERATION: 98,
+    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, DEPTH_COMPONENT: 35, NO_ERROR: 0, INVALID_OPERATION: 98, OUT_OF_MEMORY: 99,
     createShader() { log.push('createShader'); return obj('shader'); },
     shaderSource() {}, compileShader() {}, getShaderParameter() { return !compileFail; },
     getShaderInfoLog() { return 'mock compile error'; }, deleteShader() { log.push('deleteShader'); },
@@ -35,6 +36,10 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
       log.push('bufferData');
       const handle = target === this.ARRAY_BUFFER ? bindings.arrayBuffer : bindings.elementArrayBuffer;
       if (handle && ArrayBuffer.isView(data)) buffers.set(handle, data.slice());
+      if (this.failBufferDataOn === target) {
+        this.failBufferDataOn = null;
+        pendingBufferUploadErrors++;
+      }
     },
     bufferSubData(target, offset, data) {
       log.push('bufferSubData');
@@ -65,7 +70,10 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
         log.push('depthTexImage2D:' + _format + ':' + _format2 + ':' + _type);
       }
     },
-    getError() { return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR; },
+    getError() {
+      if (pendingBufferUploadErrors > 0) { pendingBufferUploadErrors--; return this.OUT_OF_MEMORY; }
+      return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR;
+    },
     deleteTexture() { log.push('deleteTexture'); },
     createFramebuffer() { log.push('createFramebuffer'); return obj('framebuffer'); },
     bindFramebuffer(_target, handle) { bindings.framebuffer = handle; log.push('bindFramebuffer'); },
@@ -604,4 +612,35 @@ test('C2-B replacement buffer allocation failure leaves prior E1 mesh usable',()
   assert.equal(log.filter(x=>x==='deleteBuffer').length,1);
   d.dispose();
   assert.equal(buffers.size,0);
+});
+
+// Copilot C2-B safety finding: gl.bufferData need not throw on an exhausted GPU.
+test('C2-B non-throwing attribute/index GPU upload errors preserve old mesh on WebGL1 and WebGL2', () => {
+  for (const backend of ['WEBGL1','WEBGL2']) for (const targetName of ['ARRAY_BUFFER','ELEMENT_ARRAY_BUFFER']) {
+    const {canvas,gl,log,buffers}=fakeCanvas({webgl2:true});
+    const device=createNativeWebGLDevice(canvas,{backend});
+    const program=device.createProgram(shader);
+    const mesh=device.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const previousGpu=mesh.gpu, previousDefinition=mesh.definition;
+    const byteCount=device.status().estimatedTotalResourceBytes;
+    const deletedBefore=log.filter(x=>x==='deleteBuffer').length;
+    gl.failBufferDataOn=gl[targetName];
+    assert.throws(()=>device.replaceMesh(mesh,{attributes:[{...attrib,dynamic:true}],
+      indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3}),/MESH_BUFFER_UPLOAD_GL_ERROR/);
+    assert.strictEqual(mesh.gpu,previousGpu);
+    assert.strictEqual(mesh.definition,previousDefinition);
+    assert.equal(device.status().estimatedTotalResourceBytes,byteCount);
+    assert.equal(device.status().meshes,1);
+    assert.equal(device.status().restorationError,null);
+    assert.equal(buffers.size,2);
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,3);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length-deletedBefore,
+      targetName==='ARRAY_BUFFER'?1:2);
+    // The one-shot error is consumed; a subsequent sound replacement succeeds.
+    device.replaceMesh(mesh,{attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3});
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,6);
+    assert.equal(buffers.size,2);
+    device.dispose();
+    assert.equal(buffers.size,0);
+  }
 });

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
+import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,shouldPresentAssetSettleFrame,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
@@ -21,6 +21,33 @@ test('asset readiness rejects asynchronous partial scenes and failed assets',()=
  r.treeCollection.queue.loading=true;assert.equal(assetReadiness(r,{x:0,z:0}).ready,false);r.treeCollection.queue.loading=false;
  r.treeCollection.entries[0].state='FALLBACK';assert.throws(()=>assetReadiness(r,{x:0,z:0}),/ASSET_FAILURE/);
  assert.throws(()=>assetReadiness({},{}),/ASSET_RECEIPT_MISSING/);
+});
+
+test('Gen3287 yields busy tree loads and resumes only when source readiness succeeds',()=>{
+  assert.equal(shouldPresentAssetSettleFrame(true,{loading:true}),false);
+  assert.equal(shouldPresentAssetSettleFrame(true,{loading:false}),true);
+  assert.equal(shouldPresentAssetSettleFrame(true,null),true);
+  assert.equal(shouldPresentAssetSettleFrame(false,{loading:true}),true);
+  const resources={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},
+    treeCollection:{queue:{loading:true,failures:{}},entries:[{id:'maple',state:'LOADING',ready:false,x:10,z:0}]}};
+  assert.equal(assetReadiness(resources,{x:0,z:0}).ready,false);
+  assert.equal(shouldPresentAssetSettleFrame(true,resources.treeCollection.queue),false);
+  resources.treeCollection.entries[0].state='READY';resources.treeCollection.entries[0].ready=true;
+  resources.treeCollection.queue.loading=false;
+  assert.equal(shouldPresentAssetSettleFrame(true,resources.treeCollection.queue),true);
+  assert.equal(assetReadiness(resources,{x:0,z:0}).ready,true);
+});
+
+test('Gen3287 identifies blocking asset IDs, queue state and preserves fail-closed readiness',()=>{
+ const resources={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},treeCollection:{queue:{loading:false,failures:{}},entries:[{id:'far',state:'LOADING',ready:false,x:900,z:900},{id:'near',state:'IDLE',ready:false,x:10,z:0}]}};
+ let state=assetReadiness(resources,{x:0,z:0});
+ assert.equal(state.ready,false);assert.equal(state.pendingReasons.loadingCount,1);
+ assert.deepEqual(state.pendingReasons.loadingIds,['far']);assert.equal(state.pendingReasons.nearbyIdleCount,1);
+ assert.deepEqual(state.pendingReasons.nearbyIdleIds,['near']);assert.equal(state.pendingReasons.queueLoading,false);
+ for(const e of resources.treeCollection.entries){e.state='READY';e.ready=true;}
+ resources.treeCollection.queue.loading=true;state=assetReadiness(resources,{x:0,z:0});
+ assert.equal(state.ready,false);assert.equal(state.pendingReasons.queueLoading,true);
+ resources.treeCollection.queue.loading=false;assert.equal(assetReadiness(resources,{x:0,z:0}).ready,true);
 });
 
 test('wrong checkout identity fails before browser loading and preserves failure receipt',async()=>{
@@ -195,4 +222,191 @@ test('Gen3147 entry proof follows actual immutable loader internal mode rather t
   assert.ok(comparator.includes("loaderHidden:loading?.hidden===true"));
   assert.ok(comparator.includes("loaderDomMode:loading?.dataset.mode"));
   assert.ok(!comparator.includes("dataset.mode==='entered'"));
+});
+
+test('Gen3287 exact material comparison binds restored Gen3259 against immutable Gen3286 only',async()=>{
+  const x=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const p=x.GEN3286_MATCHED;
+  assert.equal(p.heads.baseline,'f05d97d402f27b640e8776a0c9f0851524db0fa0');
+  assert.equal(p.heads.candidate,'676cb926180219d62ff4fd4a356d8360ff66d99b');
+  assert.equal(p.renderer.baseline,'3471d386d720382b1b55b146fef6fa0af61f0d36');
+  assert.equal(p.renderer.candidate,'38def850ac126f2766aec7bab3b43efea8f04ccc');
+  assert.equal(x.HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');
+  assert.equal(p.viewports.length,2);
+  assert.deepEqual(p.viewports.map(v=>v.id),['mobile-sized','desktop']);
+  assert.equal(p.poses.length,8);
+  assert.ok(p.poses.some(v=>v.id==='defective-open-grassland'));
+  assert.equal(Object.keys(p.protectedBlobs).length,4);
+  for(const value of Object.values(p.protectedBlobs))assert.match(value,/^[a-f0-9]{40}$/);
+});
+test('Gen3287 rejects source label, pair camera, projection, asset or PNG identity mismatch',async()=>{
+  const x=await import('./h-earth-ground-material-comparison.v1.mjs');
+  assert.throws(()=>x.gen3286VerifySource('/absent','unknown'),/SOURCE_LABEL/);
+  const view=label=>({
+    label,pose:{id:'reference'},viewport:{id:'desktop'},
+    assetSignature:'same-assets',
+    camera:{position:{x:18,y:20,z:-226},matrix:Array.from({length:16},(_,i)=>i/16)},
+    png:{width:1024,height:768},image:label+'.png',imageSha256:'test',frame:{responseMs:12}
+  });
+  const good=x.gen3286ValidatePair(view('baseline'),view('candidate'));
+  assert.equal(good.cameraMatched,true);assert.equal(good.projectionMatched,true);
+  for(const change of [
+    v=>v.assetSignature='different',
+    v=>v.camera.position.y+=0.1,
+    v=>v.camera.matrix[5]+=0.02,
+    v=>v.png.width--,
+    v=>v.pose.id='wrong'
+  ]){const candidate=view('candidate');change(candidate);assert.throws(()=>x.gen3286ValidatePair(view('baseline'),candidate));}
+});
+test('Gen3287 historical source-chain guards remain present and new job has immutable A/B bindings',()=>{
+  const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.ok(yaml.includes('gen3287-matched-material-gpu:'));
+  assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_MATERIAL_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3286_WITNESS_SCOUT_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_CAUSAL_MATERIAL_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_HANDOFF_EDGE_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3288_EXACT_PRODUCT_AB_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_SURFACE_ATTRIBUTES_V1')||yaml.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'));
+  assert.ok(yaml.includes("ref: f05d97d402f27b640e8776a0c9f0851524db0fa0"));
+  assert.ok(yaml.includes("ref: 676cb926180219d62ff4fd4a356d8360ff66d99b")||yaml.includes("ref: 76637b3afbf846746200d78155a36e193de488eb"));
+  assert.ok(yaml.includes("test \"$sector_blob\" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03"));
+  assert.ok(yaml.includes("test \"$sector_blob\" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5"));
+  assert.ok(yaml.includes('node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only'));
+  assert.ok(yaml.includes('H_EARTH_GEN3287_EXACT_GEN3259_GEN3286_SOURCE_BINDING_v1'));
+  assert.ok(yaml.includes('h-earth/gen3286-matched-webgl-verifier-20261114'));
+  assert.ok(yaml.includes('gen3142-matched-gpu:'));
+  assert.ok(yaml.includes('ground-material-comparison:'));
+});
+
+test('Gen3287 audit packet follows the accepted live route deferVegetation true path; never requests the non-route BARK package',()=>{
+  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  const route=fs.readFileSync(new URL('../showroom/globe/h-earth/vegetation-prototype/route.js',import.meta.url),'utf8');
+  assert.ok(route.includes('createHEarthRun8ER3AFrameUniformPacket({deferVegetation:true,navigationState:state'));
+  assert.equal((comparator.match(/deferVegetation:false/g)||[]).length,0);
+  assert.ok(comparator.includes("GEN3286_MATCHED_REAL_WEBGL"));
+  assert.ok(comparator.includes('deferVegetation:true,navigationState:state'));
+});
+
+test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and refuses invented meadow/seam acceptance',async()=>{
+  const tool=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.equal(tool.GEN3286_WITNESS_SCOUT_POSES.length,16);
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===145&&p.z===-225));
+  assert.ok(tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===-141&&p.z===-226));
+  assert.ok(source.includes("page.locator('#h-earth-functional-landscape-canvas').boundingBox()"));
+  assert.ok(source.includes("GEN3286_REAL_CANVAS_ENTRY_NOT_UNLOCKED"));
+  assert.ok(source.includes("classification:'NOT_A_NAVIGABLE_CAMERA'"));
+  assert.ok(source.includes('receipt.rejectedWitnesses'));
+  assert.ok(!tool.GEN3286_WITNESS_SCOUT_POSES.some(p=>p.x===130.241846&&p.z===-250));
+  assert.ok(source.includes("poseAuthority:'UNQUALIFIED_UNTIL_ACTUAL_SCREENSHOT_VISIBLE'"));
+  const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
+  assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));
+  assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
+  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'));
+  assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
+  assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
+});
+
+
+// Gen3288: four ephemeral browser-response GLSL variants; accepted checkout
+// remains byte-identical and every candidate mode edits exactly one operand.
+test('Gen3288 four exact-source material operands preserve product bytes',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const baseline=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+  assert.deepEqual(m.GEN3288_CAUSAL_MODES,['baseline','occupancy-off','habitat-off','groundcover-off']);
+  assert.deepEqual(m.GEN3288_CAUSAL_POSES.map(p=>p.id),['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge']);
+  assert.equal(m.gen3288CausalShaderSource(baseline,'baseline'),baseline);
+  const matcher=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  assert.ok(matcher.includes("gen3286VerifySource(dir,browserVariation?'baseline':label)"));
+  assert.ok(matcher.includes('passes:browserVariation?3:8'));
+  assert.ok(matcher.includes("(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
+  assert.ok(matcher.includes('receipt.views.length!==16||receipt.comparisons.length!==12'));
+  for(const mode of m.GEN3288_CAUSAL_MODES.slice(1)){
+    const candidate=m.gen3288CausalShaderSource(baseline,mode);
+    assert.notEqual(candidate,baseline);
+    assert.equal(candidate.length>100000,true);
+  }
+});
+
+
+test('Gen3288 same-camera primitive ID and combined treatments are browser-only',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const renderer=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+  assert.deepEqual(m.GEN3288_EDGE_HANDOFF_MODES,['baseline','primitive-id','combined-off','grass-off']);
+  assert.equal(m.gen3288HandoffSource(renderer,'baseline'),renderer);
+  for(const mode of m.GEN3288_EDGE_HANDOFF_MODES.slice(1)){
+    const candidate=m.gen3288HandoffSource(renderer,mode);
+    assert.notEqual(candidate,renderer);
+    assert.ok(candidate.length>100000);
+  }
+  assert.ok(m.gen3288HandoffSource(renderer,'primitive-id').includes('vPrimitiveIndex>>16u'));
+  assert.ok(m.gen3288HandoffSource(renderer,'grass-off').includes('if(false)resources.singleOwnerVegetation?.draw(packet);'));
+});
+
+
+test('Gen3288 exact immutable product A/B source and desktop/mobile witness binding',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const p=m.GEN3288_PRODUCT_AB;
+  assert.equal(p.heads.baseline,m.GEN3286_MATCHED.heads.baseline);
+  assert.equal(p.heads.candidate,'76637b3afbf846746200d78155a36e193de488eb');
+  assert.equal(p.renderer.candidate,'97114936a17939ebb548074b57193735db17f3cc');
+  assert.equal(p.index.candidate,'32a5e2747a74e41e0c379de406ae99f7edeae549');
+  assert.equal(p.candidateRootCount,3805291);
+  assert.deepEqual(p.viewports.map(v=>v.id),['desktop','mobile-sized']);
+  assert.deepEqual(p.poses.map(x=>x.id),['woodland-grove-a-control','woodland-core-b-control','official-ridge-east','seam-overlap-edge']);
+  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+  assert.ok(comparator.includes('gen3288ProductVerifySource(dir,label)'));
+  assert.ok(comparator.includes('receipt.views.length!==16||receipt.comparisons.length!==8'));
+});
+
+test('Gen3287 surface role, normal and base-color diagnostics are source-only and fail closed',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.deepEqual(m.GEN3287_SURFACE_ATTRIBUTE_MODES,['baseline','role-code','surface-normal','vertex-base']);
+ assert.equal(m.gen3287SurfaceAttributeSource(source,'baseline'),source);
+ for(const mode of m.GEN3287_SURFACE_ATTRIBUTE_MODES.slice(1)){
+   const result=m.gen3287SurfaceAttributeSource(source,mode);
+   assert.notEqual(result,source);
+   assert.equal(result.split('outColor=vec4(lit,outputAlpha);').length,1);
+   assert.ok(result.includes("resources.singleOwnerVegetation?.draw(packet);"));
+ }
+ assert.throws(()=>m.gen3287SurfaceAttributeSource(source,'bad-probe'),/GEN3287_UNKNOWN_SURFACE_PROBE/);
+ assert.throws(()=>m.gen3287SurfaceAttributeSource(source.replace('outColor=vec4(lit,outputAlpha);',''),'role-code'),/GEN3287_SURFACE_OUTPUT_NOT_UNIQUE/);
+});
+
+test('Gen3287 attribute profile binds baseline Gen3259 and current Gen3288 candidate; historical modes unchanged',()=>{
+ const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ assert.ok(source.includes("const useGen3288Source=product||((surfaceAttribution||r8Slope)&&label==='candidate');"));
+ assert.ok(source.includes("gen3288ProductVerifySource(args['--'+label+'-dir'],label)"));
+ assert.ok(source.includes("gen3286VerifySource(args['--'+label+'-dir'],label)"));
+ assert.ok(source.includes("const browserVariation=isolation||handoff||surfaceAttribution||r8Slope;"));
+});
+
+test('Gen3287 R8 single-factor browser-only ridge soil-slope eligibility preserves geometry and normals',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.deepEqual(m.GEN3287_R8_SOIL_SLOPE_MODES,['baseline','ridge-slope-eligibility-neutral']);
+ assert.equal(m.gen3287R8SoilSlopeSource(source,'baseline'),source);
+ const edited=m.gen3287R8SoilSlopeSource(source,'ridge-slope-eligibility-neutral');
+ assert.notEqual(edited,source);
+ assert.equal(edited.split('float gen3287R8RidgeWindow=').length,2);
+ assert.ok(edited.includes('distance(vWorldPosition.xz,vec2(152.0,-224.0))'));
+ assert.ok(edited.includes('vec3 geometricNormal=normalize(vNormal);'));
+ assert.ok(edited.includes('float worldSoilRock=geologicalEarthRock?1.0:1.0-smoothstep(0.22,0.66,rockExposure);'));
+ assert.ok(edited.includes('resources.singleOwnerVegetation?.draw(packet);'));
+ assert.throws(()=>m.gen3287R8SoilSlopeSource(source,'bad'),/GEN3287_R8_MODE_INVALID/);
+ assert.throws(()=>m.gen3287R8SoilSlopeSource(source.replace('float worldSoilSlope=geologicalEarthRock?1.0:1.0-smoothstep(0.16,0.59,slope);',''),'ridge-slope-eligibility-neutral'),/GEN3287_R8_EXACT_SLOPE_SOURCE_DRIFT/);
+});
+
+test('Gen3287 R8 yields WebGL frames while immutable tree queue is loading and maintains readiness gate',()=>{
+ const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ assert.ok(source.includes("const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope,queue);"));
+ assert.ok(source.includes("const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope})=>{"));
+ assert.ok(source.includes("},{pose,sequence:++sequence,surfaceAttribution,r8Slope});"));
+ assert.equal(shouldPresentAssetSettleFrame(true,{loading:true}),false);
+ assert.equal(shouldPresentAssetSettleFrame(true,{loading:false}),true);
+ assert.equal(shouldPresentAssetSettleFrame(false,{loading:true}),true); // preserve historical profile
+ const pending={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},
+  treeCollection:{queue:{loading:true,failures:{}},entries:[{id:'COLLECTION_MAPLE_LARGE',state:'LOADING',ready:false,x:-139,z:-194}]}};
+ assert.equal(assetReadiness(pending,{x:-139,z:-194}).ready,false);
+ pending.treeCollection.queue.loading=false;
+ pending.treeCollection.entries[0].state='READY';
+ pending.treeCollection.entries[0].ready=true;
+ assert.equal(assetReadiness(pending,{x:-139,z:-194}).ready,true);
 });

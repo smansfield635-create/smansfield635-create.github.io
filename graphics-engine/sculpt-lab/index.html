@@ -48,7 +48,7 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
 <pre id="status" class="status" role="status" aria-live="polite">Initializing native Graphics Engine WebGL contexts…</pre>
 <footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene. Connected edits use deterministic v2 lineage replay; unmodified v1 mesh files remain loadable.</footer>
 <script type="module">
-import {createNativeSculptStudio} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=d6fdc0c9d6b376456f90a85a2dc18953c109f674';
+import {createNativeSculptStudio,replaceSculptStudioAtomically} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=1054a89fdf3334f26d3a61a9c50f19a1ee04b6a8';
 import {createM13OriginalSource} from '../../assets/engine/dgb.native-sculpt-session.v1.mjs?asset=c3e0bc555d5376eb53bc1b8cf27f988a88c0e6fb';
 const $=id=>document.getElementById(id);
 const M13_ZIP_SHA='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
@@ -132,23 +132,30 @@ let studio=null,source=null,rawM13=null,eyeModule=null,atlas=null,originalImport
 const canvases=['hero','side','front','rear'].map($);
 const controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','subdivide','faceIndex','reference','save','load'].map(id=>[id,$(id)]));
 function install(fixture){
-  studio?.dispose();studio=null;
-  studio=createNativeSculptStudio({canvases,controls,fixture,backend:source?'WEBGL2':'AUTO',
+  const previous=studio;
+  const build=()=>createNativeSculptStudio({canvases,controls,fixture,
+    backend:fixture?.sourceRender?.readOnlyOriginal===true?'WEBGL2':'AUTO',
     onStatus:(message,state)=>{$('status').textContent=message+'\nVertices '+state.vertices+
       ' • Triangles '+state.triangles+' • Revision '+state.revision+
       ' • Topology edits '+state.topologyDepth+' • Selected face '+(state.selectedFace??'none')+
       ' • Undo '+state.undoDepth+' • Redo '+state.redoDepth+' • Active views '+state.viewCount;}});
-  window.__dgbSculptLab={get studio(){return studio;},canvases,controls,ready:true,
-    get originalM13(){return Boolean(source);}};
+  const next=replaceSculptStudioAtomically(previous,build);
+  studio=next;
+  window.__dgbSculptLab={get studio(){return studio;},canvases,controls,
+    get ready(){return Boolean(studio&&!studio.status().disposed&&!studio.status().failed);},
+    get originalM13(){return Boolean(studio?.status().originalM13ReadOnly);}};
 }
-function showOriginalPose(index){
-  if(!source||!rawM13||!eyeModule||!atlas)throw Error('M13_SOURCE_NOT_LOADED');
-  const frame=source.pose(index);
-  frame.sourceRender.atlasPixels=atlas.pixels;
-  frame.sourceRender.atlasWidth=atlas.width;
-  frame.sourceRender.atlasHeight=atlas.height;
-  frame.sourceRender.eye=originalEyeAt(eyeModule,rawM13,frame);
+function showOriginalPose(index,original={source,rawM13,eyeModule,atlas}){
+  const {source:nextSource,rawM13:nextRaw,eyeModule:nextEyeModule,atlas:nextAtlas}=original;
+  if(!nextSource||!nextRaw||!nextEyeModule||!nextAtlas)throw Error('M13_SOURCE_NOT_LOADED');
+  const frame=nextSource.pose(index);
+  frame.sourceRender.atlasPixels=nextAtlas.pixels;
+  frame.sourceRender.atlasWidth=nextAtlas.width;
+  frame.sourceRender.atlasHeight=nextAtlas.height;
+  frame.sourceRender.eye=originalEyeAt(nextEyeModule,nextRaw,frame);
   install(frame);
+  // Publish source-mode state only after the replacement studio exists.
+  source=nextSource;rawM13=nextRaw;eyeModule=nextEyeModule;atlas=nextAtlas;
   $('m13Notice').textContent='Original M1.3 imported locally, immutable reference pose '+index+
     ' of 63. Master vertices 1,134; UV-split render vertices 1,409; original 16 morph targets and 64 pose rows retained. Anatomical editing remains disabled.';
 }
@@ -165,12 +172,12 @@ async function importOriginalZip(file,generation){
   const url=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));
   let nextModule;try{nextModule=await import(url);}finally{URL.revokeObjectURL(url);}
   if(generation!==originalImportGeneration)return;
-  source=nextSource;rawM13=nextRaw;atlas=nextAtlas;eyeModule=nextModule;
+  showOriginalPose(52,{source:nextSource,rawM13:nextRaw,atlas:nextAtlas,eyeModule:nextModule});
   $('m13Pose').replaceChildren();
   for(let i=0;i<64;i++){const option=document.createElement('option');option.value=String(i);
     option.textContent=i===52?'52 · Rest':i===24?'24 · Hop':String(i);
     $('m13Pose').append(option);}
-  $('m13Pose').value='52';showOriginalPose(52);$('m13Pose').disabled=false;
+  $('m13Pose').value='52';$('m13Pose').disabled=false;
 }
 try{
   install(undefined);
@@ -196,11 +203,13 @@ try{
     catch(error){$('status').textContent='Original pose rejected: '+error.message;}
   });
   $('returnNeutral').addEventListener('click',()=>{
-    ++originalImportGeneration;source=null;rawM13=null;eyeModule=null;atlas=null;
-    $('m13Pose').disabled=true;
-    $('m13Notice').textContent='Neutral editing restored; private archive remains on this device.';
-    try{install(undefined);}
-    catch(error){$('status').textContent='Neutral reload rejected: '+error.message;}
+    ++originalImportGeneration;
+    try{
+      install(undefined);
+      source=null;rawM13=null;eyeModule=null;atlas=null;
+      $('m13Pose').disabled=true;
+      $('m13Notice').textContent='Neutral editing restored; private archive remains on this device.';
+    }catch(error){$('status').textContent='Neutral reload rejected: '+error.message;}
   });
 }catch(error){
   $('status').textContent='Native Sculpt Lab blocked: '+error.message;

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,createSculptReferenceImportGate,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,createSculptReferenceImportGate,replaceFourSculptViewMeshes,abortRejectedSculptStroke,releaseSculptStudioResources,replaceSculptStudioAtomically} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -376,4 +376,39 @@ test('Gen3310 original M1.3 remains protected while C2-B editing paths survive',
   assert(browser.includes('if(originalSource)throw new Error(\'M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN\')'));
   assert(session.includes('forequarterEditAllowed:false'));
   assert(session.includes('originalReferenceSelfIntersectionNotAdjudicated'));
+});
+
+test('Gen3310 failed partial four-view initialization releases device-only entries and listeners',()=>{
+  const calls=[],listeners=[()=>calls.push('canvas-listener')];
+  const views=[
+    {device:{dispose(){calls.push('device-1');}},scene:{dispose(){calls.push('scene-1');}}},
+    {device:{dispose(){calls.push('device-2');}}} // atlas/eye setup threw before scene existed
+  ];
+  releaseSculptStudioResources(views,listeners);
+  assert.deepEqual(calls,['canvas-listener','scene-1','device-1','device-2']);
+  assert.equal(listeners.length,0);
+});
+test('Gen3310 studio replacement preserves edited session on failed original import',()=>{
+  let disposed=0,redraws=0;
+  const editable={state:{revision:7,undoDepth:2},drawAll(){redraws++;},dispose(){disposed++;}};
+  assert.throws(()=>replaceSculptStudioAtomically(editable,()=>{throw Error('WEBGL2_MISSING');}),/WEBGL2_MISSING/);
+  assert.equal(disposed,0);
+  assert.equal(redraws,1);
+  assert.deepEqual(editable.state,{revision:7,undoDepth:2});
+  const original={originalM13ReadOnly:true};
+  assert.equal(replaceSculptStudioAtomically(editable,()=>original),original);
+  assert.equal(disposed,1);
+});
+test('Gen3310 source-mode installation commits state only on success and exposes truthful readiness',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  assert.match(browser,/const view=\{name:names\[i\],canvas,device\};views\.push\(view\);[\s\S]*?const texture=originalSource/);
+  assert.match(browser,/catch\(e\)\{releaseSculptStudioResources\(views,listeners\);throw e;\}/);
+  assert.match(browser,/catch\(error\)\{releaseSculptStudioResources\(views,listeners\);throw error;\}/);
+  assert.match(html,/const next=replaceSculptStudioAtomically\(previous,build\);\s*studio=next;/);
+  assert.match(html,/get ready\(\)\{return Boolean\(studio&&!studio\.status\(\)\.disposed&&!studio\.status\(\)\.failed\);\}/);
+  assert.match(html,/showOriginalPose\(52,\{source:nextSource,rawM13:nextRaw,atlas:nextAtlas,eyeModule:nextModule\}\);/);
+  assert.match(html,/install\(frame\);\s*\/\/ Publish source-mode state only after/);
+  assert.doesNotMatch(html,/studio\?\.dispose\(\);studio=null/);
 });

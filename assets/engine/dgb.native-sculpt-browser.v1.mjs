@@ -346,6 +346,28 @@ function originalEyeShaders(backend){
 }
 
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
+// Failure-atomic resource ownership: a view is registered immediately after
+// device creation, even if later shader, atlas or eye construction fails.
+export function releaseSculptStudioResources(views,listeners){
+  for(const remove of listeners.splice(0)){try{remove();}catch{}}
+  for(const view of views){
+    try{view.scene?.dispose();}catch{}
+    try{view.device?.dispose();}catch{}
+  }
+}
+// Keep the complete editable studio alive until its replacement has rendered.
+// On failed construction the old session and its undo/save history survive.
+export function replaceSculptStudioAtomically(previous,build){
+  if(typeof build!=='function')throw new TypeError('STUDIO_REPLACEMENT_FACTORY_REQUIRED');
+  let next;
+  try{next=build();}
+  catch(error){
+    try{previous?.drawAll();}catch{} // Restore the previous canvas if setup drew into it.
+    throw error;
+  }
+  previous?.dispose();
+  return next;
+}
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
   if(!['AUTO','WEBGL1','WEBGL2'].includes(backend)||typeof onStatus!=='function')throw new TypeError('STUDIO_OPTIONS_INVALID');
@@ -364,7 +386,9 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   try{
     for(let i=0;i<4;i++){
       const canvas=expectCanvas(canvases[i],i),be=backend==='AUTO'?(canvas.getContext('webgl2')?'WEBGL2':'WEBGL1'):backend;
-      const device=createNativeWebGLDevice(canvas,{backend:be,contextAttributes:{alpha:false,antialias:true,depth:true,preserveDrawingBuffer:true}}),pipeline=createNativeFramePipeline(device);
+      const device=createNativeWebGLDevice(canvas,{backend:be,contextAttributes:{alpha:false,antialias:true,depth:true,preserveDrawingBuffer:true}});
+      const view={name:names[i],canvas,device};views.push(view);
+      const pipeline=createNativeFramePipeline(device);
       const program=device.createProgram(originalSource?originalTexturedShaders(be):shaders(be));
       const mesh=originalSource?device.createMesh({attributes:[
         {name:'aPosition',data:originalRender.positions,size:3,dynamic:true},
@@ -374,7 +398,8 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
         :device.createMesh(sculptMeshSpecification(session,uv));
       const texture=originalSource?device.createTexture2D({width:originalSource.atlasWidth,height:originalSource.atlasHeight,
         pixels:originalSource.atlasPixels,filter:'LINEAR'}):null;
-      const scene=createNativeSpatialScene(),eye=originalSource?
+      const scene=createNativeSpatialScene();view.scene=scene;
+      const eye=originalSource?
         [[2.4,1.25,3.5],[0,.3,4.8],[4.8,.15,0],[-2.4,1.3,-3.5]][i]:eyes[i];
       const basis=lookAtQuaternion(eye),center=originalSource?[.37,.48,-.03]:[0,0,0];
       const camera=scene.createCamera({position:eye.map((v,k)=>v+center[k]),rotation:basis.rotation,
@@ -400,10 +425,10 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
         scene.setRenderable(enode,{program:ep,mesh:eyeMesh,pass:'OPAQUE',
           cull:'NONE',bounds:{center:[0,0,0],radius:3}});
       }
-      const view={name:names[i],canvas,device,pipeline,program,mesh,scene,camera,basis};views.push(view);
+      Object.assign(view,{pipeline,program,mesh,camera,basis});
       add(canvas,'webglcontextlost',event=>{event.preventDefault();failed=true;status('WebGL context lost. Reload studio; no edit published.');});
     }
-  }catch(e){for(const v of views){try{v.device.dispose();}catch{}}throw e;}
+  }catch(e){releaseSculptStudioResources(views,listeners);throw e;}
   function drawAll(){assertReady();
     for(const v of views){
       const {canvas,device,pipeline,scene,camera}=v;
@@ -588,11 +613,14 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }catch(e){if(referenceImports.isCurrent(token))status('Reload rejected: '+e.message);}
     finally{if(referenceImports.isCurrent(token))event.target.value='';}
   });
-  drawAll();status(originalSource?'Original M1.3 protected reference: four native WebGL views.':'Ready: four actual synchronized engine WebGL views.');
+  try{
+    drawAll();
+    status(originalSource?'Original M1.3 protected reference: four native WebGL views.':'Ready: four actual synchronized engine WebGL views.');
+  }catch(error){releaseSculptStudioResources(views,listeners);throw error;}
   return Object.freeze({get session(){return session;},drawAll,updateAll,subdivide,
     saveState:()=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');return serializeSculptStudioState(session,stages,sourceMetadata);},
     loadState:text=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
     views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
     status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:originalSource?.originalPose??null,originalAtlasMapped:Boolean(originalSource)}),
-    dispose(){if(disposed)return;referenceImports.cancel();for(const f of listeners)f();for(const v of views){try{v.scene.dispose();v.device.dispose();}catch{}}disposed=true;}});
+    dispose(){if(disposed)return;referenceImports.cancel();releaseSculptStudioResources(views,listeners);disposed=true;}});
 }

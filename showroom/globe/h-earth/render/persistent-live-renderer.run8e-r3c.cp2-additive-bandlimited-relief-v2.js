@@ -750,6 +750,8 @@ void main(){
   float terrainReliefEnvelope=0.0;
   // Blend the approved soil's sunward lighting only into eligible ground.
   float worldSoilLightingWeight=0.0;
+  // Gen3311: soil-texture ownership survives downstream biome overlays.
+  float approvedSoilMaterialProtection=0.0;
   float materialSignal=clearingType>0.5?0.0:clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
@@ -996,6 +998,11 @@ void main(){
         float worldSoilAlbedoAuthority=mix(
           0.14,0.98,worldSoilCoastalAlbedoMix
         );
+        // Restore the approved Oct 10 texture-method priority on eligible soil.
+        // This uses existing slope/rock/coast eligibility, never a world box.
+        approvedSoilMaterialProtection=smoothstep(
+          0.12,0.80,worldSoilWeight*worldSoilAlbedoAuthority
+        );
         vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);
         palette=mix(palette,worldSoilFinal,worldSoilWeight);
         // The existing clearing directly lights its approved soil toward
@@ -1105,7 +1112,10 @@ void main(){
       );
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;
-      palette=mix(palette,identityBase,identityWeight);
+      // The photographed soil remains the substrate; identity may color only
+      // the residual natural material authority, not replace the soil image.
+      palette=mix(palette,identityBase,
+        identityWeight*(1.0-approvedSoilMaterialProtection));
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every
       // distance. Reuse the resident habitat signals and texture grain;
@@ -1155,7 +1165,10 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // Keep ecological foliage in the separate grass renderer. Do not stamp
+      // a second synthetic base color onto already-approved natural soil.
+      palette=mix(palette,groundcoverTone,
+        groundcoverWeight*(1.0-approvedSoilMaterialProtection));
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
@@ -1331,7 +1344,15 @@ void main(){
       habitatColorCoverage=gen3259OriginalHabitat
         +gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade;
     }
-    base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    // Preserve real woodland/ravine/coast habitat while preventing optional
+    // occupancy-driven material color from repainting eligible soil texels.
+    // Accepted grove/oasis/route protections retain original color behavior.
+    float nativeHabitatMaterial=clamp(max(habitatCoverage,habitatMaterialCoverage),0.0,1.0);
+    float approvedSoilHabitatProtection=vRoleCode==1u?
+      approvedSoilMaterialProtection*habitatMaterialProtection(vWorldPosition.xz)*
+      (1.0-nativeHabitatMaterial):0.0;
+    base=mix(base,habitatSoil,
+      habitatColorCoverage*.68*(1.0-approvedSoilHabitatProtection));
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

@@ -1291,13 +1291,13 @@
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "DGB_GRAPHICS_C2B_GEN3302_REPAIRED_WEBGL12_QUALIFICATION_DESCRIPTOR_V1",
-      "operationId": "DGB_GRAPHICS_C2B_GEN3302_REPAIRED_WEBGL12_QUALIFIER_BINDING_20261115_001",
+      "operationId": "DGB_GRAPHICS_C2B_GEN3303_REPAIRED_SOURCE_EXACT_BINDING_20261115_001",
       "operationClass": "DGB_GRAPHICS_C2B_GEN3302_REPAIRED_EXACT_HEAD_HTTP_WEBGL12_READONLY_QUALIFICATION",
       "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "DGB_GRAPHICS_C2B_GEN3302_REPAIRED_SERVED_WEBGL12_QUALIFIER_V1",
-      "exactToolingHead": "f042f9bd0be68407386d2fca23470b62760b0797",
+      "exactToolingHead": "75c800791d72c8b8e50146f6b9e301cd5acf49d5",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [
@@ -1347,7 +1347,7 @@
         "properties": {
           "candidateHead": {
             "type": "string",
-            "const": "8bb5ffa19596ac1829739c402884abfed903dd27"
+            "const": "2b6052f3b6beac1c6b0793ed8fa5279bea126778"
           },
           "executionHolder": {
             "type": "string",

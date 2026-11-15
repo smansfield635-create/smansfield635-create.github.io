@@ -397,7 +397,7 @@ export function createConnectedSculptTopologyCandidate({
     allPositions.push(...anchored);candidateRegions.push(v.region);
     provenance.push({sourceFace:v.sourceFace,barycentric:[...v.barycentric],normalOffset:v.normalOffset});
   }
-  const candidatePos=new Float32Array(allPositions),newFaceIndices=[],outputLineage=[],parentCounts=new Map(selectedFaces.map(i=>[i,0])),parentArea=new Map(selectedFaces.map(i=>[i,0]));
+  const candidatePos=new Float32Array(allPositions),newFaceIndices=[],outputLineage=[],parentCounts=new Map(selectedFaces.map(i=>[i,0])),parentArea=new Map(selectedFaces.map(i=>[i,0])),projectedArea=new Map(selectedFaces.map(i=>[i,0]));
   // Project a candidate vertex onto an asserted parent plane, requiring it
   // to lie inside the ORIGINAL parent triangle in source 2D barycentric space.
   function baryInFace(face,id){
@@ -419,11 +419,14 @@ export function createConnectedSculptTopologyCandidate({
     if(area<1e-8||dot(n,src.n)/area<0.2)throw new Error('C2A_REVERSED_OR_DEGENERATE_CHILD');
     parentCounts.set(child.sourceFace,parentCounts.get(child.sourceFace)+1);
     parentArea.set(child.sourceFace,parentArea.get(child.sourceFace)+area);
+    projectedArea.set(child.sourceFace,projectedArea.get(child.sourceFace)+dot(n,src.n));
     newFaceIndices.push(...ids);outputLineage.push(child.sourceFace);
   }
   for(const id of selectedFaces){
     const ratio=parentArea.get(id)/faceNormal(id).area;
     if(!parentCounts.get(id)||ratio<0.5||ratio>2)throw new Error('C2A_PARENT_FACE_COVERAGE_INVALID');
+    if(Math.abs(projectedArea.get(id)/faceNormal(id).area-1)>1e-3)
+      throw new Error('C2A_PROJECTED_PARENT_COVERAGE_INVALID');
   }
   const outputBoundaryCounts=new Map();
   for(let t=0;t<newFaceIndices.length;t+=3){
@@ -443,6 +446,9 @@ export function createConnectedSculptTopologyCandidate({
   const remaining=[];
   for(let f=0;f<faceCount;f++)if(!selected.has(f))remaining.push(...getFace(f));
   const candidateFaces=new Uint32Array([...remaining,...newFaceIndices]);
+  const usedVertices=new Set(newFaceIndices);
+  for(let i=vertexCount;i<candidatePos.length/3;i++)if(!usedVertices.has(i))
+    throw new Error('C2A_ORPHAN_NEW_VERTEX');
   verifySculptGeometry(candidatePos,candidateFaces);
 
   let render=null,rawHandoff=null;
@@ -478,16 +484,27 @@ export function createConnectedSculptTopologyCandidate({
     replacementFaces:replacementFaces.map(v=>({sourceFace:v.sourceFace,indices:[...v.indices]})),uvHandoff:rawHandoff,
     geometry:{positions:[...candidatePos],triangles:[...candidateFaces]}};
   const serialized=JSON.stringify(recipe);
+  // Freeze an immutable envelope AND do not leak internal typed-array buffers.
+  // Object.freeze({ positions: typedArray }) does NOT freeze typed-array elements.
+  const sealedProvenance=Object.freeze(provenance.map(v=>Object.freeze({
+    sourceFace:v.sourceFace,barycentric:Object.freeze([...v.barycentric]),normalOffset:v.normalOffset})));
   return Object.freeze({schema:recipe.schema,sourceId,
-    positions:candidatePos,triangles:candidateFaces,regions:Object.freeze(candidateRegions),
+    get positions(){return new Float32Array(candidatePos);},
+    get triangles(){return new Uint32Array(candidateFaces);},
+    regions:Object.freeze(candidateRegions),
     protectedVertices:Object.freeze([...protectedVertices]),sourceFaceLineage:Object.freeze(outputLineage),
-    sourceVertexLineage:Object.freeze(provenance),render,
+    sourceVertexLineage:sealedProvenance,
+    get render(){return render===null?null:Object.freeze({
+      renderToMaster:new Uint32Array(render.renderToMaster),uvs:new Float32Array(render.uvs),
+      triangles:new Uint32Array(render.triangles),originalRenderVertexCount:render.originalRenderVertexCount,
+      originalUvPrefixPreserved:render.originalUvPrefixPreserved,
+      sourceFaceCornerLineagePreserved:render.sourceFaceCornerLineagePreserved});},
     counts:Object.freeze({sourceFaces:faceCount,replacedFaces:selectedFaces.length,outputFaces:candidateFaces.length/3,addedVertices:newVertices.length}),
     serialize:()=>serialized});
 }
 /** Deterministic re-execution of the complete, source-owned edit. A forged geometry
  * payload, UV seam, parent identity or topology cannot be adopted on load. */
-export function restoreConnectedSculptTopologyCandidate(serialized){
+export function restoreConnectedSculptTopologyCandidate(serialized,trustedSource){
   let x;try{x=JSON.parse(serialized);}catch{throw new TypeError('C2A_SAVE_JSON_INVALID');}
   if(x?.schema!=='DGB_SCULPT_CONNECTED_TOPOLOGY_EDIT_v2'||!x.original||!x.geometry||
     !Array.isArray(x.original.positions)||!Array.isArray(x.original.triangles)||
@@ -495,8 +512,27 @@ export function restoreConnectedSculptTopologyCandidate(serialized){
     x.original.positions.some(t=>!finite(t))||x.original.triangles.some(t=>!Number.isSafeInteger(t)||t<0)||
     x.geometry.positions.some(t=>!finite(t))||x.geometry.triangles.some(t=>!Number.isSafeInteger(t)||t<0))
     throw new TypeError('C2A_SAVE_SCHEMA_INVALID');
+  // A stored sourceId is a claim, not trust. Compare every original source byte
+  // and UV seam to an independently supplied, trusted source before replay.
+  if(!trustedSource || trustedSource.sourceId!==x.sourceId ||
+    !(trustedSource.positions instanceof Float32Array)||
+    !(trustedSource.triangles instanceof Uint16Array||trustedSource.triangles instanceof Uint32Array)||
+    !Array.isArray(trustedSource.regions)||!Array.isArray(trustedSource.protectedVertices))
+    throw new Error('C2A_TRUSTED_SOURCE_REQUIRED');
+  const exact=(a,b)=>JSON.stringify(Array.from(a))===JSON.stringify(b);
+  if(!exact(trustedSource.positions,x.original.positions)||!exact(trustedSource.triangles,x.original.triangles)||
+    !exact(trustedSource.regions,x.original.regions)||
+    !exact([...trustedSource.protectedVertices].sort((a,b)=>a-b),x.original.protectedVertices))
+    throw new Error('C2A_TRUSTED_SOURCE_IDENTITY_MISMATCH');
+  if((trustedSource.uvHandoff===null||trustedSource.uvHandoff===undefined)!==(x.uvHandoff===null))
+    throw new Error('C2A_TRUSTED_UV_IDENTITY_MISMATCH');
   let uv=null;
   if(x.uvHandoff!==null){
+    const originalUv=trustedSource.uvHandoff;
+    if(!originalUv||!exact(originalUv.renderToMaster,x.uvHandoff.renderToMaster)||
+      !exact(originalUv.uvs,x.uvHandoff.uvs)||
+      !exact(originalUv.faceRenderCorners,x.uvHandoff.faceRenderCorners))
+      throw new Error('C2A_TRUSTED_UV_IDENTITY_MISMATCH');
     const h=x.uvHandoff;if(!h||!Array.isArray(h.renderToMaster)||!Array.isArray(h.uvs)||!Array.isArray(h.faceRenderCorners)||
       h.renderToMaster.some(t=>!Number.isSafeInteger(t)||t<0)||
       h.faceRenderCorners.some(t=>!Number.isSafeInteger(t)||t<0)||h.uvs.some(t=>!finite(t)))

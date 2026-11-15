@@ -51,6 +51,44 @@ function coplanarTrianglesOverlap(a,b,c,d,e,f){
   }
   return true;
 }
+// For noncoplanar triangles, the line of intersection can run through both
+// face interiors even when *every* edge/plane contact ends on a boundary.
+// Clipping both faces against the opposing plane and testing an overlap midpoint
+// closes that gap without rejecting legal shared-edge or shared-vertex contact.
+function noncoplanarInteriorOverlap(a,b,c,d,e,f){
+  const A=[a,b,c],B=[d,e,f],nA=cross(sub(b,a),sub(c,a)),nB=cross(sub(e,d),sub(f,d));
+  const sizeA=Math.hypot(...nA),sizeB=Math.hypot(...nB);
+  const axis=cross(nA,nB),axisLength=Math.hypot(...axis);
+  if(axisLength <= 1e-12*sizeA*sizeB)return false;
+  const direction=mul(axis,1/axisLength);
+  const edges=tri=>Math.max(...tri.map((v,i)=>Math.hypot(...sub(v,tri[(i+1)%3]))));
+  const eps=Math.max(1e-12,1e-10*Math.max(edges(A),edges(B)));
+  function cut(tri,otherNormal,otherOrigin,normalSize){
+    const dist=tri.map(p=>dot(otherNormal,sub(p,otherOrigin))/normalSize),hits=[];
+    function append(q){if(!hits.some(p=>Math.hypot(...sub(p,q))<=eps))hits.push(q);}
+    for(let i=0;i<3;i++){
+      const j=(i+1)%3,di=dist[i],dj=dist[j];
+      if(Math.abs(di)<=eps)append(tri[i]);
+      if((di>eps&&dj< -eps)||(di< -eps&&dj>eps)){
+        const t=di/(di-dj);append(add(tri[i],mul(sub(tri[j],tri[i]),t)));
+      }
+    }
+    return hits.map(point=>({point,t:dot(point,direction)})).sort((x,y)=>x.t-y.t);
+  }
+  const ca=cut(A,nB,d,sizeB),cb=cut(B,nA,a,sizeA);
+  if(ca.length<2||cb.length<2)return false;
+  const low=Math.max(ca[0].t,cb[0].t),high=Math.min(ca.at(-1).t,cb.at(-1).t);
+  if(high-low<=eps)return false;
+  const mid=(low+high)*.5,first=ca[0],last=ca.at(-1);
+  const t=(mid-first.t)/(last.t-first.t),point=add(first.point,mul(sub(last.point,first.point),t));
+  function strictlyInside(tri,normal){
+    const [p,q,r]=tri,den=dot(normal,normal);
+    const weights=[cross(sub(q,point),sub(r,point)),cross(sub(r,point),sub(p,point)),cross(sub(p,point),sub(q,point))]
+      .map(x=>dot(x,normal)/den);
+    return weights.every(w=>w>1e-7);
+  }
+  return strictlyInside(A,nA)&&strictlyInside(B,nB);
+}
 function trianglesIntersect(a,b,c,d,e,f){
   const mn=u=>[Math.min(...u.map(v=>v[0])),Math.min(...u.map(v=>v[1])),Math.min(...u.map(v=>v[2]))];
   const mx=u=>[Math.max(...u.map(v=>v[0])),Math.max(...u.map(v=>v[1])),Math.max(...u.map(v=>v[2]))];
@@ -58,7 +96,8 @@ function trianglesIntersect(a,b,c,d,e,f){
   if([0,1,2].some(k=>ax[k]<bm[k]-1e-10||bx[k]<am[k]-1e-10))return false;
   if(coplanarTrianglesOverlap(a,b,c,d,e,f))return true;
   return [[a,b],[b,c],[c,a]].some(([p,q])=>segmentTriangle(p,q,d,e,f))||
-    [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c));
+    [[d,e],[e,f],[f,d]].some(([p,q])=>segmentTriangle(p,q,a,b,c))||
+    noncoplanarInteriorOverlap(a,b,c,d,e,f);
 }
 /** Independent callers can verify each edited geometry before GPU display/export. */
 export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=true}={}){
@@ -398,9 +437,11 @@ export function createConnectedSculptTopologyCandidate({
   // to lie inside the ORIGINAL parent triangle in source 2D barycentric space.
   function baryInFace(face,id){
     const [i,j,k]=getFace(face),a=pos(original,i),b=pos(original,j),c=pos(original,k),p=pos(candidatePos,id),
-      u=sub(b,a),v=sub(c,a),w=sub(p,a),d00=dot(u,u),d01=dot(u,v),d11=dot(v,v),d20=dot(w,u),d21=dot(w,v),den=d00*d11-d01*d01;
-    if(Math.abs(den)<1e-12)throw new Error('C2A_SOURCE_FACE_DEGENERATE');
-    const beta=(d11*d20-d01*d21)/den,gamma=(d00*d21-d01*d20)/den,alpha=1-beta-gamma;
+      u=sub(b,a),v=sub(c,a),w=sub(p,a),n=cross(u,v),den=dot(n,n);
+    // Match verifySculptGeometry's doubled-area floor (1e-8); do not
+    // subtract near-equal Gram terms for skinny but valid source faces.
+    if(den<1e-16)throw new Error('C2A_SOURCE_FACE_DEGENERATE');
+    const beta=dot(cross(w,v),n)/den,gamma=dot(cross(u,w),n)/den,alpha=1-beta-gamma;
     if([alpha,beta,gamma].some(t=>t < -1e-4||t > 1+1e-4))throw new Error('C2A_FALSE_PARENT_FACE_LINEAGE');
     return [alpha,beta,gamma];
   }
@@ -439,9 +480,12 @@ export function createConnectedSculptTopologyCandidate({
   for(const entries of outputBoundaryCounts.values())if(entries.length===2&&
     (entries[0].a!==entries[1].b||entries[0].b!==entries[1].a))
     throw new Error('C2A_REPLACEMENT_WINDING_INVALID');
-  const remaining=[];
-  for(let f=0;f<faceCount;f++)if(!selected.has(f))remaining.push(...getFace(f));
+  const remaining=[],remainingLineage=[];
+  for(let f=0;f<faceCount;f++)if(!selected.has(f)){
+    remaining.push(...getFace(f));remainingLineage.push(f);
+  }
   const candidateFaces=new Uint32Array([...remaining,...newFaceIndices]);
+  const fullOutputLineage=[...remainingLineage,...outputLineage];
   const usedVertices=new Set(newFaceIndices);
   for(let i=vertexCount;i<candidatePos.length/3;i++)if(!usedVertices.has(i))
     throw new Error('C2A_ORPHAN_NEW_VERTEX');
@@ -488,7 +532,7 @@ export function createConnectedSculptTopologyCandidate({
     get positions(){return new Float32Array(candidatePos);},
     get triangles(){return new Uint32Array(candidateFaces);},
     regions:Object.freeze(candidateRegions),
-    protectedVertices:Object.freeze([...protectedVertices]),sourceFaceLineage:Object.freeze(outputLineage),
+    protectedVertices:Object.freeze([...protectedVertices]),sourceFaceLineage:Object.freeze(fullOutputLineage),
     sourceVertexLineage:sealedProvenance,
     get render(){return render===null?null:Object.freeze({
       renderToMaster:new Uint32Array(render.renderToMaster),uvs:new Float32Array(render.uvs),
@@ -510,15 +554,16 @@ export function restoreConnectedSculptTopologyCandidate(serialized,trustedSource
     throw new TypeError('C2A_SAVE_SCHEMA_INVALID');
   // A stored sourceId is a claim, not trust. Compare every original source byte
   // and UV seam to an independently supplied, trusted source before replay.
+  const trustedProtected=trustedSource?.protectedVertices===undefined?[]:trustedSource.protectedVertices;
   if(!trustedSource || trustedSource.sourceId!==x.sourceId ||
     !(trustedSource.positions instanceof Float32Array)||
     !(trustedSource.triangles instanceof Uint16Array||trustedSource.triangles instanceof Uint32Array)||
-    !Array.isArray(trustedSource.regions)||!Array.isArray(trustedSource.protectedVertices))
+    !Array.isArray(trustedSource.regions)||!Array.isArray(trustedProtected))
     throw new Error('C2A_TRUSTED_SOURCE_REQUIRED');
   const exact=(a,b)=>JSON.stringify(Array.from(a))===JSON.stringify(b);
   if(!exact(trustedSource.positions,x.original.positions)||!exact(trustedSource.triangles,x.original.triangles)||
     !exact(trustedSource.regions,x.original.regions)||
-    !exact([...trustedSource.protectedVertices].sort((a,b)=>a-b),x.original.protectedVertices))
+    !exact([...trustedProtected].sort((a,b)=>a-b),x.original.protectedVertices))
     throw new Error('C2A_TRUSTED_SOURCE_IDENTITY_MISMATCH');
   if((trustedSource.uvHandoff===null||trustedSource.uvHandoff===undefined)!==(x.uvHandoff===null))
     throw new Error('C2A_TRUSTED_UV_IDENTITY_MISMATCH');
@@ -537,7 +582,8 @@ export function restoreConnectedSculptTopologyCandidate(serialized,trustedSource
   }
   const result=createConnectedSculptTopologyCandidate({sourceId:x.sourceId,positions:new Float32Array(x.original.positions),
     triangles:new Uint32Array(x.original.triangles),regions:x.original.regions,protectedVertices:x.original.protectedVertices,
-    selectedFaces:x.selectedFaces,newVertices:x.newVertices,replacementFaces:x.replacementFaces,uvHandoff:uv});
+    selectedFaces:x.selectedFaces,newVertices:x.newVertices,replacementFaces:x.replacementFaces,
+    uvHandoff:uv,animation:trustedSource.animation});
   if(JSON.stringify([...result.positions])!==JSON.stringify(x.geometry.positions)||
     JSON.stringify([...result.triangles])!==JSON.stringify(x.geometry.triangles)||
     result.serialize()!==serialized)throw new Error('C2A_SAVE_OR_SOURCE_IDENTITY_DRIFT');

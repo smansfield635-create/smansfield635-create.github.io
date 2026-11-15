@@ -315,7 +315,7 @@ test('Gen3288 four exact-source material operands preserve product bytes',async(
   const matcher=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
   assert.ok(matcher.includes("gen3286VerifySource(dir,anyBrowserVariation?'baseline':label)"));
   assert.ok(matcher.includes('passes:anyBrowserVariation?3:8'));
-  assert.ok(matcher.includes("(scout||browserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
+  assert.ok(matcher.includes("(scout||anyBrowserVariation)?[GEN3286_MATCHED.viewports.find(v=>v.id==='desktop')]") );
   assert.ok(matcher.includes('receipt.views.length!==16||receipt.comparisons.length!==12'));
   for(const mode of m.GEN3288_CAUSAL_MODES.slice(1)){
     const candidate=m.gen3288CausalShaderSource(baseline,mode);

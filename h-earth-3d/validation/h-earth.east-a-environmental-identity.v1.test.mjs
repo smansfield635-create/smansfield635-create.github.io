@@ -70,7 +70,7 @@ test('Original approved soil remains the substrate after regional and habitat co
   const owner=source.indexOf('approvedSoilMaterialProtection=smoothstep(');
   const identity=source.indexOf('palette=mix(palette,identityBase,');
   const groundcover=source.indexOf('palette=mix(palette,groundcoverTone,');
-  const habitat=source.indexOf('float approvedSoilHabitatProtection=vRoleCode==1u?');
+  const habitat=source.indexOf('float approvedSoilHabitatProtection=(vRoleCode==1u&&!geologicalEarthRock)?');
   assert.ok(soil>0&&soil<owner&&owner<identity&&identity<groundcover&&groundcover<habitat);
   assert.match(source,/approvedSoilMaterialProtection=smoothstep\(\s*0\.12,0\.80,worldSoilWeight\*worldSoilAlbedoAuthority/);
   assert.match(source,/identityWeight\*\(1\.0-approvedSoilMaterialProtection\)/);
@@ -94,7 +94,7 @@ test('Material-owner protection is continuous and protects native regions', () =
     assert.equal(owner*0,0,'protected grove/oasis gate prevents non-native overlay alteration');
   }
   assert.ok(source.includes('habitatMaterialProtection(vWorldPosition.xz)'));
-  assert.ok(source.includes('vRoleCode==1u?'));
+  assert.ok(source.includes('(vRoleCode==1u&&!geologicalEarthRock)?'));
 });
 
 test('Stage A does not alter canonical B2 terrain or successor material source bytes', () => {

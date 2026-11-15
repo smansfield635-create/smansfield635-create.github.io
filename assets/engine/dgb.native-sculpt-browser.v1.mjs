@@ -349,12 +349,17 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     const result=replaceFourSculptViewMeshes(views,previous,replacement,drawAll,
       ()=>{failed=true;});
     session=nextSession;uv=nextUv;stages=nextStages;selectedFace=null;
+    if(controls.faceIndex){
+      controls.faceIndex.value='';
+      controls.faceIndex.max=String(session.getTriangles().length/3-1);
+    }
     fixtureSource=nextFixture;sourceMetadata=nextSource;
     return result;
   }
   function subdivide(faceIndex=selectedFace){
     assertReady();
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
+    validateSculptFaceIndex(faceIndex,session.getTriangles().length/3);
     const before=session.serialize(),candidate=makeSculptSubdivision(session,uv,fixtureSource.protectedVertices??[],faceIndex,stages.length);
     const nextSession=createSculptSession({positions:candidate.positions,triangles:candidate.triangles,
       regions:[...candidate.regions],protectedVertices:[...candidate.protectedVertices]});
@@ -370,6 +375,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     const ray=sculptScreenRay({...local,width:v.canvas.width,height:v.canvas.height,viewProjection:vp});
     const hit=session.pick(ray.origin,ray.direction);if(!hit){status('No surface intersected.');return;}
     selectedFace=hit.triangle;
+    if(controls.faceIndex)controls.faceIndex.value=String(selectedFace);
     const mode=controls.mode.value, organic=mode.startsWith('ORGANIC_');
     const radius=Number(controls.radius.value);
     const fieldRadii=organic?['fieldX','fieldY','fieldZ'].map(k=>radius*Number(controls[k]?.value??1)):null;
@@ -411,8 +417,32 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   function operate(fn,label){try{assertReady();if(active){session.cancelStroke();active=null;}const changed=fn();if(changed)updateAll();status(label+(changed?' complete.':' no available edit.'));}catch(e){status(label+' failed: '+e.message);}}
   add(controls.undo,'click',()=>operate(()=>session.undo(),'Undo'));
   add(controls.redo,'click',()=>operate(()=>session.redo(),'Redo'));
+  // Keyboard-accessible numeric face selection uses exactly the same
+  // selectedFace state as pointer picking; neither path bypasses C2-A guards.
+  if(controls.faceIndex){
+    controls.faceIndex.max=String(session.getTriangles().length/3-1);
+    add(controls.faceIndex,'input',event=>{
+      try{
+        assertReady();
+        if(active)throw new Error('STUDIO_STROKE_ACTIVE');
+        const raw=String(event.target.value);
+        if(!/^(0|[1-9][0-9]*)$/.test(raw))
+          throw new RangeError('STUDIO_SELECTED_FACE_INVALID');
+        selectedFace=validateSculptFaceIndex(Number(raw),session.getTriangles().length/3);
+        status('Selected triangle '+selectedFace+' using keyboard-accessible face index.');
+      }catch(error){
+        selectedFace=null;
+        status('Face selection rejected: '+error.message);
+      }
+    });
+  }
   if(controls.subdivide)add(controls.subdivide,'click',()=>{
-    try{subdivide();}catch(error){status('Topology edit rejected: '+error.message);}
+    try{
+      if(controls.faceIndex && controls.faceIndex.value!=='')
+        selectedFace=validateSculptFaceIndex(Number(controls.faceIndex.value),
+          session.getTriangles().length/3);
+      subdivide();
+    }catch(error){status('Topology edit rejected: '+error.message);}
   });
   if(controls.reference)add(controls.reference,'change',async event=>{
     const file=event.target.files?.[0];if(!file)return;

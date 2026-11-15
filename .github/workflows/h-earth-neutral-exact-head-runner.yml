@@ -1202,6 +1202,134 @@ jobs:
 
 
   # Gen3287: independently admitted Gen3259/Gen3286 visual comparator.
+  # Gen3287 exact native source proof: passive same-PR CI, no new dispatch.
+  gen3287-indexed-vertex-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout bounded exact tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout immutable accepted Gen3259 source
+        uses: actions/checkout@v4
+        with:
+          ref: f05d97d402f27b640e8776a0c9f0851524db0fa0
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Read exact native indexed vertex and material attributes
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NATIVE_JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import {gunzipSync} from 'node:zlib';
+          import {execFileSync} from 'node:child_process';
+          import {pathToFileURL} from 'node:url';
+          const root=path.resolve('../baseline'),out=path.resolve(process.env.RUNNER_TEMP,'gen3287-native');
+          fs.mkdirSync(out,{recursive:true});
+          const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+          const expectedHead='f05d97d402f27b640e8776a0c9f0851524db0fa0';
+          const sourceHead=execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          if(sourceHead!==expectedHead)throw Error('ACCEPTED_HEAD_NOT_EXACT');
+          const archivePath=path.join(root,'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
+          const archiveBytes=fs.readFileSync(archivePath),archiveSha256=sha(archiveBytes);
+          if(archiveSha256!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_ARCHIVE_SHA_MISMATCH');
+          const archive=JSON.parse(gunzipSync(archiveBytes).toString('utf8'));
+          if(!archive.canonical?.buffers?.indices||!archive.raw?.buffers?.indices)throw Error('CANONICAL_ARCHIVE_SCHEMA_INVALID');
+          const mod=rel=>import(pathToFileURL(path.join(root,rel)).href);
+          const [pkgModule,gpuModule,matModule,soilModule]=await Promise.all([
+            mod('showroom/globe/h-earth/render/live-render-package.run8e-r2.js'),
+            mod('showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js'),
+            mod('h-earth-3d/environment/h-earth.successor-surface-material.run8c.js'),
+            mod('showroom/globe/h-earth/render/geometry-landscape-cover.js')
+          ]);
+          const actual=pkgModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
+          if(actual?.eligible!==true)throw Error('RUNTIME_PACKAGE_INELIGIBLE:'+JSON.stringify(actual?.issues));
+          const gpu=gpuModule.createHEarthRun8ER2DCanonicalGPUUploadViews(actual,{enableWoodlandClearing:true});
+          const archived=archive.canonical.buffers,source=actual.buffers;
+          const spans=(actual.primitiveSpans||[]).filter(x=>x.role==='TERRAIN');
+          if(spans.length!==1||spans[0].primitiveIndex!==0||spans[0].vertexStart!==0)throw Error('TERRAIN_PRIMITIVE_NOT_ORIGINAL_ZERO');
+          const W=97,X0=-384,Z0=-736,S=8,row=64,col=67,index=row*W+col;
+          if(index!==6275)throw Error('INDEX_GRID_CANDIDATE_DRIFT');
+          const list=(a,start,count)=>[...a.slice(start,start+count)].map(Number);
+          function point(r,c){
+            const i=r*W+c,x=X0+c*S,z=Z0+r*S;
+            const m=matModule.sampleHEarthRun8CSuccessorSurfaceMaterial(x,z);
+            if(m?.valid!==true)throw Error('MATERIAL_SAMPLE_REJECTED:'+i);
+            return {i,r,c,x,z,position:list(gpu.positions,i*3,3),
+              archivePosition:list(archived.positions,i*3,3),
+              archiveNormal:list(archived.normals,i*3,3),
+              archiveBase:list(archived.baseColorsLinear,i*4,4),
+              sourceNormal:list(source.normals,i*3,3),
+              gpuNormal:list(gpu.normals,i*3,3),
+              sourceBase:list(source.baseColorsLinear,i*4,4),
+              gpuBase:list(gpu.baseColorsLinear,i*4,4),
+              role:Number(gpu.roleCodes[i]),sourceClassCode:Number(source.surfaceClassCodes[i]),
+              material:{surfaceClass:m.surfaceClass,landformClass:m.landformClass,
+                slope:m.slope,rockExposure:m.rockExposure,
+                baseColorProfile:m.baseColorProfile,
+                calculatedLandscapeSoilColor:soilModule.landscapeSoilColor(m,x,z)}};
+          }
+          const incident=[
+            [12229,6178,6274,6275],[12230,6178,6275,6179],[12231,6179,6275,6276],
+            [12420,6274,6371,6275],[12421,6275,6371,6372],[12422,6275,6372,6276]
+          ].map(([triangle,...expected])=>{
+            const indexOffset=triangle*3;
+            const actualIds=list(source.indices,indexOffset,3);
+            return {triangle,indexOffset,expected,actualIds,exactMatch:JSON.stringify(expected)===JSON.stringify(actualIds)};
+          });
+          const neighborhood=[];
+          for(let r=row-2;r<=row+2;r++)for(let c=col-2;c<=col+2;c++)neighborhood.push(point(r,c));
+          const meadow=[[-139.40268,-194.5],[-141,-226]].map(([x,z])=>({
+            cameraXZ:[x,z],nearestGridVertex:point(Math.round((z-Z0)/S),Math.round((x-X0)/S))
+          }));
+          const edges=[];
+          for(const a of neighborhood)for(const b of neighborhood){
+            if(a.i>=b.i||Math.hypot(a.x-b.x,a.z-b.z)>S+1e-7)continue;
+            const delta=b.gpuBase.slice(0,3).map((v,i)=>v-a.gpuBase[i]);
+            const nDot=a.gpuNormal.reduce((sum,v,i)=>sum+v*b.gpuNormal[i],0);
+            const norm=Math.hypot(...a.gpuNormal)*Math.hypot(...b.gpuNormal);
+            const angle=Math.acos(Math.min(1,Math.max(-1,nDot/norm)))*180/Math.PI;
+            edges.push({vertices:[a.i,b.i],baseColorDelta:delta,baseDeltaMagnitude:Math.hypot(...delta),
+              normalAngleDegrees:angle,surfaceClassTransition:a.material.surfaceClass!==b.material.surfaceClass,
+              landformTransition:a.material.landformClass!==b.material.landformClass});
+          }
+          edges.sort((a,b)=>b.baseDeltaMagnitude-a.baseDeltaMagnitude);
+          const report={schema:'H_EARTH_GEN3287_SOURCE_VERTEX_NATIVE_READONLY_v1',sourceHead,archiveSha256,
+            status:'EXACT_ACCEPTED_RUNTIME_SOURCE_INSPECTED',productMutation:false,rendererMutation:false,ownerAcceptance:false,
+            packageIdentity:actual.packageIdentity,packageContentDigest:actual.contentDigest,
+            terrainSpan:{primitiveIndex:spans[0].primitiveIndex,primitiveId:spans[0].primitiveId,
+              vertexStart:spans[0].vertexStart,indexStart:spans[0].indexStart,vertexCount:spans[0].vertexCount},
+            candidate:point(row,col),incident,
+            allIncidentIndexTripletsMatch:incident.every(x=>x.exactMatch),
+            vertexXZMatchesProjection:Math.abs(point(row,col).position[0]-152)<0.01&&Math.abs(point(row,col).position[2]+224)<0.01,
+            neighborhood,meadowReferenceSamples:meadow,largestAdjacentColorDeltas:edges.slice(0,20),
+            claimCeiling:'Native archive + approved deferred runtime/GPU attribute values, not a verified owner-specific fragment/triangle or visual repair.'};
+          const file=path.join(out,'source-vertex-native.json');
+          fs.writeFileSync(file,JSON.stringify(report,null,2)+'\n');
+          console.log(JSON.stringify({file,status:report.status,candidateY:report.candidate.position[1],material:report.candidate.material.surfaceClass,
+            facesExact:report.allIncidentIndexTripletsMatch,xzExact:report.vertexXZMatchesProjection,artifactSha:sha(fs.readFileSync(file))}));
+          if(!report.allIncidentIndexTripletsMatch||!report.vertexXZMatchesProjection||report.candidate.role!==1)throw Error('GEN3287_CANDIDATE_SOURCE_CERTIFICATION_FAILED');
+          
+          NATIVE_JS
+      - name: Preserve source-buffer evidence even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3287-native-vertex-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen3287-native
+          if-no-files-found: warn
+          retention-days: 30
   gen3287-matched-material-gpu:
     if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3286-matched-webgl-verifier-20261114' }}
     runs-on: ubuntu-24.04

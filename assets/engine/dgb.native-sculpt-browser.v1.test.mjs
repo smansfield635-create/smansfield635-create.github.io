@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -83,4 +83,49 @@ test('C2-B original Sculpt Lab exposes human topology action and updated source 
   assert.match(browser,/restoreConnectedSculptTopologyCandidate/);
   assert.match(browser,/view\.device\.replaceMesh\(view\.mesh,replacement\)/);
   assert.match(browser,/get session\(\)\{return session;/);
+});
+
+
+test('C2-B image RGBA reference uses bounded silhouette heuristic and preserves seed UVs',()=>{
+  const width=12,height=12,data=new Uint8ClampedArray(width*height*4);
+  for(let i=0;i<width*height;i++){
+    const inside=((i%width)-6)**2+(Math.floor(i/width)-6)**2<16;
+    for(let k=0;k<3;k++)data[4*i+k]=inside?0:255;
+    data[4*i+3]=255;
+  }
+  const mask=makeReferenceMaskFromRgba({width,height,data});
+  assert.equal(mask.mask.reduce((n,x)=>n+x,0),45);
+  const generated=makeSculptReferenceFixture(mask);
+  assert.equal(generated.positions.length/3,454);
+  assert.equal(generated.triangles.length/3,904);
+  const session=createSculptSession(generated);
+  const uv=makeSculptUvHandoff(session.getPositions(),session.getTriangles(),generated.uvs);
+  assert.deepEqual([...uv.uvs],[...generated.uvs]);
+  const spec=sculptMeshSpecification(session,uv);
+  assert.equal(spec.indices.length,generated.triangles.length);
+  assert.throws(()=>makeReferenceMaskFromRgba({width:4,height:4,data:new Uint8ClampedArray(64)}),/STUDIO_REFERENCE_IMAGE_INVALID/);
+  assert.throws(()=>makeReferenceMaskFromRgba({width:12,height:12,data:new Uint8ClampedArray(576)}),/STUDIO_REFERENCE_MASK_NO_CONTRAST/);
+});
+test('C2-B reference source mask persists through v2 save, trusted C2-A edit and reload',()=>{
+  const width=12,height=12,mask=Array.from({length:144},(_,i)=>
+    ((i%12)-6)**2+(Math.floor(i/12)-6)**2<16?1:0);
+  const reference={width,height,mask},metadata={kind:'SILHOUETTE_HEURISTIC_PRIOR',...reference};
+  const fixture=makeSculptReferenceFixture(reference),session=createSculptSession(fixture),
+    uv=makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs);
+  const neutral=makeNeutralSculptRegionFixture();
+  const unedited=serializeSculptStudioState(session,[],metadata);
+  assert.equal(JSON.parse(unedited).schema,'DGB_SCULPT_LAB_TOPOLOGY_CHAIN_V2');
+  const plain=restoreSculptStudioState(unedited,neutral);
+  assert.equal(plain.stages.length,0);
+  assert.deepEqual([...plain.session.getTriangles()],[...session.getTriangles()]);
+  const edit=makeSculptSubdivision(session,uv,fixture.protectedVertices,191,0);
+  const next=createSculptSession({positions:edit.positions,triangles:edit.triangles,
+    regions:[...edit.regions],protectedVertices:[...edit.protectedVertices]});
+  const saved=serializeSculptStudioState(next,[{before:session.serialize(),recipe:edit.serialize()}],metadata);
+  const restored=restoreSculptStudioState(saved,neutral);
+  assert.equal(restored.stages.length,1);
+  assert.deepEqual([...restored.session.getTriangles()],[...next.getTriangles()]);
+  assert.deepEqual([...restored.uv.uvs],[...edit.render.uvs]);
+  const corrupt=JSON.parse(saved);corrupt.source.mask[1]=2;
+  assert.throws(()=>restoreSculptStudioState(JSON.stringify(corrupt),neutral),/SILHOUETTE_INVALID/);
 });

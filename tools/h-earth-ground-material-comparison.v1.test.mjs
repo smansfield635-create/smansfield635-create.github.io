@@ -298,7 +298,7 @@ test('Gen3287 scout uses desktop canvas-relative genuine pointer interaction and
   const gen3286Section=source.slice(source.indexOf('export async function runGen3286('),source.indexOf('export async function run(argv){'));
   assert.ok(!gen3286Section.includes('page.mouse.move(160,240);await page.mouse.down()'));
   assert.ok(source.includes('page.mouse.move(160,240);await page.mouse.down()')); // immutable historical Gen3142 profile
-  assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'));
+  assert.ok(workflow.includes("'GEN3287_R8_SOIL_SLOPE_CAUSAL_V1'"));
   assert.ok(workflow.includes('ref: f05d97d402f27b640e8776a0c9f0851524db0fa0'));
   assert.ok(workflow.includes('ref: 76637b3afbf846746200d78155a36e193de488eb'));
 });
@@ -396,9 +396,9 @@ test('Gen3287 R8 single-factor browser-only ridge soil-slope eligibility preserv
 
 test('Gen3287 R8 yields WebGL frames while immutable tree queue is loading and maintains readiness gate',()=>{
  const source=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(source.includes("const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope,queue);"));
- assert.ok(source.includes("const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope})=>{"));
- assert.ok(source.includes("},{pose,sequence:++sequence,surfaceAttribution,r8Slope});"));
+ assert.ok(source.includes("const presented=globalThis.__groundShouldPresentAssetSettleFrame(surfaceAttribution||r8Slope||r10,queue);"));
+ assert.ok(source.includes("const check=await page.evaluate(async({pose,sequence,surfaceAttribution,r8Slope,r10})=>{"));
+ assert.ok(source.includes("},{pose,sequence:++sequence,surfaceAttribution,r8Slope,r10});"));
  assert.equal(shouldPresentAssetSettleFrame(true,{loading:true}),false);
  assert.equal(shouldPresentAssetSettleFrame(true,{loading:false}),true);
  assert.equal(shouldPresentAssetSettleFrame(false,{loading:true}),true); // preserve historical profile
@@ -409,4 +409,44 @@ test('Gen3287 R8 yields WebGL frames while immutable tree queue is loading and m
  pending.treeCollection.entries[0].state='READY';
  pending.treeCollection.entries[0].ready=true;
  assert.equal(assetReadiness(pending,{x:-139,z:-194}).ready,true);
+});
+
+test('H-Earth R10 compares one accepted shader at identical ridge cameras with exactly three reversible display modes',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.deepEqual(m.GEN3287_R10_MODES,['baseline','prelight-albedo','light-response']);
+ assert.equal(m.gen3287R10MaterialLightingSource(source,'baseline'),source);
+ const output='outColor=vec4(lit,outputAlpha);';
+ assert.equal(source.split(output).length-1,1);
+ for(const mode of m.GEN3287_R10_MODES.slice(1)){
+   const changed=m.gen3287R10MaterialLightingSource(source,mode);
+   assert.notEqual(changed,source);
+   assert.equal(changed.split(output).length-1,1);
+   assert.equal(changed.split('float r10RidgeDisplayWindow=').length-1,1);
+   assert.ok(changed.includes('vRoleCode==1u && vPrimitiveIndex==0u && vSurfaceClassCode==6u'));
+   assert.ok(changed.includes('distance(vWorldPosition.xz,vec2(152.0,-224.0))'));
+   assert.ok(changed.includes('vec3 geometricNormal=normalize(vNormal);'));
+   assert.ok(changed.includes('resources.singleOwnerVegetation?.draw(packet);'));
+   assert.ok(changed.includes('base=mix(base,habitatSoil,habitatColorCoverage*.68);'));
+   assert.ok(changed.includes('vec3 lit=base*(ambient+directional)*uSunColor;'));
+   assert.ok(changed.includes('lit=mix(lit,r10DiagnosticDisplay,r10RidgeDisplayWindow);'));
+   const removal=changed.slice(changed.indexOf('float r10RidgeDisplayWindow='),changed.indexOf(output)+output.length);
+   assert.equal(changed.replace(removal,output),source);
+ }
+ const albedo=m.gen3287R10MaterialLightingSource(source,'prelight-albedo');
+ const light=m.gen3287R10MaterialLightingSource(source,'light-response');
+ assert.ok(albedo.includes('vec3 r10DiagnosticLinear=base;'));
+ assert.ok(light.includes('vec3 r10DiagnosticLinear=vec3(clamp((ambient+directional+rim*0.14*cavernSky)*0.40,0.0,1.0));'));
+ assert.throws(()=>m.gen3287R10MaterialLightingSource(source,'bad'),/GEN3287_R10_MODE_INVALID/);
+ assert.throws(()=>m.gen3287R10MaterialLightingSource(source.replace(output,''),'light-response'),/GEN3287_R10_OUTPUT_ANCHOR_DRIFT/);
+});
+test('H-Earth R10 has separate existing-runner profile, 12 genuine WebGL2 frames and unchanged prior tree-loader safety',()=>{
+ const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(comparator.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE)"));
+ assert.ok(comparator.includes("if(r10){if(receipt.views.length!==12||receipt.comparisons.length!==8)"));
+ assert.ok(comparator.includes("const anyBrowserVariation=browserVariation||r10;"));
+ assert.ok(comparator.includes('surfaceAttribution||r8Slope||r10,queue'));
+ assert.ok(workflow.includes("GEN3287_R10_MATERIAL_LIGHTING_V1"));
+ assert.ok(workflow.includes("h-earth/r10-material-light-separation-20261115"));
 });

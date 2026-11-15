@@ -412,3 +412,41 @@ test('Gen3310 source-mode installation commits state only on success and exposes
   assert.match(html,/install\(frame\);\s*\/\/ Publish source-mode state only after/);
   assert.doesNotMatch(html,/studio\?\.dispose\(\);studio=null/);
 });
+
+test('Gen3310 original M1.3 eye anchor is frozen at rest and carried through hop poses',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const start=html.indexOf('function originalEyeAt(');
+  const end=html.indexOf('\nlet studio=',start);
+  assert(start>=0&&end>start,'M13_ORIGINAL_EYE_ADAPTER_REQUIRED');
+  const adapter=Function('return ('+html.slice(start,end).trim()+')')();
+  const map=Uint32Array.from([0,1]);
+  const restFrame={sourceMasterPosition:Float32Array.from([.74,1,.668,.75,1,.667]),
+    sourceRender:{renderToMaster:map,originalPose:52}};
+  const hopFrame={sourceMasterPosition:Float32Array.from([.4,1.1,.6,.41,1.2,.61]),
+    sourceRender:{renderToMaster:map,originalPose:24}};
+  const calls=[];
+  const mockPrivateEye={createRabbitVisualAppearance({device,bridge}){
+    const atRest=bridge.snapshot().positions;
+    assert.deepEqual([...atRest],[...restFrame.sourceMasterPosition]);
+    calls.push('anchor-rest');
+    device.createMesh({attributes:[
+      {name:'a_position',data:Float32Array.from([.74,1,.668])},
+      {name:'a_normal',data:Float32Array.from([0,0,1])},
+      {name:'a_color',data:Float32Array.from([.2,.1,.1])},
+      {name:'a_fade',data:Float32Array.from([1])}]});
+    return {status:()=>({furFins:0,tailIncluded:false}),update({positions}){
+      assert.deepEqual([...positions],[...hopFrame.sourceMasterPosition]);
+      calls.push('follow-posed-surface');
+      device.updateMeshAttribute(null,'a_position',Float32Array.from([.4,1.1,.6]));
+    }};
+  }};
+  const hop=adapter(mockPrivateEye,{},hopFrame,restFrame);
+  assert.deepEqual(calls,['anchor-rest','follow-posed-surface']);
+  assert.deepEqual([...hop.positions],[.4,.6,-1.1].map(Math.fround));
+  assert.deepEqual([...hop.colors],[Math.fround(.2),Math.fround(.1),Math.fround(.1)]);
+  const rest=adapter(mockPrivateEye,{},restFrame,restFrame);
+  assert.deepEqual(calls,['anchor-rest','follow-posed-surface','anchor-rest']);
+  assert.deepEqual([...rest.positions],[.74,.668,-1].map(Math.fround));
+  assert.match(html,/const restFrame=nextSource\.pose\(52\),frame=index===52\?restFrame:nextSource\.pose\(index\)/);
+});

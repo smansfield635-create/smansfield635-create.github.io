@@ -8,6 +8,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
   const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4, arrayBuffer: null, elementArrayBuffer: null };
   const buffers = new Map();
   let dynamicFailures = failDynamicUploadOnce ? 1 : 0;
+  let pendingBufferUploadErrors = 0;
   const obj = type => ({ type, id: ++id });
   const gl = {
     VERTEX_SHADER: 1, FRAGMENT_SHADER: 2, COMPILE_STATUS: 3, LINK_STATUS: 4,
@@ -19,7 +20,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     MAX_RENDERBUFFER_SIZE: 25, FRAMEBUFFER: 26, FRAMEBUFFER_BINDING: 27,
     COLOR_ATTACHMENT0: 28, DEPTH_ATTACHMENT: 29, FRAMEBUFFER_COMPLETE: 30,
     FRAMEBUFFER_INCOMPLETE_ATTACHMENT: 31, RENDERBUFFER: 32,
-    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, DEPTH_COMPONENT: 35, NO_ERROR: 0, INVALID_OPERATION: 98,
+    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, DEPTH_COMPONENT: 35, NO_ERROR: 0, INVALID_OPERATION: 98, OUT_OF_MEMORY: 99,
     createShader() { log.push('createShader'); return obj('shader'); },
     shaderSource() {}, compileShader() {}, getShaderParameter() { return !compileFail; },
     getShaderInfoLog() { return 'mock compile error'; }, deleteShader() { log.push('deleteShader'); },
@@ -35,6 +36,10 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
       log.push('bufferData');
       const handle = target === this.ARRAY_BUFFER ? bindings.arrayBuffer : bindings.elementArrayBuffer;
       if (handle && ArrayBuffer.isView(data)) buffers.set(handle, data.slice());
+      if (this.failBufferDataOn === target) {
+        this.failBufferDataOn = null;
+        pendingBufferUploadErrors++;
+      }
     },
     bufferSubData(target, offset, data) {
       log.push('bufferSubData');
@@ -65,7 +70,10 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
         log.push('depthTexImage2D:' + _format + ':' + _format2 + ':' + _type);
       }
     },
-    getError() { return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR; },
+    getError() {
+      if (pendingBufferUploadErrors > 0) { pendingBufferUploadErrors--; return this.OUT_OF_MEMORY; }
+      return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR;
+    },
     deleteTexture() { log.push('deleteTexture'); },
     createFramebuffer() { log.push('createFramebuffer'); return obj('framebuffer'); },
     bindFramebuffer(_target, handle) { bindings.framebuffer = handle; log.push('bindFramebuffer'); },
@@ -500,4 +508,139 @@ test('M1.1 failed partial GPU update rolls back old bytes and does not commit co
   assert.equal(log.filter(x=>x==='bufferSubData').length,2);
   assert.equal(device.status().restorationError,null);
   device.dispose();
+});
+
+
+test('C2-B owned mesh replacement keeps identity, reclaims old buffers, and preserves drawability', () => {
+  for (const backend of ['WEBGL1','WEBGL2']) {
+    const {canvas,log}=fakeCanvas({webgl2:true});
+    const device=createNativeWebGLDevice(canvas,{backend});
+    const program=device.createProgram(shader);
+    const mesh=device.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const oldGpu=mesh.gpu,oldBytes=device.status().estimatedTotalResourceBytes;
+    const nextPositions=new Float32Array([...positions,0,0,1]);
+    assert.strictEqual(device.replaceMesh(mesh,{attributes:[{name:'a_position',data:nextPositions,size:3,dynamic:true}],
+      indices:new Uint16Array([0,1,2,0,2,3]),vertexCount:4}),mesh);
+    assert.notStrictEqual(mesh.gpu,oldGpu);
+    assert.equal(device.status().meshes,1);
+    assert(device.status().estimatedTotalResourceBytes>oldBytes);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,2);
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,6);
+    assert.equal(device.releaseMesh(mesh),true);
+    assert.equal(device.status().meshes,0);
+    assert.equal(device.status().estimatedTotalResourceBytes,0);
+    assert.throws(()=>device.draw({program,mesh}),/MESH_NOT_OWNED_BY_DEVICE/);
+    assert.throws(()=>device.releaseMesh(mesh),/MESH_NOT_OWNED_BY_DEVICE/);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,4);
+    device.dispose();
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,4);
+  }
+});
+test('C2-B invalid replacement retains old mesh bytes, ownership and drawability', () => {
+  const {canvas,log}=fakeCanvas();
+  const d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader);
+  const m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const before=m.gpu,bytes=d.status().estimatedTotalResourceBytes;
+  assert.throws(()=>d.replaceMesh(m,{attributes:[attrib],indices:new Uint32Array([0,1,2]),vertexCount:3}),
+    /WEBGL1_UINT32_INDICES_EXTENSION_REQUIRED/);
+  assert.strictEqual(m.gpu,before);
+  assert.equal(d.status().meshes,1);
+  assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+  assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+  // Provisional attribute allocation was deleted; original two buffers remain.
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,1);
+  d.dispose();
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,3);
+});
+test('C2-B replaced mesh survives context recovery while released mesh stays retired', () => {
+  const {canvas,log}=fakeCanvas({webgl2:true});
+  const d=createNativeWebGLDevice(canvas,{backend:'WEBGL2'}),p=d.createProgram(shader);
+  const keep=d.createMesh({attributes:[attrib],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const retire=d.createMesh({attributes:[attrib],vertexCount:3});
+  d.replaceMesh(keep,{attributes:[attrib],indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3});
+  d.releaseMesh(retire);
+  const before=log.filter(x=>x==='createBuffer').length;
+  canvas.trigger('webglcontextlost');
+  assert.throws(()=>d.releaseMesh(keep),/GRAPHICS_CONTEXT_LOST/);
+  canvas.trigger('webglcontextrestored');
+  assert.equal(d.status().meshes,1);
+  assert.equal(log.filter(x=>x==='createBuffer').length-before,2);
+  assert.equal(d.draw({program:p,mesh:keep}).verticesOrIndices,6);
+  assert.throws(()=>d.draw({program:p,mesh:retire}),/MESH_NOT_OWNED_BY_DEVICE/);
+  d.dispose();
+});
+
+test('C2-B repeated indexed replacements have bounded resident GPU bytes and buffers',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const {canvas,log,buffers}=fakeCanvas({webgl2:true});
+    const d=createNativeWebGLDevice(canvas,{backend}),p=d.createProgram(shader),
+      m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const bytes=d.status().estimatedTotalResourceBytes;
+    for(let i=0;i<32;i++){
+      const data=new Float32Array(positions);data[0]+=.01*i;
+      const previous=m.gpu;
+      d.replaceMesh(m,{attributes:[{...attrib,data,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+      assert.notStrictEqual(m.gpu,previous);
+      assert.equal(d.status().meshes,1);
+      assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+      assert.equal(buffers.size,2);
+      assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+    }
+    assert.equal(log.filter(x=>x==='deleteBuffer').length,64);
+    d.releaseMesh(m);
+    assert.equal(buffers.size,0);
+    d.dispose();
+  }
+});
+test('C2-B replacement buffer allocation failure leaves prior E1 mesh usable',()=>{
+  const {canvas,gl,log,buffers}=fakeCanvas();
+  const d=createNativeWebGLDevice(canvas),p=d.createProgram(shader),
+    m=d.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+  const first=m.gpu,bytes=d.status().estimatedTotalResourceBytes,create=gl.createBuffer.bind(gl);
+  let attempts=0;gl.createBuffer=()=>++attempts===2?null:create();
+  assert.throws(()=>d.replaceMesh(m,{attributes:[
+    {...attrib,dynamic:true},
+    {name:'a_extra',data:new Float32Array([1,2,3,4,5,6,7,8,9]),size:3,dynamic:true}
+    ],indices:new Uint16Array([0,1,2]),vertexCount:3}),/BUFFER_ALLOCATION_FAILED/);
+  gl.createBuffer=create;
+  assert.strictEqual(m.gpu,first);
+  assert.equal(d.status().meshes,1);
+  assert.equal(d.status().estimatedTotalResourceBytes,bytes);
+  assert.equal(buffers.size,2);
+  assert.equal(d.draw({program:p,mesh:m}).verticesOrIndices,3);
+  assert.equal(log.filter(x=>x==='deleteBuffer').length,1);
+  d.dispose();
+  assert.equal(buffers.size,0);
+});
+
+// Copilot C2-B safety finding: gl.bufferData need not throw on an exhausted GPU.
+test('C2-B non-throwing attribute/index GPU upload errors preserve old mesh on WebGL1 and WebGL2', () => {
+  for (const backend of ['WEBGL1','WEBGL2']) for (const targetName of ['ARRAY_BUFFER','ELEMENT_ARRAY_BUFFER']) {
+    const {canvas,gl,log,buffers}=fakeCanvas({webgl2:true});
+    const device=createNativeWebGLDevice(canvas,{backend});
+    const program=device.createProgram(shader);
+    const mesh=device.createMesh({attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2]),vertexCount:3});
+    const previousGpu=mesh.gpu, previousDefinition=mesh.definition;
+    const byteCount=device.status().estimatedTotalResourceBytes;
+    const deletedBefore=log.filter(x=>x==='deleteBuffer').length;
+    gl.failBufferDataOn=gl[targetName];
+    assert.throws(()=>device.replaceMesh(mesh,{attributes:[{...attrib,dynamic:true}],
+      indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3}),/MESH_BUFFER_UPLOAD_GL_ERROR/);
+    assert.strictEqual(mesh.gpu,previousGpu);
+    assert.strictEqual(mesh.definition,previousDefinition);
+    assert.equal(device.status().estimatedTotalResourceBytes,byteCount);
+    assert.equal(device.status().meshes,1);
+    assert.equal(device.status().restorationError,null);
+    assert.equal(buffers.size,2);
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,3);
+    assert.equal(log.filter(x=>x==='deleteBuffer').length-deletedBefore,
+      targetName==='ARRAY_BUFFER'?1:2);
+    // The one-shot error is consumed; a subsequent sound replacement succeeds.
+    device.replaceMesh(mesh,{attributes:[{...attrib,dynamic:true}],indices:new Uint16Array([0,1,2,0,2,1]),vertexCount:3});
+    assert.equal(device.draw({program,mesh}).verticesOrIndices,6);
+    assert.equal(buffers.size,2);
+    device.dispose();
+    assert.equal(buffers.size,0);
+  }
 });

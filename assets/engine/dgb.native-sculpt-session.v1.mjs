@@ -449,7 +449,11 @@ export function createConnectedSculptTopologyCandidate({
     if(!child||!selected.has(child.sourceFace)||!Array.isArray(child.indices)||child.indices.length!==3||
       child.indices.some(i=>!Number.isInteger(i)||i<0||i>=candidatePos.length/3)||
       new Set(child.indices).size!==3)throw new TypeError('C2A_REPLACEMENT_FACE_LINEAGE_INVALID');
-    const ids=child.indices;
+    const ids=child.indices,sourceCornerIds=new Set(getFace(child.sourceFace));
+    // An original index from a detached component may project inside this
+    // parent triangle without belonging to it. Never weld by projection.
+    for(const id of ids)if(id<vertexCount&&!sourceCornerIds.has(id))
+      throw new Error('C2A_FALSE_PARENT_SOURCE_VERTEX');
     ids.forEach(i=>baryInFace(child.sourceFace,i));
     const p=ids.map(i=>pos(candidatePos,i)),n=cross(sub(p[1],p[0]),sub(p[2],p[0])),
       area=Math.hypot(...n),src=faceNormal(child.sourceFace);
@@ -486,6 +490,9 @@ export function createConnectedSculptTopologyCandidate({
   }
   const candidateFaces=new Uint32Array([...remaining,...newFaceIndices]);
   const fullOutputLineage=[...remainingLineage,...outputLineage];
+  const originallyReferenced=new Set(faces),outputReferenced=new Set(candidateFaces);
+  for(const id of protectedVertices)if(originallyReferenced.has(id)&&!outputReferenced.has(id))
+    throw new Error('C2A_PROTECTED_SOURCE_VERTEX_REMOVED');
   const usedVertices=new Set(newFaceIndices);
   for(let i=vertexCount;i<candidatePos.length/3;i++)if(!usedVertices.has(i))
     throw new Error('C2A_ORPHAN_NEW_VERTEX');

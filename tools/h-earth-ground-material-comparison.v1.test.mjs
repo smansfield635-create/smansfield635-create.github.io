@@ -443,7 +443,8 @@ test('H-Earth R10 compares one accepted shader at identical ridge cameras with e
 test('H-Earth R10 has separate existing-runner profile, 12 genuine WebGL2 frames and unchanged prior tree-loader safety',()=>{
  const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
  const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
- assert.ok(comparator.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1'].includes(process.env.H_EARTH_COMPARISON_PROFILE)"));
+ assert.ok(comparator.includes("'GEN3287_R10_MATERIAL_LIGHTING_V1',GEN3287_R11_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE)"));
+ assert.ok(comparator.includes("export const GEN3287_R11_PROFILE='GEN3287_R11_CLASS6_PRODUCT_AB_V1';"));
  assert.ok(comparator.includes("if(r10){if(receipt.views.length!==12||receipt.comparisons.length!==8)"));
  assert.ok(comparator.includes("const anyBrowserVariation=browserVariation||r10;"));
  assert.ok(comparator.includes('surfaceAttribution||r8Slope||r10,queue'));

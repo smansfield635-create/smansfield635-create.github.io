@@ -212,6 +212,22 @@ export function replaceFourSculptViewMeshes(views,oldSpec,newSpec,draw,quarantin
   }
 }
 
+/** Fail-closed recovery for an interrupted interactive brush stroke.
+ * Do not leave an active stroke behind after rejection. A failed CPU cancel or
+ * GPU redraw is uncertainty, never a silently completed edit. */
+export function abortRejectedSculptStroke(session, redraw, quarantineAlready=false){
+  if(!session||typeof session.cancelStroke!=='function'||typeof redraw!=='function')
+    throw new TypeError('STUDIO_STROKE_ABORT_INPUT_INVALID');
+  let recoveryError=null;
+  try{session.cancelStroke();}catch(error){recoveryError=error;}
+  if(!quarantineAlready&&!recoveryError){
+    try{redraw();}catch(error){recoveryError=error;}
+  }
+  return Object.freeze({restored:!quarantineAlready&&!recoveryError,
+    uncertain:Boolean(quarantineAlready||recoveryError),
+    recoveryError:recoveryError?.message??null});
+}
+
 const expectCanvas=(x,i)=>{if(!x||typeof x.getContext!=='function'||typeof x.addEventListener!=='function')throw new TypeError('CANVAS_'+i+'_REQUIRED');return x;};
 export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralSculptRegionFixture(),backend='AUTO',onStatus=()=>{}}={}){
   if(!Array.isArray(canvases)||canvases.length!==4)throw new TypeError('FOUR_CANVASES_REQUIRED');
@@ -305,7 +321,14 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
         update={mode:'MOVE',delta:right.map((x,k)=>x*dx*scale-up[k]*dy*scale)};
       }else update={mode,amount:Math.min(.18,Math.hypot(dx,dy)*.005)};
       session.applyStroke(update);updateAll();status(v.name+': live four-view update, revision '+session.state().revision);
-    }catch(e){active=null;status('Stroke rejected: '+e.message);try{updateAll();}catch{}}}
+    }catch(e){
+      const recovery=abortRejectedSculptStroke(session,updateAll,failed);
+      active=null;
+      if(recovery.uncertain)failed=true;
+      status(recovery.uncertain
+        ?'Stroke failed; studio quarantined: '+e.message+(recovery.recoveryError?' / '+recovery.recoveryError:'')
+        :'Stroke rejected; prior geometry restored: '+e.message);
+    }}
   function pointerUp(event,v){if(!active||active.view!==v||active.pointerId!==event.pointerId)return;
     try{session.endStroke();status('Stroke committed; undo/redo available.');}catch(e){status(e.message);}active=null;}
   for(const v of views){add(v.canvas,'pointerdown',e=>pointerDown(e,v));add(v.canvas,'pointermove',e=>pointerMove(e,v));add(v.canvas,'pointerup',e=>pointerUp(e,v));add(v.canvas,'pointercancel',e=>{if(active?.view===v){session.cancelStroke();active=null;updateAll();}});}

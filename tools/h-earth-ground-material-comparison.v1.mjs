@@ -88,8 +88,15 @@ export function assetReadiness(resources,camera){
   const all=[jac,...tree.entries];
   if(all.some(x=>!['IDLE','LOADING','READY'].includes(x.state)||x.failure)||Object.keys(tree.queue.failures??{}).length)throw Error('ASSET_FAILURE');
   const near=(e,inclusive)=>{const a=inclusive?e.targetAnchor:e;if(!Number.isFinite(a.x)||!Number.isFinite(a.z))throw Error('ASSET_ANCHOR_MISSING');const d=Math.hypot(camera.x-a.x,camera.z-a.z);return inclusive?d<=180:d<180;};
-  const pending=tree.queue.loading||all.some(x=>x.state==='LOADING')||(jac.state==='IDLE'&&near(jac,true))||tree.entries.some(e=>e.state==='IDLE'&&near(e,false));
-  return {ready:!pending,signature:JSON.stringify(all.map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready}))),queue:tree.queue};
+  // Preserve the same fail-closed readiness rule; identify the exact blocking assets.
+  const loading=all.filter(e=>e.state==='LOADING');
+  const jacarandaIdleNear=jac.state==='IDLE'&&near(jac,true);
+  const nearbyIdle=tree.entries.filter(e=>e.state==='IDLE'&&near(e,false));
+  const pending=Boolean(tree.queue.loading)||loading.length>0||jacarandaIdleNear||nearbyIdle.length>0;
+  return {ready:!pending,signature:JSON.stringify(all.map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready}))),queue:tree.queue,
+    pendingReasons:{queueLoading:Boolean(tree.queue.loading),loadingCount:loading.length,
+      loadingIds:loading.slice(0,24).map(e=>e.focusId??e.id),jacarandaIdleNear,
+      nearbyIdleCount:nearbyIdle.length,nearbyIdleIds:nearbyIdle.slice(0,24).map(e=>e.focusId??e.id)}};
 }
 export function decodeCanvasCapture(capture,expectedFrame){
   for(const frame of [capture.before,capture.after])if(!frame||frame.navigationSequence!==expectedFrame.navigationSequence||frame.frameSequence!==expectedFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
@@ -674,7 +681,7 @@ export async function runGen3286(argv){
               persist();continue;
             }
           }
-          let stableCount=0,priorSignature=null,deadline=Date.now()+120000;
+          let stableCount=0,priorSignature=null,deadline=Date.now()+120000,settleAttempts=0;
           while(stableCount<2){
             const check=await page.evaluate(async({pose,sequence})=>{
               const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3286_ASSET_SETTLE');
@@ -686,7 +693,18 @@ export async function runGen3286(argv){
             },{pose,sequence:++sequence});
             stableCount=check.frame?.navigationSequence===sequence&&check.asset.ready&&check.asset.signature===priorSignature?stableCount+1:0;
             priorSignature=check.asset.signature;
-            if(Date.now()>deadline)throw Error('GEN3286_ASSETS_NOT_SETTLED:'+label+':'+viewport.id+':'+pose.id);
+            // Durable first-pose evidence: keep unchanged 120s guard and actual frame parity.
+            runRecord.lastAssetSettle={
+              poseId:pose.id,viewportId:viewport.id,attempt:++settleAttempts,
+              ready:check.asset.ready,stableCount,signatureSha256:sha(check.asset.signature),
+              pendingReasons:check.asset.pendingReasons,
+              queueFailureIds:Object.keys(check.asset.queue?.failures??{}).slice(0,24),
+              frameSequence:check.frame?.frameSequence??null,
+              frameNavigationSequence:check.frame?.navigationSequence??null,
+              expectedNavigationSequence:sequence
+            };
+            if(settleAttempts===1||settleAttempts%40===0)persist();
+            if(Date.now()>deadline){persist();throw Error('GEN3286_ASSETS_NOT_SETTLED:'+label+':'+viewport.id+':'+pose.id);}
             if(stableCount<2)await new Promise(resolve=>setTimeout(resolve,250));
           }
           const result=await page.evaluate(async({pose,sequence,passes})=>{

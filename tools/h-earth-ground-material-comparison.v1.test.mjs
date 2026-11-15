@@ -23,6 +23,18 @@ test('asset readiness rejects asynchronous partial scenes and failed assets',()=
  assert.throws(()=>assetReadiness({},{}),/ASSET_RECEIPT_MISSING/);
 });
 
+test('Gen3287 identifies blocking asset IDs, queue state and preserves fail-closed readiness',()=>{
+ const resources={jacaranda:{focusId:'jac',state:'READY',ready:true,targetAnchor:{x:0,z:0}},treeCollection:{queue:{loading:false,failures:{}},entries:[{id:'far',state:'LOADING',ready:false,x:900,z:900},{id:'near',state:'IDLE',ready:false,x:10,z:0}]}};
+ let state=assetReadiness(resources,{x:0,z:0});
+ assert.equal(state.ready,false);assert.equal(state.pendingReasons.loadingCount,1);
+ assert.deepEqual(state.pendingReasons.loadingIds,['far']);assert.equal(state.pendingReasons.nearbyIdleCount,1);
+ assert.deepEqual(state.pendingReasons.nearbyIdleIds,['near']);assert.equal(state.pendingReasons.queueLoading,false);
+ for(const e of resources.treeCollection.entries){e.state='READY';e.ready=true;}
+ resources.treeCollection.queue.loading=true;state=assetReadiness(resources,{x:0,z:0});
+ assert.equal(state.ready,false);assert.equal(state.pendingReasons.queueLoading,true);
+ resources.treeCollection.queue.loading=false;assert.equal(assetReadiness(resources,{x:0,z:0}).ready,true);
+});
+
 test('wrong checkout identity fails before browser loading and preserves failure receipt',async()=>{
  const {run}=await import('./h-earth-ground-material-comparison.v1.mjs');
  const {mkdtempSync,rmSync,mkdirSync,readFileSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');const {execFileSync}=await import('node:child_process');

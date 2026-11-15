@@ -396,3 +396,46 @@ test('C2-A Copilot round-two: originally referenced protected vertex cannot be o
   assert.equal(candidate.counts.outputFaces,4);
   assert.equal(load(candidate.serialize(),valid).serialize(),candidate.serialize());
 });
+
+test('C2-A Copilot round-three: new vertex joining detached incident fans on a folded strip is rejected',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'folded-u-sheet',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0,1,0,.2,1,1,.2,0,1,.2,0,0,.2]),
+    triangles:new Uint32Array([0,1,2,0,2,3,1,4,5,1,5,2,4,6,5,4,7,6]),
+    regions:Array(8).fill('body'),protectedVertices:[],selectedFaces:[0,1,2,3,4,5],
+    newVertices:[{sourceFace:0,barycentric:[.3,.3,.4],normalOffset:.1,region:'body'}],
+    replacementFaces:[
+      {sourceFace:0,indices:[0,1,8]},{sourceFace:0,indices:[1,2,8]},{sourceFace:0,indices:[2,0,8]},
+      {sourceFace:1,indices:[0,2,3]},{sourceFace:2,indices:[1,4,5]},{sourceFace:3,indices:[1,5,2]},
+      {sourceFace:4,indices:[4,6,8]},{sourceFace:4,indices:[6,5,8]},{sourceFace:4,indices:[5,4,8]},
+      {sourceFace:5,indices:[4,7,6]}],uvHandoff:null};
+  // Source is a single U-shaped connected sheet, while its replacement has two
+  // disconnected triangle fans touching only at newly added vertex 8.
+  assert.doesNotThrow(()=>verifySculptGeometry(source.positions,source.triangles));
+  assert.throws(()=>make(source),/C2A_DISCONNECTED_NEW_VERTEX_FAN/);
+});
+
+test('C2-A Copilot round-three: a legitimately shared new vertex has one connected incident fan and restores',async()=>{
+  const {createConnectedSculptTopologyCandidate:make,restoreConnectedSculptTopologyCandidate:load}=await C2A();
+  const source={sourceId:'shared-edge-subdivision',
+    positions:new Float32Array([0,0,0,1,0,0,1,1,0,0,1,0]),
+    triangles:new Uint32Array([0,1,2,0,2,3]),regions:Array(4).fill('body'),protectedVertices:[],
+    selectedFaces:[0,1],newVertices:[{sourceFace:0,barycentric:[.5,0,.5],normalOffset:0,region:'body'}],
+    replacementFaces:[{sourceFace:0,indices:[0,1,4]},{sourceFace:0,indices:[1,2,4]},
+      {sourceFace:1,indices:[0,4,3]},{sourceFace:1,indices:[4,2,3]}],uvHandoff:null};
+  const candidate=make(source);
+  assert.equal(candidate.counts.outputFaces,4);
+  assert.equal(candidate.counts.addedVertices,1);
+  assert.equal(load(candidate.serialize(),source).serialize(),candidate.serialize());
+});
+
+test('C2-A Copilot round-three: sparse source regions or protected vertices reject before producing unrestorable saves',async()=>{
+  const {createConnectedSculptTopologyCandidate:make}=await C2A();
+  const source=square();
+  const regions=Array(4),protectedVertices=[];protectedVertices.length=1;
+  assert.throws(()=>make({...source,regions}),/C2A_REGIONS_INVALID/);
+  assert.throws(()=>make({...source,protectedVertices}),/C2A_PROTECTED_INVALID/);
+  const partial=['body','body','body'];partial.length=4;
+  assert.throws(()=>make({...source,regions:partial}),/C2A_REGIONS_INVALID/);
+  assert.equal(make({...source,protectedVertices:[]}).counts.outputFaces,6);
+});

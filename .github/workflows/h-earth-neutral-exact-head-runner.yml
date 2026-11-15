@@ -1305,6 +1305,10 @@ jobs:
               landformTransition:a.material.landformClass!==b.material.landformClass});
           }
           edges.sort((a,b)=>b.baseDeltaMagnitude-a.baseDeltaMagnitude);
+          // Invert the accepted exact spherical world-manifold projection.
+          const p=point(row,col).position,R=420000,radial=Math.hypot(p[0],p[2]);
+          const authoringR=R*Math.atan2(radial,R+p[1]);
+          const unprojectedXZ=radial>0?[p[0]*authoringR/radial,p[2]*authoringR/radial]:[0,0];
           const report={schema:'H_EARTH_GEN3287_SOURCE_VERTEX_NATIVE_READONLY_v1',sourceHead,archiveSha256,
             status:'EXACT_ACCEPTED_RUNTIME_SOURCE_INSPECTED',productMutation:false,rendererMutation:false,ownerAcceptance:false,
             packageIdentity:actual.packageIdentity,packageContentDigest:actual.contentDigest,
@@ -1312,7 +1316,7 @@ jobs:
               vertexStart:spans[0].vertexStart,indexStart:spans[0].indexStart,vertexCount:spans[0].vertexCount},
             candidate:point(row,col),incident,
             allIncidentIndexTripletsMatch:incident.every(x=>x.exactMatch),
-            vertexXZMatchesProjection:Math.abs(point(row,col).position[0]-152)<0.01&&Math.abs(point(row,col).position[2]+224)<0.01,
+            unprojectedAuthoringXZ:unprojectedXZ,vertexXZMatchesProjection:Math.abs(unprojectedXZ[0]-152)<0.01&&Math.abs(unprojectedXZ[1]+224)<0.01,
             neighborhood,meadowReferenceSamples:meadow,largestAdjacentColorDeltas:edges.slice(0,20),
             claimCeiling:'Native archive + approved deferred runtime/GPU attribute values, not a verified owner-specific fragment/triangle or visual repair.'};
           const file=path.join(out,'source-vertex-native.json');

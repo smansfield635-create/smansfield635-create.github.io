@@ -82,12 +82,58 @@ test('complete census accounting, enclosure on every edge, and frozen quota comp
 test('independent full census, every 4x4 probe, actual occupancy and baseline preservation',async()=>{
  const {execFileSync}=await import('node:child_process');
  const {createHash}=await import('node:crypto');
- const {visibleSurface,groundAdmission,materials,cover,geology}=await import('../evidence/hillside-shoreline-continuity-v1/support-fixture.mjs');
+ const {visibleSurface:currentVisibleSurface,materials,cover,geology,integrated,terrain,placement}=await import('../evidence/hillside-shoreline-continuity-v1/support-fixture.mjs');
  const sha=b=>createHash('sha256').update(b).digest('hex'),root=new URL('../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.';
  const cp=read('checkpoint.json'),rows=read('coverage.json.gz');
  // Execute the frozen North/West 4x4 census on the original output commit,
  // before the later accepted coastal relocations altered root tile prefixes.
  const historic='902b06404965527e98de2612ee824d87ce404eaf';
+
+ // The immutable 4x4 checkpoint was generated when the original surface
+ // selected TERRAIN only. Current accepted geometry additionally includes
+ // FAR_LAND_CONTINUATION. Replay the old sampled oracle against the exact
+ // historic Git source; never relax cp.centerEligibleCells or saved probes.
+ const surfaceFile='showroom/globe/h-earth/render/vegetation-visible-surface.v1.js';
+ const originalSurfaceSource=execFileSync('git',['show',historic+':'+surfaceFile],{cwd:root,maxBuffer:2*1024*1024}).toString('utf8');
+ const presentSurfaceSource=fs.readFileSync(new URL(surfaceFile,root),'utf8');
+ const oldSpan="spans:pkg.primitiveSpans.filter(s=>s.role==='TERRAIN')";
+ const newSpan="spans:pkg.primitiveSpans.filter(s=>s.role==='TERRAIN'||s.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION')";
+ assert.equal(presentSurfaceSource.split(newSpan).length,2,'CURRENT_FAR_LAND_SPAN_CHANGE_NOT_UNIQUE');
+ assert.equal(presentSurfaceSource.replace(newSpan,oldSpan),originalSurfaceSource,'UNACCOUNTED_VISIBLE_SURFACE_SOURCE_DRIFT');
+ assert.equal(execFileSync('git',['hash-object','--stdin'],{cwd:root,input:originalSurfaceSource}).toString().trim(),'5f4460005ba6954adadd20c63ed0659959f15f87','HISTORIC_SURFACE_BLOB_DRIFT');
+ assert.equal(execFileSync('git',['hash-object','--stdin'],{cwd:root,input:presentSurfaceSource}).toString().trim(),'46334ed155ce1f45df215c9a0cc75acea5196407','PRESENT_SURFACE_BLOB_DRIFT');
+ const historicalModuleCode=originalSurfaceSource
+  .replace("from './hillside-shoreline-field.v1.js'","from '"+new URL('showroom/globe/h-earth/render/hillside-shoreline-field.v1.js',root).href+"'")
+  .replace("from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1'","from '"+new URL('showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1',root).href+"'");
+ assert(!historicalModuleCode.includes("from './hillside-shoreline-field.v1.js'"));
+ assert(!historicalModuleCode.includes("from '../functional-landscape/geological-runtime-bridge.v1.js"));
+ const historicalSurfaceModule=await import('data:text/javascript;base64,'+Buffer.from(historicalModuleCode).toString('base64'));
+ const fixtureSource=fs.readFileSync(new URL('h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs',root),'utf8');
+ const fixtureStart=fixtureSource.indexOf('async function buildCanonicalBeachFixture('),fixtureEnd=fixtureSource.indexOf("\n\n\ntest(",fixtureStart);
+ assert(fixtureStart>=0&&fixtureEnd>fixtureStart,'FROZEN_TEST_FIXTURE_SOURCE_NOT_FOUND');
+ const fixtureImport="const {buildVegetationVisibleSurface}=await import('file://'+render+'vegetation-visible-surface.v1.js');";
+ const baselineFixture=fixtureSource.slice(fixtureStart,fixtureEnd);
+ assert.equal(baselineFixture.split(fixtureImport).length,2,'FROZEN_VISIBLE_SURFACE_FACTORY_NOT_UNIQUE');
+ const historicalFixture=baselineFixture
+  .replace(fixtureImport,'const {buildVegetationVisibleSurface}=historicalSurfaceModule;')
+  .replace("source.slice(normalStart,normalEnd)+';return normals;'","'const partTiming={},meshStarted=performance.now();'+source.slice(normalStart,normalEnd)+';return normals;'");
+ const buildHistoricalFixture=Function('assert','readFile','historicalSurfaceModule',historicalFixture+';return buildCanonicalBeachFixture;')(assert,fs.promises.readFile,historicalSurfaceModule);
+ const {visibleSurface}=await buildHistoricalFixture({baseDirectory:root.pathname,pkg:integrated,geology,uploadSource:fs.readFileSync(new URL('showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js',root),'utf8'),protectedReferenceAt:()=>false});
+ const pilot=await import(new URL('showroom/globe/h-earth/render/landscape-planting-pilot.v1.js',root));
+ const oasis=await import(new URL('showroom/globe/h-earth/render/grass-lowland-trial.js',root));
+ const groundAdmission=await pilot.createUniformGroundAdmission({visibleSurface,geology,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,obstacles:integrated.landscapeCoverFootprints,trees:integrated.landscapeFloorFootprints,oasis:oasis.H_EARTH_OASIS_FOLIAGE_SAMPLE,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,maximumSandCoverage:.12});
+ const farLandSpans=integrated.primitiveSpans.filter(span=>span.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION');
+ assert(farLandSpans.length>0,'FAR_LAND_CONTINUATION_SOURCE_MISSING');
+ assert(currentVisibleSurface.receipt.baseTerrainTriangles>visibleSurface.receipt.baseTerrainTriangles,'ACCEPTED_FAR_LAND_SUPPORT_NOT_PRESERVED');
+ let farLandWitnesses=0;
+ for(let z=-360;z<160;z+=16)for(let x=-512;x<512;x+=16){
+  const old=visibleSurface.sample(x+.5,z+.5),present=currentVisibleSurface.sample(x+.5,z+.5);
+  if(old)assert(present,'CURRENT_TERRAIN_LOST_HISTORIC_SUPPORT');
+  if(!old&&present&&present.terrainPrimitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION')farLandWitnesses++;
+ }
+ assert(farLandWitnesses>0,'FAR_LAND_ADDITIVE_SUPPORT_NOT_WITNESSED');
+ console.log('GEN3337_FROZEN_SURFACE_REPLAY',JSON.stringify({historicalSurfaceCommit:historic,historicalSurfaceBlob:'5f4460005ba6954adadd20c63ed0659959f15f87',presentSurfaceBlob:'46334ed155ce1f45df215c9a0cc75acea5196407',historicalBaseTriangles:visibleSurface.receipt.baseTerrainTriangles,presentBaseTriangles:currentVisibleSurface.receipt.baseTerrainTriangles,currentFarLandWitnesses:farLandWitnesses,expectedFrozenCenterCells:cp.centerEligibleCells}));
+
  const showHistorical=suffix=>execFileSync('git',['show',historic+':'+asset+suffix],{cwd:root,maxBuffer:180*1024*1024});
  const manifest=JSON.parse(showHistorical('json')),raw=gunzipSync(showHistorical('bin.gz'));
  assert.equal(sha(raw),manifest.rawSha256);assert.equal(manifest.rootCount,2858738);

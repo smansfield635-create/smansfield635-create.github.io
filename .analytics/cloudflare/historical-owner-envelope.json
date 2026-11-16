@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T05:28:01Z",
+  "generatedAt": "2026-11-16T06:50:15Z",
   "window": {
-    "start": "2026-08-18T05:28:01Z",
-    "end": "2026-11-16T05:28:01Z"
+    "start": "2026-08-18T06:50:15Z",
+    "end": "2026-11-16T06:50:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3385,
-    "visits": 922,
+    "pageLoads": 3605,
+    "visits": 1082,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3385,
-        "visits": 922
+        "pageLoads": 3605,
+        "visits": 1082
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 692,
-        "visits": 512
+        "pageLoads": 782,
+        "visits": 592
       },
       "/products/": {
         "pageLoads": 40,
@@ -67,7 +67,7 @@
         "visits": 10
       },
       "/showroom/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
@@ -77,6 +77,22 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/compass-composite/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -130,13 +146,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -150,8 +166,20 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/evidence/agentic-frontier/": {
+        "pageLoads": 70,
+        "visits": 0
+      },
+      "/characters/": {
         "pageLoads": 60,
+        "visits": 30
+      },
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
@@ -177,10 +205,6 @@
       "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 40,
-        "visits": 20
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -214,13 +238,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -277,16 +301,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 480,
-        "visits": 480
+        "pageLoads": 560,
+        "visits": 560
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2463,
+        "pageLoads": 2523,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 432,
-        "visits": 432
+        "pageLoads": 512,
+        "visits": 512
       },
       "raw.githack.com": {
         "pageLoads": 10,

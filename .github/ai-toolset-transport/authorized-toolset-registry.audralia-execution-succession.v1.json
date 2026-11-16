@@ -1428,6 +1428,154 @@
       "continuationRule": "ONLY_AFTER_SEPARATE_GEN3302_TOOLING_REVIEW_ADOPTION_AND_GENUINE_GEN3296_SOURCE_REVIEW_RESOLUTION; RETURN_REPAIRED_SOURCE_QUALIFICATION_TO_PR7427_AND_ISSUE7108; NO_AUTO_MERGE",
       "terminationRule": "READONLY_REPAIRED_C2B_EXACT_SOURCE_QUALIFICATION_NO_RABBIT_GRATITUDE_WORLD_MERGE_DEPLOY_RELEASE_PUBLICATION",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "DGB_GRAPHICS_GEN3310_M13_SERVED_HTTP_WEBGL12_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "DGB_GRAPHICS_GEN3310_M13_FIXED_HTTP_WEBGL12_QUALIFIER_BINDING_20261115_001",
+      "operationClass": "DGB_GRAPHICS_GEN3310_FIXED_EXACT_HEAD_HTTP_WEBGL12_READONLY_QUALIFICATION",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "DGB_GRAPHICS_GEN3310_M13_SERVED_HTTP_WEBGL12_QUALIFIER_V1",
+      "exactToolingHead": "5588eae47b17372720bcd13db48cd7ab83e246e0",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          },
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "DGB_GRAPHICS_GEN3310_SERVED_HTTP_WEBGL12_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "59b8ba885cc6849f22bb86a09a84d0015dc1339b"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "DGB_GRAPHICS_GEN3310_SERVED_HTTP_WEBGL12_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "governingHead",
+          "status",
+          "cases",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "workflowMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "assets/",
+        "graphics-engine/",
+        "showroom/",
+        "characters/",
+        "h-earth-3d/",
+        "products/",
+        "nine-summits/",
+        "tools/ai-room-transport/dgb-sculpt-gen3273-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-gen3296-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-reviewed-webgl12.v1.mjs",
+        "ORIGINAL_PRIVATE_M13_ARCHIVE_FIXTURE_ATLAS_EYE_SOURCE",
+        "OWNER_PRIVATE_DRIVE_OR_LOCAL_ASSET_CUSTODY"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "WORKFLOW_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WEBGL_ENGINE_MUTATION",
+        "RABBIT_SOURCE_MUTATION",
+        "ORIGINAL_GEN3273_QUALIFIER_MUTATION",
+        "C2B_SOURCE_BRANCH_MUTATION",
+        "WORLD_CONSUMER_MUTATION",
+        "ORIGINAL_GEN3298_QUALIFIER_MUTATION",
+        "GEN3310_SOURCE_MUTATION",
+        "PRIVATE_M13_ARCHIVE_UPLOAD",
+        "PRIVATE_RABBIT_ORIGINAL_WEBGL_POSITIVE_CLAIM",
+        "ORIGINAL_GEN3302_TOOLING_MUTATION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_EXACT_GEN3310_PUBLIC_SOURCE_HTTP_WEBGL2_DESKTOP_TABLET_PHONE_AND_WEBGL1_NEUTRAL_PNG_QUALIFICATION_ONLY_NO_PRIVATE_ORIGINAL_ACCEPTANCE",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_AND_RETURN_FIRST_BROWSER_OR_NATIVE_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_AND_RETURN_EXECUTION_SURFACE_BOUNDARY",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "ONLY_AFTER_SEPARATE_GEN3312_TOOLING_SOURCE_REVIEW_AND_ADOPTION; RETURN_AUTHENTIC_PUBLIC_SOURCE_HTTP_QUALIFICATION_TO_PR7435_AND_ISSUE7108; PRIVATE_M13_POSITIVE_HTTP_REMAINS_OWNER_CONTROLLED_SEPARATE_GATE",
+      "terminationRule": "READONLY_FIXED_GEN3310_PUBLIC_SOURCE_HTTP_WEBGL12_QUALIFICATION_ONLY_NO_PRIVATE_RABBIT_UPLOAD_SOURCE_MERGE_WORLD_DEPLOY_RELEASE_OR_PUBLICATION",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

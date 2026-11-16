@@ -17714,6 +17714,50 @@
       "scopeHash": "848a948144db7c24e083cb4be07a426e12adbd2dfe3def546012e2205a4bed8b",
       "state": "ADMITTED_LOCKED"
     },
+    "84913723d1356660736ddd8567a580979f74ded9cc39c42c841cda1f51270d0f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6386cd14fc5260ae4881d763538289e1ddd60df4",
+          "lockGeneration": 3325,
+          "lockScope": "H_EARTH:GEN3323:NATURAL_GROUNDCOVER_PRESENTATION_REPAIR:20261115",
+          "operationId": "H_EARTH_NATURAL_MATERIAL_BOUNDARY_REPAIR_20261115_001",
+          "procedureLocatorDigest": "41e4a350b70c51b0d1af5f9f08e9f8d6131a6954f44fde3a17b1fc51df40ad78",
+          "requestDigest": "bf99260b5290fbd8d4d82b3562e113ecfe387753ec8204e71fad679a350b9a38",
+          "scopeHash": "84913723d1356660736ddd8567a580979f74ded9cc39c42c841cda1f51270d0f"
+        },
+        "bindingDigest": "2b1e563bd3b87c29ddaca95fd2b5e977759410385cfe5f502a84a820cd28eee9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "613f8c7e7b9b8c70d19e6f6e89bcb437ecb883b807c523e87e58c5d9c742d887",
+          "commentId": 6907865150,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43808101566,
+          "workflowSha": "6386cd14fc5260ae4881d763538289e1ddd60df4"
+        },
+        "lineageAnchorCommitSha": "199094f6a4cac4134cdd205b267a079946208aa4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "6386cd14fc5260ae4881d763538289e1ddd60df4",
+      "lockGeneration": 3325,
+      "lockScope": "H_EARTH:GEN3323:NATURAL_GROUNDCOVER_PRESENTATION_REPAIR:20261115",
+      "operationId": "H_EARTH_NATURAL_MATERIAL_BOUNDARY_REPAIR_20261115_001",
+      "procedureLocatorDigest": "41e4a350b70c51b0d1af5f9f08e9f8d6131a6954f44fde3a17b1fc51df40ad78",
+      "released": false,
+      "requestDigest": "bf99260b5290fbd8d4d82b3562e113ecfe387753ec8204e71fad679a350b9a38",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "84913723d1356660736ddd8567a580979f74ded9cc39c42c841cda1f51270d0f",
+      "state": "ADMITTED_LOCKED"
+    },
     "84b79eb01ddde1937435d8ff0898012ef5da7b98c79376a96175645a2f710dfa": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -34136,7 +34180,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3324,
+  "lockGeneration": 3325,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

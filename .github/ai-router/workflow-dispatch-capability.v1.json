@@ -919,6 +919,22 @@
       "controlPlaneSemanticAuthority": false,
       "successResult": "H_EARTH_R2_PACKAGE_EXACT_CANDIDATE_DIAGNOSTIC_v1"
     },
+    "H_EARTH_GEN3313_WEBGL2_AB_QUALIFY": {
+      "workflow": "h-earth-gen3313-webgl2-ab-qualification-v1.yml",
+      "ref": "main",
+      "inputPolicy": {
+        "target_sha": {
+          "source": "REQUEST",
+          "required": true,
+          "userOverrideAllowed": true
+        }
+      },
+      "workflowDispatchRegistrationRequired": true,
+      "deploymentAuthority": false,
+      "productMutationAuthority": false,
+      "controlPlaneSemanticAuthority": false,
+      "successResult": "H_EARTH_GEN3313_WEBGL2_AB_EVIDENCE"
+    },
     "H_EARTH_NEUTRAL_EXACT_HEAD_RUN": {
       "workflow": "h-earth-neutral-exact-head-runner.yml",
       "ref": "main",

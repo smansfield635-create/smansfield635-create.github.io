@@ -46,8 +46,24 @@ test('shared GLSL divider, shoulder, dry and sand expressions match the CPU law'
  const root=new URL('../../',import.meta.url),owner=fs.readFileSync(new URL('showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',root),'utf8'),renderer=fs.readFileSync(new URL('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',root),'utf8');
  assert(owner.includes('${HILLSIDE_SHORELINE_GLSL}'));assert(renderer.includes('${HILLSIDE_SHORELINE_GLSL}'));
  assert(owner.includes('max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz))'));
- assert(renderer.includes('max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition))'));
- assert(renderer.includes('hillsideSandCoverage(world,slope,renderedBeachCoverage('));
+ // The frozen hillside law continues governing accepted grass placement.
+ // Soil presentation alone no longer follows its straight/horizontal world-Z divider.
+ const soilStart=renderer.indexOf('  if(worldSoilTerrain){');
+ const soilEnd=renderer.indexOf('  if(clearingType>0.5&&clearingType<1.5){\\n    // Texture-derived shallow bark relief',soilStart);
+ assert(soilStart>=0&&soilEnd>soilStart,'active terrain shader scope not found');
+ const soil=renderer.slice(soilStart,soilEnd);
+ assert(soil.includes('materialHillsideWeight=\\n      smoothstep(28.0,92.0,max(0.0,vCoastDistanceMeters))*\\n      (1.0-smoothstep(0.35,0.65,slope));'));
+ assert(soil.includes('float sandCoverage=renderedBeachCoverage('));
+ assert(soil.includes('(1.0-materialHillsideWeight*smoothstep(.012,.065,slope))'));
+ assert(soil.includes('float steepBank=materialHillsideWeight*smoothstep(.012,.065,slope)'));
+ assert(soil.includes('materialHillsideWeight*smoothstep(18.0,42.0,vWorldPosition.y)'));
+ assert(!soil.includes('hillsideSandCoverage(world')&&!soil.includes('hillsideDry(vWorldPosition)'));
+ const displayWeight=(coast,slope)=>s(28,92,Math.max(0,coast))*(1-s(.35,.65,slope));
+ for(const coast of [0,28,48,72,92,140])for(const slope of [0,.2,.35,.5,.65,.9]){
+   const weight=displayWeight(coast,slope);
+   assert(weight>=0&&weight<=1);
+   assert(Math.abs(weight-displayWeight(coast+.00001,slope))<.00001);
+ }
 });
 
 test('complete census accounting, enclosure on every edge, and frozen quota completion',()=>{

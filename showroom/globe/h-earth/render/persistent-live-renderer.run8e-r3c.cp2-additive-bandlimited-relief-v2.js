@@ -1111,8 +1111,13 @@ void main(){
         0.48+0.10*abs(fertilePatch-0.5)*2.0+
         0.08*mineralExposure,0.0,0.66
       );
+      // Gen3343: keep the already accepted photographic world soil as the
+      // dominant inland albedo. The synthetic six-biome identity tint may
+      // gently vary it but must not paint broad solid-color panels over it.
+      // Protected grove has zero identity mix, as before; grass, water, rock,
+      // shoreline material and world geometry remain on their original paths.
       float identityWeight=inlandIdentity*
-        (1.0-protectedGrove)*identityContrast;
+        (1.0-protectedGrove)*identityContrast*0.15;
       palette=mix(palette,identityBase,identityWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every

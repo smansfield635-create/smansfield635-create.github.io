@@ -49,10 +49,10 @@ test('shared GLSL divider, shoulder, dry and sand expressions match the CPU law'
  // The frozen hillside law continues governing accepted grass placement.
  // Soil presentation alone no longer follows its straight/horizontal world-Z divider.
  const soilStart=renderer.indexOf('  if(worldSoilTerrain){');
- const soilEnd=renderer.indexOf('  if(clearingType>0.5&&clearingType<1.5){\\n    // Texture-derived shallow bark relief',soilStart);
+ const soilEnd=renderer.indexOf('  if(clearingType>0.5&&clearingType<1.5){\n    // Texture-derived shallow bark relief',soilStart);
  assert(soilStart>=0&&soilEnd>soilStart,'active terrain shader scope not found');
  const soil=renderer.slice(soilStart,soilEnd);
- assert(soil.includes('materialHillsideWeight=\\n      smoothstep(28.0,92.0,max(0.0,vCoastDistanceMeters))*\\n      (1.0-smoothstep(0.35,0.65,slope));'));
+ assert(soil.includes('materialHillsideWeight=\n      smoothstep(28.0,92.0,max(0.0,vCoastDistanceMeters))*\n      (1.0-smoothstep(0.35,0.65,slope));'));
  assert(soil.includes('float sandCoverage=renderedBeachCoverage('));
  assert(soil.includes('(1.0-materialHillsideWeight*smoothstep(.012,.065,slope))'));
  assert(soil.includes('float steepBank=materialHillsideWeight*smoothstep(.012,.065,slope)'));

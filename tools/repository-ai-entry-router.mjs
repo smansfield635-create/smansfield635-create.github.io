@@ -380,6 +380,173 @@ async function verifyGen3290LiveAdmission(paths,task,mutationIntent){
   if(!proof.eligible)throw new Error('GEN3290_INVALID_PROVENANCE:'+proof.code);
   return proof;
 }
+const GEN3323_C2C_SOURCE_OPERATION='DGB_GRAPHICS_C2C_TWO_FILE_ADAPTER_SOURCE_20261115_001';
+const GEN3323_C2C_SOURCE_COMMENT=6906987847;
+const GEN3323_C2C_SOURCE_HEAD='a8dc45d1d24bf0914a5621cdbc46ff48801f9525';
+const GEN3323_C2C_SOURCE_SCOPE='DIAMOND_GATE_GRAPHICS_ENGINE:C2C:WORLD_HANDOFF_TWO_FILES:20261115';
+const GEN3323_C2C_SOURCE_PATHS=Object.freeze([
+  'assets/engine/dgb.native-sculpt-world-handoff.v1.mjs',
+  'assets/engine/dgb.native-sculpt-world-handoff.v1.test.mjs'
+]);
+function gen3323C2CFail(code){return Object.freeze({eligible:false,code,authorityEffect:'NONE'});}
+function verifyGen3323C2CCandidateEvidence({source,ledger,lockRefHead,paths,task,mutationIntent}={}){
+  try{
+    if(mutationIntent!==true||task!==GEN3323_C2C_SOURCE_OPERATION||
+       paths?.length!==GEN3323_C2C_SOURCE_PATHS.length||
+       !m163Equal([...new Set(paths)].sort(),[...GEN3323_C2C_SOURCE_PATHS].sort()))
+      return gen3323C2CFail('GEN3323_C2C_EXACT_OPERATION_AND_PATHS_REQUIRED');
+    if(!/^[a-f0-9]{40}$/.test(lockRefHead??''))
+      return gen3323C2CFail('GEN3323_C2C_LOCK_REF_INVALID');
+    if(source?.id!==GEN3323_C2C_SOURCE_COMMENT||
+       source.user?.login!=='smansfield635-create'||
+       source.author_association!=='OWNER'||
+       !String(source.issue_url).endsWith('/7108')||
+       !source.body?.startsWith('CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'))
+      return gen3323C2CFail('GEN3323_C2C_OWNER_COMMENT_INVALID');
+    const packet=JSON.parse(source.body.slice(source.body.indexOf('\n')+1));
+    const r=packet.operationRequest,p=packet.constructionProcedure;
+    if(packet.schema!=='CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1'||
+       !m163Equal(Object.keys(packet).sort(),['constructionProcedure','operationRequest','schema'])||
+       r?.operationId!==GEN3323_C2C_SOURCE_OPERATION||
+       r?.projectId!==M163_PROJECT||
+       r?.lockScope!==GEN3323_C2C_SOURCE_SCOPE||
+       r?.exactGoverningHead!==GEN3323_C2C_SOURCE_HEAD||
+       p?.exactGoverningHead!==GEN3323_C2C_SOURCE_HEAD||
+       !m163Equal(r?.allowedPaths,GEN3323_C2C_SOURCE_PATHS)||
+       !m163Equal(p?.exactAllowedRepositoryPaths,GEN3323_C2C_SOURCE_PATHS)||
+       r?.fingerprintDomain?.domain!=='DGB_C2C_TWO_FILE_WORLD_ADAPTER_SOURCE_ADMISSION_V1'||
+       r?.fingerprintDomain?.mainHead!==GEN3323_C2C_SOURCE_HEAD||
+       r?.fingerprintDomain?.moduleSha256!=='008c7b98d8661e211c20bcb8f8ad9d04cf2b5bb06e786193e036013951fb82de'||
+       r?.fingerprintDomain?.testSha256!=='33ac7db184f5d6da51dae442e8cf0cdad62bbaac8aaa52a3b4cef0d0ccb92098'||
+       r?.fingerprintDomain?.archiveSha256!=='9181484ab22eac93ac0bdf9090db70c6c8b39415bbd5121cc3bdb064137e8048'||
+       !m163Equal(r?.fingerprintDomain?.allowedPaths,GEN3323_C2C_SOURCE_PATHS)||
+       r?.subjectIdentity?.worldConsumerIntegration!=='SEPARATE_ADMISSION_REQUIRED')
+      return gen3323C2CFail('GEN3323_C2C_SOURCE_SCOPE_MISMATCH');
+    const locks=Object.values(ledger?.activeScopes??{}).filter(lock=>lock?.operationId===GEN3323_C2C_SOURCE_OPERATION);
+    if(locks.length!==1)return gen3323C2CFail('GEN3323_C2C_ACTIVE_LOCK_NOT_UNIQUE');
+    const lock=locks[0], inv=lock.authorityProvenance?.invocation;
+    if(lock.lockGeneration!==3323||lock.governingHead!==GEN3323_C2C_SOURCE_HEAD||
+       lock.lockScope!==GEN3323_C2C_SOURCE_SCOPE||
+       !['ADMITTED_LOCKED','EXECUTING'].includes(lock.state)||lock.released!==false||
+       lock.scopeHash!==m163Hash(lock.lockScope.trim().toUpperCase())||
+       lock.requestDigest!==m163Hash(JSON.stringify(m163Stable(r)))||
+       lock.procedureLocatorDigest!==m163Hash(JSON.stringify(m163Stable(p)))||
+       inv?.commentId!==GEN3323_C2C_SOURCE_COMMENT||
+       inv?.repository!==M163_REPO||
+       inv?.commentBodySha256!==m163Hash(source.body)||
+       inv?.commentAuthorLogin!=='smansfield635-create'||
+       inv?.commentAuthorAssociation!=='OWNER'||
+       inv?.workflowRunId!==43802068605||
+       inv?.workflowSha!==GEN3323_C2C_SOURCE_HEAD)
+      return gen3323C2CFail('GEN3323_C2C_CANONICAL_LOCK_PROVENANCE_MISMATCH');
+    return Object.freeze({eligible:true,operationId:GEN3323_C2C_SOURCE_OPERATION,
+      lockGeneration:3323,governingHead:GEN3323_C2C_SOURCE_HEAD,
+      sourceCommentId:GEN3323_C2C_SOURCE_COMMENT,lockRefHead,
+      projectId:M163_PROJECT,allowedPaths:GEN3323_C2C_SOURCE_PATHS,
+      scopeHash:lock.scopeHash,authorityEffect:'NONE_EXACT_CANDIDATE_PATH_RECOGNITION_ONLY'});
+  }catch{return gen3323C2CFail('GEN3323_C2C_INVALID_SOURCE_OR_LEDGER');}
+}
+function promoteGen3323C2CRoutes(raw,registry,proof){
+  if(proof?.eligible!==true)throw new Error('GEN3323_C2C_AUTHENTIC_PROOF_REQUIRED');
+  const projects=(registry?.projects??[]).filter(p=>p.projectId===M163_PROJECT&&p.status==='ACTIVE_REGISTERED_PROJECT');
+  if(projects.length!==1)throw new Error('GEN3323_C2C_REGISTERED_PROJECT_NOT_UNIQUE');
+  if(raw?.disposition!=='BLOCK'||!Array.isArray(raw.routes)||
+     raw.routes.length!==GEN3323_C2C_SOURCE_PATHS.length||
+     !m163Equal(raw.routes.map(r=>r.path).sort(),[...GEN3323_C2C_SOURCE_PATHS].sort()))
+    throw new Error('GEN3323_C2C_RAW_SCOPE_MISMATCH');
+  const routes=raw.routes.map(route=>{
+    if(route.routeClass!=='UNREGISTERED'||route.disposition!=='BLOCK'||route.projectId!=null)
+      throw new Error('GEN3323_C2C_RAW_ROUTE_NOT_UNREGISTERED');
+    return {...route,routeClass:'AUTHENTIC_GEN3323_C2C_ADMITTED_CANDIDATE_PATH',
+      projectId:M163_PROJECT,disposition:'PASS'};
+  });
+  return {...raw,routes,disposition:'PASS',legacyDisposition:raw.disposition,
+    admittedCandidateScopeRecognition:'GEN3323_C2C_EXACT_TWO_PATHS_ONLY'};
+}
+async function verifyGen3323C2CLiveAdmission(paths,task,mutationIntent){
+  if(task!==GEN3323_C2C_SOURCE_OPERATION||mutationIntent!==true||
+     paths.length!==GEN3323_C2C_SOURCE_PATHS.length||
+     !m163Equal([...new Set(paths)].sort(),[...GEN3323_C2C_SOURCE_PATHS].sort()))
+    throw new Error('GEN3323_C2C_EXACT_PATH_SET_REQUIRED');
+  const api='https://api.github.com/repos/'+M163_REPO;
+  const [source,ref]=await Promise.all([
+    fetchM163Json(api+'/issues/comments/'+GEN3323_C2C_SOURCE_COMMENT),
+    fetchM163Json(api+'/git/ref/heads/operation-locks/repository-operation-intake-v1')
+  ]);
+  const head=ref?.object?.sha;
+  if(!/^[a-f0-9]{40}$/.test(head??''))throw new Error('GEN3323_C2C_LOCK_REF_INVALID');
+  const doc=await fetchM163Json(api+'/contents/.github/operation-intake/active-operation-ledger.v1.json?ref='+head);
+  if(!/^[a-f0-9]{40}$/.test(doc?.sha??''))throw new Error('GEN3323_C2C_LEDGER_OBJECT_INVALID');
+  const blob=doc.encoding==='base64'&&typeof doc.content==='string'&&doc.content.trim()
+    ?doc:await fetchM163Json(api+'/git/blobs/'+doc.sha);
+  if(blob?.encoding!=='base64'||typeof blob.content!=='string')
+    throw new Error('GEN3323_C2C_LEDGER_CONTENT_INVALID');
+  const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
+  const proof=verifyGen3323C2CCandidateEvidence({source,ledger,lockRefHead:head,paths,task,mutationIntent});
+  if(!proof.eligible)throw new Error('GEN3323_C2C_INVALID_PROVENANCE:'+proof.code);
+  return proof;
+}
+function gen3323C2CScopeSelfTest(){
+  const paths=[...GEN3323_C2C_SOURCE_PATHS],task=GEN3323_C2C_SOURCE_OPERATION;
+  const r={operationId:task,projectId:M163_PROJECT,lockScope:GEN3323_C2C_SOURCE_SCOPE,
+    exactGoverningHead:GEN3323_C2C_SOURCE_HEAD,allowedPaths:paths,
+    fingerprintDomain:{domain:'DGB_C2C_TWO_FILE_WORLD_ADAPTER_SOURCE_ADMISSION_V1',
+      mainHead:GEN3323_C2C_SOURCE_HEAD,
+      moduleSha256:'008c7b98d8661e211c20bcb8f8ad9d04cf2b5bb06e786193e036013951fb82de',
+      testSha256:'33ac7db184f5d6da51dae442e8cf0cdad62bbaac8aaa52a3b4cef0d0ccb92098',
+      archiveSha256:'9181484ab22eac93ac0bdf9090db70c6c8b39415bbd5121cc3bdb064137e8048',
+      allowedPaths:paths},
+    subjectIdentity:{worldConsumerIntegration:'SEPARATE_ADMISSION_REQUIRED'}};
+  const p={exactGoverningHead:GEN3323_C2C_SOURCE_HEAD,exactAllowedRepositoryPaths:paths};
+  const source={id:GEN3323_C2C_SOURCE_COMMENT,user:{login:'smansfield635-create'},
+    author_association:'OWNER',issue_url:'https://api.github.com/repos/'+M163_REPO+'/issues/7108',
+    body:'CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'+JSON.stringify({
+      schema:'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1',
+      operationRequest:r,constructionProcedure:p})};
+  const invocation={commentId:GEN3323_C2C_SOURCE_COMMENT,repository:M163_REPO,
+    commentBodySha256:m163Hash(source.body),commentAuthorLogin:'smansfield635-create',
+    commentAuthorAssociation:'OWNER',workflowRunId:43802068605,
+    workflowSha:GEN3323_C2C_SOURCE_HEAD};
+  const lock={operationId:task,lockGeneration:3323,governingHead:GEN3323_C2C_SOURCE_HEAD,
+    lockScope:GEN3323_C2C_SOURCE_SCOPE,state:'ADMITTED_LOCKED',released:false,
+    scopeHash:m163Hash(GEN3323_C2C_SOURCE_SCOPE.trim().toUpperCase()),
+    requestDigest:m163Hash(JSON.stringify(m163Stable(r))),
+    procedureLocatorDigest:m163Hash(JSON.stringify(m163Stable(p))),
+    authorityProvenance:{invocation}};
+  const a={task,paths,mutationIntent:true,source,ledger:{activeScopes:{one:lock}},lockRefHead:'a'.repeat(40)};
+  const proof=verifyGen3323C2CCandidateEvidence(a);
+  const raw={disposition:'BLOCK',routes:paths.map(path=>({
+    path,routeClass:'UNREGISTERED',projectId:null,disposition:'BLOCK'}))};
+  const registry={projects:[{projectId:M163_PROJECT,status:'ACTIVE_REGISTERED_PROJECT'}]};
+  let promoted=null;try{promoted=promoteGen3323C2CRoutes(raw,registry,proof)}catch{}
+  let extrasRejected=false;
+  try{promoteGen3323C2CRoutes({...raw,routes:[...raw.routes,
+    {path:'assets/engine/foreign.mjs',routeClass:'UNREGISTERED',projectId:null,disposition:'BLOCK'}]},registry,proof)}catch{extrasRejected=true}
+  const fail=[
+    verifyGen3323C2CCandidateEvidence({...a,task:'FOREIGN'}),
+    verifyGen3323C2CCandidateEvidence({...a,paths:[paths[0]]}),
+    verifyGen3323C2CCandidateEvidence({...a,paths:[...paths,'another.mjs']}),
+    verifyGen3323C2CCandidateEvidence({...a,source:{...source,id:0}}),
+    verifyGen3323C2CCandidateEvidence({...a,source:{...source,author_association:'COLLABORATOR'}}),
+    verifyGen3323C2CCandidateEvidence({...a,source:{...source,body:source.body+'{}'}}),
+    verifyGen3323C2CCandidateEvidence({...a,ledger:{activeScopes:{one:{...lock,released:true}}}}),
+    verifyGen3323C2CCandidateEvidence({...a,ledger:{activeScopes:{one:{...lock,lockGeneration:0}}}}),
+    verifyGen3323C2CCandidateEvidence({...a,ledger:{activeScopes:{one:{...lock,requestDigest:'0'.repeat(64)}}}}),
+    verifyGen3323C2CCandidateEvidence({...a,ledger:{activeScopes:{one:lock,two:lock}}}),
+    verifyGen3323C2CCandidateEvidence({...a,ledger:{activeScopes:{one:{...lock,
+      authorityProvenance:{invocation:{...invocation,workflowRunId:0}}}}}}),
+    verifyGen3323C2CCandidateEvidence({...a,source:{...source,body:source.body.replace(
+      'SEPARATE_ADMISSION_REQUIRED','WORLD_ADMISSION_GRANT')}}),
+    verifyGen3323C2CCandidateEvidence({...a,lockRefHead:'invalid'})
+  ];
+  return {result:proof.eligible===true&&promoted?.disposition==='PASS'&&
+    promoted.routes.every(x=>x.projectId===M163_PROJECT)&&extrasRejected&&
+    fail.every(x=>x.eligible===false)?'PASS':'FAIL',
+    positive:proof.eligible===true,negativeCount:fail.length,
+    negativePassed:fail.filter(x=>x.eligible===false).length,
+    extraPathsRejected:extrasRejected,authorityEffect:'NONE_EXACT_CANDIDATE_PATH_RECOGNITION_ONLY'};
+}
+
 function gen3290ScopeSelfTest(){
   const paths=[...GEN3290_SOURCE_PATHS],task=GEN3290_SOURCE_OPERATION;
   const r={operationId:task,projectId:M163_PROJECT,lockScope:GEN3290_SOURCE_SCOPE,
@@ -509,7 +676,8 @@ function selfTest(root) {
   const legacyPass=legacy.status===0&&legacyReceipt?.result==='PASS';
   const m163CandidateScope=m163ScopeSelfTest();
   const gen3290CandidateScope=gen3290ScopeSelfTest();
-  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'&&gen3290CandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope,gen3290CandidateScope };
+  const gen3323C2CCandidateScope=gen3323C2CScopeSelfTest();
+  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'&&gen3290CandidateScope.result==='PASS'&&gen3323C2CCandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope,gen3290CandidateScope,gen3323C2CCandidateScope };
 }
 const root = discoverRoot(process.cwd());
 const argv = process.argv.slice(2);
@@ -585,7 +753,19 @@ if(parsed.task===GEN3290_SOURCE_OPERATION && parsed.mutationIntent){
     gen3290ScopeFailure=String(error.code??error.message??'GEN3290_PROVENANCE_INVALID');
   }
 }
-const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof&&!gen3290ScopeProof)||routeReceipt.disposition!=='PASS';
+let gen3323C2CScopeProof=null;
+let gen3323C2CScopeFailure=null;
+if(parsed.task===GEN3323_C2C_SOURCE_OPERATION&&parsed.mutationIntent){
+  try{
+    const proof=await verifyGen3323C2CLiveAdmission(paths,parsed.task,parsed.mutationIntent);
+    const registry=JSON.parse(fs.readFileSync(path.join(root,'.github/ai-router/router.v1.json'),'utf8'));
+    routeReceipt=promoteGen3323C2CRoutes(rawRouteReceipt,registry,proof);
+    gen3323C2CScopeProof=proof;
+  }catch(error){
+    gen3323C2CScopeFailure=String(error.code??error.message??'GEN3323_INVALID_PROVENANCE');
+  }
+}
+const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof&&!gen3290ScopeProof&&!gen3323C2CScopeProof)||routeReceipt.disposition!=='PASS';
 const isStatic = classification.mutationClass==='STATIC_EDITORIAL_MICRO';
 const passResult = isStatic ? 'PASS_STATIC_EDITORIAL_MICRO' : 'PASS_BOUNDED_PAGE_RELEASE';
 const executionResult = isStatic ? 'NOT_REQUIRED_STATIC_EDITORIAL_MICRO' : 'NOT_REQUIRED_BOUNDED_PAGE_RELEASE';
@@ -601,6 +781,8 @@ const receipt={
   ...(m163ScopeProof ? {gen3264AdmissionProvenance:m163ScopeProof} : {}),
   ...(gen3290ScopeProof ? {gen3290AdmissionProvenance:gen3290ScopeProof} : {}),
   ...(gen3290ScopeFailure ? {gen3290ProvenanceFailure:gen3290ScopeFailure} : {}),
+  ...(gen3323C2CScopeProof ? {gen3323C2CAdmissionProvenance:gen3323C2CScopeProof} : {}),
+  ...(gen3323C2CScopeFailure ? {gen3323C2CProvenanceFailure:gen3323C2CScopeFailure} : {}),
   ...(m163ScopeFailure ? {gen3264ProvenanceFailure:m163ScopeFailure} : {}),
   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-16T08:43:26Z",
+  "generatedAt": "2026-11-16T09:36:19Z",
   "window": {
-    "start": "2026-10-17T08:43:26Z",
-    "end": "2026-11-16T08:43:26Z"
+    "start": "2026-10-17T09:36:19Z",
+    "end": "2026-11-16T09:36:19Z"
   },
   "dimensions": {
     "requestPath": [
@@ -78,17 +78,17 @@
         "visits": 10
       },
       {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/about/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/characters/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },

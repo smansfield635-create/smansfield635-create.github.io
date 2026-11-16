@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-16T21:24:33Z",
+  "generatedAt": "2026-11-16T22:23:54Z",
   "window": {
-    "start": "2026-10-17T21:24:33Z",
-    "end": "2026-11-16T21:24:33Z"
+    "start": "2026-10-17T22:23:54Z",
+    "end": "2026-11-16T22:23:54Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,13 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 309,
-        "visits": 244
+        "pageLoads": 429,
+        "visits": 354
+      },
+      {
+        "value": "/",
+        "pageLoads": 92,
+        "visits": 82
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -28,14 +33,9 @@
         "visits": 80
       },
       {
-        "value": "/",
-        "pageLoads": 62,
-        "visits": 52
-      },
-      {
         "value": "/nine-summits/universe/",
-        "pageLoads": 51,
-        "visits": 51
+        "pageLoads": 71,
+        "visits": 71
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -48,14 +48,24 @@
         "visits": 20
       },
       {
-        "value": "/products/education/",
+        "value": "/showroom/globe/earth/",
         "pageLoads": 20,
         "visits": 20
+      },
+      {
+        "value": "/door/",
+        "pageLoads": 20,
+        "visits": 0
       },
       {
         "value": "/showroom/globe/",
         "pageLoads": 11,
         "visits": 11
+      },
+      {
+        "value": "/about/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/release-proof/",
@@ -73,24 +83,24 @@
         "visits": 10
       },
       {
-        "value": "/about/",
+        "value": "/build/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/characters/",
+        "value": "/products/education/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/showroom/globe/earth/",
+        "value": "/campaigns/wave/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/meet-sean-mansfield/",
+        "value": "/laws/test/",
         "pageLoads": 10,
-        "visits": 0
+        "visits": 10
       },
       {
         "value": "/products/archcoin/contract/",
@@ -118,7 +128,17 @@
         "visits": 0
       },
       {
+        "value": "/products/five-flags/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/instruments/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -129,6 +149,16 @@
       },
       {
         "value": "/explore/frontier/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/products/nutrition/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -148,22 +178,12 @@
         "visits": 1
       },
       {
-        "value": "/products/five-flags/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/rob/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/campaigns/consider-the-energy/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -179,16 +199,6 @@
       },
       {
         "value": "/products/archcoin/payable/overview/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/products/nutrition/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/evidence/agentic-frontier/reproduction/same-state-different-future/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -223,13 +233,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1383,
-        "visits": 1262
+        "pageLoads": 1293,
+        "visits": 1202
       },
       {
         "value": "CN",
-        "pageLoads": 30,
-        "visits": 30
+        "pageLoads": 40,
+        "visits": 40
       },
       {
         "value": "CA",
@@ -250,45 +260,45 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1263,
-        "visits": 1188
+        "pageLoads": 1173,
+        "visits": 1118
       },
       {
         "value": "mobile",
-        "pageLoads": 207,
-        "visits": 184
+        "pageLoads": 177,
+        "visits": 154
       },
       {
         "value": "tablet",
-        "pageLoads": 45,
-        "visits": 22
+        "pageLoads": 15,
+        "visits": 2
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 772,
-        "visits": 771
+        "pageLoads": 782,
+        "visits": 781
       },
       {
         "value": "Chrome",
-        "pageLoads": 258,
-        "visits": 222
+        "pageLoads": 208,
+        "visits": 182
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 133,
-        "visits": 121
+        "pageLoads": 123,
+        "visits": 111
       },
       {
         "value": "Edge",
-        "pageLoads": 116,
-        "visits": 85
+        "pageLoads": 96,
+        "visits": 65
       },
       {
         "value": "Unknown",
-        "pageLoads": 61,
-        "visits": 49
+        "pageLoads": 71,
+        "visits": 59
       },
       {
         "value": "Firefox",
@@ -297,18 +307,13 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 23,
-        "visits": 22
+        "pageLoads": 13,
+        "visits": 12
       },
       {
         "value": "Safari",
         "pageLoads": 13,
         "visits": 13
-      },
-      {
-        "value": "SamsungInternet",
-        "pageLoads": 10,
-        "visits": 10
       },
       {
         "value": "ChromeMobileWebview",

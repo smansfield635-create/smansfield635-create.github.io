@@ -1,22 +1,22 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-16T21:24:33Z",
+  "generatedAt": "2026-11-16T22:23:54Z",
   "window30d": {
-    "start": "2026-10-17T21:24:33Z",
-    "end": "2026-11-16T21:24:33Z"
+    "start": "2026-10-17T22:23:54Z",
+    "end": "2026-11-16T22:23:54Z"
   },
   "daily": [
     {
       "date": "2026-10-18",
-      "pageLoads": 40
+      "pageLoads": 60
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 30
+      "pageLoads": 70
     },
     {
       "date": "2026-10-21",
@@ -36,23 +36,23 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 70
+      "pageLoads": 80
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 60
-    },
-    {
-      "date": "2026-10-27",
       "pageLoads": 10
     },
     {
+      "date": "2026-10-27",
+      "pageLoads": 50
+    },
+    {
       "date": "2026-10-28",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-10-29",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-30",
@@ -64,11 +64,11 @@
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 10
+      "pageLoads": 20
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-11-03",
@@ -76,23 +76,23 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 170
+      "pageLoads": 90
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 10
+      "pageLoads": 40
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 53
+      "pageLoads": 52
     },
     {
       "date": "2026-11-09",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 20
+      "pageLoads": 21
     }
   ],
   "summary": {
@@ -167,8 +167,13 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 309,
-      "visits": 244
+      "pageLoads": 429,
+      "visits": 354
+    },
+    {
+      "path": "/",
+      "pageLoads": 92,
+      "visits": 82
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -181,14 +186,9 @@
       "visits": 80
     },
     {
-      "path": "/",
-      "pageLoads": 62,
-      "visits": 52
-    },
-    {
       "path": "/nine-summits/universe/",
-      "pageLoads": 51,
-      "visits": 51
+      "pageLoads": 71,
+      "visits": 71
     },
     {
       "path": "/showroom/globe/audralia/",

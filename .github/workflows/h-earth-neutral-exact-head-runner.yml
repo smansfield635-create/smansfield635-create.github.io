@@ -2008,3 +2008,134 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3313-native
           if-no-files-found: warn
           retention-days: 30
+
+  # Gen3331: admitted single-path tooling for immutable Gen3329 candidate.
+  # Read-only Node 22; no product modification, visual acceptance, merge, or release.
+  gen3331-terrain-grass-node22:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3329-native-qualification-tooling-20261116'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout immutable Gen3329 product candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 41d430dae2e9151517e7bcec1b4ca21a844e03a1
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up native Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run unchanged terrain grass, visibility, and precomputed grass tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=/tmp/h-earth-gen3331-native
+          mkdir -p "$evidence"
+          test "$(git rev-parse HEAD)" = '41d430dae2e9151517e7bcec1b4ca21a844e03a1'
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = '967403f2b13ad29c2f117a259995ca2b7852852c'
+          test "$(git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs)" = 'd2ad0851144e735dae9dcb46d4006e2a8d5b23d0'
+          # Materialize only the two frozen precomputed-grass histories used by unchanged tests.
+          # A depth-one checkout cannot satisfy their independent git-show baseline proofs.
+          for baseline in 12357909b2cbaab16052b6c30459065547fe9440 db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d; do
+            git -c protocol.version=2 fetch --no-tags --depth=1 origin "$baseline"
+            git cat-file -e "${baseline}^{commit}"
+            git cat-file -e "$baseline:showroom/globe/h-earth/render/assets/precomputed-grass.v1.json"
+            git cat-file -e "$baseline:showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz"
+            printf '%s\n' "$baseline" >> "$evidence/historical-baselines.txt"
+          done
+          git rev-parse HEAD > "$evidence/candidate-head.txt"
+          git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs > "$evidence/test-blob.txt"
+          node --version | tee "$evidence/node-version.txt"
+          test "$(node --version | sed -E 's/^v([0-9]+).*/\1/')" = '22'
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js > "$evidence/renderer-node-check.txt" 2>&1
+          set +e
+          node --test h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs > "$evidence/native.tap" 2>&1
+          status=$?
+          set -e
+          cat "$evidence/native.tap"
+          printf '%s\n' "$status" > "$evidence/native-exit-code.txt"
+          # On failure, preserve an independent, read-only byte-level diagnostic.
+          # This does not edit the frozen tests, source assets, or historical baselines.
+          if [ "$status" -ne 0 ]; then
+            set +e
+            node --input-type=module > "$evidence/grass-provenance-diagnostic.json" 2> "$evidence/grass-provenance-diagnostic.stderr" <<'NODE'
+            import fs from 'node:fs';
+            import {execFileSync} from 'node:child_process';
+            import {gunzipSync} from 'node:zlib';
+            import {createHash} from 'node:crypto';
+            const path='showroom/globe/h-earth/render/assets/precomputed-grass.v1.';
+            const sha=b=>createHash('sha256').update(b).digest('hex');
+            const read=p=>fs.readFileSync(p), json=p=>JSON.parse(read(p)), unzip=p=>gunzipSync(read(p));
+            const oldRef='db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d';
+            const oldManifest=JSON.parse(execFileSync('git',['show',oldRef+':'+path+'json'],{maxBuffer:200e6}));
+            const oldRaw=gunzipSync(execFileSync('git',['show',oldRef+':'+path+'bin.gz'],{maxBuffer:200e6}));
+            const current=json(path+'json'),raw=unzip(path+'bin.gz');
+            if(sha(oldRaw)!==oldManifest.rawSha256||sha(raw)!==current.rawSha256)throw Error('RAW_ASSET_DIGEST_MISMATCH');
+            function tilesWithOffsets(manifest){let pos=0;const map=new Map();for(const t of manifest.tiles){map.set(t.id,{...t,offset:pos});pos+=t.count*52;}return map;}
+            const before=tilesWithOffsets(oldManifest),after=tilesWithOffsets(current);
+            let missingTiles=0,missingRoots=0,shortPrefixTiles=0,shortPrefixRoots=0,changedCommonPrefixTiles=0,preservedPrefixRecords=0;
+            const changedSamples=[],shortSamples=[];
+            for(const [id,b] of before){
+             const a=after.get(id);if(!a){missingTiles++;missingRoots+=b.count;continue;}
+             if(a.baselineCount<b.count){shortPrefixTiles++;shortPrefixRoots+=b.count-a.baselineCount;if(shortSamples.length<12)shortSamples.push({id,old:b.count,baseline:a.baselineCount,total:a.count});}
+             const overlap=Math.min(a.baselineCount,b.count);const same=raw.subarray(a.offset,a.offset+overlap*52).equals(oldRaw.subarray(b.offset,b.offset+overlap*52));
+             if(!same){changedCommonPrefixTiles++;if(changedSamples.length<12)changedSamples.push({id,overlap});}else preservedPrefixRecords+=overlap;
+            }
+            const target='-44:-69',t=after.get(target),old=before.get(target);
+            const key=r=>r.x+':'+r.z,tile=r=>Math.floor(r.x/4)+':'+Math.floor(r.z/4);
+            const decode=b=>({x:b.readDoubleLE(0),y:b.readDoubleLE(8),z:b.readDoubleLE(16),angle:b.readDoubleLE(24),slope:b.readDoubleLE(32),seed:b.readUInt32LE(40),triangleId:b.readUInt32LE(44),tag:b.readUInt32LE(48),hex:b.toString('hex')});
+            const observed=Array.from({length:t.count-t.baselineCount},(_,i)=>decode(raw.subarray(t.offset+(t.baselineCount+i)*52,t.offset+(t.baselineCount+i+1)*52)));
+            const expected=[];
+            for(const [source,srcPath] of [['spatial','h-earth-3d/evidence/grass-spatial-repair-v1/roots.json.gz'],['coastal','h-earth-3d/evidence/grass-coastal-v1/roots.json.gz']]){
+             for(const r of JSON.parse(unzip(srcPath)))if(tile(r)===target)expected.push({...r,source});
+            }
+            for(const [source,srcPath] of [['hillside','h-earth-3d/evidence/hillside-shoreline-continuity-v1/added.bin.gz'],['terrain','h-earth-3d/evidence/terrain-grass-continuity-v2/added.bin.gz']]){
+             const bytes=unzip(srcPath);if(bytes.length%52)throw Error('BAD_ADDITION_STRIDE:'+source);
+             for(let i=0;i<bytes.length;i+=52){const r=decode(bytes.subarray(i,i+52));if(tile(r)===target)expected.push({...r,source});}
+            }
+            const expectation=new Map(expected.map(r=>[key(r),r]));
+            // Authenticated accepted successor: compare every target record against
+            // the final coastal redistribution movement ledger, not the obsolete original additions.
+            const coastalReceipt=json('h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json');
+            const relocationChanges=JSON.parse(unzip('h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz'));
+            const relocationHash=sha(Buffer.from(JSON.stringify(relocationChanges)));
+            if(relocationHash!==coastalReceipt.changesSha256||relocationChanges.length!==coastalReceipt.moved)throw Error('REDISTRIBUTION_LEDGER_IDENTITY_MISMATCH');
+            if(coastalReceipt.added!==0||coastalReceipt.removed!==0||coastalReceipt.rootCount!==current.rootCount)throw Error('REDISTRIBUTION_ROOT_CENSUS_MISMATCH');
+            const isTarget=([x,,z])=>Math.floor(x/4)+':'+Math.floor(z/4)===target;
+            const targetMoves=relocationChanges.filter(c=>isTarget(c.to));
+            const movesByIdentity=new Map(targetMoves.map(c=>[[c.to[0],c.to[2],c.seed].join(':'),c]));
+            const movementRecords=observed.map(r=>{
+             const movement=movesByIdentity.get([r.x,r.z,r.seed].join(':'));
+             return {x:r.x,z:r.z,seed:r.seed,matched:!!movement,triangleIdMatched:!!movement&&movement.triangleId===r.triangleId,heightMatched:!!movement&&Math.fround(movement.to[1])===r.y,regionTagMatched:r.tag===2,from:movement?.from??null};
+            });
+            const movementEvidence={receiptDigest:coastalReceipt.changesSha256,computedDigest:relocationHash,ledgerEntries:relocationChanges.length,rootCountConserved:true,targetMoveCount:targetMoves.length,targetActualCount:observed.length,matched:movementRecords.filter(x=>x.matched&&x.triangleIdMatched&&x.heightMatched&&x.regionTagMatched).length,records:movementRecords};
+            if(movementEvidence.targetMoveCount!==observed.length||movementEvidence.matched!==observed.length)throw Error('TARGET_TILE_MOVEMENT_PROVENANCE_MISMATCH:'+JSON.stringify(movementEvidence));
+            const targetRecords=observed.map(r=>{const exact=expectation.get(key(r));const ordered=expected.map(q=>({source:q.source,x:q.x,z:q.z,distance:Math.hypot(q.x-r.x,q.z-r.z)})).sort((a,b)=>a.distance-b.distance).slice(0,2);return {x:r.x,z:r.z,seed:r.seed,triangleId:r.triangleId,tag:r.tag,matchedSource:exact?.source||null,matchAllFields:exact?['x','y','z','angle','slope','seed','triangleId'].every(k=>exact[k]===r[k]):false,nearest:exact?[]:ordered,rawHex:r.hex};});
+            const report={schema:'H_EARTH_GEN3331_PREEXISTING_GRASS_PROVENANCE_DIAGNOSTIC_v1',coastalMovementLedger:movementEvidence,candidate:'41d430dae2e9151517e7bcec1b4ca21a844e03a1',historic:oldRef,oldRootCount:oldManifest.rootCount,currentRootCount:current.rootCount,missingTiles,missingRoots,shortPrefixTiles,shortPrefixRoots,recordedPrefixShortfall:missingRoots+shortPrefixRoots,changedCommonPrefixTiles,preservedPrefixRecords,shortSamples,changedSamples,targetTile:{id:target,oldCount:old.count,currentBaselineCount:t.baselineCount,currentTotalCount:t.count,expectedBySource:Object.fromEntries(['spatial','coastal','hillside','terrain'].map(s=>[s,expected.filter(x=>x.source===s).length])),expectedUniqueKeys:new Set(expected.map(key)).size,actualAdditions:observed.length,records:targetRecords}};
+            console.log(JSON.stringify(report));
+          NODE
+            printf '%s\n' "$?" > "$evidence/grass-provenance-diagnostic-exit-code.txt"
+            set -e
+          fi
+          if [ "$status" -ne 0 ]; then
+            awk '/^not ok [0-9]+/ {print; exit}' "$evidence/native.tap" > "$evidence/first-failure.txt"
+            exit "$status"
+          fi
+          grep -Eq '^# tests [1-9][0-9]*$' "$evidence/native.tap"
+          grep -Fxq '# fail 0' "$evidence/native.tap"
+          jq -n --arg candidate '41d430dae2e9151517e7bcec1b4ca21a844e03a1' \
+            --arg renderer '967403f2b13ad29c2f117a259995ca2b7852852c' \
+            --arg test 'd2ad0851144e735dae9dcb46d4006e2a8d5b23d0' \
+            --arg nodeVersion "$(cat "$evidence/node-version.txt")" \
+            '{schema:"H_EARTH_PR7445_EXACT_NODE22_QUALIFICATION_RECEIPT_v1",result:"NATIVE_SOURCE_QUALIFICATION_PASS_NOT_VISUAL_ACCEPTANCE",candidateHead:$candidate,rendererBlob:$renderer,testBlob:$test,nodeVersion:$nodeVersion,node22Executed:true,nativeTestExitCode:0,tests:["h-earth.terrain-grass-continuity.v2.test.mjs","h-earth.grass-visibility.v2.test.mjs","h-earth.precomputed-grass.v1.test.mjs"],glslCompiled:false,webgl2PixelsRendered:false,ownerKeep:false,productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false}' > "$evidence/native-receipt.json"
+      - name: Preserve exact-head Node22 evidence or first native failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3331-terrain-grass-node22
+          path: /tmp/h-earth-gen3331-native
+          if-no-files-found: warn
+          retention-days: 30

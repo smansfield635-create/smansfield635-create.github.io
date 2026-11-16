@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' && inputs.route_query != 'qualification=gen3333-lineage-native-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -2006,5 +2006,102 @@ jobs:
         with:
           name: h-earth-gen3313-native-${{ inputs.target_sha }}
           path: ${{ runner.temp }}/h-earth-gen3313-native
+          if-no-files-found: warn
+          retention-days: 30
+
+  # Gen3335 admission: immutable Gen3333 grass-lineage tests, not product release.
+  gen3333-lineage-native:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3333-lineage-native-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - name: Check out frozen Gen3333 validation source
+        uses: actions/checkout@v4
+        with:
+          ref: 05cccb5c0e404d5a5a9e11d146942dbb2babf97a
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify pinned sources and execute genuine historical Node22 TAP
+        shell: bash
+        env:
+          REQUESTED_TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/h-earth-gen3333-native"
+          mkdir -p "$evidence"
+          printf 'NOT_EXECUTED\n' > "$evidence/disposition.txt"
+          printf '%s\n' "$REQUESTED_TARGET_SHA" > "$evidence/requested-head.txt"
+          test "$REQUESTED_TARGET_SHA" = '05cccb5c0e404d5a5a9e11d146942dbb2babf97a'
+          test "$(git rev-parse HEAD)" = '05cccb5c0e404d5a5a9e11d146942dbb2babf97a'
+          git rev-parse HEAD > "$evidence/checked-out-head.txt"
+          node --version | tee "$evidence/node-version.txt"
+          test "$(node --version | cut -d. -f1)" = v22
+          # These source identities are independent of the original Gen3331 TAP.
+          test "$(git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs)" = da985a7fd67dbcc5e06c87d59221b10eb22814b0
+          test "$(git hash-object h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs)" = c8232e64e5dd991abea2b65851f6935990189618
+          test "$(git hash-object h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs)" = ebae7183ee7ebe8e7948a8b81a021f811941763b
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 7cb62866153d4ceb57b2a2177359bd56a4220d85
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 967403f2b13ad29c2f117a259995ca2b7852852c
+          test "$(git hash-object showroom/globe/h-earth/render/assets/precomputed-grass.v1.json)" = 2479a2cb678b4fcac5583129fb5aaf8f73da1e54
+          for path in \
+            h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs \
+            h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs \
+            h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs \
+            showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js \
+            showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js \
+            showroom/globe/h-earth/render/assets/precomputed-grass.v1.json \
+            showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz; do
+            printf '%s %s\n' "$(git hash-object "$path")" "$path" >> "$evidence/source-blobs.txt"
+          done
+          # A shallow exact checkout alone cannot authenticate the original 4x4 census.
+          for historic in \
+            902b06404965527e98de2612ee824d87ce404eaf \
+            db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d \
+            0a1124d4337fdabed155273dbf80b4750188141b \
+            2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088 \
+            12357909b2cbaab16052b6c30459065547fe9440; do
+            git fetch --no-tags --depth=1 origin "$historic"
+            git cat-file -e "$historic^{commit}"
+            git cat-file -e "$historic:showroom/globe/h-earth/render/assets/precomputed-grass.v1.json"
+            git cat-file -e "$historic:showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz"
+            printf '%s\n' "$historic" >> "$evidence/historical-commits.txt"
+          done
+          grass=showroom/globe/h-earth/render/assets/precomputed-grass.v1
+          jq -e '.rootCount==2858738 and .stride==52 and .rawSha256=="bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97" and .compressedSha256=="4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800"' "$grass.json" > "$evidence/manifest-identity.txt"
+          printf '%s  %s\n' 4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800 "$grass.bin.gz" | sha256sum --check | tee "$evidence/compressed-integrity.txt"
+          raw_digest="$(gzip -cd "$grass.bin.gz" | sha256sum | cut -d' ' -f1)"
+          printf '%s\n' "$raw_digest" > "$evidence/raw-integrity.txt"
+          test "$raw_digest" = bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97
+          node --check h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs
+          node --check h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs
+          node --check h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs
+          printf 'NODE22_TAP_STARTED\n' > "$evidence/disposition.txt"
+          set +e
+          node --test h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs > "$evidence/native.tap" 2>&1
+          status=$?
+          set -e
+          printf '%s\n' "$status" > "$evidence/native-exit-code.txt"
+          cat "$evidence/native.tap"
+          if [ "$status" -ne 0 ]; then
+            grep -m1 -E '^not ok [0-9]+' "$evidence/native.tap" > "$evidence/first-failure.txt" || printf 'NATIVE_PROCESS_EXIT_%s\n' "$status" > "$evidence/first-failure.txt"
+            printf 'NODE22_TAP_FAILED\n' > "$evidence/disposition.txt"
+            exit "$status"
+          fi
+          grep -Eq '^# tests [1-9][0-9]*$' "$evidence/native.tap"
+          grep -Fxq '# fail 0' "$evidence/native.tap"
+          printf 'NODE22_TAP_PASS_WEST_REVIEW_PENDING\n' > "$evidence/disposition.txt"
+          jq -n --arg candidate '05cccb5c0e404d5a5a9e11d146942dbb2babf97a' --arg terrain 'da985a7fd67dbcc5e06c87d59221b10eb22814b0' --arg visibility 'c8232e64e5dd991abea2b65851f6935990189618' --arg precomputed 'ebae7183ee7ebe8e7948a8b81a021f811941763b' '{schema:"H_EARTH_GEN3333_EXACT_NATIVE_NODE22_RECEIPT_v1",result:"NATIVE_NODE22_TAP_PASS_WEST_REVIEW_PENDING",candidateHead:$candidate,terrainTestBlob:$terrain,grassVisibilityTestBlob:$visibility,precomputedGrassTestBlob:$precomputed,rootCount:2858738,relocated:60963,plantingRepair:632,nativeNode22Executed:true,nativeTestExitCode:0,independentWestReview:false,ownerVisualKeep:false,experienceAnchorAccepted:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false,publicationAuthorityCreated:false}' > "$evidence/native-receipt.json"
+      - name: Preserve actual TAP, historical source hashes, or first failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3333-native-05cccb5c0e404d5a5a9e11d146942dbb2babf97a
+          path: ${{ runner.temp }}/h-earth-gen3333-native
           if-no-files-found: warn
           retention-days: 30

@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Require exact immutable target
         env:
-          TARGET_SHA: \${{ inputs.target_sha }}
+          TARGET_SHA: ${{ inputs.target_sha }}
         run: |
           set -euo pipefail
           test "$TARGET_SHA" = '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d'
@@ -92,7 +92,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3313-webgl2-ab-\${{ inputs.target_sha }}
-          path: \${{ runner.temp }}/h-earth-gen3313-webgl2-ab
+          name: h-earth-gen3313-webgl2-ab-${{ inputs.target_sha }}
+          path: ${{ runner.temp }}/h-earth-gen3313-webgl2-ab
           if-no-files-found: error
           retention-days: 30

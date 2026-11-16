@@ -28515,6 +28515,50 @@
       "scopeHash": "d0e44ee036df91b824cdb85f5b49419a22d6bcf1431eeea285d20b735d6bdaca",
       "state": "ADMITTED_LOCKED"
     },
+    "d0f43915b82ec8aa3c035b216981faf71bf92ff44a1e40e264bf49f49c2a6915": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f59fde4dc066aee4c002902a94d4d5c38cd4c92d",
+          "lockGeneration": 3337,
+          "lockScope": "H_EARTH:GEN3336_FROZEN_CENSUS_HISTORIC_SURFACE_READ_ONLY_ORACLE_REPAIR:20261116",
+          "operationId": "H_EARTH_GEN3336_FROZEN_CENSUS_HISTORICAL_SURFACE_REPLAY_REPAIR_20261116_001",
+          "procedureLocatorDigest": "ee997ba9151589d3158ad2bd9920936ceb4685ffb5eac6ec06f40aa8b7b2d6ab",
+          "requestDigest": "a7f8ac254c4c82f2952ca23c076e372f93ce66d4f70ba6b11b0e16bc355aa3b3",
+          "scopeHash": "d0f43915b82ec8aa3c035b216981faf71bf92ff44a1e40e264bf49f49c2a6915"
+        },
+        "bindingDigest": "24a922eba61b6702b0b0135bc6508bf9edaf92f02360f9ae12180579611bc6c6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d7ce9e4636bb0d2fd102eb44386ff9580864bd21297b8eb00977cf8cc0cb24c4",
+          "commentId": 6928462233,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43950813864,
+          "workflowSha": "f59fde4dc066aee4c002902a94d4d5c38cd4c92d"
+        },
+        "lineageAnchorCommitSha": "0ba3b723f0a476353906a6f44a35bfd3a3b1a108",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f59fde4dc066aee4c002902a94d4d5c38cd4c92d",
+      "lockGeneration": 3337,
+      "lockScope": "H_EARTH:GEN3336_FROZEN_CENSUS_HISTORIC_SURFACE_READ_ONLY_ORACLE_REPAIR:20261116",
+      "operationId": "H_EARTH_GEN3336_FROZEN_CENSUS_HISTORICAL_SURFACE_REPLAY_REPAIR_20261116_001",
+      "procedureLocatorDigest": "ee997ba9151589d3158ad2bd9920936ceb4685ffb5eac6ec06f40aa8b7b2d6ab",
+      "released": false,
+      "requestDigest": "a7f8ac254c4c82f2952ca23c076e372f93ce66d4f70ba6b11b0e16bc355aa3b3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d0f43915b82ec8aa3c035b216981faf71bf92ff44a1e40e264bf49f49c2a6915",
+      "state": "ADMITTED_LOCKED"
+    },
     "d191b38511afd64b008db94e09d66672f15da5579ad98e97d096cbfe499ba11e": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -34664,7 +34708,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3336,
+  "lockGeneration": 3337,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

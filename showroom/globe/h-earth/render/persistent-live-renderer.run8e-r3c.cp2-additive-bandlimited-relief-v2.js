@@ -750,6 +750,8 @@ void main(){
   float terrainReliefEnvelope=0.0;
   // Blend the approved soil's sunward lighting only into eligible ground.
   float worldSoilLightingWeight=0.0;
+  // Gen3325: a terrain-presentation weight only; grass roots and shaders remain frozen.
+  float materialHillsideWeight=0.0;
   float materialSignal=clearingType>0.5?0.0:clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
@@ -790,6 +792,12 @@ void main(){
     float detailField=noise2(world*0.29+vec2(29.0,-17.0));
     float elevationMix=smoothstep(-1.0,34.0,vWorldPosition.y);
     float slopeResponse=smoothstep(0.025,0.58,slope);
+    // The former material weight followed a four-point polyline ending in a
+    // perfectly horizontal Z=-224 divider. Use the existing geographic coast
+    // distance and terrain slope instead; preserve the authored grass/density law.
+    materialHillsideWeight=
+      smoothstep(28.0,92.0,max(0.0,vCoastDistanceMeters))*
+      (1.0-smoothstep(0.35,0.65,slope));
     // Screen derivatives accentuate mesh triangle boundaries rather than landform.
     float curvatureResponse=0.0;
     float nearDetail=1.0-smoothstep(72.0,250.0,distanceToCamera);
@@ -1103,8 +1111,13 @@ void main(){
         0.48+0.10*abs(fertilePatch-0.5)*2.0+
         0.08*mineralExposure,0.0,0.66
       );
+      // Gen3343: keep the already accepted photographic world soil as the
+      // dominant inland albedo. The synthetic six-biome identity tint may
+      // gently vary it but must not paint broad solid-color panels over it.
+      // Protected grove has zero identity mix, as before; grass, water, rock,
+      // shoreline material and world geometry remain on their original paths.
       float identityWeight=inlandIdentity*
-        (1.0-protectedGrove)*identityContrast;
+        (1.0-protectedGrove)*identityContrast*0.15;
       palette=mix(palette,identityBase,identityWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every
@@ -1155,7 +1168,11 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // Gen2917 proved this authored olive tint creates an inland color band.
+      // Let real grass carry vegetation color; retain only restrained soil tint.
+      // Original root population, textures, patch masks and exclusions are unchanged.
+      float groundcoverPigmentWeight=groundcoverWeight*0.08;
+      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
@@ -1200,9 +1217,10 @@ void main(){
     // Actual exposed mesh contacts drive proximity; canonical coast distance
     // retains the existing transition to slope/elevation suitability inland.
     float inlandMeters=vContactDistanceMeters;
-    float sandCoverage=hillsideSandCoverage(world,slope,renderedBeachCoverage(inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope));
+    float sandCoverage=renderedBeachCoverage(inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope)*
+      (1.0-materialHillsideWeight*smoothstep(.012,.065,slope));
     // Exposed banks are weathered earth/stone, not the flat beach sand palette.
-    float steepBank=hillsideWeight(world)*smoothstep(.012,.065,slope)*(1.0-smoothstep(10.0,38.0,inlandMeters))*smoothstep(-1.0,0.0,inlandMeters);
+    float steepBank=materialHillsideWeight*smoothstep(.012,.065,slope)*(1.0-smoothstep(10.0,38.0,inlandMeters))*smoothstep(-1.0,0.0,inlandMeters);
     vec3 bankEarth=mix(vec3(.20,.17,.115),vec3(.28,.255,.215),smoothstep(.08,.35,slope));
     palette=mix(palette,bankEarth*(.90+.18*grain),steepBank*.78);
     vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
@@ -1303,7 +1321,8 @@ void main(){
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
       habitatMaterialCoverage=max(habitatMaterialCoverage,texture(uHabitatMaterialPresentation,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
-    float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
+    float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),
+      materialHillsideWeight*smoothstep(18.0,42.0,vWorldPosition.y));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
     // Occupied meadow soil only; immutable original habitat panels remain dominant.

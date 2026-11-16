@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T19:24:38Z",
+  "generatedAt": "2026-11-16T20:24:17Z",
   "window": {
-    "start": "2026-08-18T19:24:38Z",
-    "end": "2026-11-16T19:24:38Z"
+    "start": "2026-08-18T20:24:17Z",
+    "end": "2026-11-16T20:24:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -70,6 +70,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -85,10 +89,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 63,
@@ -106,16 +106,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {

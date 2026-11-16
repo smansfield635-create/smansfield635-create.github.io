@@ -1586,7 +1586,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFIER_V1",
-      "exactToolingHead": "5bd69bd37da04f3a145708c64d7cb8d8984ffae4",
+      "exactToolingHead": "3f19f84b7ff375690c57ed28d4037a1518db3f38",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [
@@ -1718,7 +1718,8 @@
       },
       "continuationRule": "AFTER_SEPARATE_GEN3330_TOOLING_REVIEW_AND_MERGE_RUN_FIXED_DESCRIPTOR_AT_EXACT_TARGET; ONLY_AFTER_AUTHENTIC_GEN3323_TWO_PATH_NATIVE_ROUTER_PASS_ADVANCE_EXISTING_28_OF_28_ADAPTER_SOURCE",
       "terminationRule": "READONLY_GEN3323_EXACT_TWO_PATH_QUALIFICATION_ONLY_NO_ADAPTER_SOURCE_MERGE_DEPLOYMENT_OR_WORLD_INTEGRATION",
-      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>"
     }
   ]
 }

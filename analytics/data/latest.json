@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-16T11:28:45Z",
+  "generatedAt": "2026-11-16T12:38:26Z",
   "window30d": {
-    "start": "2026-10-17T11:28:45Z",
-    "end": "2026-11-16T11:28:45Z"
+    "start": "2026-10-17T12:38:26Z",
+    "end": "2026-11-16T12:38:26Z"
   },
   "daily": [
     {
@@ -24,15 +24,15 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 100
+      "pageLoads": 40
     },
     {
       "date": "2026-10-24",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-25",
@@ -56,15 +56,15 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 50
-    },
-    {
-      "date": "2026-10-31",
       "pageLoads": 40
     },
     {
+      "date": "2026-10-31",
+      "pageLoads": 10
+    },
+    {
       "date": "2026-11-01",
-      "pageLoads": 50
+      "pageLoads": 10
     },
     {
       "date": "2026-11-02",
@@ -84,7 +84,7 @@
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 30
+      "pageLoads": 10
     },
     {
       "date": "2026-11-07",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 74
+      "pageLoads": 72
     },
     {
       "date": "2026-11-09",
@@ -124,34 +124,34 @@
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 10
+      "pageLoads": 11
     }
   ],
   "summary": {
-    "pageLoads": 1556,
-    "botPageLoads": 823,
-    "nonBotPageLoads": 733
+    "pageLoads": 1405,
+    "botPageLoads": 792,
+    "nonBotPageLoads": 613
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1241,
-      "visits": 1241
+      "pageLoads": 1280,
+      "visits": 1280
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 146,
+      "pageLoads": 106,
       "visits": 0
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 16,
-      "visits": 16
     },
     {
       "host": "www.facebook.com",
       "pageLoads": 12,
       "visits": 12
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 6,
+      "visits": 6
     },
     {
       "host": "www.google.com",
@@ -162,28 +162,28 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 581,
-      "visits": 581
+      "pageLoads": 600,
+      "visits": 600
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 359,
-      "visits": 294
-    },
-    {
-      "path": "/",
-      "pageLoads": 97,
-      "visits": 73
-    },
-    {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 70,
-      "visits": 70
+      "pageLoads": 339,
+      "visits": 264
     },
     {
       "path": "/products/education/personal-training/course.html",
-      "pageLoads": 60,
-      "visits": 60
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
+      "path": "/products/education/personal-training/",
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
+      "path": "/",
+      "pageLoads": 67,
+      "visits": 53
     },
     {
       "path": "/nine-summits/universe/",

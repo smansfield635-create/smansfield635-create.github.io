@@ -84,7 +84,13 @@ test('independent full census, every 4x4 probe, actual occupancy and baseline pr
  const {createHash}=await import('node:crypto');
  const {visibleSurface,groundAdmission,materials,cover,geology}=await import('../evidence/hillside-shoreline-continuity-v1/support-fixture.mjs');
  const sha=b=>createHash('sha256').update(b).digest('hex'),root=new URL('../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.';
- const cp=read('checkpoint.json'),rows=read('coverage.json.gz'),manifest=JSON.parse(fs.readFileSync(new URL(asset+'json',root))),raw=gunzipSync(fs.readFileSync(new URL(asset+'bin.gz',root)));
+ const cp=read('checkpoint.json'),rows=read('coverage.json.gz');
+ // Execute the frozen North/West 4x4 census on the original output commit,
+ // before the later accepted coastal relocations altered root tile prefixes.
+ const historic='902b06404965527e98de2612ee824d87ce404eaf';
+ const showHistorical=suffix=>execFileSync('git',['show',historic+':'+asset+suffix],{cwd:root,maxBuffer:180*1024*1024});
+ const manifest=JSON.parse(showHistorical('json')),raw=gunzipSync(showHistorical('bin.gz'));
+ assert.equal(sha(raw),manifest.rawSha256);assert.equal(manifest.rootCount,2858738);
  const priorManifest=JSON.parse(execFileSync('git',['show',contract.baseline+':'+asset+'json'],{cwd:root,maxBuffer:10*1024*1024})),prior=gunzipSync(execFileSync('git',['show',contract.baseline+':'+asset+'bin.gz'],{cwd:root,maxBuffer:120*1024*1024}));
  assert.equal(sha(raw),manifest.rawSha256);assert.equal(sha(fs.readFileSync(new URL('acceptance.json',evidence))),cp.acceptanceSha256);
  const key=(x,z)=>Math.floor(x)+':'+Math.floor(z),before=new Map(),after=new Map(),oldTiles=new Map(),priorPackedTiles=[];let offset=0;
@@ -93,10 +99,16 @@ test('independent full census, every 4x4 probe, actual occupancy and baseline pr
  for(const tile of manifest.tiles){const old=oldTiles.get(tile.id);assert.equal(tile.baselineCount,old?.count||0);if(old){assert(tile.count>=old.count);assert.deepEqual(raw.subarray(offset,offset+old.count*52),prior.subarray(old.offset,old.offset+old.count*52));preserved+=old.count;oldTiles.delete(tile.id);}assert(tile.count<=1600);for(let i=0;i<tile.count;i++){const o=offset+i*52,x=raw.readDoubleLE(o),z=raw.readDoubleLE(o+16),k=key(x,z);assert.equal(tile.id,Math.floor(x/4)+':'+Math.floor(z/4));after.set(k,(after.get(k)||0)+1);}offset+=tile.count*52;}
  assert.equal(preserved,priorManifest.rootCount);assert.equal(oldTiles.size,0);assert.equal(offset,manifest.rootCount*52);assert.equal(manifest.rootCount,priorManifest.rootCount+cp.added);
  for(let z=0;z<192;z++)assert.deepEqual(raw.subarray(offset+z*576,offset+z*576+384),prior.subarray(priorManifest.rootCount*52+z*576,priorManifest.rootCount*52+z*576+384));
- const {loadPrecomputedGrass,takePrecomputedGrassPlan}=await import('../../showroom/globe/h-earth/render/precomputed-grass.v1.js');
+
  const {runtimePlantingBaselineTiles}=await import('../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js');
- const authenticated=await loadPrecomputedGrass({packed:true,fetchImpl:async url=>new Response(fs.readFileSync(url.pathname))});
- const plan=takePrecomputedGrassPlan(authenticated),runtimeInput=runtimePlantingBaselineTiles(plan.tiles);
+ const historicalTiles=[];let historicOffset=0;
+ for(const tile of manifest.tiles){
+  const packed=new Float32Array(tile.count*4);
+  for(let i=0;i<tile.count;i++)for(let j=0;j<4;j++)packed[i*4+j]=raw.readDoubleLE(historicOffset+i*52+j*8);
+  historicalTiles.push({...tile,packed});historicOffset+=tile.count*52;
+ }
+ assert.equal(historicOffset,manifest.rootCount*52);
+ const runtimeInput=runtimePlantingBaselineTiles(historicalTiles);
  assert.equal(runtimeInput.length,priorPackedTiles.length);
  for(let i=0;i<runtimeInput.length;i++){const actual=runtimeInput[i],old=priorPackedTiles[i];assert.equal(actual.id,old.id);assert.equal(actual.minX,old.minX);assert.equal(actual.minZ,old.minZ);assert.equal(actual.count,old.count);assert.deepEqual(actual.packed,old.packed);}
  const {buildCavernEntranceGrass}=await import('../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js');
@@ -151,4 +163,143 @@ test('independent full census, every 4x4 probe, actual occupancy and baseline pr
  }
  assert.equal(selected.size,0);assert.equal(short,cp.shortCells);assert.equal(shortFull,0);
  console.log('WEST_INDEPENDENT_TERRAIN_CENSUS',JSON.stringify({cells:rows.length,probes:rows.length*16,boundaryCells:included,baselineRootsPreserved:preserved,runtimeRootsPreserved:runtimeCount,combinedMaximumTileRoots:physicalMax,shortCells:short,shortFullyEligibleCells:shortFull}));
+});
+
+ 
+// Preserve the original frozen 4x4 census above. These are separately admitted,
+// later relocations; the CURRENT asset must never be substituted for that oracle.
+test('post-terrain ledger, 60,963 redistribution moves and 632 planting moves have zero unaccounted root loss',async()=>{
+ const {execFileSync}=await import('node:child_process');
+ const {createHash}=await import('node:crypto');
+ const sha=bytes=>createHash('sha256').update(bytes).digest('hex'),root=new URL('../../',import.meta.url);
+ const asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.';
+ const maxBuffer=180*1024*1024;
+ const git=(commit,suffix)=>execFileSync('git',['show',commit+':'+asset+suffix],{cwd:root,maxBuffer});
+ const snapshot=(commit)=>{
+  const m=JSON.parse(git(commit,'json')),compressed=git(commit,'bin.gz'),raw=gunzipSync(compressed);
+  assert.equal(sha(compressed),m.compressedSha256);
+  assert.equal(sha(raw),m.rawSha256);
+  assert.equal(m.rootCount,2858738);assert.equal(m.stride,52);
+  assert.equal(raw.length,m.rootCount*52+576*192);
+  return {m,raw};
+ };
+ const onDisk=()=>{
+  const m=JSON.parse(fs.readFileSync(new URL(asset+'json',root))),compressed=fs.readFileSync(new URL(asset+'bin.gz',root)),raw=gunzipSync(compressed);
+  assert.equal(sha(compressed),m.compressedSha256);assert.equal(sha(raw),m.rawSha256);
+  assert.equal(m.rootCount,2858738);assert.equal(raw.length,m.rootCount*52+576*192);
+  return {m,raw};
+ };
+ const original=snapshot('902b06404965527e98de2612ee824d87ce404eaf');
+ assert.equal(original.m.rawSha256,'a7988a67d4f12eece749b2699655444b73a6384588ed5af78f367dc1145fb50b');
+ const before=snapshot('0a1124d4337fdabed155273dbf80b4750188141b');
+ assert.equal(before.m.rawSha256,'9b850685afcca54f4a96b45f5b45c2301d114da797449462bf33f831929dcf97');
+ const after=snapshot('2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088');
+ assert.equal(after.m.rawSha256,'2f196095203c9a4a250c697496c6734f8d8e60487684d3956bd05950c5a5b020');
+ const current=onDisk();
+ assert.equal(current.m.rawSha256,'bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97');
+ // Independent multiset: exact (seed, float32 blade angle) pairs survive
+ // every epoch, including the earlier accepted post-terrain relocations.
+ const invariant=s=>{
+  const pairs=new BigUint64Array(s.m.rootCount),angleBits=new DataView(new ArrayBuffer(4));
+  const regions=[0,0,0];let index=0;
+  for(const tile of s.m.tiles){
+   assert(tile.count>=1&&tile.count<=1600);
+   assert(tile.baselineCount>=0&&tile.baselineCount<=tile.count);
+   for(let j=0;j<tile.count;j++,index++){
+    const o=index*52,x=s.raw.readDoubleLE(o),y=s.raw.readDoubleLE(o+8),z=s.raw.readDoubleLE(o+16);
+    assert(Number.isFinite(x)&&Number.isFinite(y)&&Number.isFinite(z));
+    assert(x>=tile.minX&&x<tile.minX+4&&z>=tile.minZ&&z<tile.minZ+4,'ROOT_OUTSIDE_ACTUAL_TILE');
+    const region=s.raw.readUInt32LE(o+48);assert(region<=2);regions[region]++;
+    angleBits.setFloat32(0,s.raw.readDoubleLE(o+24),true);
+    pairs[index]=(BigInt(s.raw.readUInt32LE(o+40))<<32n)|BigInt(angleBits.getUint32(0,true));
+   }
+  }
+  assert.equal(index,s.m.rootCount);
+  pairs.sort();
+  return {sha256:sha(Buffer.from(pairs.buffer)),regions};
+ };
+ const originalInvariant=invariant(original);
+ for(const s of [before,after,current])assert.deepEqual(invariant(s),originalInvariant,'ROOT_SEED_ANGLE_REGION_LOSS_OR_DRIFT');
+ const rr=JSON.parse(fs.readFileSync(new URL('h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json',root)));
+ const changeBytes=gunzipSync(fs.readFileSync(new URL('h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz',root)));
+ const changes=JSON.parse(changeBytes);
+ assert.equal(sha(changeBytes),rr.changesSha256);
+ assert.equal(rr.moved,60963);assert.equal(changes.length,rr.moved);
+ assert.equal(rr.added,0);assert.equal(rr.removed,0);assert.equal(rr.unmovedDonorCandidates,0);
+ assert.equal(rr.unchangedRoots+changes.length,current.m.rootCount);
+ assert.equal(rr.rawSha256,after.m.rawSha256);
+ const key=(x,y,z,seed)=>[x,y,z,seed].join(':');
+ const identity=b=>key(b.readDoubleLE(0),b.readDoubleLE(8),b.readDoubleLE(16),b.readUInt32LE(40));
+ const from=new Map(),to=new Map();
+ for(const c of changes){
+  const kFrom=key(...c.from,c.seed),kTo=key(c.to[0],Math.fround(c.to[1]),c.to[2],c.seed);
+  assert(!from.has(kFrom)&&!to.has(kTo),'DUPLICATE_MOVEMENT_RECEIPT');
+  from.set(kFrom,c);to.set(kTo,c);
+ }
+ const select=(s,ids)=>{
+  const selected=new Map();for(let o=0;o<s.m.rootCount*52;o+=52){
+   const b=s.raw.subarray(o,o+52),id=identity(b);
+   if(ids.has(id)){assert(!selected.has(id),'DUPLICATE_MATCHING_ROOT');selected.set(id,b);}
+  }assert.equal(selected.size,ids.size,'MISSING_OR_UNACCOUNTED_ROOT');return selected;
+ };
+ const donors=select(before,from),recipients=select(after,to);
+ for(const c of changes){
+  const old=donors.get(key(...c.from,c.seed)),now=recipients.get(key(c.to[0],Math.fround(c.to[1]),c.to[2],c.seed));
+  assert(old&&now,'UNACCOUNTED_REDISTRIBUTION');
+  assert.equal(old.readDoubleLE(24),now.readDoubleLE(24),'BLADE_ANGLE_CHANGED');
+  assert.equal(old.readUInt32LE(40),now.readUInt32LE(40),'SEED_CHANGED');
+  assert.equal(old.readUInt32LE(48),now.readUInt32LE(48),'REGION_CHANGED');
+  assert.equal(now.readUInt32LE(44),c.triangleId,'TRIANGLE_WITNESS_CHANGED');
+  assert(Number.isFinite(now.readDoubleLE(32)),'INVALID_RELOCATED_SLOPE');
+ }
+ const report=JSON.parse(fs.readFileSync(new URL('h-earth-3d/evidence/planting-boundary-repair-v1/compiler-report.json',root)));
+ const verify=JSON.parse(fs.readFileSync(new URL('h-earth-3d/evidence/planting-boundary-repair-v1/independent-verification.json',root)));
+ assert.equal(report.inputRawSha256,after.m.rawSha256);
+ assert.equal(report.rawSha256,current.m.rawSha256);
+ assert.equal(report.packedSha256,current.m.packedSha256);
+ assert.equal(report.atlasSha256,current.m.atlasSha256);
+ assert.equal(report.moved,632);assert.equal(report.changes.length,632);
+ assert.equal(report.rootCount,current.m.rootCount);assert.equal(report.prefixesPreserved,true);
+ assert.equal(verify.moved,632);assert.equal(verify.seedMultiset,'PASS');
+ const repairTo=new Map(),repairFrom=new Set();
+ for(const c of report.changes){
+  assert(Number.isSafeInteger(c.fromOffset)&&c.fromOffset>=0&&c.fromOffset%52===0&&c.fromOffset<after.m.rootCount*52);
+  assert(!repairFrom.has(c.fromOffset));repairFrom.add(c.fromOffset);
+  const old=after.raw.subarray(c.fromOffset,c.fromOffset+52);
+  assert.equal(old.readUInt32LE(40),c.seed,'PLANTING_REPAIR_DONOR_SEED');
+  const destKey=key(...c.to,c.seed);assert(!repairTo.has(destKey),'DUPLICATE_PLANTING_TARGET');
+  repairTo.set(destKey,{old,change:c});
+ }
+ const repaired=select(current,repairTo);
+ for(const [k,{old,change}] of repairTo){
+  const now=repaired.get(k);assert(now,'MISSING_REPAIRED_ROOT');
+  assert.equal(now.readDoubleLE(24),old.readDoubleLE(24));
+  assert.equal(now.readUInt32LE(40),old.readUInt32LE(40));
+  assert.equal(now.readUInt32LE(48),old.readUInt32LE(48));
+  assert(Number.isFinite(now.readDoubleLE(32)));
+  assert.equal(now.readDoubleLE(0),change.to[0]);
+  assert.equal(now.readDoubleLE(8),change.to[1]);
+  assert.equal(now.readDoubleLE(16),change.to[2]);
+ }
+ // The repair's prefix custody is tested from actual 52-byte records, not
+ // from a compiler PASS field. The earlier redistribution may move prefixes.
+ assert.equal(after.m.tiles.length,current.m.tiles.length);
+ let oldOffset=0,newOffset=0;const prefixHash=createHash('sha256');
+ for(let i=0;i<after.m.tiles.length;i++){
+  const old=after.m.tiles[i],now=current.m.tiles[i];assert.equal(old.id,now.id);
+  assert.equal(old.baselineCount,now.baselineCount);
+  const n=old.baselineCount*52;
+  assert.deepEqual(after.raw.subarray(oldOffset,oldOffset+n),current.raw.subarray(newOffset,newOffset+n),'CURRENT_PREFIX_CHANGED_'+old.id);
+  prefixHash.update(current.raw.subarray(newOffset,newOffset+n));
+  oldOffset+=old.count*52;newOffset+=now.count*52;
+ }
+ assert.equal(prefixHash.digest('hex'),verify.prefixSha256);
+ assert.equal(oldOffset,after.m.rootCount*52);assert.equal(newOffset,current.m.rootCount*52);
+ for(let z=0;z<192;z++){
+  const i=z*576;
+  assert.deepEqual(original.raw.subarray(original.m.rootCount*52+i,original.m.rootCount*52+i+384),current.raw.subarray(newOffset+i,newOffset+i+384),'PROTECTED_HABITAT_ATLAS_CHANGED');
+ }
+ assert.equal(current.m.receipt.coastalRedistribution.moved,60963);
+ assert.equal(current.m.receipt.plantingBoundaryRepair.moved,632);
+ console.log('POST_TERRAIN_MOVEMENT_CUSTODY',JSON.stringify({originalCensusCommit:'902b06404965527e98de2612ee824d87ce404eaf',redistribution:changes.length,plantingRepair:report.changes.length,roots:current.m.rootCount,zeroUnaccountedSeedAngleRootLoss:true}));
 });

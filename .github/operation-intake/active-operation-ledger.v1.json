@@ -11355,6 +11355,50 @@
       "scopeHash": "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652",
       "state": "ADMITTED_LOCKED"
     },
+    "5888bcf51beed9280e75c929444197c2a4bba2c1d4ae4d7883126efd2cb35835": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d57d83f17d5413874c604065ccd6471309684320",
+          "lockGeneration": 3327,
+          "lockScope": "H_EARTH:GEN3326:TEST_CONTRACT_RECONCILIATION:20261116",
+          "operationId": "H_EARTH_GEN3326_TERRAIN_GRASS_TEST_CONTRACT_RECONCILIATION_20261116_001",
+          "procedureLocatorDigest": "8538f0476ee509218c7657df28fa088e5611b2143231e10ce8c1d5dd66d69ccb",
+          "requestDigest": "6ce1a6f6e5b7058b90ed8a54474c54c6f7bb8615e406ad8ee99ca012d314fc5a",
+          "scopeHash": "5888bcf51beed9280e75c929444197c2a4bba2c1d4ae4d7883126efd2cb35835"
+        },
+        "bindingDigest": "aab70d65a7a1be1c5768e0057133c89d69a1f8c7cf60756e1b9651849248a5b6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ac6edc7f7c15b7985fa837fd13d80bec4321e130a3d6b6e38cead2dadc962c95",
+          "commentId": 6908267612,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43810984953,
+          "workflowSha": "d57d83f17d5413874c604065ccd6471309684320"
+        },
+        "lineageAnchorCommitSha": "4f40c6f6cc4a52d679745a965381ff3453997948",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d57d83f17d5413874c604065ccd6471309684320",
+      "lockGeneration": 3327,
+      "lockScope": "H_EARTH:GEN3326:TEST_CONTRACT_RECONCILIATION:20261116",
+      "operationId": "H_EARTH_GEN3326_TERRAIN_GRASS_TEST_CONTRACT_RECONCILIATION_20261116_001",
+      "procedureLocatorDigest": "8538f0476ee509218c7657df28fa088e5611b2143231e10ce8c1d5dd66d69ccb",
+      "released": false,
+      "requestDigest": "6ce1a6f6e5b7058b90ed8a54474c54c6f7bb8615e406ad8ee99ca012d314fc5a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5888bcf51beed9280e75c929444197c2a4bba2c1d4ae4d7883126efd2cb35835",
+      "state": "ADMITTED_LOCKED"
+    },
     "58a8401ec10ddc6fef4660f71f9e8d6545d544c65a444d900a4208bd900956b4": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -34224,7 +34268,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3326,
+  "lockGeneration": 3327,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

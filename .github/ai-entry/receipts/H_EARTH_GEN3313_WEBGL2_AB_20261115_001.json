@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN3313_WEBGL2_AB_20261115_001",
+  "capabilityId": "H_EARTH_GEN3313_WEBGL2_AB_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7443,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3313-webgl2-20261115-001",
+  "requestCommit": "276f5fe09138cd58129f0130c951a5896ba212b0",
+  "requestCommitParent": "a8dc45d1d24bf0914a5621cdbc46ff48801f9525",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a8dc45d1d24bf0914a5621cdbc46ff48801f9525",
+  "workflow": "h-earth-gen3313-webgl2-ab-qualification-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "371998ecceee8bdba7328c93c74d5a6a3aeb8f7d"
+  },
+  "bridgeRunId": "43801462733",
+  "dispatchedRunId": 43801492974,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/43801492974",
+  "dispatchedRunHeadSha": "a8dc45d1d24bf0914a5621cdbc46ff48801f9525",
+  "dispatchedAt": "2026-11-16T04:00:55.316Z",
+  "resolvedAt": "2026-11-16T04:00:59.017Z"
+}

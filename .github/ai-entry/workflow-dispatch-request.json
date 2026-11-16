@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "H_EARTH_GEN3338_NODE22_HISTORIC_6438E008_20261116_001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "6438e008ebf32dfda746c0af853194abeb743ec4",
+    "route_query": "qualification=gen3333-lineage-native-v1"
   }
 }

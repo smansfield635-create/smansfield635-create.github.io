@@ -1,0 +1,98 @@
+name: H-Earth Gen3313 Isolated WebGL2 A-B Qualification v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/h-earth-gen3313-webgl2-ab-qualification-v1.yml'
+      - 'tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs'
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact immutable Gen3313 candidate head; no product mutation
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify closed two-head comparator binding
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs
+          node tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs --self-test
+
+  gen3313-webgl2-ab:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Require exact immutable target
+        env:
+          TARGET_SHA: \${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          test "$TARGET_SHA" = '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d'
+      - name: Checkout adopted read-only qualifier tooling
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: tooling
+          persist-credentials: false
+      - name: Checkout exact accepted Gen3259 comparison baseline
+        uses: actions/checkout@v4
+        with:
+          ref: 13409ec444f6c92b0ed37ddcada3bdc45c0d6d0b
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact immutable Gen3313 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 371998ecceee8bdba7328c93c74d5a6a3aeb8f7d
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Assert immutable comparator and source contract
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs
+          node tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs --self-test
+      - name: Install isolated Chromium
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture real matched WebGL2 frames and negative controls
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          timeout 2700s node tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --output "$RUNNER_TEMP/h-earth-gen3313-webgl2-ab"
+          jq -e '.result == "WEBGL2_AB_CAPTURED_OWNER_VISUAL_DISPOSITION_PENDING" and .webgl2PixelsRendered == true and .ownerKeep == false and .mergePerformed == false and .deploymentPerformed == false' \
+            "$RUNNER_TEMP/h-earth-gen3313-webgl2-ab/gen3313-webgl2-evidence.json"
+      - name: Preserve actual screenshots, pixel comparisons, or first failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3313-webgl2-ab-\${{ inputs.target_sha }}
+          path: \${{ runner.temp }}/h-earth-gen3313-webgl2-ab
+          if-no-files-found: error
+          retention-days: 30

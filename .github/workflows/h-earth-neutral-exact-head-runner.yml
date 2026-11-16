@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1947,3 +1947,64 @@ jobs:
           assert(workflow.includes('  gen3150-material-first-hit:'));
           console.log('GEN3188_REGISTERED_TOOLING_SOURCE_CONFORMANCE_PASS_NOT_BROWSER_ACCEPTANCE');
           NODE
+
+  # Gen3316 workflow-only tooling: exact Gen3313 candidate native qualification.
+  # This runs no GLSL compilation, pixel capture, visual acceptance, merge or deployment.
+  gen3313-native:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3313-native-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact immutable Gen3313 product candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 371998ecceee8bdba7328c93c74d5a6a3aeb8f7d
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact candidate and execute source-only native qualification
+        shell: bash
+        env:
+          REQUESTED_TARGET_SHA: ${{ inputs.target_sha }}
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/h-earth-gen3313-native"
+          mkdir -p "$evidence"
+          test "$REQUESTED_TARGET_SHA" = '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d'
+          test "$(git rev-parse HEAD)" = '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d'
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = '1cdb91cb7bbcf9f6d0c4b66f5f576cbb36b48636'
+          test "$(git hash-object h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs)" = '52f93ea007887236e670381bb46348aca9801f3c'
+          node --version | tee "$evidence/node-version.txt"
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js 2>&1 | tee "$evidence/renderer-node-check.txt"
+          set +e
+          node --test h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs > "$evidence/native.tap" 2>&1
+          status=$?
+          set -e
+          cat "$evidence/native.tap"
+          printf '%s\n' "$status" > "$evidence/native-exit-code.txt"
+          if [ "$status" -ne 0 ]; then
+            awk '/^not ok [0-9]+/ { print; exit }' "$evidence/native.tap" > "$evidence/first-failure.txt"
+            exit "$status"
+          fi
+          grep -Eq '^# tests [1-9][0-9]*$' "$evidence/native.tap"
+          grep -Fxq '# fail 0' "$evidence/native.tap"
+          jq -n \
+            --arg schema 'H_EARTH_GEN3313_EXACT_NATIVE_QUALIFICATION_RECEIPT_v1' \
+            --arg result 'NATIVE_SOURCE_QUALIFICATION_PASS_NOT_WEBGL2' \
+            --arg candidate '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d' \
+            --arg rendererBlob '1cdb91cb7bbcf9f6d0c4b66f5f576cbb36b48636' \
+            --arg testBlob '52f93ea007887236e670381bb46348aca9801f3c' \
+            --arg testPath 'h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs' \
+            '{schema:$schema,result:$result,candidateHead:$candidate,rendererBlob:$rendererBlob,testBlob:$testBlob,testPath:$testPath,node22Executed:true,nativeTestExitCode:0,glslCompiled:false,webgl2PixelsRendered:false,ownerKeep:false,productMutationPerformed:false,mergeAuthorityCreated:false,deploymentAuthorityCreated:false}' \
+            > "$evidence/native-receipt.json"
+      - name: Preserve Gen3313 Node22 TAP or first native failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3313-native-${{ inputs.target_sha }}
+          path: ${{ runner.temp }}/h-earth-gen3313-native
+          if-no-files-found: warn
+          retention-days: 30

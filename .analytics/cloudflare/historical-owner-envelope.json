@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T13:46:26Z",
+  "generatedAt": "2026-11-16T14:42:50Z",
   "window": {
-    "start": "2026-08-18T13:46:26Z",
-    "end": "2026-11-16T13:46:26Z"
+    "start": "2026-08-18T14:42:50Z",
+    "end": "2026-11-16T14:42:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3585,
-    "visits": 1072,
+    "pageLoads": 3555,
+    "visits": 1052,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3585,
-        "visits": 1072
+        "pageLoads": 3555,
+        "visits": 1052
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 772,
-        "visits": 582
+        "pageLoads": 782,
+        "visits": 592
       },
       "/products/": {
         "pageLoads": 40,
@@ -104,7 +104,7 @@
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 53,
-        "visits": 10
+        "visits": 0
       },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
@@ -182,9 +182,13 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
-        "visits": 20
+        "visits": 10
       },
       "/door/": {
         "pageLoads": 20,
@@ -199,10 +203,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -227,14 +227,6 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -290,10 +282,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/prototypes/abc-roofing/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -305,12 +293,12 @@
         "visits": 560
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2513,
+        "pageLoads": 2503,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 502,
-        "visits": 502
+        "pageLoads": 482,
+        "visits": 482
       },
       "raw.githack.com": {
         "pageLoads": 10,

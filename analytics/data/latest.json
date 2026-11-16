@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-16T13:46:26Z",
+  "generatedAt": "2026-11-16T14:42:50Z",
   "window30d": {
-    "start": "2026-10-17T13:46:26Z",
-    "end": "2026-11-16T13:46:26Z"
+    "start": "2026-10-17T14:42:50Z",
+    "end": "2026-11-16T14:42:50Z"
   },
   "daily": [
     {
       "date": "2026-10-18",
-      "pageLoads": 10
+      "pageLoads": 40
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 10
+      "pageLoads": 40
     },
     {
       "date": "2026-10-20",
@@ -24,11 +24,11 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 90
     },
     {
       "date": "2026-10-24",
@@ -44,11 +44,11 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-29",
@@ -72,7 +72,7 @@
     },
     {
       "date": "2026-11-03",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-11-04",
@@ -80,7 +80,7 @@
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 130
+      "pageLoads": 170
     },
     {
       "date": "2026-11-06",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 71
+      "pageLoads": 70
     },
     {
       "date": "2026-11-09",
@@ -124,24 +124,29 @@
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 12
+      "pageLoads": 13
     }
   ],
   "summary": {
-    "pageLoads": 1395,
-    "botPageLoads": 762,
-    "nonBotPageLoads": 633
+    "pageLoads": 1465,
+    "botPageLoads": 842,
+    "nonBotPageLoads": 623
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1230,
-      "visits": 1230
+      "pageLoads": 1270,
+      "visits": 1270
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 146,
+      "pageLoads": 116,
       "visits": 0
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 16,
+      "visits": 16
     },
     {
       "host": "www.facebook.com",
@@ -149,9 +154,9 @@
       "visits": 12
     },
     {
-      "host": "bing.com",
-      "pageLoads": 6,
-      "visits": 6
+      "host": "github.com",
+      "pageLoads": 10,
+      "visits": 10
     },
     {
       "host": "www.google.com",
@@ -162,18 +167,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 530,
-      "visits": 530
+      "pageLoads": 600,
+      "visits": 600
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 429,
-      "visits": 254
-    },
-    {
-      "path": "/",
-      "pageLoads": 87,
-      "visits": 63
+      "pageLoads": 339,
+      "visits": 264
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -186,9 +186,14 @@
       "visits": 80
     },
     {
+      "path": "/",
+      "pageLoads": 67,
+      "visits": 53
+    },
+    {
       "path": "/nine-summits/universe/",
-      "pageLoads": 51,
-      "visits": 51
+      "pageLoads": 41,
+      "visits": 41
     },
     {
       "path": "/showroom/globe/audralia/",

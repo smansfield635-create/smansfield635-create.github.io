@@ -34,6 +34,7 @@
       "tools/ai-room-transport/dgb-sculpt-gen3273-browser.v1.mjs",
       "tools/ai-room-transport/dgb-graphics-c2b-gen3296-browser.v1.mjs",
       "tools/ai-room-transport/dgb-graphics-c2b-reviewed-webgl12.v1.mjs",
+      "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
       ".github/workflows/repository-operation-intake-validation.yml",
       ".github/workflows/remote-operation-terminal-closure-v1.yml",
       ".github/workflows/progressive-system-continuity-v1.yml",

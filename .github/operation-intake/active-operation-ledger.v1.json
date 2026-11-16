@@ -22850,6 +22850,50 @@
       "scopeHash": "a63f6d7c325358b61f4a8732d9e454a02b6c8479e93ccb4278870dfa655bca89",
       "state": "ADMITTED_LOCKED"
     },
+    "a67fcb931b7651a96613cf43776898243d37b20041af24e32576f1f9934c8c93": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d432a6d7ea3c6facf4f763375acd6de670c50117",
+          "lockGeneration": 3344,
+          "lockScope": "H_EARTH:GEN3345_BEACHWARD_EXISTING_GRASS_VISUAL_CONTINUITY_V2:20261116",
+          "operationId": "H_EARTH_GEN3345_BEACHWARD_GRASS_AND_HABITAT_COLOR_CONTINUITY_CANDIDATE_20261116_V2_002",
+          "procedureLocatorDigest": "d351bc67adba32c86b867212b197d96aa90c4585237f129980618347a72dcbbf",
+          "requestDigest": "82fd41eefaf04fd433e01fe0958afecd7465ecf0ffdf0ca9586a78dc0cc18558",
+          "scopeHash": "a67fcb931b7651a96613cf43776898243d37b20041af24e32576f1f9934c8c93"
+        },
+        "bindingDigest": "e4f51dbc2e8521201b506e5f29c4aefc48eb517ec4785f51ea3b011424e2d3dc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b35780ec06db8b60121afdf7f273bf7229e00de780278c52f364a38074ebc0f9",
+          "commentId": 6932843066,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 43981825425,
+          "workflowSha": "d432a6d7ea3c6facf4f763375acd6de670c50117"
+        },
+        "lineageAnchorCommitSha": "60901c1a6b41eaacab6ea6e9b2c5cee409088594",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d432a6d7ea3c6facf4f763375acd6de670c50117",
+      "lockGeneration": 3344,
+      "lockScope": "H_EARTH:GEN3345_BEACHWARD_EXISTING_GRASS_VISUAL_CONTINUITY_V2:20261116",
+      "operationId": "H_EARTH_GEN3345_BEACHWARD_GRASS_AND_HABITAT_COLOR_CONTINUITY_CANDIDATE_20261116_V2_002",
+      "procedureLocatorDigest": "d351bc67adba32c86b867212b197d96aa90c4585237f129980618347a72dcbbf",
+      "released": false,
+      "requestDigest": "82fd41eefaf04fd433e01fe0958afecd7465ecf0ffdf0ca9586a78dc0cc18558",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a67fcb931b7651a96613cf43776898243d37b20041af24e32576f1f9934c8c93",
+      "state": "ADMITTED_LOCKED"
+    },
     "a70b3135ff3356257935e1a255707d44545da1e51cb68b35ca3eddec8436f040": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -34928,7 +34972,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3343,
+  "lockGeneration": 3344,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-16T16:27:54Z",
+  "generatedAt": "2026-11-16T18:28:17Z",
   "window": {
-    "start": "2026-10-17T16:27:54Z",
-    "end": "2026-11-16T16:27:54Z"
+    "start": "2026-10-17T18:28:17Z",
+    "end": "2026-11-16T18:28:17Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 601,
-        "visits": 601
+        "pageLoads": 600,
+        "visits": 600
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 67,
-        "visits": 53
+        "pageLoads": 68,
+        "visits": 54
       },
       {
         "value": "/nine-summits/universe/",
@@ -128,6 +128,16 @@
         "visits": 0
       },
       {
+        "value": "/instruments/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/frontier/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/products/five-flags/",
         "pageLoads": 1,
         "visits": 1
@@ -138,22 +148,12 @@
         "visits": 1
       },
       {
-        "value": "/instruments/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/campaigns/consider-the-energy/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/evidence/agentic-frontier/reproduction/what-has-to-be-true-first/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/frontier/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -228,8 +228,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1324,
-        "visits": 1228
+        "pageLoads": 1544,
+        "visits": 1448
       },
       {
         "value": "CN",
@@ -272,43 +272,43 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 793,
-        "visits": 792
+        "pageLoads": 631,
+        "visits": 630
       },
       {
         "value": "Chrome",
-        "pageLoads": 228,
-        "visits": 197
+        "pageLoads": 210,
+        "visits": 180
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 123,
-        "visits": 111
+        "pageLoads": 119,
+        "visits": 107
       },
       {
         "value": "Edge",
-        "pageLoads": 96,
-        "visits": 65
+        "pageLoads": 80,
+        "visits": 56
       },
       {
         "value": "Unknown",
-        "pageLoads": 71,
-        "visits": 59
+        "pageLoads": 70,
+        "visits": 58
       },
       {
         "value": "Firefox",
-        "pageLoads": 58,
-        "visits": 50
+        "pageLoads": 36,
+        "visits": 33
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 23,
-        "visits": 12
+        "pageLoads": 22,
+        "visits": 11
       },
       {
         "value": "Safari",
-        "pageLoads": 13,
-        "visits": 13
+        "pageLoads": 11,
+        "visits": 11
       },
       {
         "value": "ChromeMobileWebview",
@@ -319,45 +319,45 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 860,
-        "visits": 859
+        "pageLoads": 745,
+        "visits": 744
       },
       {
         "value": "Windows",
-        "pageLoads": 249,
-        "visits": 165
+        "pageLoads": 189,
+        "visits": 144
       },
       {
         "value": "Android",
-        "pageLoads": 123,
-        "visits": 98
+        "pageLoads": 139,
+        "visits": 114
       },
       {
         "value": "Unknown",
-        "pageLoads": 71,
-        "visits": 61
+        "pageLoads": 61,
+        "visits": 49
       },
       {
         "value": "MacOSX",
-        "pageLoads": 43,
-        "visits": 43
+        "pageLoads": 49,
+        "visits": 47
       },
       {
         "value": "iOS",
-        "pageLoads": 22,
-        "visits": 11
+        "pageLoads": 23,
+        "visits": 12
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 768,
-        "visits": 572
+        "pageLoads": 802,
+        "visits": 607
       },
       {
         "value": "1",
-        "pageLoads": 551,
-        "visits": 550
+        "pageLoads": 760,
+        "visits": 759
       }
     ],
     "navigationType": [
@@ -380,8 +380,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1312,
-        "visits": 1239
+        "pageLoads": 1372,
+        "visits": 1299
       },
       {
         "value": "cache",

@@ -25,6 +25,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -51,6 +56,9 @@ jobs:
           ref: main
           path: tooling
           persist-credentials: false
+          sparse-checkout-cone-mode: true
+          sparse-checkout: |
+            tools
       - name: Checkout exact accepted Gen3259 comparison baseline
         uses: actions/checkout@v4
         with:

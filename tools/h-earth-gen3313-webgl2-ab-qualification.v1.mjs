@@ -73,6 +73,60 @@ function inspect(dir, head, blob) {
   if (exactGit(dir, ['hash-object', RENDERER]) !== blob) throw Error('EXACT_RENDERER_BLOB_MISMATCH');
   if (exactGit(dir, ['status', '--porcelain']).length !== 0) throw Error('PRODUCT_CHECKOUT_DIRTY');
 }
+
+function withinOrEqual(target, root) {
+  const rel = path.relative(root, target);
+  return rel === '' || (rel !== '..' && !rel.startsWith('..' + path.sep) && !path.isAbsolute(rel));
+}
+function resolveProspectiveOutput(raw) {
+  const absolute = path.resolve(raw);
+  let ancestor = absolute;
+  while (!fs.existsSync(ancestor)) {
+    const parent = path.dirname(ancestor);
+    if (parent === ancestor) throw Error('OUTPUT_REALPATH_UNRESOLVABLE');
+    ancestor = parent;
+  }
+  return path.resolve(fs.realpathSync(ancestor), path.relative(ancestor, absolute));
+}
+function guardedOutputPath(out, baselineDir, candidateDir) {
+  if (!path.isAbsolute(out)) throw Error('OUTPUT_MUST_BE_ABSOLUTE');
+  // Resolve existing parent symlinks even when the final evidence directory does not exist.
+  const target = resolveProspectiveOutput(out);
+  const protectedRoots = [baselineDir, candidateDir, TOOL_ROOT].map(dir => fs.realpathSync(dir));
+  for (const root of protectedRoots) {
+    if (withinOrEqual(target, root) || withinOrEqual(root, target))
+      throw Error('OUTPUT_OVERLAPS_PROTECTED_CHECKOUT');
+  }
+  return target;
+}
+function assertGuardReject(fn, label) {
+  let blocked = false;
+  try { fn(); } catch (error) {
+    if (error?.message !== 'OUTPUT_OVERLAPS_PROTECTED_CHECKOUT') throw error;
+    blocked = true;
+  }
+  if (!blocked) throw Error('GUARD_SELFTEST_ACCEPTED_PROTECTED_PATH:' + label);
+}
+function outputGuardSelfTest() {
+  const testRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'gen3313-output-guard-'));
+  try {
+    const baseline = path.join(testRoot, 'baseline');
+    const candidate = path.join(testRoot, 'candidate');
+    fs.mkdirSync(baseline);
+    fs.mkdirSync(candidate);
+    const safe = path.join(testRoot, 'evidence');
+    if (guardedOutputPath(safe, baseline, candidate) !== safe) throw Error('OUTPUT_GUARD_SAFE_PATH_REJECTED');
+    assertGuardReject(() => guardedOutputPath(path.join(baseline, 'evidence'), baseline, candidate), 'DIRECT_BASELINE');
+    assertGuardReject(() => guardedOutputPath(path.join(candidate, 'evidence'), baseline, candidate), 'DIRECT_CANDIDATE');
+    assertGuardReject(() => guardedOutputPath(testRoot, baseline, candidate), 'ANCESTOR_OVERLAP');
+    const alias = path.join(testRoot, 'baseline-alias');
+    fs.symlinkSync(baseline, alias, 'dir');
+    assertGuardReject(() => guardedOutputPath(path.join(alias, 'evidence'), baseline, candidate), 'SYMLINK_ALIAS');
+  } finally {
+    fs.rmSync(testRoot, { force: true, recursive: true });
+  }
+}
+
 function persist(dest, value) {
   fs.mkdirSync(dest, { recursive: true });
   fs.writeFileSync(path.join(dest, 'gen3313-webgl2-evidence.json'), JSON.stringify(value, null, 2) + '\n');
@@ -91,13 +145,17 @@ async function main() {
     const s = sourceBinding();
     if (s.includes("baseline:'bcfb0650077323851f01f51d712c7f8b8ac39220'")) throw Error('OLD_BASELINE_RETAINED');
     if (!s.includes('inland-boundary-control') || !s.includes('grove-second-control')) throw Error('CONTROLS_MISSING');
+    outputGuardSelfTest();
     process.stdout.write(JSON.stringify({ schema: EVIDENCE_SCHEMA, result: 'SOURCE_BINDING_SELF_TEST_PASS_NOT_WEBGL2', baselineHead: BASELINE_HEAD, candidateHead: CANDIDATE_HEAD }) + '\n');
     return;
   }
   const a = args(process.argv.slice(2)), out = a['--output'];
   if (!out || !a['--baseline-dir'] || !a['--candidate-dir']) throw Error('EXACT_THREE_ARGS_REQUIRED');
-  const record = { ...baseRecord, result: 'INCOMPLETE_OR_FAILED', errors: [] };
-  persist(out, record);
+  // Fail closed before the first mkdir or receipt write.
+  const safeOutput = guardedOutputPath(out, a['--baseline-dir'], a['--candidate-dir']);
+  const record = { ...baseRecord, result: 'INCOMPLETE_OR_FAILED', toolingExecutionSha: exactGit(TOOL_ROOT, ['rev-parse', 'HEAD']), errors: [] };
+  if (process.env.GITHUB_SHA && record.toolingExecutionSha !== process.env.GITHUB_SHA) throw Error('TOOLING_RUN_SHA_MISMATCH');
+  persist(safeOutput, record);
   try {
     const source = sourceBinding();
     inspect(a['--baseline-dir'], BASELINE_HEAD, BASELINE_BLOB);
@@ -110,9 +168,9 @@ async function main() {
     await comparator.runGen3313([
       '--baseline-dir', a['--baseline-dir'],
       '--candidate-dir', a['--candidate-dir'],
-      '--output', out
+      '--output', safeOutput
     ]);
-    const captured = JSON.parse(fs.readFileSync(path.join(out, 'receipt.json'), 'utf8'));
+    const captured = JSON.parse(fs.readFileSync(path.join(safeOutput, 'receipt.json'), 'utf8'));
     if (captured.result !== 'MATCHED_OWNER_FRAME_CAPTURED_VISUAL_DISPOSITION_PENDING') throw Error('CAPTURE_NOT_COMPLETE');
     if (captured.views?.length !== 14 || captured.comparisons?.length !== 7) throw Error('PAIRED_CONTROL_SET_INCOMPLETE');
     for (const view of captured.views) {
@@ -130,7 +188,7 @@ async function main() {
     record.errors.push(String(error?.stack ?? error));
     throw error;
   } finally {
-    persist(out, record);
+    persist(safeOutput, record);
   }
 }
 main().catch(e => { console.error(e); process.exitCode = 1; });

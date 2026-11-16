@@ -1350,7 +1350,13 @@ void main(){
       habitatColorCoverage=gen3259OriginalHabitat
         +gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade;
     }
-    base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    // Gen3345: retain accepted grove/cavern soil when vegetation becomes ready.
+    // Beyond those meadows, keep the approved photographic ground dominant.
+    // This only feathers late habitat-color presentation; roots are unchanged.
+    float acceptedGroveDistance=distance(vWorldPosition.xz,vec2(-139.40268,-210.74617));
+    float acceptedCavernDistance=distance(vWorldPosition.xz,vec2(40.0,-260.0));
+    float acceptedColorRetention=1.0-smoothstep(45.0,105.0,min(acceptedGroveDistance,acceptedCavernDistance));
+    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

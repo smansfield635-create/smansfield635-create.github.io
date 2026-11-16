@@ -634,7 +634,11 @@ void main(){
  float scale=uFine==1?detail:1.;
  // Fuller persistent blades connect the near crossed tuft to the far coarse cover.
  // Same two triangles and unchanged 14-24 m fine-lobe fade.
- float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation);
+ // Same original rooted blades and draw count; widen only the sparse
+ // beach-facing dryland presentation, with a smooth world-space transition.
+ // Accepted woodland and cavern controls lie outside this adjustment.
+ float beachwardContinuity=smoothstep(70.,165.,aRoot.x)*smoothstep(-300.,-225.,aRoot.z);
+ float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity);
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));

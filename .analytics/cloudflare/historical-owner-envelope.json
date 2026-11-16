@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T01:27:20Z",
+  "generatedAt": "2026-11-16T02:30:15Z",
   "window": {
-    "start": "2026-08-18T01:27:20Z",
-    "end": "2026-11-16T01:27:20Z"
+    "start": "2026-08-18T02:30:15Z",
+    "end": "2026-11-16T02:30:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3625,
-    "visits": 1092,
+    "pageLoads": 3615,
+    "visits": 1082,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3625,
-        "visits": 1092
+        "pageLoads": 3615,
+        "visits": 1082
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 792,
-        "visits": 602
+        "pageLoads": 782,
+        "visits": 592
       },
       "/laws/": {
         "pageLoads": 40,
@@ -37,6 +37,10 @@
       "/products/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/evidence/": {
+        "pageLoads": 70,
+        "visits": 0
       },
       "/developer/": {
         "pageLoads": 50,
@@ -48,10 +52,6 @@
       },
       "/coherence-diagnostic/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 70,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -86,13 +86,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -258,13 +258,13 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -301,8 +301,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 570,
-        "visits": 570
+        "pageLoads": 560,
+        "visits": 560
       },
       "diamondgatebridge.com": {
         "pageLoads": 2533,

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,createSculptReferenceImportGate,replaceFourSculptViewMeshes,abortRejectedSculptStroke} from './dgb.native-sculpt-browser.v1.mjs';
+import {makeNeutralSculptRegionFixture,createNativeSculptStudio,makeSculptUvHandoff,sculptMeshSpecification,makeSculptSubdivision,serializeSculptStudioState,restoreSculptStudioState,makeReferenceMaskFromRgba,makeSculptReferenceFixture,readSculptReferenceImageDimensions,validateSculptFaceIndex,createSculptReferenceImportGate,replaceFourSculptViewMeshes,abortRejectedSculptStroke,releaseSculptStudioResources,replaceSculptStudioAtomically} from './dgb.native-sculpt-browser.v1.mjs';
 import {createSculptSession,verifySculptGeometry} from './dgb.native-sculpt-session.v1.mjs';
 test('neutral four-zone regional mesh is a real connected editable 3D surface',()=>{
   const x=makeNeutralSculptRegionFixture();const v=verifySculptGeometry(x.positions,x.triangles);assert.equal(v.vertexCount,273);assert.equal(v.triangleCount,480);
@@ -359,4 +359,94 @@ test('C2-B live file.text reload checks generation before topology adoption and 
   assert.match(source,/const source=await file\.text\(\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;/);
   assert.match(source,/const restored=restoreSculptStudioState\(source,fixture\);\s*if\(!referenceImports\.isCurrent\(token\)\)return;\s*adoptTopology\(/);
   assert.match(source,/if\(referenceImports\.isCurrent\(token\)\)event\.target\.value='';/);
+});
+
+test('Gen3310 original M1.3 remains protected while C2-B editing paths survive',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  const session=readFileSync(new URL('./dgb.native-sculpt-session.v1.mjs',import.meta.url),'utf8');
+  for(const id of ['m13Archive','m13Pose','returnNeutral','reference','subdivide','faceIndex','load'])
+    assert(html.includes('id="'+id+'"'),id);
+  for(const marker of ["new DecompressionStream('deflate-raw')","crypto.subtle.digest","M13_ZIP_SHA","M13_MEMBER_HASHES","originalEyeAt","nextSource.pose(index)"])
+    assert(html.includes(marker),marker);
+  assert(!html.includes('src="https://drive.google.com'));
+  for(const marker of ['sourceGeometry(originalSource','originalTexturedShaders','originalEyeShaders','originalSource?device.createMesh','Original M1.3 is read-only','restoreSculptStudioState','replaceFourSculptViewMeshes','createSculptReferenceImportGate'])
+    assert(browser.includes(marker),marker);
+  assert(browser.includes('if(originalSource)throw new Error(\'M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN\')'));
+  assert(session.includes('forequarterEditAllowed:false'));
+  assert(session.includes('originalReferenceSelfIntersectionNotAdjudicated'));
+});
+
+test('Gen3310 failed partial four-view initialization releases device-only entries and listeners',()=>{
+  const calls=[],listeners=[()=>calls.push('canvas-listener')];
+  const views=[
+    {device:{dispose(){calls.push('device-1');}},scene:{dispose(){calls.push('scene-1');}}},
+    {device:{dispose(){calls.push('device-2');}}} // atlas/eye setup threw before scene existed
+  ];
+  releaseSculptStudioResources(views,listeners);
+  assert.deepEqual(calls,['canvas-listener','scene-1','device-1','device-2']);
+  assert.equal(listeners.length,0);
+});
+test('Gen3310 studio replacement preserves edited session on failed original import',()=>{
+  let disposed=0,redraws=0;
+  const editable={state:{revision:7,undoDepth:2},drawAll(){redraws++;},dispose(){disposed++;}};
+  assert.throws(()=>replaceSculptStudioAtomically(editable,()=>{throw Error('WEBGL2_MISSING');}),/WEBGL2_MISSING/);
+  assert.equal(disposed,0);
+  assert.equal(redraws,1);
+  assert.deepEqual(editable.state,{revision:7,undoDepth:2});
+  const original={originalM13ReadOnly:true};
+  assert.equal(replaceSculptStudioAtomically(editable,()=>original),original);
+  assert.equal(disposed,1);
+});
+test('Gen3310 source-mode installation commits state only on success and exposes truthful readiness',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  assert.match(browser,/const view=\{name:names\[i\],canvas,device\};views\.push\(view\);[\s\S]*?const texture=originalSource/);
+  assert.match(browser,/catch\(e\)\{releaseSculptStudioResources\(views,listeners\);throw e;\}/);
+  assert.match(browser,/catch\(error\)\{releaseSculptStudioResources\(views,listeners\);throw error;\}/);
+  assert.match(html,/const next=replaceSculptStudioAtomically\(previous,build\);\s*studio=next;/);
+  assert.match(html,/get ready\(\)\{return Boolean\(studio&&!studio\.status\(\)\.disposed&&!studio\.status\(\)\.failed\);\}/);
+  assert.match(html,/showOriginalPose\(52,\{source:nextSource,rawM13:nextRaw,atlas:nextAtlas,eyeModule:nextModule\}\);/);
+  assert.match(html,/install\(frame\);\s*\/\/ Publish source-mode state only after/);
+  assert.doesNotMatch(html,/studio\?\.dispose\(\);studio=null/);
+});
+
+test('Gen3310 original M1.3 eye anchor is frozen at rest and carried through hop poses',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const start=html.indexOf('function originalEyeAt(');
+  const end=html.indexOf('\nlet studio=',start);
+  assert(start>=0&&end>start,'M13_ORIGINAL_EYE_ADAPTER_REQUIRED');
+  const adapter=Function('return ('+html.slice(start,end).trim()+')')();
+  const map=Uint32Array.from([0,1]);
+  const restFrame={sourceMasterPosition:Float32Array.from([.74,1,.668,.75,1,.667]),
+    sourceRender:{renderToMaster:map,originalPose:52}};
+  const hopFrame={sourceMasterPosition:Float32Array.from([.4,1.1,.6,.41,1.2,.61]),
+    sourceRender:{renderToMaster:map,originalPose:24}};
+  const calls=[];
+  const mockPrivateEye={createRabbitVisualAppearance({device,bridge}){
+    const atRest=bridge.snapshot().positions;
+    assert.deepEqual([...atRest],[...restFrame.sourceMasterPosition]);
+    calls.push('anchor-rest');
+    device.createMesh({attributes:[
+      {name:'a_position',data:Float32Array.from([.74,1,.668])},
+      {name:'a_normal',data:Float32Array.from([0,0,1])},
+      {name:'a_color',data:Float32Array.from([.2,.1,.1])},
+      {name:'a_fade',data:Float32Array.from([1])}]});
+    return {status:()=>({furFins:0,tailIncluded:false}),update({positions}){
+      assert.deepEqual([...positions],[...hopFrame.sourceMasterPosition]);
+      calls.push('follow-posed-surface');
+      device.updateMeshAttribute(null,'a_position',Float32Array.from([.4,1.1,.6]));
+    }};
+  }};
+  const hop=adapter(mockPrivateEye,{},hopFrame,restFrame);
+  assert.deepEqual(calls,['anchor-rest','follow-posed-surface']);
+  assert.deepEqual([...hop.positions],[.4,.6,-1.1].map(Math.fround));
+  assert.deepEqual([...hop.colors],[Math.fround(.2),Math.fround(.1),Math.fround(.1)]);
+  const rest=adapter(mockPrivateEye,{},restFrame,restFrame);
+  assert.deepEqual(calls,['anchor-rest','follow-posed-surface','anchor-rest']);
+  assert.deepEqual([...rest.positions],[.74,.668,-1].map(Math.fround));
+  assert.match(html,/const restFrame=nextSource\.pose\(52\),frame=index===52\?restFrame:nextSource\.pose\(index\)/);
 });

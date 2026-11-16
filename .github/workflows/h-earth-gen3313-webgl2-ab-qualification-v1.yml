@@ -47,13 +47,15 @@ jobs:
       - name: Require exact immutable target
         env:
           TARGET_SHA: ${{ inputs.target_sha }}
+          DISPATCH_REF: ${{ github.ref }}
         run: |
           set -euo pipefail
+          test "$DISPATCH_REF" = 'refs/heads/main'
           test "$TARGET_SHA" = '371998ecceee8bdba7328c93c74d5a6a3aeb8f7d'
       - name: Checkout adopted read-only qualifier tooling
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.sha }}
           path: tooling
           persist-credentials: false
           sparse-checkout-cone-mode: true
@@ -76,8 +78,11 @@ jobs:
           node-version: 22
       - name: Assert immutable comparator and source contract
         working-directory: tooling
+        env:
+          EXPECTED_TOOLING_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_TOOLING_SHA"
           node --check tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs
           node tools/h-earth-gen3313-webgl2-ab-qualification.v1.mjs --self-test
       - name: Install isolated Chromium

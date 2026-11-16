@@ -2100,7 +2100,7 @@ jobs:
             const targetRecords=observed.map(r=>{const exact=expectation.get(key(r));const ordered=expected.map(q=>({source:q.source,x:q.x,z:q.z,distance:Math.hypot(q.x-r.x,q.z-r.z)})).sort((a,b)=>a.distance-b.distance).slice(0,2);return {x:r.x,z:r.z,seed:r.seed,triangleId:r.triangleId,tag:r.tag,matchedSource:exact?.source||null,matchAllFields:exact?['x','y','z','angle','slope','seed','triangleId'].every(k=>exact[k]===r[k]):false,nearest:exact?[]:ordered,rawHex:r.hex};});
             const report={schema:'H_EARTH_GEN3331_PREEXISTING_GRASS_PROVENANCE_DIAGNOSTIC_v1',candidate:'41d430dae2e9151517e7bcec1b4ca21a844e03a1',historic:oldRef,oldRootCount:oldManifest.rootCount,currentRootCount:current.rootCount,missingTiles,missingRoots,shortPrefixTiles,shortPrefixRoots,recordedPrefixShortfall:missingRoots+shortPrefixRoots,changedCommonPrefixTiles,preservedPrefixRecords,shortSamples,changedSamples,targetTile:{id:target,oldCount:old.count,currentBaselineCount:t.baselineCount,currentTotalCount:t.count,expectedBySource:Object.fromEntries(['spatial','coastal','hillside','terrain'].map(s=>[s,expected.filter(x=>x.source===s).length])),expectedUniqueKeys:new Set(expected.map(key)).size,actualAdditions:observed.length,records:targetRecords}};
             console.log(JSON.stringify(report));
-NODE
+          NODE
             printf '%s\n' "$?" > "$evidence/grass-provenance-diagnostic-exit-code.txt"
             set -e
           fi

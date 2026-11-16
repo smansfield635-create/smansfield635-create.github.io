@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T04:31:34Z",
+  "generatedAt": "2026-11-16T05:28:01Z",
   "window": {
-    "start": "2026-08-18T04:31:34Z",
-    "end": "2026-11-16T04:31:34Z"
+    "start": "2026-08-18T05:28:01Z",
+    "end": "2026-11-16T05:28:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3605,
-    "visits": 1082,
+    "pageLoads": 3385,
+    "visits": 922,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3605,
-        "visits": 1082
+        "pageLoads": 3385,
+        "visits": 922
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 782,
-        "visits": 592
+        "pageLoads": 692,
+        "visits": 512
       },
       "/products/": {
         "pageLoads": 40,
@@ -67,7 +67,7 @@
         "visits": 10
       },
       "/showroom/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
@@ -77,22 +77,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -166,20 +150,8 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
-      "/characters/": {
         "pageLoads": 60,
-        "visits": 30
-      },
-      "/characters/legacy-dossiers.html": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
@@ -205,6 +177,10 @@
       "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 40,
+        "visits": 20
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -301,16 +277,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 560,
-        "visits": 560
+        "pageLoads": 480,
+        "visits": 480
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2523,
+        "pageLoads": 2463,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 512,
-        "visits": 512
+        "pageLoads": 432,
+        "visits": 432
       },
       "raw.githack.com": {
         "pageLoads": 10,

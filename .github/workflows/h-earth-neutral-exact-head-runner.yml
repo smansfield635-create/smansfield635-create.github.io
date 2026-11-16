@@ -2035,6 +2035,8 @@ jobs:
           set -euo pipefail
           evidence="$RUNNER_TEMP/h-earth-gen3333-native"
           mkdir -p "$evidence"
+          # Record preflight and post-TAP assertion failures in the artifact.
+          trap 'rc=$?; printf "GEN3333_GATE_COMMAND_FAILED exit=%s line=%s command=%s\n" "$rc" "$LINENO" "$BASH_COMMAND" > "$evidence/first-failure.txt"; printf "SOURCE_OR_TAP_INTEGRITY_GATE_FAILED\n" > "$evidence/disposition.txt"' ERR
           printf 'NOT_EXECUTED\n' > "$evidence/disposition.txt"
           printf '%s\n' "$REQUESTED_TARGET_SHA" > "$evidence/requested-head.txt"
           test "$REQUESTED_TARGET_SHA" = '05cccb5c0e404d5a5a9e11d146942dbb2babf97a'
@@ -2103,5 +2105,5 @@ jobs:
         with:
           name: h-earth-gen3333-native-05cccb5c0e404d5a5a9e11d146942dbb2babf97a
           path: ${{ runner.temp }}/h-earth-gen3333-native
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30

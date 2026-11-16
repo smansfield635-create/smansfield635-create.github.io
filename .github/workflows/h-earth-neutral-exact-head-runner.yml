@@ -2037,6 +2037,15 @@ jobs:
           test "$(git rev-parse HEAD)" = '41d430dae2e9151517e7bcec1b4ca21a844e03a1'
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = '967403f2b13ad29c2f117a259995ca2b7852852c'
           test "$(git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs)" = 'd2ad0851144e735dae9dcb46d4006e2a8d5b23d0'
+          # Materialize only the two frozen precomputed-grass histories used by unchanged tests.
+          # A depth-one checkout cannot satisfy their independent git-show baseline proofs.
+          for baseline in 12357909b2cbaab16052b6c30459065547fe9440 db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d; do
+            git -c protocol.version=2 fetch --no-tags --depth=1 origin "$baseline"
+            git cat-file -e "${baseline}^{commit}"
+            git cat-file -e "$baseline:showroom/globe/h-earth/render/assets/precomputed-grass.v1.json"
+            git cat-file -e "$baseline:showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz"
+            printf '%s\n' "$baseline" >> "$evidence/historical-baselines.txt"
+          done
           git rev-parse HEAD > "$evidence/candidate-head.txt"
           git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs > "$evidence/test-blob.txt"
           node --version | tee "$evidence/node-version.txt"

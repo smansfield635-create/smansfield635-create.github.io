@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "24461e27430a6562d1c5eec7c6f8009a06487548",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "b402e2d3c091bc37e21f7e97d480fa8435ed094f",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3312,
+    "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:GRAPHICS_GEN3310:M13_HTTP_WEBGL12_READONLY_QUALIFIER:20261115",
+    "observedBranchHead": "5128d0b96acec7147c978e7e2c3569eedd463fe7",
+    "observedLedgerBlobSha": "9d81469ccdc3cd804d4f68795a1c27d92936f488",
+    "operationId": "DGB_GRAPHICS_GEN3310_M13_FIXED_HTTP_WEBGL12_QUALIFIER_BINDING_20261115_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "e3b7d0e76f1adc981e4d35970a166c9129485169d6cea1ad3a0837b08a0d9006"
+  },
+  "operationId": "DGB_GRAPHICS_GEN3310_M13_FIXED_HTTP_WEBGL12_QUALIFIER_BINDING_20261115_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "9a3c1ba7620cbb0c00c6f6d9045475f95f9a1c3f0eaf9f79a56278820b3bb160",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "7cf913c98609f593a29eb546d5a02586b5de53ffb47815252af771281401311a",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

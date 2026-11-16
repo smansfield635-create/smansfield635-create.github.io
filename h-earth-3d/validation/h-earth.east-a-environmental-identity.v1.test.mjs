@@ -30,7 +30,9 @@ test('Stage A patch is one bounded real terrain shader insertion', () => {
   assert.match(stage, /inlandIdentity=smoothstep\(/);
   assert.match(stage, /protectedGrove=1\.0-smoothstep\(/);
   assert.match(stage, /identityWeight=inlandIdentity\*/);
-  assert.match(stage, /palette=mix\(palette,identityBase,identityWeight\)/);
+  assert.match(stage, /vec3 ecologicalSoilSubstrate=palette;/);
+  assert.match(stage, /float ecologicalDenominator=1\.0\+identityWeight\+groundcoverWeight;/);
+  assert.doesNotMatch(stage, /palette=mix\(palette,identityBase,identityWeight\)/);
 });
 
 test('Visible ground identities use spatially continuous material mechanisms', () => {
@@ -145,4 +147,73 @@ test('Bare-ground regional palettes keep foliage green separate', () => {
   assert.ok(stage.includes('0.48+0.10*abs(fertilePatch-0.5)*2.0+'), 'PREVIOUS_ACCEPTED_BLEND_STRENGTH_CHANGED');
   assert.ok(stage.includes('(1.0-protectedGrove)*identityContrast'), 'GROVE_PROTECTION_CHANGED');
   assert.ok(source.includes('WOODLAND_FINE_GRASS_FS'), 'GREEN_FOLIAGE_SHADER_MISSING');
+});
+
+
+// Gen3313: source-only guard; WebGL2 visual proof and owner KEEP remain separate.
+const gen3313Splices = [
+  {
+    "label": "identity",
+    "original": "      float identityWeight=inlandIdentity*\n        (1.0-protectedGrove)*identityContrast;\n      palette=mix(palette,identityBase,identityWeight);",
+    "replacement": "      float identityWeight=inlandIdentity*\n        (1.0-protectedGrove)*identityContrast;\n      // A03/A04: the current textured earth remains the common substrate.\n      vec3 ecologicalSoilSubstrate=palette;\n      float ecologicalIdentityLuma=max(\n        dot(identityBase,vec3(0.2126,0.7152,0.0722)),0.001\n      );\n      vec3 ecologicalIdentityHue=clamp(\n        identityBase/ecologicalIdentityLuma,vec3(0.60),vec3(1.60)\n      );\n      vec3 ecologicalIdentityTint=clamp(\n        mix(vec3(1.0),ecologicalIdentityHue,0.24),\n        vec3(0.86),vec3(1.14)\n      );"
+  },
+  {
+    "label": "groundcover",
+    "original": "      vec3 groundcoverTone=mix(\n        vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),groundcoverMoisture\n      );\n      groundcoverTone=mix(\n        groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry\n      );\n      groundcoverTone*=0.88+0.24*materialVariation;\n      palette=mix(palette,groundcoverTone,groundcoverWeight);",
+    "replacement": "      // Ecological pigment modifies local earth rather than painting olive.\n      vec3 ecologicalGroundcoverTint=mix(\n        vec3(0.965,0.975,0.945),vec3(0.890,0.960,0.900),groundcoverMoisture\n      );\n      ecologicalGroundcoverTint=mix(\n        ecologicalGroundcoverTint,vec3(1.015,0.990,0.965),groundcoverDry\n      );\n      vec3 ecologicalIdentityTarget=ecologicalSoilSubstrate*ecologicalIdentityTint;\n      vec3 ecologicalGroundcoverTarget=ecologicalSoilSubstrate*ecologicalGroundcoverTint;\n      // Nonnegative partition of unity: positive substrate share at every\n      // eligible pixel, including overlap; original supports stay unchanged.\n      float ecologicalDenominator=1.0+identityWeight+groundcoverWeight;\n      palette=(\n        ecologicalSoilSubstrate+\n        identityWeight*ecologicalIdentityTarget+\n        groundcoverWeight*ecologicalGroundcoverTarget\n      )/ecologicalDenominator;"
+  },
+  {
+    "label": "habitat",
+    "original": "    base=mix(base,habitatSoil,habitatColorCoverage*.68);",
+    "replacement": "    // A03/A04: retain the resident soil grain through later habitat pigment.\n    float ecologicalHabitatLuma=max(\n      dot(habitatSoil,vec3(0.2126,0.7152,0.0722)),0.001\n    );\n    vec3 ecologicalHabitatHue=clamp(\n      habitatSoil/ecologicalHabitatLuma,vec3(0.60),vec3(1.60)\n    );\n    vec3 ecologicalHabitatTint=clamp(\n      mix(vec3(1.0),ecologicalHabitatHue,0.20),\n      vec3(0.88),vec3(1.12)\n    );\n    float ecologicalHabitatWeight=clamp(habitatColorCoverage*0.68,0.0,1.0);\n    base=(base+ecologicalHabitatWeight*(base*ecologicalHabitatTint))\n      /(1.0+ecologicalHabitatWeight);"
+  }
+];
+
+// The candidate must invert to the exact accepted Git blob by changing only
+// three color-composition outputs; roots, native R8, geology and roles are not edited.
+test('Gen3313 only three source-relative color operators changed from Gen3259', () => {
+  let recovered=source;
+  for (const { label, original, replacement } of [...gen3313Splices].reverse()) {
+    assert.equal(source.split(replacement).length-1,1,'CANDIDATE_OPERATOR_NONUNIQUE_'+label);
+    assert.equal(recovered.split(replacement).length-1,1,'CANDIDATE_INVERSE_NONUNIQUE_'+label);
+    recovered=recovered.replace(replacement,original);
+  }
+  assert.equal(blob(Buffer.from(recovered,'utf8')),'3471d386d720382b1b55b146fef6fa0af61f0d36','ACCEPTED_SOURCE_INVERSION_DRIFT');
+  for(const marker of [
+    'vec3 worldSoilActualAlbedo=', 'vec3 worldSoilFinal=',
+    'float identityWeight=inlandIdentity*', 'float groundcoverWeight=0.88*groundcoverPatch*',
+    'float gen3259OriginalHabitat=', 'float gen3259MeadowExcess=',
+    'float gen3259RegionalFade=', 'float gen3259SoilStrength=',
+    'habitatColorCoverage=gen3259OriginalHabitat',
+    'texture(uMeadowGroundOccupancy,meadowUv).r'
+  ]) assert.equal(source.split(marker).length-1,1,'GEN3259_GUARD_NOT_UNIQUE_'+marker);
+  assert.ok(source.indexOf('habitatColorCoverage=gen3259OriginalHabitat') < source.indexOf('float ecologicalHabitatWeight='),'R8_COVERAGE_MUST_PRECEDE_HABITAT_COMPOSITION');
+  assert.ok(source.indexOf('float ecologicalHabitatWeight=') < source.indexOf('terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);'),'NATIVE_LIGHTING_MUST_FOLLOW_COLOR');
+});
+
+test('Gen3313 normalized identity and groundcover retain nonnegative soil share', () => {
+  assert.match(source,/float ecologicalDenominator=1\.0\+identityWeight\+groundcoverWeight;/);
+  assert.match(source,/ecologicalSoilSubstrate\+\s*identityWeight\*ecologicalIdentityTarget\+\s*groundcoverWeight\*ecologicalGroundcoverTarget/);
+  const minShare=1/(1+0.66+0.88);
+  for(let i=0;i<=100;i++) for(let j=0;j<=100;j++) {
+    const identityWeight=0.66*i/100, groundcoverWeight=0.88*j/100;
+    const denominator=1+identityWeight+groundcoverWeight;
+    const portions=[1/denominator,identityWeight/denominator,groundcoverWeight/denominator];
+    assert.ok(portions.every(x=>x>=0));
+    assert.ok(Math.abs(portions.reduce((a,b)=>a+b,0)-1)<1e-12);
+    assert.ok(portions[0]>=minShare-1e-12,'SOIL_SHARE_BELOW_ACCEPTED_MINIMUM');
+  }
+});
+
+test('Gen3313 native habitat/R8 zero and positive coverage cases remain eligible', () => {
+  assert.match(source,/float gen3259MeadowExcess=max\(0\.0,meadowOccupancy\*meadowOuterWeight-gen3259OriginalHabitat\)/);
+  assert.match(source,/habitatColorCoverage=gen3259OriginalHabitat\s*\+gen3259MeadowExcess\*gen3259SoilStrength\*gen3259RegionalFade/);
+  assert.match(source,/float ecologicalHabitatWeight=clamp\(habitatColorCoverage\*0\.68,0\.0,1\.0\)/);
+  const coverage=(originalHabitat,occupancy,outerWeight,strength,fade)=>
+    originalHabitat+Math.max(0,occupancy*outerWeight-originalHabitat)*strength*fade;
+  const weight=value=>Math.max(0,Math.min(1,value*.68));
+  assert.equal(weight(coverage(0,0,1,.16,1)),0,'ZERO_OCCUPANCY_ZERO_HABITAT_MUST_NOT_PIGMENT');
+  assert.equal(coverage(.4,0,1,.16,1),.4,'NATIVE_HABITAT_MUST_SURVIVE_ZERO_R8');
+  assert.ok(weight(coverage(.4,0,1,.16,1))>0,'NATIVE_HABITAT_POSITIVE_ELIGIBILITY');
+  assert.ok(weight(coverage(0,1,1,.16,1))>0,'GEN3259_R8_POSITIVE_ELIGIBILITY');
 });

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T12:38:26Z",
+  "generatedAt": "2026-11-16T13:46:26Z",
   "window": {
-    "start": "2026-08-18T12:38:26Z",
-    "end": "2026-11-16T12:38:26Z"
+    "start": "2026-08-18T13:46:26Z",
+    "end": "2026-11-16T13:46:26Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3605,
-    "visits": 1082,
+    "pageLoads": 3585,
+    "visits": 1072,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3605,
-        "visits": 1082
+        "pageLoads": 3585,
+        "visits": 1072
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 782,
-        "visits": 592
+        "pageLoads": 772,
+        "visits": 582
       },
       "/products/": {
         "pageLoads": 40,
@@ -103,7 +103,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 63,
+        "pageLoads": 53,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -305,12 +305,12 @@
         "visits": 560
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2523,
+        "pageLoads": 2513,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 512,
-        "visits": 512
+        "pageLoads": 502,
+        "visits": 502
       },
       "raw.githack.com": {
         "pageLoads": 10,

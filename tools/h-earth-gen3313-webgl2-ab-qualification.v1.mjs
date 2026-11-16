@@ -50,6 +50,11 @@ function sourceBinding() {
   const importOld = "from './h-earth-groundcover-factor-overlay.mjs'";
   const importNew = 'from ' + JSON.stringify(pathToFileURL(path.join(TOOL_ROOT, 'tools/h-earth-groundcover-factor-overlay.mjs')).href);
   s = requireOne(s, importOld, importNew);
+  // Generated comparator executes outside node_modules ancestry: bind both Playwright imports.
+  const playwrightOld = "await import('playwright')";
+  const playwrightNew = 'await import(' + JSON.stringify(pathToFileURL(path.join(TOOL_ROOT, 'node_modules/playwright/index.mjs')).href) + ')';
+  if (s.split(playwrightOld).length !== 3) throw Error('PLAYWRIGHT_IMPORT_ANCHOR_DRIFT');
+  s = s.split(playwrightOld).join(playwrightNew);
   s = s.replaceAll('GEN3142', 'GEN3313').replaceAll('gen3142', 'gen3313');
   if (!s.includes("profile:'GEN3313_OWNER_FRAME_V1'") || !s.includes('export async function runGen3313'))
     throw Error('GEN3313_ADAPTATION_INCOMPLETE');

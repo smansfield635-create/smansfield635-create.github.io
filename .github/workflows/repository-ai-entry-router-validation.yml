@@ -271,6 +271,8 @@ jobs:
         shell: bash
         env:
           COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR_LOGIN: ${{ github.event.comment.user.login }}
+          COMMENT_APP_SLUG: ${{ github.event.comment.performed_via_github_app.slug }}
         run: |
           set +e
           CURRENT_HEAD="$(git rev-parse HEAD^{commit})"
@@ -286,7 +288,9 @@ jobs:
             const tail=body.slice(marker.length).trim();
             if(!tail.startsWith('{')||!tail.endsWith('}')) throw new Error('REMOTE_REQUEST_JSON_INVALID');
             const q=JSON.parse(tail);
-            const exact=['paths','requestNonce','schema','subjectHead','task'].sort();
+            const appSlug=String(process.env.COMMENT_APP_SLUG??'');
+            const agentOrigin=appSlug.length>0;
+            const exact=(agentOrigin?['operationId','paths','requestNonce','schema','subjectHead','task']:['paths','requestNonce','schema','subjectHead','task']).sort();
             if(!q||typeof q!=='object'||Array.isArray(q)||JSON.stringify(Object.keys(q).sort())!==JSON.stringify(exact)) throw new Error('REMOTE_REQUEST_KEYSET_INVALID');
             if(q.schema!=='REPOSITORY_AI_ROUTER_REMOTE_INVOCATION_REQUEST_v1') throw new Error('REMOTE_REQUEST_SCHEMA_INVALID');
             if(q.subjectHead!==process.env.CURRENT_HEAD||!/^[0-9a-f]{40}$/.test(q.subjectHead)) throw new Error('REMOTE_SUBJECT_HEAD_MISMATCH');
@@ -294,6 +298,14 @@ jobs:
             if(!Array.isArray(q.paths)||q.paths.length<1||q.paths.length>64) throw new Error('REMOTE_PATHS_INVALID');
             const normalized=q.paths.map((value)=>{const p=String(value??'').trim().replaceAll('\\','/').replace(/^\.\/+/, '');if(!p||p.length>512||p.startsWith('/')||p==='..'||p.startsWith('../')||p.includes('/../')||p.includes('//')||p.includes('\0'))throw new Error('REMOTE_PATH_INVALID');return p;});
             if(new Set(normalized).size!==normalized.length) throw new Error('REMOTE_PATH_DUPLICATE');
+            if(agentOrigin){
+              const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+              const exemption=entry.remoteRouterReceiptTransport?.fixedAgentQualifierExemption;
+              if(entry.remoteRouterReceiptTransport?.agentInvocationAllowed!==false||exemption?.status!=='ALLOWED_BOUNDED_AFTER_ADOPTION'||exemption?.allOtherAgentRouterRequestsBlocked!==true||exemption?.generalAgentExecutionAllowed!==false) throw new Error('REMOTE_AGENT_POLICY_NOT_ACTIVE');
+              if(appSlug!==exemption.originatingGitHubAppSlug||process.env.COMMENT_AUTHOR_LOGIN!==exemption.authenticatedOwnerLogin) throw new Error('REMOTE_AGENT_OWNER_AUTH_INVALID');
+              if(q.operationId!==exemption.operationId||q.task!==exemption.operationId) throw new Error('REMOTE_AGENT_OPERATION_NOT_EXEMPTED');
+              if(normalized.length!==1||normalized[0]!==exemption.exactPermittedPath||exemption.singlePathOnly!==true) throw new Error('REMOTE_AGENT_PATH_NOT_EXEMPTED');
+            }
             if(!/^[0-9a-f]{64}$/.test(q.requestNonce)) throw new Error('REMOTE_NONCE_INVALID');
             fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-paths.txt',normalized.join('\n')+'\n');
             fs.writeFileSync(process.env.RUNNER_TEMP+'/remote-router-task.txt',q.task);

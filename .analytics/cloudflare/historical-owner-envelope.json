@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-16T18:28:17Z",
+  "generatedAt": "2026-11-16T19:24:38Z",
   "window": {
-    "start": "2026-08-18T18:28:17Z",
-    "end": "2026-11-16T18:28:17Z"
+    "start": "2026-08-18T19:24:38Z",
+    "end": "2026-11-16T19:24:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -66,13 +66,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -110,6 +110,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -122,7 +126,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -136,10 +140,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -242,13 +242,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-16T18:28:17Z",
+  "generatedAt": "2026-11-16T19:24:38Z",
   "window": {
-    "start": "2026-10-17T18:28:17Z",
-    "end": "2026-11-16T18:28:17Z"
+    "start": "2026-10-17T19:24:38Z",
+    "end": "2026-11-16T19:24:38Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 264
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
@@ -78,17 +78,17 @@
         "visits": 10
       },
       {
-        "value": "/showroom/globe/earth/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/about/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/characters/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -228,8 +228,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1544,
-        "visits": 1448
+        "pageLoads": 1324,
+        "visits": 1228
       },
       {
         "value": "CN",
@@ -272,43 +272,43 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 631,
-        "visits": 630
+        "pageLoads": 792,
+        "visits": 791
       },
       {
         "value": "Chrome",
-        "pageLoads": 210,
-        "visits": 180
+        "pageLoads": 229,
+        "visits": 198
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 119,
-        "visits": 107
+        "pageLoads": 123,
+        "visits": 111
       },
       {
         "value": "Edge",
-        "pageLoads": 80,
-        "visits": 56
+        "pageLoads": 96,
+        "visits": 65
       },
       {
         "value": "Unknown",
-        "pageLoads": 70,
-        "visits": 58
+        "pageLoads": 71,
+        "visits": 59
       },
       {
         "value": "Firefox",
-        "pageLoads": 36,
-        "visits": 33
+        "pageLoads": 58,
+        "visits": 50
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 22,
-        "visits": 11
+        "pageLoads": 23,
+        "visits": 12
       },
       {
         "value": "Safari",
-        "pageLoads": 11,
-        "visits": 11
+        "pageLoads": 13,
+        "visits": 13
       },
       {
         "value": "ChromeMobileWebview",
@@ -319,13 +319,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 745,
-        "visits": 744
+        "pageLoads": 885,
+        "visits": 884
       },
       {
         "value": "Windows",
-        "pageLoads": 189,
-        "visits": 144
+        "pageLoads": 229,
+        "visits": 174
       },
       {
         "value": "Android",
@@ -334,13 +334,13 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 61,
-        "visits": 49
+        "pageLoads": 71,
+        "visits": 59
       },
       {
         "value": "MacOSX",
-        "pageLoads": 49,
-        "visits": 47
+        "pageLoads": 59,
+        "visits": 57
       },
       {
         "value": "iOS",
@@ -350,14 +350,14 @@
     ],
     "bot": [
       {
-        "value": "0",
-        "pageLoads": 802,
-        "visits": 607
+        "value": "1",
+        "pageLoads": 792,
+        "visits": 791
       },
       {
-        "value": "1",
-        "pageLoads": 760,
-        "visits": 759
+        "value": "0",
+        "pageLoads": 614,
+        "visits": 509
       }
     ],
     "navigationType": [

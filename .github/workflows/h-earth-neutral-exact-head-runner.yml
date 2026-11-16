@@ -2008,3 +2008,62 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3313-native
           if-no-files-found: warn
           retention-days: 30
+
+  # Gen3331: admitted single-path tooling for immutable Gen3329 candidate.
+  # Read-only Node 22; no product modification, visual acceptance, merge, or release.
+  gen3331-terrain-grass-node22:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3329-native-qualification-tooling-20261116'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout immutable Gen3329 product candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 41d430dae2e9151517e7bcec1b4ca21a844e03a1
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Set up native Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run unchanged terrain grass, visibility, and precomputed grass tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence=/tmp/h-earth-gen3331-native
+          mkdir -p "$evidence"
+          test "$(git rev-parse HEAD)" = '41d430dae2e9151517e7bcec1b4ca21a844e03a1'
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = '967403f2b13ad29c2f117a259995ca2b7852852c'
+          test "$(git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs)" = 'd2ad0851144e735dae9dcb46d4006e2a8d5b23d0'
+          git rev-parse HEAD > "$evidence/candidate-head.txt"
+          git hash-object h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs > "$evidence/test-blob.txt"
+          node --version | tee "$evidence/node-version.txt"
+          test "$(node --version | sed -E 's/^v([0-9]+).*/\1/')" = '22'
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js > "$evidence/renderer-node-check.txt" 2>&1
+          set +e
+          node --test h-earth-3d/validation/h-earth.terrain-grass-continuity.v2.test.mjs h-earth-3d/validation/h-earth.grass-visibility.v2.test.mjs h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs > "$evidence/native.tap" 2>&1
+          status=$?
+          set -e
+          cat "$evidence/native.tap"
+          printf '%s\n' "$status" > "$evidence/native-exit-code.txt"
+          if [ "$status" -ne 0 ]; then
+            awk '/^not ok [0-9]+/ {print; exit}' "$evidence/native.tap" > "$evidence/first-failure.txt"
+            exit "$status"
+          fi
+          grep -Eq '^# tests [1-9][0-9]*$' "$evidence/native.tap"
+          grep -Fxq '# fail 0' "$evidence/native.tap"
+          jq -n --arg candidate '41d430dae2e9151517e7bcec1b4ca21a844e03a1' \
+            --arg renderer '967403f2b13ad29c2f117a259995ca2b7852852c' \
+            --arg test 'd2ad0851144e735dae9dcb46d4006e2a8d5b23d0' \
+            --arg nodeVersion "$(cat "$evidence/node-version.txt")" \
+            '{schema:"H_EARTH_PR7445_EXACT_NODE22_QUALIFICATION_RECEIPT_v1",result:"NATIVE_SOURCE_QUALIFICATION_PASS_NOT_VISUAL_ACCEPTANCE",candidateHead:$candidate,rendererBlob:$renderer,testBlob:$test,nodeVersion:$nodeVersion,node22Executed:true,nativeTestExitCode:0,tests:["h-earth.terrain-grass-continuity.v2.test.mjs","h-earth.grass-visibility.v2.test.mjs","h-earth.precomputed-grass.v1.test.mjs"],glslCompiled:false,webgl2PixelsRendered:false,ownerKeep:false,productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false}' > "$evidence/native-receipt.json"
+      - name: Preserve exact-head Node22 evidence or first native failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3331-terrain-grass-node22
+          path: /tmp/h-earth-gen3331-native
+          if-no-files-found: warn
+          retention-days: 30

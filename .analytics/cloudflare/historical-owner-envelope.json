@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-15T23:29:23Z",
+  "generatedAt": "2026-11-16T00:49:17Z",
   "window": {
-    "start": "2026-08-17T23:29:23Z",
-    "end": "2026-11-15T23:29:23Z"
+    "start": "2026-08-18T00:49:17Z",
+    "end": "2026-11-16T00:49:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -190,16 +190,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -214,19 +214,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },

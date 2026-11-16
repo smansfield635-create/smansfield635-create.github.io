@@ -98,12 +98,38 @@ function validateNegative(result){
   check(!result.receipt?.gen3323C2CAdmissionProvenance?.eligible,'EXTRA_PATH_INHERITED_ADMISSION');
   return {additionalPath:'assets/engine/unadmitted-c2c-foreign.mjs',disposition:result.receipt.disposition,reasonCodes:result.receipt.reasonCodes||[]};
 }
+// Preserve the original live-router diagnostics, including negative evidence, without
+// copying owner source bodies or repository lock ledgers into the execution artifact.
+function routerEvidence(kind, attempt) {
+  const r=attempt?.receipt;
+  return {kind,exitCode:attempt?.exitCode??null,disposition:r?.disposition??null,
+    reasonCodes:Array.isArray(r?.reasonCodes)?r.reasonCodes:[],
+    provenanceFailure:r?.gen3323C2CProvenanceFailure??null,
+    provenance:r?.gen3323C2CAdmissionProvenance??null,
+    routes:Array.isArray(r?.routes)?r.routes.map(route=>({
+      path:route.path,projectId:route.projectId??null,
+      routeClass:route.routeClass??null,disposition:route.disposition??null,
+      reasonCodes:Array.isArray(route.reasonCodes)?route.reasonCodes:[]
+    })):[]};
+}
 function main(){
-  const inputs=parseArgs(process.argv.slice(2));const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'dgb-c2c-fixed-live-router-'));
-  try{
+  let inputs=null,tmp=null,stage='ARGUMENT_VALIDATION',lastRouter=null;
+  try {
+    inputs=parseArgs(process.argv.slice(2));
+    stage='EXACT_SOURCE_MATERIALIZATION';
+    tmp=fs.mkdtempSync(path.join(os.tmpdir(),'dgb-c2c-fixed-live-router-'));
     const root=path.join(tmp,'src');const source=materialize(root);
-    const positive=validatePositive(invoke(root,PATHS));
-    const negative=validateNegative(invoke(root,[...PATHS,'assets/engine/unadmitted-c2c-foreign.mjs']));
+    stage='POSITIVE_TWO_PATH_ROUTER_EXECUTION';
+    const admitted=invoke(root,PATHS);
+    lastRouter=routerEvidence('ADMITTED_TWO_PATHS',admitted);
+    stage='POSITIVE_TWO_PATH_ASSERTIONS';
+    const positive=validatePositive(admitted);
+    stage='NEGATIVE_THIRD_PATH_ROUTER_EXECUTION';
+    const foreign=invoke(root,[...PATHS,'assets/engine/unadmitted-c2c-foreign.mjs']);
+    lastRouter=routerEvidence('UNADMITTED_THIRD_PATH',foreign);
+    stage='NEGATIVE_THIRD_PATH_ASSERTIONS';
+    const negative=validateNegative(foreign);
+    stage='WRITE_SUCCESS_RECEIPT';
     const output={schema:SCHEMA,result:'PASS_CLOSED',operationId:OPERATION,
       executionHolder:inputs['--execution-holder'],candidateHead:SOURCE,source,...source,
       gen3323Operation:TASK,gen3323AdmissionProvenance:positive,negativeExtraPath:negative,
@@ -112,6 +138,24 @@ function main(){
       authorityEffect:'NONE_READONLY_QUALIFICATION_ONLY'};
     fs.writeFileSync(inputs['--output'],JSON.stringify(output,null,2)+'\n');
     process.stdout.write(JSON.stringify({schema:SCHEMA,result:output.result,gen3323:EXPECTED_GEN,routeCount:2,negativePass:true})+'\n');
-  }finally{fs.rmSync(tmp,{recursive:true,force:true});}
+  }catch(error){
+    const failure={schema:SCHEMA,result:'FAIL_CLOSED',operationId:OPERATION,
+      executionHolder:inputs?.['--execution-holder']??null,candidateHead:SOURCE,source:null,
+      gen3323Operation:TASK,gen3323AdmissionProvenance:null,negativeExtraPath:null,
+      actualGitHubLiveRouterExecuted:lastRouter!==null,adapterSourceCommitted:false,
+      repositoryMutationPerformed:false,branchCreated:false,mergePerformed:false,
+      deploymentPerformed:false,releasePerformed:false,publicationPerformed:false,
+      authorityEffect:'NONE_READONLY_QUALIFICATION_ONLY',
+      failedStage:stage,errorCode:error.code||'UNEXPECTED',
+      detail:String(error.message).slice(0,1200),routerEvidence:lastRouter};
+    // Only a validated output path may be written. Keep the process nonzero even
+    // when the dispatcher captures this structured failure payload successfully.
+    if(inputs){
+      try{fs.writeFileSync(inputs['--output'],JSON.stringify(failure,null,2)+'\n');}
+      catch(writeError){failure.outputWriteError=String(writeError.message).slice(0,350);}
+    }
+    process.stderr.write(JSON.stringify(failure)+'\n');
+    process.exitCode=1;
+  }finally{if(tmp)fs.rmSync(tmp,{recursive:true,force:true});}
 }
-try{main()}catch(error){process.stderr.write(JSON.stringify({schema:SCHEMA,result:'FAIL_CLOSED',errorCode:error.code||'UNEXPECTED',detail:String(error.message).slice(0,1200)})+'\n');process.exit(1)}
+main();

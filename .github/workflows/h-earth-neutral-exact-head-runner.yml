@@ -2097,8 +2097,24 @@ jobs:
              for(let i=0;i<bytes.length;i+=52){const r=decode(bytes.subarray(i,i+52));if(tile(r)===target)expected.push({...r,source});}
             }
             const expectation=new Map(expected.map(r=>[key(r),r]));
+            // Authenticated accepted successor: compare every target record against
+            // the final coastal redistribution movement ledger, not the obsolete original additions.
+            const coastalReceipt=json('h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json');
+            const relocationChanges=JSON.parse(unzip('h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz'));
+            const relocationHash=sha(Buffer.from(JSON.stringify(relocationChanges)));
+            if(relocationHash!==coastalReceipt.changesSha256||relocationChanges.length!==coastalReceipt.moved)throw Error('REDISTRIBUTION_LEDGER_IDENTITY_MISMATCH');
+            if(coastalReceipt.added!==0||coastalReceipt.removed!==0||coastalReceipt.rootCount!==current.rootCount)throw Error('REDISTRIBUTION_ROOT_CENSUS_MISMATCH');
+            const isTarget=([x,,z])=>Math.floor(x/4)+':'+Math.floor(z/4)===target;
+            const targetMoves=relocationChanges.filter(c=>isTarget(c.to));
+            const movesByIdentity=new Map(targetMoves.map(c=>[[c.to[0],c.to[2],c.seed].join(':'),c]));
+            const movementRecords=observed.map(r=>{
+             const movement=movesByIdentity.get([r.x,r.z,r.seed].join(':'));
+             return {x:r.x,z:r.z,seed:r.seed,matched:!!movement,triangleIdMatched:!!movement&&movement.triangleId===r.triangleId,heightMatched:!!movement&&Math.fround(movement.to[1])===r.y,regionTagMatched:r.tag===2,from:movement?.from??null};
+            });
+            const movementEvidence={receiptDigest:coastalReceipt.changesSha256,computedDigest:relocationHash,ledgerEntries:relocationChanges.length,rootCountConserved:true,targetMoveCount:targetMoves.length,targetActualCount:observed.length,matched:movementRecords.filter(x=>x.matched&&x.triangleIdMatched&&x.heightMatched&&x.regionTagMatched).length,records:movementRecords};
+            if(movementEvidence.targetMoveCount!==observed.length||movementEvidence.matched!==observed.length)throw Error('TARGET_TILE_MOVEMENT_PROVENANCE_MISMATCH:'+JSON.stringify(movementEvidence));
             const targetRecords=observed.map(r=>{const exact=expectation.get(key(r));const ordered=expected.map(q=>({source:q.source,x:q.x,z:q.z,distance:Math.hypot(q.x-r.x,q.z-r.z)})).sort((a,b)=>a.distance-b.distance).slice(0,2);return {x:r.x,z:r.z,seed:r.seed,triangleId:r.triangleId,tag:r.tag,matchedSource:exact?.source||null,matchAllFields:exact?['x','y','z','angle','slope','seed','triangleId'].every(k=>exact[k]===r[k]):false,nearest:exact?[]:ordered,rawHex:r.hex};});
-            const report={schema:'H_EARTH_GEN3331_PREEXISTING_GRASS_PROVENANCE_DIAGNOSTIC_v1',candidate:'41d430dae2e9151517e7bcec1b4ca21a844e03a1',historic:oldRef,oldRootCount:oldManifest.rootCount,currentRootCount:current.rootCount,missingTiles,missingRoots,shortPrefixTiles,shortPrefixRoots,recordedPrefixShortfall:missingRoots+shortPrefixRoots,changedCommonPrefixTiles,preservedPrefixRecords,shortSamples,changedSamples,targetTile:{id:target,oldCount:old.count,currentBaselineCount:t.baselineCount,currentTotalCount:t.count,expectedBySource:Object.fromEntries(['spatial','coastal','hillside','terrain'].map(s=>[s,expected.filter(x=>x.source===s).length])),expectedUniqueKeys:new Set(expected.map(key)).size,actualAdditions:observed.length,records:targetRecords}};
+            const report={schema:'H_EARTH_GEN3331_PREEXISTING_GRASS_PROVENANCE_DIAGNOSTIC_v1',coastalMovementLedger:movementEvidence,candidate:'41d430dae2e9151517e7bcec1b4ca21a844e03a1',historic:oldRef,oldRootCount:oldManifest.rootCount,currentRootCount:current.rootCount,missingTiles,missingRoots,shortPrefixTiles,shortPrefixRoots,recordedPrefixShortfall:missingRoots+shortPrefixRoots,changedCommonPrefixTiles,preservedPrefixRecords,shortSamples,changedSamples,targetTile:{id:target,oldCount:old.count,currentBaselineCount:t.baselineCount,currentTotalCount:t.count,expectedBySource:Object.fromEntries(['spatial','coastal','hillside','terrain'].map(s=>[s,expected.filter(x=>x.source===s).length])),expectedUniqueKeys:new Set(expected.map(key)).size,actualAdditions:observed.length,records:targetRecords}};
             console.log(JSON.stringify(report));
           NODE
             printf '%s\n' "$?" > "$evidence/grass-provenance-diagnostic-exit-code.txt"

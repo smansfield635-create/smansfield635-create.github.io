@@ -12,7 +12,6 @@
     "lockGeneration": 3347,
     "lockScope": "H_EARTH:GEN3347_CURRENT_HEAD_FIRST_HIT_QUALIFIER:20261116",
     "lockAcquired": true,
-    "acquisitionCommitSha": "27a687a4d94a85c9e71f1390b134200adb1dc14a",
-    "committedLedgerBlobSha": "301cef29c6a06e44c6cb350728b5de050351a843"
+    "acquisitionCommitSha": "27a687a4d94a85c9e71f1390b134200adb1dc14a"
   }
 }

@@ -1974,6 +1974,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       surface,geology};
     c2cPendingObjects.add(entry);
     const rollback=()=>destroy();
+    entry.rollback=rollback;
     const commit=()=>{
       c2cAssert(active&&!committed,'COMMIT_STATE_INVALID');
       c2cAssert(resources.vegetationVisibleSurface===surface&&

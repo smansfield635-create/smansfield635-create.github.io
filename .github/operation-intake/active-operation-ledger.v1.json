@@ -23290,6 +23290,50 @@
       "scopeHash": "a67fcb931b7651a96613cf43776898243d37b20041af24e32576f1f9934c8c93",
       "state": "ADMITTED_LOCKED"
     },
+    "a6da2155e7c0339d0763277f631ffef097af80069b32440f0b13892f70ee448f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "42bbb76680cf18b8d1846cb44676cd22d13b0615",
+          "lockGeneration": 3363,
+          "lockScope": "H_EARTH:GEN3363_COARSE_SILHOUETTE_PRESENTATION_ONLY:20261116",
+          "operationId": "H_EARTH_GEN3363_COARSE_GRASS_SILHOUETTE_ONE_LINE_TRIAL_20261116_001",
+          "procedureLocatorDigest": "039bf718dce806e52b89a9391371d63bc03d0e957e31368e24fd0ed0cde2c721",
+          "requestDigest": "c7779a9926bdc748aacf36a3e8f6c665f0f8b2800cd60766d98ca689c4d75da8",
+          "scopeHash": "a6da2155e7c0339d0763277f631ffef097af80069b32440f0b13892f70ee448f"
+        },
+        "bindingDigest": "357190811823ed3497b85ba210d82b0606aa8e7a3837dce3efb2727ae64f0457",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ec8e6be89e187ce9dc5d230c1c6f57277f07029ea07c2990807e87d8db85bccd",
+          "commentId": 6937778767,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44013724959,
+          "workflowSha": "42bbb76680cf18b8d1846cb44676cd22d13b0615"
+        },
+        "lineageAnchorCommitSha": "75ba87b525372eac9cfede106e256001c18471ca",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "42bbb76680cf18b8d1846cb44676cd22d13b0615",
+      "lockGeneration": 3363,
+      "lockScope": "H_EARTH:GEN3363_COARSE_SILHOUETTE_PRESENTATION_ONLY:20261116",
+      "operationId": "H_EARTH_GEN3363_COARSE_GRASS_SILHOUETTE_ONE_LINE_TRIAL_20261116_001",
+      "procedureLocatorDigest": "039bf718dce806e52b89a9391371d63bc03d0e957e31368e24fd0ed0cde2c721",
+      "released": false,
+      "requestDigest": "c7779a9926bdc748aacf36a3e8f6c665f0f8b2800cd60766d98ca689c4d75da8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a6da2155e7c0339d0763277f631ffef097af80069b32440f0b13892f70ee448f",
+      "state": "ADMITTED_LOCKED"
+    },
     "a70b3135ff3356257935e1a255707d44545da1e51cb68b35ca3eddec8436f040": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -35764,7 +35808,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3362,
+  "lockGeneration": 3363,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-17T17:24:23Z",
+  "generatedAt": "2026-11-17T18:27:52Z",
   "window": {
-    "start": "2026-10-18T17:24:23Z",
-    "end": "2026-11-17T17:24:23Z"
+    "start": "2026-10-18T18:27:52Z",
+    "end": "2026-11-17T18:27:52Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 248
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
@@ -360,20 +360,20 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1336,
-        "visits": 1284
+        "pageLoads": 1269,
+        "visits": 1119
       },
       {
         "value": "cache",
-        "pageLoads": 40,
+        "pageLoads": 20,
         "visits": 0
       }
     ],
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1356,
-        "visits": 1264
+        "pageLoads": 1376,
+        "visits": 1284
       }
     ],
     "siteTag": [

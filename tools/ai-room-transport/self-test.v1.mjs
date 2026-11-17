@@ -36,8 +36,16 @@ function gitBytes(root, ...args) {
   return cp.execFileSync('git', args, { cwd: root, maxBuffer: 64 * 1024 * 1024 });
 }
 
+const COMPATIBILITY_TEST_DESCRIPTOR_ID = 'METHODS_ASSIGNMENT_GAP_CLOSURE_REPRODUCTION_DESCRIPTOR_V1';
 function fixture(registry, holder) {
-  const descriptor = registry.tools[0];
+  // Do not depend on registry insertion order: the packet compiler now precedes
+  // the legacy fixture descriptor and requires different canonical inputs.
+  const descriptor = registry.tools.find(tool => tool.descriptorId === COMPATIBILITY_TEST_DESCRIPTOR_ID);
+  if (!descriptor) fail('SELF_TEST_COMPATIBILITY_DESCRIPTOR_MISSING', COMPATIBILITY_TEST_DESCRIPTOR_ID);
+  const fixtureRegistry = {
+    ...registry,
+    tools: [descriptor, ...registry.tools.filter(tool => tool.descriptorId !== COMPATIBILITY_TEST_DESCRIPTOR_ID)]
+  };
   const request = {
     schema: 'AI_ROOM_EXECUTION_REQUEST_v1',
     requestId: `AI_ROOM_BOOTSTRAP_SELF_TEST_${holder}`,
@@ -87,7 +95,7 @@ function fixture(registry, holder) {
     disposition: 'PASS',
     routes: [{ projectId: descriptor.projectId, disposition: 'PASS' }]
   };
-  return { request, admissionReceipt, routerReceipt, registry };
+  return { request, admissionReceipt, routerReceipt, registry: fixtureRegistry };
 }
 
 function clone(value) { return structuredClone(value); }
@@ -356,7 +364,7 @@ export function runSelfTest({ root, expectedHead, holder, outputDir }) {
   const backend = selectBackend({ resolutionReceipt: resolution, capabilities: base.request.availableCapabilities });
   const commandReceipt = dispatchLoaded({ ...base, request: parsed, root, allowCandidate: true });
   if (commandReceipt.executionDisposition !== 'COMMAND_EXECUTED_AND_PASSED') fail('POSITIVE_COMMAND_EXECUTION_FAILED', commandReceipt.errorCode ?? commandReceipt.executionDisposition);
-  const descriptor = registry.tools[0];
+  const descriptor = base.registry.tools[0];
   const validation = validateCommandReceipt({ descriptor, receipt: commandReceipt });
   if (validation.validationDisposition !== 'VALIDATED_PASS') fail('POSITIVE_RECEIPT_VALIDATION_FAILED');
   const continuation = applyContinuationGate({ descriptor, validationResult: validation });

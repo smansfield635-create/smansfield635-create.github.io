@@ -1829,6 +1829,23 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     });
   }
 
+  // Gen3353: reuse the existing owner copy-report/live GPU receipt on an
+  // opt-in exact-head qualification route. No new page UI or execution transport.
+  const c2cFootprintReadoutRequested=
+    typeof globalThis.location?.search==='string' &&
+    new URLSearchParams(globalThis.location.search).get('qualification')==='cycle-two-c2c-native-footprint-v1';
+  let c2cReadout=null,c2cReadoutSurface=null,c2cReadoutGeology=null;
+  function getExactC2CWorldFootprintReceipt(){
+    const surface=resources.vegetationVisibleSurface,geology=resources.geologicalRuntime;
+    if(c2cReadout&&surface===c2cReadoutSurface&&geology===c2cReadoutGeology)return c2cReadout;
+    const observed=inspectExactC2CWorldFootprint();
+    // Never cache an early startup negative as the eventual world result.
+    if(observed.contacts.length===5&&observed.sweptSamples.length===49){
+      c2cReadout=observed;c2cReadoutSurface=surface;c2cReadoutGeology=geology;
+    }
+    return observed;
+  }
+
   function getVegetationProbe({x,z,radius=2}={}){
     if(!vegetationTrace)return {enabled:false};
     if(![x,z,radius].every(Number.isFinite)||radius<=0||radius>8)throw Error('VEGETATION_TRACE_PROBE_INVALID');
@@ -3515,6 +3532,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       vegetationVisibleSurface:resources.vegetationVisibleSurface?.receipt??null,
       uniformGroundAdmission:resources.vegetationVisibleSurface?.admitGround?.getReceipt()??null,pilotCoverageOwner:pilotCoverageOwner.getReceipt(),
       legacyGrassDrawCensus:resources.legacyGrassDrawCensus??null,
+      ...(c2cFootprintReadoutRequested?{c2cExactWorldFootprintObservation:getExactC2CWorldFootprintReceipt()}:{}),
       ...(vegetationTrace?{vegetationContinuityTrace:vegetationTrace.summary()}:{}),
       canonicalPackageMutated:false
     };

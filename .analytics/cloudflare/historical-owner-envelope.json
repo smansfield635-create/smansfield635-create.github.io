@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T16:26:43Z",
+  "generatedAt": "2026-11-17T17:24:23Z",
   "window": {
-    "start": "2026-08-19T16:26:43Z",
-    "end": "2026-11-17T16:26:43Z"
+    "start": "2026-08-19T17:24:23Z",
+    "end": "2026-11-17T17:24:23Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3515,
+    "pageLoads": 3505,
     "visits": 1042,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3515,
+        "pageLoads": 3505,
         "visits": 1042
       }
     },
@@ -37,10 +37,6 @@
       "/developer/": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 30,
-        "visits": 10
       },
       "/index.html": {
         "pageLoads": 90,
@@ -58,6 +54,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
@@ -69,10 +69,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -134,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/governance/": {
+        "pageLoads": 20,
+        "visits": 10
+      },
       "/instruments/": {
         "pageLoads": 10,
         "visits": 0
@@ -166,6 +166,10 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
@@ -185,10 +189,6 @@
       "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
       },
       "/about/": {
         "pageLoads": 40,
@@ -254,10 +254,6 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
         "visits": 0
@@ -265,6 +261,10 @@
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -301,7 +301,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2473,
+        "pageLoads": 2463,
         "visits": 0
       },
       "www.google.com": {

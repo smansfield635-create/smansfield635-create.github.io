@@ -210,7 +210,7 @@ jobs:
           import path from 'node:path';
           import {spawnSync} from 'node:child_process';
           const w=fs.readFileSync('.github/workflows/repository-ai-entry-router-validation.yml','utf8');
-          const anchor=w.indexOf('      - name: Parse closed exact-head router request');
+          const anchor=w.lastIndexOf('      - name: Parse closed exact-head router request');
           const start=w.indexOf("          import fs from 'node:fs';",anchor);
           const end=w.indexOf("\n          NODE\n          status=$?",start);
           if(anchor<0||start<0||end<0)throw Error('ACTUAL_PARSER_SOURCE_NOT_FOUND');

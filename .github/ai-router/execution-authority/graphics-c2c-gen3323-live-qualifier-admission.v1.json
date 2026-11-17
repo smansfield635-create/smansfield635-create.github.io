@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "7b62a7b84ef99c04c661b3da2c2cdac4392dec34",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "dd634ed7710e4e98168a714293c4d308c33fcfba",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3334,
+    "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:C2C:GEN3323:FIXED_QUALIFIER_TWO_RECEIPT_CUSTODY:20261116",
+    "observedBranchHead": "e48c71e773993a225e33bf92458915d7d7219f73",
+    "observedLedgerBlobSha": "863d1284275fe84661a27c8fde5f166d81be6fde",
+    "operationId": "DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "44f64e6c57df8377a91f0f734048b9d0ab5c1fd87c0e85ae13fba3b0e385655d"
+  },
+  "operationId": "DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "2467240ad943e3dbbc67c8ec7322aa72a1ab5276f2ed5f098985c1e92e1555eb",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "5d2a1612945bfcd4ce81c385e3fba7a97a41a0a6d9f780bdb4b003e1c7238991",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

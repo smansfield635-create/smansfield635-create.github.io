@@ -104,7 +104,7 @@ async function fetchPinnedSource(url,expectedBlob,expectedHost){
  insist(response.status===200&&!response.redirected&&response.url===url,'GEN3347_SOURCE_FETCH_FAILED:'+String(response.status));
  const data=Buffer.from(await response.arrayBuffer());
  insist(data.length>0&&data.length<=16*1024*1024,'GEN3347_SOURCE_SIZE_OUT_OF_BOUNDS');
- const blob=crypto.createHash('sha1').update('blob '+data.length+'\\0').update(data).digest('hex');
+ const blob=crypto.createHash('sha1').update('blob '+data.length+'\0').update(data).digest('hex');
  insist(blob===expectedBlob,'GEN3347_SOURCE_GIT_BLOB_MISMATCH:'+expectedHost+':'+blob);
  return data.toString('utf8');
 }

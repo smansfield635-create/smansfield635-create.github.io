@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T20:25:17Z",
+  "generatedAt": "2026-11-17T21:25:07Z",
   "window": {
-    "start": "2026-08-19T20:25:17Z",
-    "end": "2026-11-17T20:25:17Z"
+    "start": "2026-08-19T21:25:07Z",
+    "end": "2026-11-17T21:25:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3483,
+    "pageLoads": 3463,
     "visits": 1041,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3483,
+        "pageLoads": 3463,
         "visits": 1041
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 751,
+        "pageLoads": 741,
         "visits": 571
       },
       "/index.html": {
@@ -35,7 +35,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
@@ -206,8 +206,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/prelude/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -216,14 +224,6 @@
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 460,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
@@ -305,7 +305,7 @@
         "visits": 540
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2442,
+        "pageLoads": 2422,
         "visits": 0
       },
       "(none)": {

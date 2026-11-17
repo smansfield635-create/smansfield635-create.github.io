@@ -13,7 +13,9 @@ import {verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} 
 import {verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
 import {verifyHEarthRun8ESparseAdmissionReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.run8e-sparse-admission-receipt-path-recognition.js';
 import {verifyHEarthFd05DiagnosticPathRecognition} from './accepted-amendments/h-earth.repository-registry.fd05-diagnostic-path-recognition.js';
-import registryFacade from './accepted-amendments/h-earth.repository-registry.terrain-grass-v2-test-path-recognition.v1.js';
+// Gen3383: new exact East-A material test path is recognized by an audit-only
+// successor of the already accepted Gen3329 one-path facade; no broad path grant.
+import registryFacade from './accepted-amendments/h-earth.repository-registry.east-a-material-test-path-recognition.v1.js';
 import {verifyHEarthMountainTraversalPathRecognition} from './accepted-amendments/h-earth.repository-registry.mountain-traversal-20261006-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 

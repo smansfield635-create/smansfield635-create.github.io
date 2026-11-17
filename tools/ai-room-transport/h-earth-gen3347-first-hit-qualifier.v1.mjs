@@ -125,6 +125,86 @@ function pngCheck(data){
  insist(data.startsWith('data:image/png;base64,')&&b.length>1024&&b.toString('ascii',12,16)==='IHDR'&&b.readUInt32BE(16)===FIXED.viewport[0]&&b.readUInt32BE(20)===FIXED.viewport[1],'GEN3347_NORMAL_COLOR_PNG_INVALID');
  return b;
 }
+/** Gen3358: exact-source, normal-color WebGL2 grass ON/OFF/ON diagnostic.
+ * The sole visibility intervention is the existing source-injected grass draw switch.
+ * All three frames reuse the same navigation state; the third bounds frame drift.
+ * This produces RGB evidence, never an Android photograph-parity assertion. */
+async function captureGrassNormalColorABA(page,state,samples){
+ return page.evaluate(async ({state,samples})=>{
+  const cv=document.querySelector('#h-earth-functional-landscape-canvas');
+  const gl=cv?.getContext('webgl2');
+  if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true||
+     !String(gl.getParameter(gl.VERSION)).includes('WebGL 2.0'))throw Error('GEN3358_AB_WEBGL2_CONTEXT_REQUIRED');
+  const width=cv.width,height=cv.height;
+  if(width!==602||height!==862)throw Error('GEN3358_AB_VIEWPORT_DRIFT');
+  const frames=[];
+  for(const hidden of [false,true,false]){
+   globalThis.__hEarthFirstHitMaterialMode=0;
+   globalThis.__gen3347HideGrass=hidden;
+   globalThis.__HEarthAuditPresent(state);
+   const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+   const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,
+      viewport:{width,height,pixelRatio:1},frameSequence:state.sequence});
+   const bytes=new Uint8Array(width*height*4);
+   gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);
+   if(gl.getError()!==gl.NO_ERROR||gl.isContextLost())throw Error('GEN3358_AB_GPU_READPIXELS_FAILED');
+   const frame=gpu.frameRecords.at(-1);
+   if(frame?.navigationSequence!==state.sequence)throw Error('GEN3358_AB_FRAME_NAVIGATION_DRIFT');
+   const digest=await crypto.subtle.digest('SHA-256',bytes);
+   const hex=[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('');
+   frames.push({hidden,frameSequence:frame.frameSequence,
+    viewport:[width,height],camera:{position:packet.camera.position,
+      matrix:Array.from(packet.camera.viewProjectionMatrix)},rgbaSha256:hex,bytes});
+  }
+  globalThis.__gen3347HideGrass=false;
+  if(frames.some((f,i)=>f.hidden!==(i===1))||
+     !(frames[0].frameSequence<frames[1].frameSequence&&frames[1].frameSequence<frames[2].frameSequence))
+    throw Error('GEN3358_AB_TOGGLE_OR_FRAME_ORDER_INVALID');
+  const pos=frames.map(f=>f.camera.position);
+  const mat=frames.map(f=>f.camera.matrix);
+  if(pos.some(p=>p.x!==pos[0].x||p.y!==pos[0].y||p.z!==pos[0].z)||
+     mat.some(m=>m.length!==16||m.some((v,i)=>v!==mat[0][i])))
+    throw Error('GEN3358_AB_CAMERA_MATRIX_DRIFT');
+  const a=frames[0].bytes,b=frames[1].bytes,c=frames[2].bytes;
+  const measure=(center,radius)=>{
+   const minX=center?Math.max(0,center[0]-radius):0;
+   const maxX=center?Math.min(width-1,center[0]+radius):width-1;
+   const minY=center?Math.max(0,center[1]-radius):0;
+   const maxY=center?Math.min(height-1,center[1]+radius):height-1;
+   let pixels=0,different=0,largeDifference=0,repeatDifference=0,stableGrassDifference=0;
+   let sumOnOff=0,sumRepeat=0,maxOnOff=0;
+   for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
+    const o=(y*width+x)*4;
+    let onOff=0,repeat=0;
+    for(let k=0;k<3;k++){
+     onOff=Math.max(onOff,Math.abs(a[o+k]-b[o+k]));
+     repeat=Math.max(repeat,Math.abs(a[o+k]-c[o+k]));
+    }
+    pixels++;sumOnOff+=onOff;sumRepeat+=repeat;maxOnOff=Math.max(maxOnOff,onOff);
+    if(onOff>=8)different++;
+    if(onOff>=24)largeDifference++;
+    if(repeat>=8)repeatDifference++;
+    if(onOff>=12&&onOff>=repeat+8)stableGrassDifference++;
+   }
+   return {pixels,changedRGBAtLeast8:different,changedRGBAtLeast24:largeDifference,
+    repeatDriftAtLeast8:repeatDifference,stableGrassEffectAtLeast12:stableGrassDifference,
+    meanMaxRGBDelta:Number((sumOnOff/pixels).toFixed(4)),
+    meanRepeatDelta:Number((sumRepeat/pixels).toFixed(4)),maxRGBDelta:maxOnOff};
+  };
+  const atPixel=([x,y])=>{const o=(y*width+x)*4;return [a,b,c].map(arr=>Array.from(arr.slice(o,o+4)));};
+  return {schema:'H_EARTH_GEN3358_NORMAL_COLOR_GRASS_ABA_v1',
+   evidenceClass:'SOURCE_BOUND_CHROMIUM_WEBGL2_NORMAL_COLOR_RGBA_NOT_PHYSICAL_ANDROID',
+   switchSequence:['GRASS_ON','GRASS_HIDDEN','GRASS_ON_REPEAT'],
+   probeModeAllFrames:0,sourceMutationPerformed:false,productMutationPerformed:false,
+   viewport:[width,height],frameSequence:frames.map(f=>f.frameSequence),
+   rgbaSha256:frames.map(f=>f.rgbaSha256),
+   camera:frames[0].camera,
+   overall:measure(null,0),
+   samples:samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom,
+    rgbaByFrame:atPixel(s.pixelBottom),neighborhood56px:measure(s.pixelBottom,28)})),
+   ownerImageParity:false,materialCausationUnproven:true};
+ },{state,samples});
+}
 async function capture(browser,base,renderer,route,probe,output,receipt){
  const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5,serviceWorkers:'block'});
  const page=await context.newPage();page.setDefaultTimeout(60000);const browserErrors=[];
@@ -172,7 +252,11 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
    const png=pngCheck(normal.data),filename='gen3347-'+pose.id+'-normal.png';
    fs.writeFileSync(path.join(output,filename),png);
    const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],compound:null}))};
-   let previousFrame=normal.frame.frameSequence;
+   row.grassNormalColorABA=await captureGrassNormalColorABA(page,state,row.samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom})));
+   validatePoseReport({camera:row.grassNormalColorABA.camera,viewport:row.grassNormalColorABA.viewport},pose.owner);
+   receipt.grassVisibleHiddenComparisonObserved=true;
+   receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+   let previousFrame=row.grassNormalColorABA.frameSequence.at(-1);
    for(let mode=1;mode<=7;mode++){
     const raw=await page.evaluate(({state,mode,pixels})=>{
      globalThis.__gen3347HideGrass=true;globalThis.__hEarthFirstHitMaterialMode=mode;
@@ -197,7 +281,7 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
     }
    }
    for(const sample of row.samples)sample.compound=probe.combinePixelReceipts(sample.modeEvidence);
-   receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+   fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
   }
   insist(browserErrors.length===0,'GEN3347_BROWSER_PAGE_ERRORS:'+browserErrors.join('|'));
   verifyReceiptRows(receipt.poses);

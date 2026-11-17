@@ -1,0 +1,18 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_GEN3347_CURRENT_HEAD_FIRST_HIT_QUALIFIER_ADAPTATION_20261116_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_GEN3347_CURRENT_HEAD_FIRST_HIT_QUALIFIER_ADAPTATION_20261116_001",
+    "lockGeneration": 3347,
+    "lockScope": "H_EARTH:GEN3347_CURRENT_HEAD_FIRST_HIT_QUALIFIER:20261116",
+    "lockAcquired": true,
+    "acquisitionCommitSha": "27a687a4d94a85c9e71f1390b134200adb1dc14a",
+    "committedLedgerBlobSha": "301cef29c6a06e44c6cb350728b5de050351a843"
+  }
+}

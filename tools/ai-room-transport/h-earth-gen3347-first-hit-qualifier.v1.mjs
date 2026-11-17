@@ -5,6 +5,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawn,spawnSync } from 'node:child_process';
 import { pathToFileURL,fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
 
 export const FIXED=Object.freeze({
  operationId:'H_EARTH_GEN3347_CURRENT_HEAD_FIRST_HIT_QUALIFIER_ADAPTATION_20261116_001',
@@ -105,6 +106,18 @@ async function serve(dir,port){
  const base='http://127.0.0.1:'+port;
  for(let i=0;i<90;i++){try{if((await fetch(base+FIXED.root)).ok)return {process,base}}catch{}await new Promise(resolve=>setTimeout(resolve,150))}
  process.kill();throw Error('GEN3347_LOCAL_STATIC_SERVER_FAILED');
+}
+function installChromium(temp){
+ const dep=path.join(temp,'browser-deps');fs.mkdirSync(dep,{recursive:true});
+ const checkedRun=(exe,args,cwd,timeout=600000)=>{
+  const r=spawnSync(exe,args,{cwd,encoding:'utf8',timeout,maxBuffer:16*1024*1024,env:process.env});
+  insist(r.status===0&&!r.error,'GEN3347_BROWSER_DEPENDENCY_INSTALL_FAILED:'+exe+':'+String(r.error?.message||r.stderr||r.stdout||'').slice(-500));
+ };
+ checkedRun('npm',['install','--prefix',dep,'--no-save','--no-package-lock','--no-audit','playwright@1.55.0'],temp);
+ const cli=path.join(dep,'node_modules/playwright/cli.js');
+ insist(fs.existsSync(cli),'GEN3347_PLAYWRIGHT_CLI_NOT_FOUND');
+ checkedRun(process.execPath,[cli,'install','--with-deps','chromium'],dep);
+ return createRequire(path.join(dep,'package.json'))('playwright');
 }
 function pngCheck(data){
  const b=Buffer.from(data.slice('data:image/png;base64,'.length),'base64');
@@ -209,7 +222,7 @@ export async function qualify(args){
   receipt.originalRouteBlob=objectId(route);
   receipt.historicalOverlayBlob=objectId(overlay);
   receipt.browserEvidenceClass='EXACT_SOURCE_RECONSTRUCTED_CHROMIUM_NOT_ANDROID_PHYSICAL_PIXEL';
-  const {chromium}=await import('playwright');
+  const {chromium}=installChromium(temp);
   browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
   server=await serve(product,18947);
   await capture(browser,server.base,injected,instrumentedRoute,probe,dir,receipt);

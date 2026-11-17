@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T18:27:52Z",
+  "generatedAt": "2026-11-17T19:24:42Z",
   "window": {
-    "start": "2026-08-19T18:27:52Z",
-    "end": "2026-11-17T18:27:52Z"
+    "start": "2026-08-19T19:24:42Z",
+    "end": "2026-11-17T19:24:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,13 +26,13 @@
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 752,
-        "visits": 572
-      },
       "/index.html": {
         "pageLoads": 90,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 752,
+        "visits": 572
       },
       "/evidence/": {
         "pageLoads": 70,
@@ -50,13 +50,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -94,6 +94,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -110,11 +114,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/developer/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/developer/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -133,10 +137,6 @@
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
@@ -242,13 +242,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,

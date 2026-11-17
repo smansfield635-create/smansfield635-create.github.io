@@ -458,7 +458,24 @@
     "releaseAuthorityCreated": false,
     "genericCommandAuthority": false,
     "agentInvocationAllowed": false,
-    "agentUse": "PROHIBITED_GITHUB_ACTIONS_TRANSPORT"
+    "fixedAgentQualifierExemption": {
+      "schema": "C2C_GEN3323_EXACT_AGENT_ROUTER_EXCEPTION_v1",
+      "status": "ALLOWED_BOUNDED_AFTER_ADOPTION",
+      "operationId": "DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001",
+      "exactPermittedPath": "tools/ai-room-transport/dgb-graphics-c2c-gen3323-live-router.v1.mjs",
+      "authenticatedOwnerLogin": "smansfield635-create",
+      "originatingGitHubAppSlug": "chatgpt-codex-connector",
+      "originalRouterChecksRequired": true,
+      "exactCurrentMainHeadRequired": true,
+      "singlePathOnly": true,
+      "arbitraryCommandsAllowed": false,
+      "allOtherAgentRouterRequestsBlocked": true,
+      "generalAgentExecutionAllowed": false,
+      "sourceMutationAuthorityCreated": false,
+      "mergeAuthorityCreated": false,
+      "deploymentAuthorityCreated": false
+    },
+    "agentUse": "PROHIBITED_GITHUB_ACTIONS_TRANSPORT_EXCEPT_C2C_GEN3323_FIXED_ROUTER_QUALIFICATION"
   },
   "publicQualityInstrumentationHandoff": {
     "schema": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_HANDOFF_v1",

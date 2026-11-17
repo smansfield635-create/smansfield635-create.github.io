@@ -1,0 +1,13 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "disposition": "PASS",
+  "governingHead": "a97a2381bfc6e975ef1957ea889cfc4c83902961",
+  "routes": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "H_EARTH",
+      "disposition": "PASS"
+    }
+  ]
+}

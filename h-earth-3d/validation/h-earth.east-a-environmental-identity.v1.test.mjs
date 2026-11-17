@@ -7,7 +7,9 @@ import { sampleHEarthTerrainElevation } from '../terrain/h-earth.terrain-field.j
 
 // Source-only Stage A checks. These do NOT constitute GLSL compilation,
 // camera screenshots, physical-device validation or owner acceptance.
-const renderPath = new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js', import.meta.url);
+// Pin the changed renderer's browser-visible request identity for the
+// static-asset gate; Node file URLs ignore search when reading source bytes.
+const renderPath = new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?v=a369cc6a1cce8b2ce84cc967f7ee3958b2a849a9', import.meta.url);
 const terrainPath = new URL('../terrain/h-earth.terrain-field.js', import.meta.url);
 const surfacePath = new URL('../environment/h-earth.successor-surface-material.run8c.js', import.meta.url);
 const source = readFileSync(renderPath, 'utf8');

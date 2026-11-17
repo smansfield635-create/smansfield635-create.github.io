@@ -76,14 +76,14 @@ export function extendStageOverlay(source){
   "    '    hEarthProbeSlope=slope;hEarthProbeRock=rockExposure;\\n    float shelteredSoil=clamp(');",
   "  s=probeOnce(s,'      float worldSoilWeight=worldSoilCoverage;',",
   "    '      float worldSoilWeight=worldSoilCoverage;\\n      hEarthProbeSoilWeight=worldSoilWeight;');",
-  "  s=probeOnce(s,'         vec3 worldSoilFinal=mix(',",
-  "    '         hEarthProbeSoilAuthority=worldSoilAlbedoAuthority;\\n         vec3 worldSoilFinal=mix(');",
-  "  s=probeOnce(s,'       palette=mix(palette,identityBase,identityWeight);',",
-  "    '       hEarthProbeIdentity=identityWeight;\\n       palette=mix(palette,identityBase,identityWeight);');",
-  "  s=probeOnce(s,'       palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);',",
-  "    '       hEarthProbePigment=groundcoverPigmentWeight;\\n       palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);');",
-  "  s=probeOnce(s,'     base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
-  "    '     hEarthProbeHabitat=habitatColorCoverage;hEarthProbeRetention=acceptedColorRetention;\\n     base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);');"
+  "  s=probeOnce(s,'        vec3 worldSoilFinal=mix(',",
+  "    '         hEarthProbeSoilAuthority=worldSoilAlbedoAuthority;\\n        vec3 worldSoilFinal=mix(');",
+  "  s=probeOnce(s,'      palette=mix(palette,identityBase,identityWeight);',",
+  "    '       hEarthProbeIdentity=identityWeight;\\n      palette=mix(palette,identityBase,identityWeight);');",
+  "  s=probeOnce(s,'      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);',",
+  "    '       hEarthProbePigment=groundcoverPigmentWeight;\\n      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);');",
+  "  s=probeOnce(s,'    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
+  "    '     hEarthProbeHabitat=habitatColorCoverage;hEarthProbeRetention=acceptedColorRetention;\\n    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);');"
  ].join('\n');
  const marker="  s=probeOnce(s,'  outColor=vec4(lit,outputAlpha);',";
  s=one(s,marker,extra+'\n'+marker);

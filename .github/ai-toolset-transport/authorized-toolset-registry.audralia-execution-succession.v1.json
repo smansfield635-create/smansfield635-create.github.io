@@ -1862,7 +1862,7 @@
       },
       "continuationRule": "GEN3369 V2 candidate: source security negatives and independent review required; separate canonical adoption and exact-head registered native execution only after certified activation. Original Gen3334 receipts and Gen3323 source locked identity unchanged.",
       "terminationRule": "READONLY_GEN3323_EXACT_TWO_PATH_QUALIFICATION_ONLY; GitHub credential allowed solely in exact V2 qualifier and its pinned original router child; no other descriptor or child receives credentials; no adapter/world mutation, merge, deploy or publication.",
-      "descriptorActivationStatus": "BOOTSTRAP_CANDIDATE_NOT_ACTIVE",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED",
       "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
       "authenticatedProvenanceCredential": {
         "schema": "C2C_GEN3323_EXACT_PROVENANCE_CREDENTIAL_v1",

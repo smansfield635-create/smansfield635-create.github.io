@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-17T10:24:28Z",
+  "generatedAt": "2026-11-17T11:25:09Z",
   "window30d": {
-    "start": "2026-10-18T10:24:28Z",
-    "end": "2026-11-17T10:24:28Z"
+    "start": "2026-10-18T11:25:09Z",
+    "end": "2026-11-17T11:25:09Z"
   },
   "daily": [
     {
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 37
+      "pageLoads": 39
     }
   ],
   "summary": {
-    "pageLoads": 1373,
-    "botPageLoads": 782,
-    "nonBotPageLoads": 591
+    "pageLoads": 1375,
+    "botPageLoads": 783,
+    "nonBotPageLoads": 592
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1261,
-      "visits": 1261
+      "pageLoads": 1262,
+      "visits": 1262
     },
     {
       "host": "diamondgatebridge.com",
@@ -152,13 +152,18 @@
       "host": "bing.com",
       "pageLoads": 8,
       "visits": 8
+    },
+    {
+      "host": "m.facebook.com",
+      "pageLoads": 1,
+      "visits": 1
     }
   ],
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 600,
-      "visits": 600
+      "pageLoads": 601,
+      "visits": 601
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -177,8 +182,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 66,
-      "visits": 56
+      "pageLoads": 67,
+      "visits": 57
     },
     {
       "path": "/nine-summits/universe/",

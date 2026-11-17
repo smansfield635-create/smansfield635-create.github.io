@@ -242,7 +242,7 @@ function execute({ root, subjectHead, pathsBase64, executionHolder }) {
     if (!fs.existsSync(nativeReceiptPath)) {
       fail('NATIVE_PREFLIGHT_RECEIPT_MISSING', {
         childExitStatus: nativeExecution.status,
-        childProcessError: sanitizeNativeChildError(nativeExecution.error,160),
+        childProcessError: nativeExecution.error ? sanitizeNativeChildError('Error: '+nativeExecution.error,160) : null,
         childStderrPresent: Boolean(nativeExecution.stderr),
         childStderrExcerpt: sanitizeNativeChildError(nativeExecution.stderr,512)
       });

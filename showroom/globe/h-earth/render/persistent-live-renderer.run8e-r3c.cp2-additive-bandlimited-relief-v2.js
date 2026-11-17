@@ -1846,6 +1846,183 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     return observed;
   }
 
+  // Gen3385: ONE native C2-C object in the existing R3C geometry/depth pass.
+  // No second renderer, modified terrain/water buffers, or automatic insertion.
+  const c2cWorldObjects=new Map(),c2cPendingObjects=new Set();
+  const c2cGpuCustody={createdBuffers:0,deletedBuffers:0,createdVaos:0,deletedVaos:0,
+    uploadedBytes:0,residentBytes:0,drawCalls:0,rollbackCount:0,commitCount:0};
+  const c2cAssert=(condition,code)=>{if(!condition)throw Error('R3C_C2C_'+code);};
+  function getC2CWorldTransactionReceipt(){
+    return Object.freeze({schema:'H_EARTH_R3C_C2C_NATIVE_GPU_HOST_RECEIPT_v1',
+      admittedAdapterSourceSha256:'008c7b98d8661e211c20bcb8f8ad9d04cf2b5bb06e786193e036013951fb82de',
+      admittedSaveSha256:'0419dc21b2205e35fc84cf1a6461a62936ab3b6b4c12c0c0e094b622e01283e5',
+      renderer:H_EARTH_RUN_8E_R3C_RENDERER_ID,packageIdentity:renderPackage.packageIdentity,
+      worldSourceUnchanged:true,terrainGeometryMutated:false,waterGeometryMutated:false,
+      residentObjectCount:c2cWorldObjects.size,pendingObjectCount:c2cPendingObjects.size,
+      createdBuffers:c2cGpuCustody.createdBuffers,deletedBuffers:c2cGpuCustody.deletedBuffers,
+      createdVaos:c2cGpuCustody.createdVaos,deletedVaos:c2cGpuCustody.deletedVaos,
+      uploadedBytes:c2cGpuCustody.uploadedBytes,residentBytes:c2cGpuCustody.residentBytes,
+      drawCalls:c2cGpuCustody.drawCalls,commitCount:c2cGpuCustody.commitCount,
+      rollbackCount:c2cGpuCustody.rollbackCount,
+      objects:[...c2cWorldObjects.values()].map(o=>({id:o.id,sourceSha256:o.sourceSha256,
+        triangles:o.triangles,vertices:o.vertices,drawCalls:o.drawCalls,gpuByteLength:o.gpuBytes})),
+      framebufferPixelsVerified:false,fullWorldTransactionAccepted:false});
+  }
+  function beginC2CWorldTransaction(id,mesh,placement){
+    c2cAssert(initialized&&resources.geometryFramebuffer&&resources.geometryProgram,
+      'R3C_NOT_GPU_READY');
+    c2cAssert(typeof id==='string'&&/^[A-Za-z][A-Za-z0-9_-]{1,63}$/.test(id),
+      'OBJECT_ID_INVALID');
+    c2cAssert(!c2cWorldObjects.size&&!c2cPendingObjects.size,'ONE_OBJECT_LIMIT');
+    const surface=resources.vegetationVisibleSurface,geology=resources.geologicalRuntime;
+    const observed=inspectExactC2CWorldFootprint();
+    c2cAssert(observed.result==='SOURCE_INDEXED_GROUND_AND_HYDROLOGY_SCREEN_PASS_NOT_OBJECT_ADMISSION'&&
+      observed.contacts.length===5&&observed.sweptSamples.length===49,
+      'LIVE_GROUND_WATER_FOOTPRINT_NOT_CLEAR');
+    c2cAssert(placement?.schema==='DGB_C2C_WORLD_PLACEMENT_CANDIDATE_v1'&&
+      placement.id===id&&placement.sourceSha256==='0419dc21b2205e35fc84cf1a6461a62936ab3b6b4c12c0c0e094b622e01283e5'&&
+      placement.sourceKind==='SILHOUETTE_HEURISTIC_PRIOR'&&placement.readOnly===false&&
+      placement.notYetInstalled===true&&placement.vertices===463&&placement.triangles===906,
+      'EDITED_SOURCE_IDENTITY_INVALID');
+    c2cAssert(Array.isArray(placement.groundContacts)&&placement.groundContacts.length===5,
+      'FIVE_CONTACTS_REQUIRED');
+    for(let i=0;i<5;i++){
+      const a=placement.groundContacts[i],b=observed.contacts[i];
+      c2cAssert([a.x,a.y,a.z].every(Number.isFinite)&&
+        Math.abs(a.x-b.x)<.002&&Math.abs(a.z-b.z)<.002&&Math.abs(a.y-b.y)<.04,
+        'SOURCE_INDEXED_GROUND_CONTACT_MISMATCH');
+    }
+    const box=placement.worldFootprint,foot=observed.footprint;
+    c2cAssert(box&&['minX','maxX','minZ','maxZ'].every(k=>
+      Number.isFinite(box[k])&&Math.abs(box[k]-foot[k])<.002),
+      'PADDED_ROTATED_FOOTPRINT_MISMATCH');
+    c2cAssert(mesh&&mesh.positions instanceof Float32Array&&
+      mesh.worldPositions instanceof Float32Array&&mesh.normals instanceof Float32Array&&
+      mesh.uvs instanceof Float32Array&&mesh.indices instanceof Uint16Array,
+      'ADOPTED_SCULPT_GPU_LAYOUT_REQUIRED');
+    const vertices=463,indices=new Uint32Array(mesh.indices);
+    c2cAssert(mesh.positions.length===vertices*3&&
+      mesh.worldPositions.length===vertices*3&&mesh.normals.length===vertices*3&&
+      mesh.uvs.length===vertices*2&&indices.length===906*3&&
+      mesh.positions.every(Number.isFinite)&&mesh.worldPositions.every(Number.isFinite)&&
+      mesh.normals.every(Number.isFinite)&&mesh.uvs.every(Number.isFinite)&&
+      indices.every(i=>i<vertices),'EDITED_GEOMETRY_INVALID');
+    // Proof that every uploaded position still belongs to the existing planet projection.
+    for(let i=0;i<vertices;i++){
+      const q=regionToHEarthPlanetPoint({x:mesh.worldPositions[i*3],
+        y:mesh.worldPositions[i*3+1],z:mesh.worldPositions[i*3+2]});
+      c2cAssert([q.x,q.y,q.z].every(Number.isFinite)&&
+        Math.hypot(q.x-mesh.positions[i*3],q.y-mesh.positions[i*3+1],
+          q.z-mesh.positions[i*3+2])<.02,'WORLD_PROJECTION_SOURCE_MISMATCH');
+      c2cAssert(mesh.worldPositions[i*3]>=box.minX-.002&&
+        mesh.worldPositions[i*3]<=box.maxX+.002&&
+        mesh.worldPositions[i*3+2]>=box.minZ-.002&&
+        mesh.worldPositions[i*3+2]<=box.maxZ+.002,'VERTEX_OUTSIDE_PROTECTED_FOOTPRINT');
+    }
+    let vao=null,active=true,committed=false,gpuBytes=0;
+    const buffers=[];
+    const put=(loc,data,size,type=gl.FLOAT,integer=false)=>{
+      const buffer=gl.createBuffer();c2cAssert(buffer,'GPU_BUFFER_ALLOCATION_FAILED');
+      buffers.push(buffer);c2cGpuCustody.createdBuffers++;
+      gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);
+      gpuBytes+=data.byteLength;c2cGpuCustody.uploadedBytes+=data.byteLength;
+      gl.enableVertexAttribArray(loc);
+      if(integer)gl.vertexAttribIPointer(loc,size,type,0,0);
+      else gl.vertexAttribPointer(loc,size,type,false,0,0);
+    };
+    const destroy=()=>{
+      if(!active)return false;
+      active=false;
+      c2cPendingObjects.delete(entry);c2cWorldObjects.delete(id);
+      for(const buffer of buffers){gl.deleteBuffer(buffer);c2cGpuCustody.deletedBuffers++;}
+      if(vao){gl.deleteVertexArray(vao);c2cGpuCustody.deletedVaos++;}
+      if(committed)c2cGpuCustody.residentBytes-=gpuBytes;
+      c2cGpuCustody.rollbackCount++;return true;
+    };
+    let entry=null;
+    try{
+      vao=gl.createVertexArray();c2cAssert(vao,'GPU_VAO_ALLOCATION_FAILED');
+      c2cGpuCustody.createdVaos++;gl.bindVertexArray(vao);
+      const colors=new Float32Array(vertices*4),material=new Float32Array(vertices*4);
+      for(let i=0;i<vertices;i++){
+        colors.set([.48,.34,.22,1],i*4);material[i*4+3]=1;
+      }
+      put(0,new Float32Array(mesh.positions),3);
+      put(1,new Float32Array(mesh.normals),3);
+      put(2,colors,4);put(3,material,4);
+      put(4,new Uint8Array(vertices),1,gl.UNSIGNED_BYTE,true);
+      put(5,new Uint8Array(vertices).fill(255),1,gl.UNSIGNED_BYTE,true);
+      put(6,new Uint16Array(vertices).fill(65534),1,gl.UNSIGNED_SHORT,true);
+      put(7,new Uint8Array(vertices).fill(3),1,gl.UNSIGNED_BYTE,true);
+      put(8,new Float32Array(vertices).fill(64),1);
+      put(9,new Float32Array(vertices).fill(64),1);
+      put(10,new Float32Array(vertices*2),2);
+      put(11,new Uint8Array(vertices),1,gl.UNSIGNED_BYTE,true);
+      const ib=gl.createBuffer();c2cAssert(ib,'GPU_INDEX_ALLOCATION_FAILED');
+      buffers.push(ib);c2cGpuCustody.createdBuffers++;
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
+      gpuBytes+=indices.byteLength;c2cGpuCustody.uploadedBytes+=indices.byteLength;
+      c2cAssert(gl.getError()===gl.NO_ERROR,'GPU_UPLOAD_GL_ERROR');
+    }catch(error){
+      for(const buffer of buffers){gl.deleteBuffer(buffer);c2cGpuCustody.deletedBuffers++;}
+      if(vao){gl.deleteVertexArray(vao);c2cGpuCustody.deletedVaos++;}
+      throw error;
+    }finally{gl.bindVertexArray(resources.vertexArray);}
+    entry={id,sourceSha256:placement.sourceSha256,vertices,triangles:906,
+      indexCount:indices.length,gpuBytes,drawCalls:0,vao,
+      surface,geology};
+    c2cPendingObjects.add(entry);
+    const rollback=()=>destroy();
+    const commit=()=>{
+      c2cAssert(active&&!committed,'COMMIT_STATE_INVALID');
+      c2cAssert(resources.vegetationVisibleSurface===surface&&
+        resources.geologicalRuntime===geology,'WORLD_RESIDENCY_CHANGED');
+      const res=inspectExactC2CWorldFootprint();
+      c2cAssert(res.result==='SOURCE_INDEXED_GROUND_AND_HYDROLOGY_SCREEN_PASS_NOT_OBJECT_ADMISSION',
+        'WORLD_GROUND_WATER_CHANGED');
+      c2cPendingObjects.delete(entry);c2cWorldObjects.set(id,entry);committed=true;
+      c2cGpuCustody.commitCount++;c2cGpuCustody.residentBytes+=gpuBytes;
+      return true;
+    };
+    const draw=packet=>{
+      c2cAssert(active&&committed,'DRAW_STATE_INVALID');
+      try{
+        c2cAssert(resources.vegetationVisibleSurface===surface&&
+          resources.geologicalRuntime===geology,'WORLD_RESIDENCY_CHANGED');
+        c2cAssert(packet?.packageIdentity===rendererInterface.packageIdentity&&
+          packet?.packageContentDigest===rendererInterface.packageContentDigest&&
+          Array.isArray(packet?.camera?.viewProjectionMatrix)&&
+          packet.camera.viewProjectionMatrix.length===16&&
+          packet.camera.viewProjectionMatrix.every(Number.isFinite),'FRAME_PACKET_INVALID');
+        gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);
+        gl.viewport(0,0,width,height);gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);
+        gl.useProgram(resources.geometryProgram);
+        gl.uniformMatrix4fv(resources.uniforms.viewProjection,false,
+          new Float32Array(packet.camera.viewProjectionMatrix));
+        gl.bindVertexArray(vao);
+        gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);
+        c2cAssert(gl.getError()===gl.NO_ERROR,'DRAW_GL_ERROR');
+        entry.drawCalls++;c2cGpuCustody.drawCalls++;
+        return Object.freeze({id,indicesDrawn:indices.length,frameNumber:counters.frameCount,
+          renderedBy:'EXISTING_R3C_GEOMETRY_DEPTH_FRAMEBUFFER',gpuFramebufferReadbackVerified:false});
+      }catch(error){rollback();throw error;}
+      finally{gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);}
+    };
+    entry.draw=draw;
+    return Object.freeze({commit,draw,rollback,
+      getState:()=>!active?'ROLLED_BACK':committed?'COMMITTED':'STAGED'});
+  }
+  function drawC2CWorldObjects(packet){
+    for(const object of [...c2cWorldObjects.values()])object.draw(packet);
+  }
+  function disposeC2CWorldObjects(){
+    for(const object of [...c2cPendingObjects,...c2cWorldObjects.values()]){
+      // Each entry owns exactly one rollback transaction, including GPU buffers.
+      object.rollback?.();
+    }
+  }
   function getVegetationProbe({x,z,radius=2}={}){
     if(!vegetationTrace)return {enabled:false};
     if(![x,z,radius].every(Number.isFinite)||radius<=0||radius>8)throw Error('VEGETATION_TRACE_PROBE_INVALID');
@@ -3377,6 +3554,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
     }else drawGlobalCover(packet);
     if(resources.plantingPilot&&pilotCoverageOwner.shouldDrawPilot()){resources.plantingPilot.draw(packet);counters.totalDrawnIndexCount+=resources.plantingPilotLayout.receipt.rootCount*72;gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);}
+    drawC2CWorldObjects(packet);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
@@ -3532,6 +3710,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       vegetationVisibleSurface:resources.vegetationVisibleSurface?.receipt??null,
       uniformGroundAdmission:resources.vegetationVisibleSurface?.admitGround?.getReceipt()??null,pilotCoverageOwner:pilotCoverageOwner.getReceipt(),
       legacyGrassDrawCensus:resources.legacyGrassDrawCensus??null,
+      c2cWorldTransaction:getC2CWorldTransactionReceipt(),
       ...(c2cFootprintReadoutRequested?{c2cExactWorldFootprintObservation:getExactC2CWorldFootprintReceipt()}:{}),
       ...(vegetationTrace?{vegetationContinuityTrace:vegetationTrace.summary()}:{}),
       canonicalPackageMutated:false
@@ -3550,9 +3729,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{disposeC2CWorldObjects();resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     disposeCorrectedMaterial,
     getVegetationTrace,getVegetationProbe,inspectExactC2CWorldFootprint,
+    beginTransaction:beginC2CWorldTransaction,getC2CWorldTransactionReceipt,
     initialize:observeStartupFailure("initialize",initialize), activateInitialRefinement, prepareReplacementVegetation:observeStartupFailure("prepareReplacementVegetation",prepareReplacementVegetation), prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }

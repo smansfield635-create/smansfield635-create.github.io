@@ -25,11 +25,11 @@ const header=`/**
 
 test('source differs from accepted adapter only by frozen subject and native identities',()=>{
   const expected=header+original.replace(oldTool,newTool).replace(oldActivation,newActivation)
-    .replace('const MAX_PATHS = 128;',`const FROZEN_SUBJECT_HEAD = '${subject}';\\nconst MAX_PATHS = 128;`)
-    .replace('function execute({ root, subjectHead, pathsBase64, executionHolder }) {\\n',
-      "function execute({ root, subjectHead, pathsBase64, executionHolder }) {\\n  if (subjectHead !== FROZEN_SUBJECT_HEAD) fail('PR7479_SUBJECT_HEAD_MISMATCH', subjectHead);\\n")
-    .replace("const head = git(root, ['rev-parse', 'HEAD^{commit}']);\\n  const positivePaths",
-      "const head = FROZEN_SUBJECT_HEAD;\\n  const positivePaths")
+    .replace('const MAX_PATHS = 128;',`const FROZEN_SUBJECT_HEAD = '${subject}';\nconst MAX_PATHS = 128;`)
+    .replace('function execute({ root, subjectHead, pathsBase64, executionHolder }) {\n',
+      "function execute({ root, subjectHead, pathsBase64, executionHolder }) {\n  if (subjectHead !== FROZEN_SUBJECT_HEAD) fail('PR7479_SUBJECT_HEAD_MISMATCH', subjectHead);\n")
+    .replace("const head = git(root, ['rev-parse', 'HEAD^{commit}']);\n  const positivePaths",
+      "const head = FROZEN_SUBJECT_HEAD;\n  const positivePaths")
     .replace("const TASK_TEXT = 'Remote pre-mutation H-Earth repository registry preflight';",
       "const TASK_TEXT = 'H-Earth Gen3386 PR7479 exact-head read-only full native repository registry preflight';");
   assert.equal(actual,expected);

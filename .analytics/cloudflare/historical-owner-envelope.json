@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T03:27:19Z",
+  "generatedAt": "2026-11-17T04:25:56Z",
   "window": {
-    "start": "2026-08-19T03:27:19Z",
-    "end": "2026-11-17T03:27:19Z"
+    "start": "2026-08-19T04:25:56Z",
+    "end": "2026-11-17T04:25:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,15 +17,19 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3525,
-    "visits": 1082,
+    "pageLoads": 3575,
+    "visits": 1072,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3525,
-        "visits": 1082
+        "pageLoads": 3575,
+        "visits": 1072
       }
     },
     "byPath": {
+      "/": {
+        "pageLoads": 762,
+        "visits": 582
+      },
       "/evidence/": {
         "pageLoads": 70,
         "visits": 0
@@ -34,16 +38,12 @@
         "pageLoads": 50,
         "visits": 20
       },
-      "/": {
-        "pageLoads": 842,
-        "visits": 662
-      },
       "/governance/": {
-        "pageLoads": 20,
-        "visits": 0
+        "pageLoads": 30,
+        "visits": 10
       },
       "/laws/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/coherence-diagnostic/": {
@@ -59,7 +59,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 110,
+        "pageLoads": 120,
         "visits": 10
       },
       "/showroom/": {
@@ -99,7 +99,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 53,
+        "pageLoads": 63,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -127,11 +127,11 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/laws/categories/flow/handoffs/": {
@@ -142,8 +142,12 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/laws/categories/integrity/": {
-        "pageLoads": 200,
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
@@ -163,7 +167,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 50,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
@@ -174,12 +178,28 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/about/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -206,10 +226,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 200,
-        "visits": 20
-      },
       "/showroom/globe/hearth/": {
         "pageLoads": 20,
         "visits": 0
@@ -234,9 +250,21 @@
         "pageLoads": 30,
         "visits": 10
       },
+      "/products/archcoin/receivable/": {
+        "pageLoads": 50,
+        "visits": 0
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/products/education/": {
-        "pageLoads": 220,
-        "visits": 40
+        "pageLoads": 260,
+        "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -246,9 +274,13 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/governance-bridge/": {
-        "pageLoads": 140,
-        "visits": 110
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -268,17 +300,17 @@
       }
     },
     "byReferer": {
+      "www.google.com": {
+        "pageLoads": 550,
+        "visits": 550
+      },
       "diamondgatebridge.com": {
-        "pageLoads": 2443,
+        "pageLoads": 2503,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 552,
-        "visits": 552
-      },
-      "www.google.com": {
-        "pageLoads": 520,
-        "visits": 520
+        "pageLoads": 512,
+        "visits": 512
       },
       "raw.githack.com": {
         "pageLoads": 10,

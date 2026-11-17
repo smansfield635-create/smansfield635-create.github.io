@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-17T03:27:19Z",
+  "generatedAt": "2026-11-17T04:25:56Z",
   "window30d": {
-    "start": "2026-10-18T03:27:19Z",
-    "end": "2026-11-17T03:27:19Z"
+    "start": "2026-10-18T04:25:56Z",
+    "end": "2026-11-17T04:25:56Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 40
+      "pageLoads": 39
     },
     {
       "date": "2026-11-10",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 22
+      "pageLoads": 24
     }
   ],
   "summary": {
-    "pageLoads": 1369,
+    "pageLoads": 1370,
     "botPageLoads": 777,
-    "nonBotPageLoads": 592
+    "nonBotPageLoads": 593
   },
   "referrers": [
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 7,
-      "visits": 7
+      "pageLoads": 8,
+      "visits": 8
     },
     {
       "host": "www.google.com",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 65,
-      "visits": 55
+      "pageLoads": 66,
+      "visits": 56
     },
     {
       "path": "/nine-summits/universe/",

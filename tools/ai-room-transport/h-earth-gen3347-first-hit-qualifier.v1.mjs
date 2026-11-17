@@ -60,7 +60,42 @@ export function retargetHistoricalOverlay(overlay,renderer){
  insist(objectId(renderer)===FIXED.rendererBlob,'GEN3347_CURRENT_RENDERER_BLOB_DRIFT');
  let updated=one(overlay,"head: 'bcfb0650077323851f01f51d712c7f8b8ac39220'","head: '"+FIXED.productHead+"'");
  updated=one(updated,"rendererBlob: '85ee835060d5106a670077a5f4352b7ad202b49b'","rendererBlob: '"+FIXED.rendererBlob+"'");
- return updated;
+ return extendStageOverlay(updated);
+}
+
+/** Gen3375: extend only the verified, in-memory historical first-hit probe.
+ * Modes 1-7 and original source bytes stay immutable. Modes 8-11 encode
+ * soil/rock/material weights as normalized 8-bit GPU scalar readbacks.
+ * No physical Android photo-pixel parity or release authority follows. */
+export function extendStageOverlay(source){
+ let s=one(source,'firstHitMode>7','firstHitMode>11');
+ s=one(s,'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;',
+   'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;\\n  float hEarthProbeSlope=0.0,hEarthProbeRock=0.0,hEarthProbeSoilWeight=0.0,hEarthProbeSoilAuthority=0.0,hEarthProbeIdentity=0.0,hEarthProbePigment=0.0,hEarthProbeHabitat=0.0,hEarthProbeRetention=0.0;');
+ const extra=[
+  "  s=probeOnce(s,'    float shelteredSoil=clamp(',",
+  "    '    hEarthProbeSlope=slope;hEarthProbeRock=rockExposure;\\n    float shelteredSoil=clamp(');",
+  "  s=probeOnce(s,'      float worldSoilWeight=worldSoilCoverage;',",
+  "    '      float worldSoilWeight=worldSoilCoverage;\\n      hEarthProbeSoilWeight=worldSoilWeight;');",
+  "  s=probeOnce(s,'        vec3 worldSoilFinal=mix(',",
+  "    '         hEarthProbeSoilAuthority=worldSoilAlbedoAuthority;\\n        vec3 worldSoilFinal=mix(');",
+  "  s=probeOnce(s,'      palette=mix(palette,identityBase,identityWeight);',",
+  "    '       hEarthProbeIdentity=identityWeight;\\n      palette=mix(palette,identityBase,identityWeight);');",
+  "  s=probeOnce(s,'      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);',",
+  "    '       hEarthProbePigment=groundcoverPigmentWeight;\\n      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);');",
+  "  s=probeOnce(s,'    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
+  "    '     hEarthProbeHabitat=habitatColorCoverage;hEarthProbeRetention=acceptedColorRetention;\\n    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);');"
+ ].join('\n');
+ const marker="  s=probeOnce(s,'  outColor=vec4(lit,outputAlpha);',";
+ s=one(s,marker,extra+'\n'+marker);
+ const tail='    discard;\n  }\n  outColor=vec4(lit,outputAlpha);';
+ const added=[
+  "    if(uMaterialProbeMode==8){outColor=vec4(250.0,floor(clamp(hEarthProbeSlope,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRock,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==9){outColor=vec4(251.0,floor(clamp(hEarthProbeSoilWeight,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeSoilAuthority,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==10){outColor=vec4(252.0,floor(clamp(hEarthProbeIdentity,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbePigment,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==11){outColor=vec4(253.0,floor(clamp(hEarthProbeHabitat,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRetention,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}"
+ ].join('\n');
+ s=one(s,tail,added+'\n'+tail);
+ return s;
 }
 export function injectHideGrass(source){
  return one(source,'resources.singleOwnerVegetation?.draw(packet);',
@@ -74,9 +109,18 @@ export function instrumentRoute(route){
 export function verifyReceiptRows(rows){
  insist(Array.isArray(rows)&&rows.length===3,'GEN3347_THREE_POSES_REQUIRED');
  insist(rows[0].samples?.length===4&&rows[1].samples?.length===1&&rows[2].samples?.length===1,'GEN3347_EDGE_AND_CONTROLS_INCOMPLETE');
- for(const row of rows)for(const sample of row.samples){
-  insist(sample.modeEvidence?.length===7&&sample.modeEvidence.every((v,i)=>v.mode===i+1),'GEN3347_SEVEN_MODE_EVIDENCE_MISSING');
-  insist(sample.compound?.status==='SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT','GEN3347_MATERIAL_MODE_SET_UNRESOLVED');
+ const positions=[[260.3633478294,-237.0192416266],[255.6132753491,-236.7067368582],[210.6438391699,-240.4567940795]];
+ for(let i=0;i<rows.length;i++)for(let j=0;j<rows[i].samples.length;j++){
+  const sample=rows[i].samples[j];
+  insist(sample.modeEvidence?.length===7&&sample.modeEvidence.every((v,k)=>v.mode===k+1),'GEN3347_SEVEN_MODE_EVIDENCE_MISSING');
+  insist(sample.materialModes?.length===4&&sample.materialModes.every((v,k)=>v.mode===k+8),'GEN3375_FOUR_SCALAR_MODES_REQUIRED');
+  if(i===0&&j===3){
+   insist(sample.compound?.status==='PIXEL_FIRST_HIT_UNRESOLVED'&&sample.materialModes.every(v=>v.status==='TRANSLUCENT_NOT_TERRAIN'),'GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED');
+   continue;
+  }
+  insist(sample.compound?.status==='SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT'&&sample.compound.role===1&&sample.compound.primitiveIndex===0&&sample.compound.surfaceClass===4,'GEN3375_CLASS4_TERRAIN_FIRST_HIT_MISMATCH');
+  insist(sample.materialModes.every(v=>v.status==='SOURCE_BOUND_GPU_SCALAR'&&v.values.length===2&&v.values.every(n=>Number.isFinite(n)&&n>=0&&n<=1)),'GEN3375_MATERIAL_SCALAR_READBACK_INVALID');
+  if(i===0)insist(Math.abs(sample.compound.x-positions[j][0])<1&&Math.abs(sample.compound.z-positions[j][1])<1,'GEN3375_ORIGINAL_REGION_WORLD_HIT_DRIFT');
  }
  return true;
 }
@@ -278,13 +322,13 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
    validatePoseReport(normal,pose.owner);
    const png=pngCheck(normal.data),filename='gen3347-'+pose.id+'-normal.png';
    fs.writeFileSync(path.join(output,filename),png);
-   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],compound:null}))};
+   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],materialModes:[],compound:null}))};
    row.grassNormalColorABA=await captureGrassNormalColorABA(page,state,row.samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom})));
    validatePoseReport({camera:row.grassNormalColorABA.camera,viewport:row.grassNormalColorABA.viewport},pose.owner);
    receipt.grassVisibleHiddenComparisonObserved=true;
    receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
    let previousFrame=row.grassNormalColorABA.frameSequence.at(-1);
-   for(let mode=1;mode<=7;mode++){
+   for(let mode=1;mode<=11;mode++){
     const raw=await page.evaluate(({state,mode,pixels})=>{
      globalThis.__gen3347HideGrass=true;globalThis.__hEarthFirstHitMaterialMode=mode;
      globalThis.__HEarthAuditPresent(state);
@@ -303,20 +347,31 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
     const drawSignature=sha256(String(raw.renderer)+':'+String(raw.packageId));
     for(let i=0;i<row.samples.length;i++){
      const rec=row.samples[i],capture={target:'published',sourceHead:FIXED.productHead,rendererObjectId:FIXED.rendererBlob,instrumentedSha256:receipt.instrumentedSourceSha256,webgl2:true,readbackClass:probe.PROBE_READBACK_CLASS,appliedMode:mode,poseId:pose.id,assetSignature,drawSignature,cameraPosition:[raw.camera.position.x,raw.camera.position.y,raw.camera.position.z],viewProjectionMatrix:raw.camera.matrix,viewport:FIXED.viewport,pixel:rec.pixelBottom,webglErrors:[]};
-     const decoded=probe.decodeModePixel(mode,new Uint8Array(raw.values[i]),capture);
-     rec.modeEvidence.push(decoded);
+     if(mode<=7){
+      const decoded=probe.decodeModePixel(mode,new Uint8Array(raw.values[i]),capture);
+      rec.modeEvidence.push(decoded);
+     }else{
+      const rgba=raw.values[i];
+      if(rgba[0]===249&&rgba[3]===255){
+       rec.materialModes.push({mode,status:'TRANSLUCENT_NOT_TERRAIN',rgba,capture});
+      }else{
+       insist(rgba[0]===mode+242&&rgba[3]===255,'GEN3375_SCALAR_SENTINEL_OR_ALPHA_MISMATCH');
+       rec.materialModes.push({mode,status:'SOURCE_BOUND_GPU_SCALAR',values:[rgba[1]/255,rgba[2]/255],rgba,capture});
+      }
+     }
     }
    }
    for(const sample of row.samples)sample.compound=probe.combinePixelReceipts(sample.modeEvidence);
    fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
   }
   insist(browserErrors.length===0,'GEN3347_BROWSER_PAGE_ERRORS:'+browserErrors.join('|'));
-  const approvedControls=receipt.poses.filter(row=>row.id==='approved-grove-A'||row.id==='approved-grove-B');
-  insist(approvedControls.length===2&&approvedControls.every(row=>
-   row.grassNormalColorABA?.rgbaSha256?.length===3&&
-   row.grassNormalColorABA.rgbaSha256[0]!==row.grassNormalColorABA.rgbaSha256[1]),
-   'GEN3361_AB_POSITIVE_GROVE_CONTROL_MISSING');
-  receipt.grassAbaControlValidity='BOTH_APPROVED_GROVES_SOURCE_BOUND_POSITIVE_RGBA_SIGNAL';
+  const [owner,groveA,groveB]=receipt.poses;
+  const pair=r=>r?.grassNormalColorABA?.rgbaSha256;
+  insist(pair(owner)?.length===3&&pair(groveA)?.length===3&&pair(groveB)?.length===3&&
+   pair(owner)[0]!==pair(owner)[1]&&pair(groveB)[0]!==pair(groveB)[1]&&
+   pair(groveA)[0]===pair(groveA)[1],
+   'GEN3375_OWNER_B_POSITIVE_A_NEGATIVE_CONTROL_REQUIRED');
+  receipt.grassAbaControlValidity='OWNER_AND_GROVE_B_POSITIVE_GROVE_A_NEGATIVE';
   verifyReceiptRows(receipt.poses);
  }finally{await context.close()}
 }

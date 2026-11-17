@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {FIXED,POSES,toGlPixel,validatePoseReport,retargetHistoricalOverlay,injectHideGrass,instrumentRoute,verifyReceiptRows,parseArgs,objectId} from './h-earth-gen3347-first-hit-qualifier.v1.mjs';
+import {FIXED,POSES,toGlPixel,validatePoseReport,retargetHistoricalOverlay,extendStageOverlay,injectHideGrass,instrumentRoute,verifyReceiptRows,parseArgs,objectId} from './h-earth-gen3347-first-hit-qualifier.v1.mjs';
 
 test('published head, historic probe and owner frame remain frozen',()=>{
  assert.equal(FIXED.productHead,'e400920ced2f244344c59daf0015b44c178ea31c');
@@ -56,4 +56,28 @@ test('CLI rejects other heads, extra commands and non-absolute output',()=>{
  assert.throws(()=>parseArgs([...ok,'--exec','cat']),/GEN3347_ARGUMENT_SET/);
  assert.throws(()=>parseArgs(['--candidate-head','ba741660459180de632a03f826800548a40e325f',...ok.slice(2)]),/GEN3347_PRODUCT_HEAD_MISMATCH/);
  assert.throws(()=>parseArgs([...ok.slice(0,5),'relative.txt']),/GEN3347_OUTPUT_ABSOLUTE_REQUIRED/);
+});
+
+test('Gen3375 extends only exact historical first-hit source, not generic shaders',()=>{
+ assert.throws(()=>extendStageOverlay('fabricated or incomplete first-hit overlay'),/GEN3347_SOURCE_ANCHOR_NOT_UNIQUE/);
+});
+test('Gen3375 enforces class-4 same-location scalars and translucent exclusion',()=>{
+ const location=[[260.3633478294,-237.0192416266],[255.6132753491,-236.7067368582],[210.6438391699,-240.4567940795]];
+ const modes=()=>Array.from({length:7},(_,i)=>({mode:i+1}));
+ const stages=()=>Array.from({length:4},(_,i)=>({mode:i+8,status:'SOURCE_BOUND_GPU_SCALAR',values:[.25,.75]}));
+ const good=(x,z)=>({modeEvidence:modes(),materialModes:stages(),compound:{status:'SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT',role:1,primitiveIndex:0,surfaceClass:4,x,z}});
+ const owner=location.map(([x,z])=>good(x,z));
+ owner.push({modeEvidence:modes(),materialModes:Array.from({length:4},(_,i)=>({mode:i+8,status:'TRANSLUCENT_NOT_TERRAIN'})),compound:{status:'PIXEL_FIRST_HIT_UNRESOLVED'}});
+ const rows=[{samples:owner},{samples:[good(-139.424,-183.674)]},{samples:[good(-141,-220)]}];
+ assert.equal(verifyReceiptRows(rows),true);
+ const wrongClass=structuredClone(rows);wrongClass[0].samples[0].compound.surfaceClass=6;
+ assert.throws(()=>verifyReceiptRows(wrongClass),/GEN3375_CLASS4_TERRAIN_FIRST_HIT_MISMATCH/);
+ const wrongPosition=structuredClone(rows);wrongPosition[0].samples[1].compound.z=-320;
+ assert.throws(()=>verifyReceiptRows(wrongPosition),/GEN3375_ORIGINAL_REGION_WORLD_HIT_DRIFT/);
+ const fakeOpaque=structuredClone(rows);fakeOpaque[0].samples[3].materialModes[0].status='SOURCE_BOUND_GPU_SCALAR';
+ assert.throws(()=>verifyReceiptRows(fakeOpaque),/GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED/);
+ const missingStage=structuredClone(rows);missingStage[1].samples[0].materialModes.pop();
+ assert.throws(()=>verifyReceiptRows(missingStage),/GEN3375_FOUR_SCALAR_MODES_REQUIRED/);
+ const invalidScalar=structuredClone(rows);invalidScalar[2].samples[0].materialModes[0].values=[1.5,-1];
+ assert.throws(()=>verifyReceiptRows(invalidScalar),/GEN3375_MATERIAL_SCALAR_READBACK_INVALID/);
 });

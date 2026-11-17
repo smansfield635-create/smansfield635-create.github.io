@@ -8245,6 +8245,50 @@
       "scopeHash": "3d0f50d07c9489e2b2372928e313563be652ef121da2fa5d5f034aee9424ba4e",
       "state": "ADMITTED_LOCKED"
     },
+    "3d14318494602f5525f0e7d7804590d2702955cfce92d20ab7c64c8e821343f1": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2fe4560b30cd9e46c2af141899eceb0559af5806",
+          "lockGeneration": 3382,
+          "lockScope": "H_EARTH:OWNER_DIRECTED_WOODLAND_DONOR_ORDINARY_LAND_MATERIAL_TRANSFER:20261117",
+          "operationId": "H_EARTH_OWNER_WOODLAND_DONOR_ORDINARY_LAND_MATERIAL_COMPOSITION_TRANSFER_20261117_001",
+          "procedureLocatorDigest": "a0ddb4b5e1e78493e3bfc65bed28cee0edece496db2085c9aef2147ddc5f94ba",
+          "requestDigest": "31fade259b705ee3946c047ac32bef6041f3a921174b8b5af5a5748036786667",
+          "scopeHash": "3d14318494602f5525f0e7d7804590d2702955cfce92d20ab7c64c8e821343f1"
+        },
+        "bindingDigest": "740f7fb7129fe046dc3f3ae51078c79557cf4db9ec678b864a14b000483b1000",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f6be436f531df94c468b47a3fbfc1c1ef13d258dfe91c834b1e5ef6ac2b39bfa",
+          "commentId": 6956497861,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7387,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44143466306,
+          "workflowSha": "2fe4560b30cd9e46c2af141899eceb0559af5806"
+        },
+        "lineageAnchorCommitSha": "eba3961f22e3bea87cf1941112a2293bcfe0b455",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2fe4560b30cd9e46c2af141899eceb0559af5806",
+      "lockGeneration": 3382,
+      "lockScope": "H_EARTH:OWNER_DIRECTED_WOODLAND_DONOR_ORDINARY_LAND_MATERIAL_TRANSFER:20261117",
+      "operationId": "H_EARTH_OWNER_WOODLAND_DONOR_ORDINARY_LAND_MATERIAL_COMPOSITION_TRANSFER_20261117_001",
+      "procedureLocatorDigest": "a0ddb4b5e1e78493e3bfc65bed28cee0edece496db2085c9aef2147ddc5f94ba",
+      "released": false,
+      "requestDigest": "31fade259b705ee3946c047ac32bef6041f3a921174b8b5af5a5748036786667",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3d14318494602f5525f0e7d7804590d2702955cfce92d20ab7c64c8e821343f1",
+      "state": "ADMITTED_LOCKED"
+    },
     "3d2e9715e271600893d23cd93fa9f12ac8f29227d614773da90ab048ebd168e9": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -36588,7 +36632,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3381,
+  "lockGeneration": 3382,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

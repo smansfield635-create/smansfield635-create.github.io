@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T22:25:06Z",
+  "generatedAt": "2026-11-17T23:24:15Z",
   "window": {
-    "start": "2026-08-19T22:25:06Z",
-    "end": "2026-11-17T22:25:06Z"
+    "start": "2026-08-19T23:24:15Z",
+    "end": "2026-11-17T23:24:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3463,
+    "pageLoads": 3462,
     "visits": 1041,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3463,
+        "pageLoads": 3462,
         "visits": 1041
       }
     },
@@ -46,21 +46,21 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
-        "visits": 10
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
         "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -83,7 +83,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 62,
+        "pageLoads": 61,
         "visits": 10
       },
       "/showroom/globe/audralia/disposition/": {
@@ -166,19 +166,19 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -305,7 +305,7 @@
         "visits": 540
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2422,
+        "pageLoads": 2421,
         "visits": 0
       },
       "(none)": {

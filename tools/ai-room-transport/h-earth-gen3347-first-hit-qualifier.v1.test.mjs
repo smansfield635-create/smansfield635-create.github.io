@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {FIXED,POSES,toGlPixel,validatePoseReport,retargetHistoricalOverlay,extendStageOverlay,injectHideGrass,instrumentRoute,verifyReceiptRows,parseArgs,objectId} from './h-earth-gen3347-first-hit-qualifier.v1.mjs';
+import {FIXED,POSES,toGlPixel,validatePoseReport,retargetHistoricalOverlay,extendStageOverlay,injectHideGrass,instrumentRoute,verifyReceiptRows,parseArgs,objectId,startupFailureEvidence} from './h-earth-gen3347-first-hit-qualifier.v1.mjs';
 
 test('published head, historic probe and owner frame remain frozen',()=>{
  assert.equal(FIXED.productHead,'e400920ced2f244344c59daf0015b44c178ea31c');
@@ -80,4 +80,34 @@ test('Gen3375 enforces class-4 same-location scalars and translucent exclusion',
  assert.throws(()=>verifyReceiptRows(missingStage),/GEN3375_FOUR_SCALAR_MODES_REQUIRED/);
  const invalidScalar=structuredClone(rows);invalidScalar[2].samples[0].materialModes[0].values=[1.5,-1];
  assert.throws(()=>verifyReceiptRows(invalidScalar),/GEN3375_MATERIAL_SCALAR_READBACK_INVALID/);
+});
+
+
+test('Gen3380 startup evidence preserves original route exception with bounded, URL-redacted failure metadata',()=>{
+ const evidence=startupFailureEvidence(
+  {run8eError:true,routeStatusText:'WebGL shader compile failed: original route error',loaderMode:'failed'},
+  {pageErrors:['TypeError: startup failed https://diamondgatebridge.com/a.js?token=secret'],
+   consoleErrors:Array.from({length:11},(_,i)=>'console error '+i),
+   failedResources:[{path:'/showroom/globe/h-earth/asset.js?key=secret',status:404,errorText:'HTTP_ERROR'},
+    {path:'https://bad.invalid/private?key=secret',status:403,errorText:'DENIED'}]}
+ );
+ assert.equal(evidence.schema,'H_EARTH_GEN3380_PUBLIC_ROUTE_STARTUP_FAILURE_EVIDENCE_v1');
+ assert.equal(evidence.routeReportedFailure,true);
+ assert.match(evidence.routeStatusText,/original route error/);
+ assert.equal(evidence.pageErrors.length,1);
+ assert.equal(evidence.consoleErrors.length,8);
+ assert.equal(evidence.failedResources[0].path,'/showroom/globe/h-earth/asset.js');
+ assert.equal(evidence.failedResources[0].status,404);
+ assert.equal(evidence.failedResources[1].path,'[UNKNOWN_RESOURCE]');
+ assert.equal(evidence.productMutationPerformed,false);
+ assert.equal(evidence.diagnosticOnly,true);
+ assert.doesNotMatch(JSON.stringify(evidence),/token=secret|key=secret/);
+});
+test('Gen3380 empty startup evidence fails no material or physical parity gate open',()=>{
+ const evidence=startupFailureEvidence({run8eError:false,routeStatusText:''});
+ assert.equal(evidence.routeReportedFailure,false);
+ assert.deepEqual(evidence.pageErrors,[]);
+ assert.deepEqual(evidence.consoleErrors,[]);
+ assert.deepEqual(evidence.failedResources,[]);
+ assert.equal(evidence.productMutationPerformed,false);
 });

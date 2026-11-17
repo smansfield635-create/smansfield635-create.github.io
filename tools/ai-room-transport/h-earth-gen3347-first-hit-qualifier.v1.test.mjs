@@ -65,9 +65,10 @@ test('Gen3375 enforces class-4 same-location scalars and translucent exclusion',
  const location=[[260.3633478294,-237.0192416266],[255.6132753491,-236.7067368582],[210.6438391699,-240.4567940795]];
  const modes=()=>Array.from({length:7},(_,i)=>({mode:i+1}));
  const stages=()=>Array.from({length:4},(_,i)=>({mode:i+8,status:'SOURCE_BOUND_GPU_SCALAR',values:[.25,.75]}));
- const good=(x,z)=>({modeEvidence:modes(),materialModes:stages(),compound:{status:'SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT',role:1,primitiveIndex:0,surfaceClass:4,x,z}});
+ const palettes=()=>Array.from({length:5},(_,i)=>({mode:i+12,status:'SOURCE_BOUND_PRELIGHT_RGB8',values:[.25,.5,.75]}));
+ const good=(x,z)=>({modeEvidence:modes(),materialModes:stages(),paletteModes:palettes(),compound:{status:'SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT',role:1,primitiveIndex:0,surfaceClass:4,x,z}});
  const owner=location.map(([x,z])=>good(x,z));
- owner.push({modeEvidence:modes(),materialModes:Array.from({length:4},(_,i)=>({mode:i+8,status:'TRANSLUCENT_NOT_TERRAIN'})),compound:{status:'PIXEL_FIRST_HIT_UNRESOLVED'}});
+ owner.push({modeEvidence:modes(),materialModes:Array.from({length:4},(_,i)=>({mode:i+8,status:'TRANSLUCENT_NOT_TERRAIN'})),paletteModes:Array.from({length:5},(_,i)=>({mode:i+12,status:'TRANSLUCENT_NOT_TERRAIN'})),compound:{status:'PIXEL_FIRST_HIT_UNRESOLVED'}});
  const rows=[{samples:owner},{samples:[good(-139.424,-183.674)]},{samples:[good(-141,-220)]}];
  assert.equal(verifyReceiptRows(rows),true);
  const wrongClass=structuredClone(rows);wrongClass[0].samples[0].compound.surfaceClass=6;
@@ -80,6 +81,12 @@ test('Gen3375 enforces class-4 same-location scalars and translucent exclusion',
  assert.throws(()=>verifyReceiptRows(missingStage),/GEN3375_FOUR_SCALAR_MODES_REQUIRED/);
  const invalidScalar=structuredClone(rows);invalidScalar[2].samples[0].materialModes[0].values=[1.5,-1];
  assert.throws(()=>verifyReceiptRows(invalidScalar),/GEN3375_MATERIAL_SCALAR_READBACK_INVALID/);
+ const wrongRgb=structuredClone(rows);wrongRgb[0].samples[0].paletteModes[0].values=[1.1,0,0];
+ assert.throws(()=>verifyReceiptRows(wrongRgb),/GEN3383_RGB_PALETTE_READBACK_INVALID/);
+ const missingRgb=structuredClone(rows);missingRgb[1].samples[0].paletteModes.pop();
+ assert.throws(()=>verifyReceiptRows(missingRgb),/GEN3383_FIVE_RGB_PALETTE_MODES_REQUIRED/);
+ const fakeFourth=structuredClone(rows);fakeFourth[0].samples[3].paletteModes[2].status='SOURCE_BOUND_PRELIGHT_RGB8';
+ assert.throws(()=>verifyReceiptRows(fakeFourth),/GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED/);
 });
 
 
@@ -110,4 +117,9 @@ test('Gen3380 empty startup evidence fails no material or physical parity gate o
  assert.deepEqual(evidence.consoleErrors,[]);
  assert.deepEqual(evidence.failedResources,[]);
  assert.equal(evidence.productMutationPerformed,false);
+});
+
+
+test('Gen3383 RGB8 source probe remains anchored to exact first-hit overlay',()=>{
+ assert.throws(()=>extendStageOverlay('untrusted shader probe source'),/GEN3347_SOURCE_ANCHOR_NOT_UNIQUE/);
 });

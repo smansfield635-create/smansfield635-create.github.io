@@ -41,7 +41,7 @@ permissions:
 jobs:
   exact-head:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' && inputs.route_query != 'qualification=gen3333-lineage-native-v1' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout exact candidate
@@ -95,7 +95,11 @@ jobs:
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
             # Gen3356: exact Gen3353 C2-C candidate retains accepted woodland sector;
             # all unrelated future heads keep their historical guarded identity.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ]; then
+            # Gen3387: exact prior source identity is required even when commit SHA changes.
+            # Original accepted sector, rock, tree and complete-world SHA guards remain.
+            c2c_adapter=assets/engine/dgb.native-sculpt-world-handoff.v1.mjs
+            c2c_renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ] || { [ "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5 ] && [ "$(git hash-object "$c2c_adapter")" = d452b89a850cbda619b997706d179790c2291cb5 ] && [ "$(git hash-object "$c2c_renderer")" = 757a21f621e8ee5bfe766637cd9ef56f42deec80 ]; }; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
@@ -715,6 +719,92 @@ jobs:
               return mounted?'READY':false;
             },null,{timeout:120000}).then(h=>h.jsonValue()).catch(()=> 'TIMEOUT');
             initial=await sample('initial');
+            if(new URLSearchParams(query).get('qualification')==='cycle-two-c2c-native-gpu-v1'){
+              let native=null;
+              for(const frame of page.frames()){
+                const present=await frame.evaluate(()=>Boolean(globalThis.__H_EARTH_C2C_NATIVE_GPU_QUALIFIER_V1)).catch(()=>false);
+                if(!present)continue;
+                native=await frame.evaluate(async()=>{
+                  const host=globalThis.__H_EARTH_C2C_NATIVE_GPU_QUALIFIER_V1;
+                  const base={schema:'H_EARTH_GEN3387_C2C_REAL_WEBGL2_v1',realExistingRenderer:true,
+                    adoptedAdapterBlob:'d452b89a850cbda619b997706d179790c2291cb5',
+                    sourceSavedSha256:'0419dc21b2205e35fc84cf1a6461a62936ab3b6b4c12c0c0e094b622e01283e5'};
+                  let footprint=null,handoff=null;
+                  try{
+                    footprint=host.observe();
+                    if(footprint?.result!=='SOURCE_INDEXED_GROUND_AND_HYDROLOGY_SCREEN_PASS_NOT_OBJECT_ADMISSION'){
+                      const first=[...(footprint?.contacts||[]),...(footprint?.sweptSamples||[])]
+                        .find(s=>s.result!=='SOURCE_INDEXED_CONTACT_CLEAR')||null;
+                      return {...base,result:'REAL_WORLD_54_SAMPLE_POLICY_REJECTION',
+                        firstAssertion:footprint?.reason||first?.result||footprint?.result,firstExclusion:first,footprint};
+                    }
+                    if(footprint.contacts.length!==5||footprint.sweptSamples.length!==49)
+                      throw Error('C2C_FOOTPRINT_CARDINALITY_NOT_5_AND_49');
+                    const [{recoverEditedSculptAsset,groundEditedAsset,createReversibleWorldHandoff},
+                      {regionToHEarthPlanetPoint}]=await Promise.all([
+                      import('/assets/engine/dgb.native-sculpt-world-handoff.v1.mjs'),
+                      import('/showroom/globe/h-earth/render/planetary-world-frame.js')]);
+                    const savedTest=await fetch('/assets/engine/dgb.native-sculpt-world-handoff.v1.test.mjs');
+                    if(!savedTest.ok)throw Error('C2C_SAVED_TEST_ASSET_NOT_SERVED:'+savedTest.status);
+                    const text=await savedTest.text();
+                    const matched=text.match(/const source=gunzipSync\(Buffer\.from\('([A-Za-z0-9+/=]+)','base64'\)\)\.toString\('utf8'\)/);
+                    if(!matched)throw Error('C2C_AUTHENTIC_SAVED_FIXTURE_NOT_FOUND');
+                    const gzip=Uint8Array.from(atob(matched[1]),c=>c.charCodeAt(0));
+                    const saved=await new Response(new Blob([gzip]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+                    const asset=await recoverEditedSculptAsset(saved,{expectedSha256:base.sourceSavedSha256});
+                    const point=(x,z)=>{const p=footprint.contacts.find(c=>Math.abs(c.x-x)<.002&&Math.abs(c.z-z)<.002);
+                      if(!p)throw Error('C2C_ROTATED_SOURCE_CONTACT_MISMATCH');return p;};
+                    const prepared=groundEditedAsset(asset,{id:'C2C_Edit_001',x:192,z:-288,scale:.7,rotation:.31,
+                      footprintPadding:.2,protectedFootprints:[],projectWorld:regionToHEarthPlanetPoint,
+                      groundAt:(x,z)=>({y:point(x,z).y}),
+                      waterAt:(x,z)=>{const p=point(x,z);
+                        if(p.plannedWaterFootprint||p.futureWaterY!==null)throw Error('C2C_PROTECTED_WATER_POLICY');
+                        return Number.isFinite(p.renderedWaterY)?{y:p.renderedWaterY}:null;}});
+                    const before=host.color('c2c-before'),beforeDepth=host.depth(),beforeGpu=host.resources();
+                    handoff=createReversibleWorldHandoff(prepared,host);
+                    handoff.attach();
+                    const attached=host.resources();
+                    host.render();
+                    const object=host.color('c2c-object'),objectDepth=host.depth(),drawn=host.resources();
+                    handoff.detach();
+                    host.render();
+                    const restored=host.color('c2c-rollback'),rollbackDepth=host.depth(),final=host.resources();
+                    const balanced=final.createdBuffers===final.deletedBuffers&&
+                      final.createdVaos===final.deletedVaos&&final.residentBytes===0&&
+                      final.pendingObjectCount===0&&final.residentObjectCount===0;
+                    const colorDiff=object.summary.byteHash!==before.summary.byteHash;
+                    const depthDiff=objectDepth.byteHash!==beforeDepth.byteHash;
+                    const pixelsRestored=restored.summary.byteHash===before.summary.byteHash;
+                    const pass=balanced&&colorDiff&&depthDiff&&pixelsRestored&&drawn.drawCalls>beforeGpu.drawCalls;
+                    return {...base,result:pass?'REAL_GPU_COLOR_DEPTH_AND_ROLLBACK_VERIFIED':'REAL_GPU_EXECUTED_EVIDENCE_INSUFFICIENT',
+                      firstAssertion:!balanced?'GPU_CUSTODY_UNBALANCED':!colorDiff?'GPU_COLOR_PIXEL_DIFF_MISSING':
+                        !depthDiff?'GPU_DEPTH_PIXEL_DIFF_MISSING':!pixelsRestored?'ROLLBACK_FRAME_NOT_RESTORED':
+                        drawn.drawCalls<=beforeGpu.drawCalls?'GPU_INDEX_DRAW_NOT_SUBMITTED':null,
+                      sourceAuthenticated:true,footprint,prepared:prepared.receipt,
+                      framebuffer:{before:before.summary,object:object.summary,restored:restored.summary,
+                        beforeDepth,objectDepth,rollbackDepth,objectPngDataUrl:object.pngDataUrl,
+                        colorDiff,depthDiff,pixelsRestored},
+                      gpu:{before:beforeGpu,attached,drawn,after:final,balanced},terrainWaterMutated:false};
+                  }catch(error){return {...base,result:'REAL_GPU_SOURCE_OR_RUNTIME_FAILURE',
+                    firstAssertion:String(error?.message||error),footprint,
+                    gpu:host.resources()};}
+                  finally{if(handoff?.status?.()==='ATTACHED')handoff.detach();}
+                });
+                break;
+              }
+              if(!native)native={schema:'H_EARTH_GEN3387_C2C_REAL_WEBGL2_v1',
+                result:'NO_LIVE_RENDERER_QUALIFICATION_BINDING',firstAssertion:'NO_ACTUAL_R3C_BINDING_IN_BROWSER'};
+              const png=native?.framebuffer?.objectPngDataUrl;
+              if(typeof png==='string'&&png.startsWith('data:image/png;base64,')){
+                const bytes=Buffer.from(png.slice('data:image/png;base64,'.length),'base64');
+                await fs.writeFile(out+'/c2c-native-object-framebuffer.png',bytes);
+                native.framebuffer.objectPngSha256=crypto.createHash('sha256').update(bytes).digest('hex');
+                delete native.framebuffer.objectPngDataUrl;
+              }
+              await fs.writeFile(out+'/c2c-native-gpu.json',JSON.stringify(native,null,2)+'\n');
+              if(native.result!=='REAL_GPU_COLOR_DEPTH_AND_ROLLBACK_VERIFIED')
+                throw Error('C2C_GPU_FIRST_ASSERTION:'+(native.firstAssertion||native.result));
+            }
             await page.waitForTimeout(3000);
             later=await sample('later');
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';

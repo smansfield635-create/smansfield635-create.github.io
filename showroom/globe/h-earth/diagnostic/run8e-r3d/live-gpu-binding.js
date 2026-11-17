@@ -574,6 +574,22 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     });
   };
 
+  // Gen3387: qualification-only access to this SAME hydrated R3C WebGL2 renderer.
+  const c2cQualificationRequested=
+    queryParameters.get('qualification')==='cycle-two-c2c-native-gpu-v1' ||
+    (()=>{try{return new URLSearchParams(globalThis.parent?.location?.search||'').get('qualification')==='cycle-two-c2c-native-gpu-v1';}catch{return false;}})();
+  if(c2cQualificationRequested){
+    globalThis.__H_EARTH_C2C_NATIVE_GPU_QUALIFIER_V1=Object.freeze({
+      observe:()=>renderer.inspectExactC2CWorldFootprint(),
+      beginTransaction:(id,mesh,placement)=>renderer.beginTransaction(id,mesh,placement),
+      render:()=>renderer.renderFrame(initialPacket),
+      color:label=>renderer.captureColorFrame(label,{includePng:true}),
+      depth:()=>renderer.captureDepthSummary(),
+      resources:()=>renderer.getC2CWorldTransactionReceipt(),
+      rendererId:renderer.rendererId,
+      readOnlySource:true,normalRouteUnchanged:true
+    });
+  }
   return Object.freeze({
     disposePlantingPilot:()=>renderer.disposePlantingPilot(),
     bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,

@@ -20,6 +20,14 @@ const ECO_SITE_WINDOWS=Object.freeze([
   Object.freeze({id:'MEADOW',minX:-127,maxX:37,minZ:-394,maxZ:-258})
 ]);
 const ECO_TILE_LIMIT=24, ECO_TOTAL_LIMIT=4301, ECO_SPACING=4;
+// Gen3200: the approved woodland clearing is a scoped low/mid-cover
+// presentation exception, not an alteration of immutable tall-fan placements.
+const RUNTIME_WOODLAND_CLEARING_BOUNDS=Object.freeze({
+  minX:-155.40267987050615,maxX:-123.40267987050615,
+  minZ:-226.74616902099837,maxZ:-194.74616902099837
+});
+const inRuntimeWoodlandClearing=(x,z,r=0)=>x>=RUNTIME_WOODLAND_CLEARING_BOUNDS.minX+r&&x<=RUNTIME_WOODLAND_CLEARING_BOUNDS.maxX-r
+  &&z>=RUNTIME_WOODLAND_CLEARING_BOUNDS.minZ+r&&z<=RUNTIME_WOODLAND_CLEARING_BOUNDS.maxZ-r;
 function ecoSite(x,z){return ECO_SITE_WINDOWS.find(w=>x>=w.minX&&x<=w.maxX&&z>=w.minZ&&z<=w.maxZ)?.id??null;}
 function ecoTileEligible(tile){return ECO_SITE_WINDOWS.some(w=>tile.minX<=w.maxX&&tile.minX+32>=w.minX&&tile.minZ<=w.maxZ&&tile.minZ+32>=w.minZ);}
 function ecoDrySand(m,slope){return m?.valid===true&&m.surfaceClass==='DRY_SAND'&&slope<=.18&&m.shorelineDistance>=16&&m.shorelineDistance<=34&&m.rockExposure<.28&&m.soilDepth>=.35;}
@@ -35,11 +43,11 @@ function ecoHabitat(m,slope,site,x,z){
 }
 export function inverseHEarthGroundCoverPoint(x,y,z){const h=Math.hypot(x,z),r=Math.atan2(h,y+P.planetRadius)*P.planetRadius,k=h? r/h:0;return{x:x*k,z:z*k,elevation:Math.hypot(h,y+P.planetRadius)-P.planetRadius};}
 function segmentDistance(x,z,a,b){const dx=b.x-a.x,dz=b.z-a.z,d=dx*dx+dz*dz,t=d?clamp(((x-a.x)*dx+(z-a.z)*dz)/d):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}
-function clear(x,z,r=0){
+function clear(x,z,r=0,allowScopedLowCover=false){
   for(const b of [estate.manorCore,estate.gardens,estate.outbuildingProposal,estate.acceptedEnvelope])if(Math.hypot(x-Math.max(b.minX,Math.min(b.maxX,x)),z-Math.max(b.minZ,Math.min(b.maxZ,z)))<=r)return false;
   if(estate.footRoute.slice(1).some((b,i)=>segmentDistance(x,z,estate.footRoute[i],b)<=estate.footRouteRadius+r))return false;
   if(segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230})<=1.5+r)return false;
-  if(Math.hypot((x+141)/33,(z+226)/32)<=1.25+r/32)return false;
+  if(Math.hypot((x+141)/33,(z+226)/32)<=1.25+r/32&&!(allowScopedLowCover&&inRuntimeWoodlandClearing(x,z,r)))return false;
   return !(x>=oasis.minX-r&&x<=oasis.maxX+r&&z>=oasis.minZ-r&&z<=oasis.maxZ+r);
 }
 function triangleIndex(positions,indices,spans=null,bounded=false){
@@ -160,14 +168,19 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         const support=sample(x,z);if(!support)continue;
         const ocean=water.sample(x,z);if(ocean&&support.y<=ocean.y+.01)continue;
         const authored=inverseHEarthGroundCoverPoint(x,support.y,z),site=ecoSite(authored.x,authored.z);
-        if(!site||!clear(authored.x,authored.z,1.4)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.4))continue;
+        const scopedLowCover=site==='WOODLAND_EDGE'&&inRuntimeWoodlandClearing(authored.x,authored.z,1.4);
+        if(!site||!clear(authored.x,authored.z,1.4,scopedLowCover)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.4))continue;
         // Seed separation proves these instances are not cloned tall-root companions.
         if(entries.some(entry=>entry.baselineCompatible&&entry.record[19]<2&&Math.hypot(entry.record[12]-x,entry.record[13]-z)<.58))continue;
         const m=materialAt(authored.x,authored.z);materialSamples++;
         const fit=ecoHabitat(m,support.slope,site,authored.x,authored.z);if(!fit)continue;
         const pick=hash(id,'role'),role=fit.tag===4?4:(pick<.37?3:2);
         let ecoAllowed=role===4||admitGround(x,z,support),ecoBaseline=historicalPoint(x,z);
-        const admit=role===4?fit.capacity*.21:fit.capacity*(role===3?.79:.98)*(.40+fit.pocket*.60);
+        const coverPocket=scopedLowCover
+          ? .58*field(authored.x,authored.z,3.0,'GEN3200_CLEARING_CLUMPS')
+             +.42*field(authored.x,authored.z,7.3,'GEN3200_CLEARING_GLADES')
+          : fit.pocket;
+        const admit=role===4?fit.capacity*.21:fit.capacity*(role===3?.79:.98)*(.40+coverPocket*.60);
         if(hash(id,'admission')>=admit)continue;
         const angle=f(hash(id,'angle')*Math.PI*2);
         const width=f(role===2?1.25+hash(id,'width')*.42:role===3?1.12+hash(id,'width')*.36:.86+hash(id,'width')*.25);
@@ -185,7 +198,7 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
             result={ground,a,material};seen.set(key,result);
           }
           if(!(role===4?ecoDrySand(result.material,result.ground.slope):eligibleMaterial(result.material,result.ground.slope))
-              ||!clear(result.a.x,result.a.z)||obstacles.some(t=>Math.hypot(p.x-t.x,p.z-t.z)<t.radius)){accepted=false;break;}
+              ||!clear(result.a.x,result.a.z,0,scopedLowCover)||obstacles.some(t=>Math.hypot(p.x-t.x,p.z-t.z)<t.radius)){accepted=false;break;}
           record[root]=result.ground.y;
         }
         if(!accepted)continue;

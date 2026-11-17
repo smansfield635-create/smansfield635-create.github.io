@@ -767,6 +767,10 @@ void main(){
   bool geologicalEarthRock=vPrimitiveIndex==62001u;
   bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||
     int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
+  // Gen3382: ordinary LAND material is classified by real soil, coast and
+  // exposed-rock signals, not a world-coordinate rectangle or grove distance.
+  // The donor's native soil albedo, grain, lighting and relief remain unchanged.
+  float ordinaryLandDonorMaterial=0.0;
 
   // FAR continuation is visual context only; invert the spherical projection
   // before sampling its broad landscape palette. No new roots or access rights.
@@ -951,6 +955,10 @@ void main(){
       float worldSoilEligibility=clamp(
         worldSoilSlope*worldSoilRock*worldSoilCoast,0.0,1.0
       );
+      // Complete material-class ownership on normal land; only physically
+      // coastal sand, steep ground or exposed geological rock may retain
+      // their native regional earth/mineral identity at the ecotone.
+      ordinaryLandDonorMaterial=geologicalEarthRock?0.0:worldSoilEligibility;
       // World-space gradual material variation, never distance to the box.
       float worldSoilRegion=clamp(
         macroField*0.48+mesoField*0.34+medium*0.18,0.0,1.0
@@ -1118,6 +1126,9 @@ void main(){
       // shoreline material and world geometry remain on their original paths.
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast*0.15;
+      // This synthetic class overlay must not replace the successful
+      // photographic woodland material on any eligible ordinary terrain.
+      identityWeight*=1.0-ordinaryLandDonorMaterial;
       palette=mix(palette,identityBase,identityWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every
@@ -1172,6 +1183,9 @@ void main(){
       // Let real grass carry vegetation color; retain only restrained soil tint.
       // Original root population, textures, patch masks and exclusions are unchanged.
       float groundcoverPigmentWeight=groundcoverWeight*0.08;
+      // Grass carries the foliage color; photo-soil retains its own albedo.
+      // Preserve actual beach and mountain materials and the donor grove.
+      groundcoverPigmentWeight*=1.0-ordinaryLandDonorMaterial;
       palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }

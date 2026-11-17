@@ -1,0 +1,17 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_PR7479_CURRENT_NATIVE_REGISTRY_FIXED_QUALIFIER_BINDING_20261117_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_PR7479_CURRENT_NATIVE_REGISTRY_FIXED_QUALIFIER_BINDING_20261117_001",
+    "lockGeneration": 3386,
+    "lockScope": "H_EARTH:PR7479:NATIVE_FULL_REGISTRY_FIXED_QUALIFIER_BINDING:20261117",
+    "lockAcquired": true,
+    "acquisitionCommitSha": "826dd2afaab9df09b387a6b137694c230ea71d77"
+  }
+}

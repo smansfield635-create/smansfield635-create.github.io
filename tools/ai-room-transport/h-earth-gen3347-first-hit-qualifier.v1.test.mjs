@@ -11,7 +11,7 @@ test('published head, historic probe and owner frame remain frozen',()=>{
 });
 test('exact owner edge pairs and two distinct accepted controls',()=>{
  assert.deepEqual(POSES.map(p=>p.samples.length),[4,1,1]);
- assert.deepEqual(POSES[0].samples.map(toGlPixel),[[360,474],[360,458],[156,197],[156,181]]);
+ assert.deepEqual(POSES[0].samples.map(p=>toGlPixel(p)),[[360,474],[360,458],[156,197],[156,181]]);
  assert.equal(POSES[1].point.x,-139.40268);
  assert.equal(POSES[2].point.z,-226);
  assert.equal(POSES[0].owner,true);

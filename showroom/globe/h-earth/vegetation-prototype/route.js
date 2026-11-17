@@ -10,12 +10,23 @@ import {createHEarthCopyReportFrameBridge} from './spatial-evidence.v1.js';
 import {createHEarthSpatialSelectionUI} from './spatial-selection-ui.v1.js';
 
 import {createLoadingMetrics,summarizeTransfers} from './loading-metrics.v2.js';
+import {createHEarthFunctionalLandscapeNavigationState,proposeHEarthFunctionalLandscapeNavigation} from '../functional-landscape/navigation.js?cb=4359f951b7186b7c';
 
 const sourceBaseline='f64ce197d6bd54cd3627458fc138295e9913f761';
 const root=document.getElementById('h-earth-functional-landscape-route');
 const canvas=document.getElementById('h-earth-functional-landscape-canvas');
 const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
+// Cycle Two qualification attaches only to the actual, already initialized
+// public-route R3C renderer. The ordinary route never exposes this hook.
+const c2cQualificationRequested=query.get('qualification')==='cycle-two-c2c-native-gpu-v1';
+const c2cQualificationKey='__H_EARTH_C2C_NATIVE_GPU_QUALIFIER_V1';
+let c2cQualificationHost=null,c2cQualificationNavigation=null;
+function releaseC2CQualification(){
+  if(c2cQualificationHost&&globalThis[c2cQualificationKey]===c2cQualificationHost)
+    delete globalThis[c2cQualificationKey];
+  c2cQualificationHost=null;
+}
 const ownerInspection=query.get('inspect')==='1';
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
 const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1','ravine-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
@@ -69,10 +80,11 @@ function present(state){
 }
 function presentObserved(state){
   assertRouteActive();
-  const packet=packetFor(state),start=performance.now();
+  const submittedNavigation=c2cQualificationNavigation??state;
+  const packet=packetFor(submittedNavigation),start=performance.now();
   renderer.renderFrame(packet);renderFrameCallCount++;
   renderer.presentColorFrame();gpuFramebufferPresentationCount++;
-  spatialFrameBridge.rememberSubmittedFrame({packet,navigationState:state});
+  spatialFrameBridge.rememberSubmittedFrame({packet,navigationState:submittedNavigation});
   const frame={frameSequence:sequence,navigationSequence:state.sequence,cameraPosition:{...packet.camera.position},cpuSubmitMilliseconds:performance.now()-start};
   frames.push(frame);if(frames.length>64)frames.shift();
   if(timing.firstFrameMilliseconds===null)timing.firstFrameMilliseconds=performance.now()-started;
@@ -183,7 +195,7 @@ function markReady(){
   }
   window.dispatchEvent(new CustomEvent('h-earth-run8e-ready',{detail:{type:'H_EARTH_RUN8E_READY',prototype:'single-owner-v1',mode:diagnosticReplay?'diagnostic-replay':'manual-public',timestamp:new Date().toISOString()}}));
 }
-function failRoute(error){if(terminalFailure)return;terminalFailure=error;interactiveReady=false;spatialSelection?.dispose();presenter?.cancel();renderer?.disposeCorrectedMaterial();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
+function failRoute(error){if(terminalFailure)return;releaseC2CQualification();terminalFailure=error;interactiveReady=false;spatialSelection?.dispose();presenter?.cancel();renderer?.disposeCorrectedMaterial();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
 
 window.addEventListener('pagehide',event=>{if(!event.persisted){spatialSelection?.dispose();presenter?.cancel();renderer?.disposeCorrectedMaterial();}});
 
@@ -213,7 +225,51 @@ try{
   assertRouteActive();
   await renderer.initialize(packetFor(initial));
   assertRouteActive();
+  if(c2cQualificationRequested){
+    // Only established terrain-supported navigation proposals may place the
+    // qualification camera. No bypass of sweep or visible-terrain policies.
+    const ridge=createHEarthFunctionalLandscapeNavigationState({waypointId:'RIDGE'});
+    assert(ridge.ok===true,'C2C_RIDGE_WAYPOINT_REJECTED');
+    let candidate=ridge.state;
+    for(const position of [{x:165,z:-245},{x:183,z:-263},{x:192,z:-274}]){
+      const proposal=proposeHEarthFunctionalLandscapeNavigation(candidate,{action:'SET_CAMERA_POSITION',position});
+      if(proposal.ok!==true)break;
+      candidate=proposal.state;
+    }
+    c2cQualificationNavigation=candidate;
+  }
+  // Set the identical qualifying camera before the FIRST pixel comparison.
+  // Subsequent public-route and explicit test renders retain this same pose.
   present(intake.getNavigationState());
+  if(c2cQualificationRequested){
+    assert(globalThis[c2cQualificationKey]==null,'C2C_GLOBAL_QUALIFIER_ALREADY_OWNED');
+    c2cQualificationHost=Object.freeze({
+      observe:()=>renderer.inspectExactC2CWorldFootprint(),
+      beginTransaction:(id,mesh,placement)=>renderer.beginTransaction(id,mesh,placement),
+      render:()=>{
+        const camera=c2cQualificationNavigation;
+        const contact=renderer.inspectExactC2CWorldFootprint().contacts?.[0];
+        if(!contact||!Number.isFinite(contact.y))
+          throw Error('C2C_CAMERA_VISIBLE_GROUND_NOT_OBSERVED');
+        const horizontal=Math.hypot(192-camera.position.x,-288-camera.position.z);
+        const bearing=Math.atan2(192-camera.position.x,camera.position.z+288)*180/Math.PI;
+        const yawDelta=((bearing-camera.yawDegrees+540)%360)-180;
+        const vertical=Math.atan2(contact.y+0.5-camera.position.y,horizontal)*180/Math.PI;
+        const halfHFov=Math.atan(Math.tan(camera.verticalFovDegrees*Math.PI/360)*viewport.width/viewport.height)*180/Math.PI;
+        if(horizontal<0.1||Math.abs(yawDelta)>halfHFov-4||
+           Math.abs(vertical-camera.pitchDegrees)>camera.verticalFovDegrees/2-4)
+          throw Error('C2C_QUALIFICATION_OBJECT_OUTSIDE_FIXED_CAMERA_FRUSTUM');
+        return renderer.renderFrame(packetFor(camera));
+      },
+      color:label=>renderer.captureColorFrame(label,{includePng:true}),
+      depth:()=>renderer.captureDepthSummary(),
+      resources:()=>renderer.getC2CWorldTransactionReceipt(),
+      rendererId:renderer.rendererId,
+      readOnlySource:true,normalRouteUnchanged:true
+    });
+    globalThis[c2cQualificationKey]=c2cQualificationHost;
+    globalThis.addEventListener('pagehide',releaseC2CQualification,{once:true});
+  }
   assert(typeof renderer.prepareReplacementVegetation==='function','REPLACEMENT_OWNER_MISSING');
   if(diagnosticReplay){
   preparation=await renderer.prepareReplacementVegetation({onProgress:progress('vegetation','Preparing the shared vegetation records…')});

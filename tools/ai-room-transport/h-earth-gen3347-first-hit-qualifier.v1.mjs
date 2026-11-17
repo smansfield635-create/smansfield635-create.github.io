@@ -249,17 +249,75 @@ async function captureGrassNormalColorABA(page,state,samples){
    ownerImageParity:false,materialCausationUnproven:true};
  },{state,samples});
 }
+
+/** Gen3380: preserve the already surfaced public-route startup exception without
+ * altering any normal WebGL2 frame, material mode, or source pin. URL queries
+ * are stripped from diagnostics; limit every collected event class to eight. */
+export function startupFailureEvidence(snapshot,events={}){
+ const scrub=value=>{
+  const raw=typeof value==='string'?value:'';
+  return raw.replace(/https?:\/\/[^\s"'()]+/g,full=>{
+   try{const u=new URL(full);return u.origin+u.pathname}
+   catch{return '[RESOURCE_URL]'}
+  }).slice(0,900);
+ };
+ const messages=value=>Array.isArray(value)?value.slice(0,8).map(scrub):[];
+ const resources=Array.isArray(events.failedResources)?events.failedResources.slice(0,8).map(item=>({
+  path:typeof item?.path==='string'&&item.path.startsWith('/')?item.path.split('?')[0].slice(0,220):'[UNKNOWN_RESOURCE]',
+  status:Number.isInteger(item?.status)?item.status:null,
+  errorText:scrub(item?.errorText).slice(0,220)
+ })):[];
+ return {
+  schema:'H_EARTH_GEN3380_PUBLIC_ROUTE_STARTUP_FAILURE_EVIDENCE_v1',
+  source:'PINNED_PUBLIC_ROUTE_DOM_AND_BROWSER_EVENT_STREAM',
+  routeReportedFailure:snapshot?.run8eError===true,
+  routeStatusText:scrub(snapshot?.routeStatusText),
+  loaderMode:scrub(snapshot?.loaderMode).slice(0,80),
+  pageErrors:messages(events.pageErrors),
+  consoleErrors:messages(events.consoleErrors),
+  failedResources:resources,
+  productMutationPerformed:false,
+  diagnosticOnly:true
+ };
+}
+
 async function capture(browser,base,renderer,route,probe,output,receipt){
  const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5,serviceWorkers:'block'});
- const page=await context.newPage();page.setDefaultTimeout(60000);const browserErrors=[];
- page.on('pageerror',e=>browserErrors.push(String(e.message)));
+ const page=await context.newPage();page.setDefaultTimeout(60000);
+ const browserErrors=[],consoleErrors=[],failedResources=[];
+ page.on('pageerror',e=>{if(browserErrors.length<8)browserErrors.push(String(e.message))});
+ page.on('console',m=>{if(m.type()==='error'&&consoleErrors.length<8)consoleErrors.push(m.text())});
+ page.on('requestfailed',request=>{
+  if(failedResources.length>=8)return;
+  try{
+   const u=new URL(request.url());
+   if(u.origin===new URL(base).origin)failedResources.push({path:u.pathname,status:null,errorText:request.failure()?.errorText??'REQUEST_FAILED'});
+  }catch{}
+ });
+ page.on('response',response=>{
+  if(response.status()<400||failedResources.length>=8)return;
+  try{
+   const u=new URL(response.url());
+   if(u.origin===new URL(base).origin)failedResources.push({path:u.pathname,status:response.status(),errorText:'HTTP_ERROR'});
+  }catch{}
+ });
  await page.addInitScript({content:'globalThis.__hEarthFirstHitMaterialMode=0;globalThis.__gen3347HideGrass=false;'});
  await page.route(url=>url.pathname==='/'+FIXED.renderer,routeHandler=>routeHandler.fulfill({status:200,contentType:'text/javascript',body:renderer}));
  await page.route(url=>url.pathname==='/'+FIXED.route,routeHandler=>routeHandler.fulfill({status:200,contentType:'text/javascript',body:route}));
  try{
   await page.goto(base+FIXED.root+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
-  insist(!(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true')),'GEN3347_RUNTIME_STARTUP_ERROR');
+  const startup=await page.evaluate(()=>({
+   run8eError:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eError==='true',
+   routeStatusText:document.getElementById('prototype-status')?.textContent??'',
+   loaderMode:document.getElementById('h-earth-loading-screen')?.dataset.mode??null
+  }));
+  if(startup.run8eError){
+   receipt.startupFailureEvidence=startupFailureEvidence(startup,{pageErrors:browserErrors,consoleErrors,failedResources});
+   const e=new Error('GEN3347_RUNTIME_STARTUP_ERROR:'+receipt.startupFailureEvidence.routeStatusText);
+   e.code='GEN3347_RUNTIME_STARTUP_ERROR';
+   throw e;
+  }
   await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
   await page.mouse.move(160,240);await page.mouse.down();await page.mouse.move(220,240,{steps:8});await page.mouse.up();
   await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});

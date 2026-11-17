@@ -58,6 +58,46 @@ function safeEnvironment() {
   return Object.fromEntries(keys.filter(key => process.env[key] != null).map(key => [key, process.env[key]]));
 }
 
+// An exact, source-pinned credential exception for the previously admitted C2-C
+// Gen3323 live provenance qualifier only. General fixed commands remain token-free.
+const C2C_PROVENANCE_V2_DESCRIPTOR = 'DGB_GRAPHICS_C2C_GEN3323_LIVE_TWO_PATH_ROUTER_QUALIFICATION_DESCRIPTOR_V2';
+const C2C_PROVENANCE_V2_TOOL = 'DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFIER_V2';
+const C2C_PROVENANCE_OPERATION = 'DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001';
+const C2C_PROVENANCE_SCRIPT = 'tools/ai-room-transport/dgb-graphics-c2c-gen3323-live-router.v1.mjs';
+const C2C_ORIGINAL_ROUTER_HEAD = '3a59780d37e4eaea4fa83e533ff311b5e752033e';
+const C2C_ORIGINAL_ROUTER_BLOB = 'a6fb641242975150831f29be00c4e12eb8f230ed';
+export function safeEnvironmentForDescriptor(descriptor, fixedCommand) {
+  const env = safeEnvironment();
+  const credential = descriptor?.authenticatedProvenanceCredential;
+  if (credential === undefined) return env;
+  const spec = descriptor?.commandSpecification;
+  const args = fixedCommand?.args;
+  const bound = descriptor?.descriptorId === C2C_PROVENANCE_V2_DESCRIPTOR
+    && descriptor?.toolId === C2C_PROVENANCE_V2_TOOL
+    && descriptor?.operationId === C2C_PROVENANCE_OPERATION
+    && /^[0-9a-f]{40}$/.test(descriptor?.exactToolingHead ?? '')
+    && descriptor?.exactToolingHead !== '3f19f84b7ff375690c57ed28d4037a1518db3f38'
+    && spec?.scriptPath === C2C_PROVENANCE_SCRIPT
+    && spec?.executable === 'node'
+    && spec?.shell === false
+    && spec?.extraArgumentsAllowed === false
+    && spec?.environmentOverridesAllowed === false
+    && fixedCommand?.executable === 'node'
+    && Array.isArray(args) && args[0] === C2C_PROVENANCE_SCRIPT
+    && args.includes('--candidate-head')
+    && args[args.indexOf('--candidate-head') + 1] === C2C_ORIGINAL_ROUTER_HEAD
+    && credential?.schema === 'C2C_GEN3323_EXACT_PROVENANCE_CREDENTIAL_v1'
+    && credential?.status === 'ENABLED_EXACT_QUALIFIER_ONLY'
+    && credential?.routerSourceHead === C2C_ORIGINAL_ROUTER_HEAD
+    && credential?.routerGitBlob === C2C_ORIGINAL_ROUTER_BLOB
+    && credential?.purpose === 'READ_ONLY_OWNER_COMMENT_AND_LOCK_LEDGER';
+  if (!bound) fail('C2C_GEN3323_PROVENANCE_CREDENTIAL_SCOPE_REJECTED');
+  const token = process.env.GITHUB_TOKEN;
+  if (typeof token !== 'string' || token.length === 0) fail('C2C_GEN3323_PROVENANCE_GITHUB_TOKEN_MISSING');
+  env.GITHUB_TOKEN = token; // never logged, serialized into arguments, or forwarded to other descriptor commands
+  return env;
+}
+
 export function buildFixedCommand(descriptor, inputs, payloadReceiptPath, manifestArtifactPath = null) {
   const specification = assertObject(descriptor.commandSpecification, 'COMMAND_SPECIFICATION_INVALID');
   if (specification.shell !== false) fail('SHELL_EXECUTION_PROHIBITED');
@@ -402,7 +442,7 @@ export function dispatchLoaded({ request, registry, admissionReceipt, admissionR
     const fixed = buildFixedCommand(descriptor, resolution.validatedInputs, payloadReceiptPath, manifestArtifactPath);
     const streamOutput = descriptor.commandSpecification?.streamOutput === true;
     if (streamOutput) console.log('AI_TOOLING_PHASE REGISTERED_COMMAND_START');
-    const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironment(), visible: streamOutput });
+    const execution = run(fixed.executable, fixed.args, { cwd: toolRoot, env: safeEnvironmentForDescriptor(descriptor, fixed), visible: streamOutput });
     if (streamOutput) console.log(`AI_TOOLING_PHASE REGISTERED_COMMAND_END status=${execution.status}`);
     const afterPaths = changedPaths(toolRoot);
     validateChangedPaths(descriptor, afterPaths);

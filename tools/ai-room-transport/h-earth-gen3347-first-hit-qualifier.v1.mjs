@@ -222,6 +222,33 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
   await page.click('[data-enter]');
   await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'&&
    document.querySelector('#h-earth-loading-screen')?.hidden===true,null,{timeout:180000});
+
+  // Gen3361: the public route exposes controls before asynchronous grass residency.
+  // A normal-color grass OFF/ON comparison before this witness is non-discriminating.
+  await page.waitForFunction(()=>{
+   const root=document.querySelector('#h-earth-functional-landscape-route');
+   if(root?.dataset.vegetationState==='failed')return true;
+   const grass=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.singleOwnerVegetation;
+   return root?.dataset.vegetationState==='prepared'&&grass?.gpuAllocationVerified===true&&
+    grass?.installedRootCount>0&&grass?.coarseRootCount>0&&
+    grass?.drawCallCount>0&&grass?.visibleCoarseRoots>0;
+  },null,{timeout:600000});
+  const grassResidency=await page.evaluate(()=>{
+   const root=document.querySelector('#h-earth-functional-landscape-route');
+   if(root?.dataset.vegetationState==='failed')throw Error('GEN3361_BACKGROUND_GRASS_FAILED');
+   const grass=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.singleOwnerVegetation;
+   if(root?.dataset.vegetationState!=='prepared'||grass?.gpuAllocationVerified!==true||
+      !(grass?.installedRootCount>0&&grass?.coarseRootCount>0&&
+        grass?.drawCallCount>0&&grass?.visibleCoarseRoots>0))
+    throw Error('GEN3361_GRASS_RESIDENCY_NOT_PROVEN');
+   return {schema:'H_EARTH_GEN3361_PRE_CAPTURE_GRASS_RESIDENCY_v1',
+    state:root.dataset.vegetationState,installedRootCount:grass.installedRootCount,
+    coarseRootCount:grass.coarseRootCount,visibleCoarseRoots:grass.visibleCoarseRoots,
+    drawCallCount:grass.drawCallCount,gpuAllocationVerified:true,
+    source:'PUBLIC_ROUTE_SINGLE_OWNER_RESIDENT_RECEIPT',sourceMutationPerformed:false};
+  });
+  receipt.grassResidency=grassResidency;fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+
   await page.evaluate(async()=>{
    const urls=[...new Set(performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)))];
    if(urls.length!==1)throw Error('GEN3347_NAV_MODULE_AMBIGUOUS');
@@ -284,6 +311,12 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
    fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
   }
   insist(browserErrors.length===0,'GEN3347_BROWSER_PAGE_ERRORS:'+browserErrors.join('|'));
+  const approvedControls=receipt.poses.filter(row=>row.id==='approved-grove-A'||row.id==='approved-grove-B');
+  insist(approvedControls.length===2&&approvedControls.every(row=>
+   row.grassNormalColorABA?.rgbaSha256?.length===3&&
+   row.grassNormalColorABA.rgbaSha256[0]!==row.grassNormalColorABA.rgbaSha256[1]),
+   'GEN3361_AB_POSITIVE_GROVE_CONTROL_MISSING');
+  receipt.grassAbaControlValidity='BOTH_APPROVED_GROVES_SOURCE_BOUND_POSITIVE_RGBA_SIGNAL';
   verifyReceiptRows(receipt.poses);
  }finally{await context.close()}
 }

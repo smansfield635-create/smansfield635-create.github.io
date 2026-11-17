@@ -1741,6 +1741,94 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   const diagnosticDraw=state=>({lastKnownDraw:state?.lastDraw??null,lastDrawFrameNumber:state?.diagnosticLastDrawFrame??null,calledThisFrame:state?.diagnosticLastDrawFrame===counters.frameCount});
   function diagnosticIds(ids){let hash=2166136261;for(const id of ids){hash=Math.imul(hash^(id>>>0),16777619)>>>0;}return{count:ids.length,orderedIdsDigest:'fnv1a32:'+hash.toString(16).padStart(8,'0'),idsSample:Array.from(ids.slice(0,128)),sampleLimit:128};}
   function getVegetationTrace(options){return vegetationTrace?vegetationTrace.getSnapshot(options):{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',enabled:false};}
+
+  // Gen3353 Cycle Two: a read-only probe into the ACTUAL R3C indexed
+  // visible-surface / hydrographic owners. It is NOT a placement API.
+  // The coordinates come from the immutable recovered C2-C Sculpt Lab edit
+  // (0.7 scale, 0.31 radians) and its four rotated mesh bounds corners.
+  const c2cExactContacts=Object.freeze([
+    Object.freeze({x:192,z:-288}),
+    Object.freeze({x:191.54097238618917,z:-288.18387571078995}),
+    Object.freeze({x:191.73324556724393,z:-287.58363633700293}),
+    Object.freeze({x:192.38796052708102,z:-288.45518930879246}),
+    Object.freeze({x:192.58023370813578,z:-287.8549499350054})
+  ]);
+  const c2cExactPaddedFootprint=Object.freeze({
+    minX:191.34097238618918,maxX:192.78023370813577,
+    minZ:-288.65518930879244,maxZ:-287.38363633700294
+  });
+  function inspectExactC2CWorldFootprint(){
+    const blocked=(code,contacts=[],sweptSamples=[])=>Object.freeze({
+      schema:'H_EARTH_R3C_C2C_EXACT_WORLD_FOOTPRINT_OBSERVATION_v1',
+      result:'FAIL_CLOSED',errorCode:code,sourceSha256:'008c7b98d8661e211c20bcb8f8ad9d04cf2b5bb06e786193e036013951fb82de',
+      savedEditSha256:'0419dc21b2205e35fc84cf1a6461a62936ab3b6b4c12c0c0e094b622e01283e5',
+      packageIdentity:renderPackage.packageIdentity,packageContentDigest:renderPackage.contentDigest,
+      footprint:c2cExactPaddedFootprint,contacts,sweptSamples,
+      placementAuthorized:false,worldObjectInstalled:false,renderedFrameEvidence:false,
+      rendererGeometryModified:false,newGpuResourcesCreated:false
+    });
+    if(!initialized)return blocked('R3C_NOT_INITIALIZED');
+    const surface=resources.vegetationVisibleSurface,geology=resources.geologicalRuntime;
+    if(typeof surface?.ground?.sample!=='function'||typeof surface?.water?.sample!=='function'||
+       typeof surface?.admitGround!=='function'||typeof geology?.sampleWaterAt!=='function'||
+       typeof geology?.isPlannedWaterFootprint!=='function')
+      return blocked('R3C_FULL_VISIBLE_SURFACE_AND_WATER_NOT_RESIDENT');
+    // A vegetation policy is a deliberately conservative protection screen.
+    // Even a PASS below does NOT grant a sculpt-object placement reservation.
+    const sample=(x,z)=>{
+      try{
+        const ground=surface.ground.sample(x,z);
+        if(!ground||!Number.isFinite(ground.y)||!Number.isFinite(ground.slope))
+          return Object.freeze({x,z,result:'NO_VISIBLE_INDEXED_GROUND'});
+        if(!['CANONICAL_VISIBLE_TERRAIN','VISIBLE_REFINEMENT','ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(ground.owner))
+          return Object.freeze({x,z,result:'UNSUPPORTED_GROUND_OWNER',owner:ground.owner});
+        const water=surface.water.sample(x,z);
+        const future=geology.sampleWaterAt(x,z);
+        const planned=geology.isPlannedWaterFootprint(x,z)===true;
+        const waterY=water&&Number.isFinite(water.y)?water.y:null;
+        const futureY=future&&Number.isFinite(future.y)?future.y:null;
+        const blockedByWater=planned||!!future||(waterY!==null&&ground.y<=waterY+.03);
+        const protectedPass=!blockedByWater&&surface.admitGround(x,z,ground)===true;
+        return Object.freeze({
+          x,z,y:ground.y,owner:ground.owner,partId:ground.partId,
+          triangleId:ground.triangleId,triangleOffset:ground.triangleOffset,
+          surfaceRevision:ground.surfaceRevision,slope:ground.slope,
+          renderedWaterY:waterY,futureWaterY:futureY,plannedWaterFootprint:planned,
+          result:protectedPass?'SOURCE_INDEXED_CONTACT_CLEAR':'PROTECTED_OR_WATER_EXCLUSION'
+        });
+      }catch(error){
+        return Object.freeze({x,z,result:'FAIL_CLOSED_SOURCE_SAMPLER_ERROR',
+          errorCode:String(error?.message??error).slice(0,180)});
+      }
+    };
+    const contacts=c2cExactContacts.map(p=>sample(p.x,p.z));
+    // Sweep the actual padded footprint, rather than the incorrect old
+    // +/-2 m cardinal-neighborhood points. This is only a 7x7 screen,
+    // not a complete swept-volume, human-editing or GPU draw acceptance.
+    const sweptSamples=[];
+    for(let i=0;i<7;i++)for(let j=0;j<7;j++){
+      const x=c2cExactPaddedFootprint.minX+
+        (c2cExactPaddedFootprint.maxX-c2cExactPaddedFootprint.minX)*i/6;
+      const z=c2cExactPaddedFootprint.minZ+
+        (c2cExactPaddedFootprint.maxZ-c2cExactPaddedFootprint.minZ)*j/6;
+      sweptSamples.push(sample(x,z));
+    }
+    if(contacts.some(p=>p.result!=='SOURCE_INDEXED_CONTACT_CLEAR')||
+       sweptSamples.some(p=>p.result!=='SOURCE_INDEXED_CONTACT_CLEAR'))
+      return blocked('R3C_EXACT_FOOTPRINT_SOURCE_EXCLUSION',contacts,sweptSamples);
+    return Object.freeze({
+      schema:'H_EARTH_R3C_C2C_EXACT_WORLD_FOOTPRINT_OBSERVATION_v1',
+      result:'SOURCE_INDEXED_GROUND_AND_HYDROLOGY_SCREEN_PASS_NOT_OBJECT_ADMISSION',
+      sourceSha256:'008c7b98d8661e211c20bcb8f8ad9d04cf2b5bb06e786193e036013951fb82de',
+      savedEditSha256:'0419dc21b2205e35fc84cf1a6461a62936ab3b6b4c12c0c0e094b622e01283e5',
+      packageIdentity:renderPackage.packageIdentity,packageContentDigest:renderPackage.contentDigest,
+      coordinateSpace:'UPLOADED_FLOAT32_WORLD_XZ',
+      footprint:c2cExactPaddedFootprint,contacts,sweptSamples,
+      placementAuthorized:false,worldObjectInstalled:false,renderedFrameEvidence:false,
+      rendererGeometryModified:false,newGpuResourcesCreated:false
+    });
+  }
+
   function getVegetationProbe({x,z,radius=2}={}){
     if(!vegetationTrace)return {enabled:false};
     if(![x,z,radius].every(Number.isFinite)||radius<=0||radius>8)throw Error('VEGETATION_TRACE_PROBE_INVALID');
@@ -3446,7 +3534,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
     disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     disposeCorrectedMaterial,
-    getVegetationTrace,getVegetationProbe,
+    getVegetationTrace,getVegetationProbe,inspectExactC2CWorldFootprint,
     initialize:observeStartupFailure("initialize",initialize), activateInitialRefinement, prepareReplacementVegetation:observeStartupFailure("prepareReplacementVegetation",prepareReplacementVegetation), prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }

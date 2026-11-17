@@ -40,21 +40,21 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' && inputs.route_query != 'qualification=gen3333-lineage-native-v1' }}
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.number == 7462 && github.head_ref == 'h-earth/c2c-gen3353-native-r3c-world-seam-20261116') || (github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' && inputs.route_query != 'qualification=gen3187-terrain-first-v1' && inputs.route_query != 'qualification=gen3313-native-v1' && inputs.route_query != 'qualification=gen3333-lineage-native-v1') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
           fetch-depth: 1
 
       - name: Require exact checked-out SHA
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha }}"
+          test "$(git rev-parse HEAD)" = "${{ inputs.target_sha || github.event.pull_request.head.sha }}"
 
       - name: Fetch fixed woodland-meadow qualification history
         shell: bash
@@ -70,7 +70,7 @@ jobs:
       - name: Execute source-applicable woodland mechanical qualification
         shell: bash
         env:
-          EXACT_TARGET_SHA: ${{ inputs.target_sha }}
+          EXACT_TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/h-earth-exact-evidence
@@ -490,9 +490,9 @@ jobs:
 
       - name: Execute actual H-Earth route unchanged
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
-          ROUTE_QUERY: ${{ inputs.route_query }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
+          ROUTE_QUERY: ${{ inputs.route_query || (github.event_name == 'pull_request' && 'qualification=cycle-two-c2c-native-gpu-v1') || '' }}
           EXERCISE_VEGETATION_RESIDENCY: ${{ inputs.exercise_vegetation_residency }}
         shell: bash
         run: |
@@ -1046,13 +1046,13 @@ jobs:
       - name: Check out exact frozen H-Earth product
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
           fetch-depth: 1
 
       - name: Require exact Gen2710 candidate and protected world
         shell: bash
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           test "$TARGET_SHA" = '8c6bd026e3a1b0e49cf7c14ea0293067fa864d4a'
@@ -1258,7 +1258,7 @@ jobs:
       - name: Capture native mobile grass A-B-A and default beach pixels
         shell: bash
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           timeout 420s node .h-earth-gen2711-browser.mjs
@@ -1329,8 +1329,8 @@ jobs:
     steps:
       - name: Require exact immutable Gen3142 matched camera experiment
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
@@ -1391,8 +1391,8 @@ jobs:
     steps:
       - name: Require the admitted fixed comparison
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
@@ -1517,9 +1517,9 @@ jobs:
       - name: Enforce exact qualified input profile
         shell: bash
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
-          ROUTE_QUERY: ${{ inputs.route_query }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
+          ROUTE_QUERY: ${{ inputs.route_query || (github.event_name == 'pull_request' && 'qualification=cycle-two-c2c-native-gpu-v1') || '' }}
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
@@ -1669,8 +1669,8 @@ jobs:
     steps:
       - name: Require exact source, route, and no extraneous exercise
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
@@ -1791,15 +1791,15 @@ jobs:
       - name: Checkout immutable Gen3187
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Verify exact identity, historic world and route behavioral contract
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
+          TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
+          ROUTE_PATH: ${{ inputs.route_path || '/showroom/globe/h-earth/' }}
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           SHIM: ${{ inputs.apply_timing_shim }}
         shell: bash
@@ -2060,7 +2060,7 @@ jobs:
       - name: Verify exact candidate and execute source-only native qualification
         shell: bash
         env:
-          REQUESTED_TARGET_SHA: ${{ inputs.target_sha }}
+          REQUESTED_TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           evidence="$RUNNER_TEMP/h-earth-gen3313-native"
@@ -2122,7 +2122,7 @@ jobs:
       - name: Verify pinned sources and execute genuine historical Node22 TAP
         shell: bash
         env:
-          REQUESTED_TARGET_SHA: ${{ inputs.target_sha }}
+          REQUESTED_TARGET_SHA: ${{ inputs.target_sha || github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
           evidence="$RUNNER_TEMP/h-earth-gen3333-native"

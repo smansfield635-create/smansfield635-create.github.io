@@ -1,10 +1,10 @@
+#!/usr/bin/env node
 /**
  * H-Earth Gen3386 registered native qualification binding candidate.
  * Existing accepted remote-preflight adapter retained. Immutable subject and actual
  * source tool/activation blobs are updated solely for PR #7479 qualification.
  * Does not create a new execution framework or mutation/merge/release authority.
  */
-#!/usr/bin/env node
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { spawn,spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { pathToFileURL,fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
@@ -89,23 +89,24 @@ export function parseArgs(argv){
  insist(path.isAbsolute(o['--output']),'GEN3347_OUTPUT_ABSOLUTE_REQUIRED');
  return o;
 }
-const git=(dir,args)=>{const r=spawnSync('git',['-C',dir,...args],{encoding:'utf8',maxBuffer:16*1024*1024,timeout:120000});insist(r.status===0,'GEN3347_GIT_FAILURE:'+args.join(' ')+':'+String(r.stderr).slice(0,250));return r.stdout.trim()};
-function checkout(temp,subdir,sha){
- const dir=path.join(temp,subdir);fs.mkdirSync(dir,{recursive:true});
- git(dir,['init','-q']);git(dir,['remote','add','origin','https://github.com/smansfield635-create/smansfield635-create.github.io.git']);
- git(dir,['fetch','--quiet','--no-tags','--depth=1','--filter=blob:none','origin',sha]);
- git(dir,['checkout','--quiet','--detach','FETCH_HEAD']);
- insist(git(dir,['rev-parse','HEAD'])===sha,'GEN3347_CHECKOUT_NOT_PINNED');
- return dir;
-}
-function verifyClean(dir,sha){
- insist(git(dir,['rev-parse','HEAD'])===sha&&git(dir,['status','--porcelain','--untracked-files=no'])==='','GEN3347_SOURCE_CHECKOUT_CHANGED');
-}
-async function serve(dir,port){
- const process=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:'ignore'});
- const base='http://127.0.0.1:'+port;
- for(let i=0;i<90;i++){try{if((await fetch(base+FIXED.root)).ok)return {process,base}}catch{}await new Promise(resolve=>setTimeout(resolve,150))}
- process.kill();throw Error('GEN3347_LOCAL_STATIC_SERVER_FAILED');
+const PUBLIC_BASE='https://diamondgatebridge.com';
+const HISTORIC_BASE='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io';
+const git=(dir,args)=>{
+ const started=Date.now();
+ const r=spawnSync('git',['-C',dir,...args],{encoding:'utf8',maxBuffer:16*1024*1024,timeout:120000});
+ insist(r.status===0&&!r.error,'GEN3347_GIT_FAILURE:'+args.join(' ')+':code='+String(r.error?.code||'NONE')+':status='+String(r.status)+':signal='+String(r.signal)+':elapsedMs='+String(Date.now()-started)+':stderr='+String(r.stderr||'').slice(0,250));
+ return r.stdout.trim();
+};
+async function fetchPinnedSource(url,expectedBlob,expectedHost){
+ const parsed=new URL(url);
+ insist(parsed.protocol==='https:'&&parsed.hostname===expectedHost&&parsed.port===''&&parsed.username===''&&parsed.password===''&&parsed.search===''&&parsed.hash===''&&parsed.href===url,'GEN3347_UNTRUSTED_SOURCE_URL');
+ const response=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(120000)});
+ insist(response.status===200&&!response.redirected&&response.url===url,'GEN3347_SOURCE_FETCH_FAILED:'+String(response.status));
+ const data=Buffer.from(await response.arrayBuffer());
+ insist(data.length>0&&data.length<=16*1024*1024,'GEN3347_SOURCE_SIZE_OUT_OF_BOUNDS');
+ const blob=crypto.createHash('sha1').update('blob '+data.length+'\\0').update(data).digest('hex');
+ insist(blob===expectedBlob,'GEN3347_SOURCE_GIT_BLOB_MISMATCH:'+expectedHost+':'+blob);
+ return data.toString('utf8');
 }
 function installChromium(temp){
  const dep=path.join(temp,'browser-deps');fs.mkdirSync(dep,{recursive:true});
@@ -125,7 +126,7 @@ function pngCheck(data){
  return b;
 }
 async function capture(browser,base,renderer,route,probe,output,receipt){
- const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5});
+ const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5,serviceWorkers:'block'});
  const page=await context.newPage();page.setDefaultTimeout(60000);const browserErrors=[];
  page.on('pageerror',e=>browserErrors.push(String(e.message)));
  await page.addInitScript({content:'globalThis.__hEarthFirstHitMaterialMode=0;globalThis.__gen3347HideGrass=false;'});
@@ -206,11 +207,13 @@ export async function qualify(args){
  const out=args['--output'],dir=path.dirname(out);fs.mkdirSync(dir,{recursive:true});
  const receipt={schema:'H_EARTH_GEN3347_FIRST_HIT_EXACT_HEAD_QUALIFICATION_RECEIPT_v1',operationId:FIXED.operationId,exactProductHead:FIXED.productHead,toolingHead:null,executionHolder:args['--execution-holder'],status:'INCOMPLETE',frame:FIXED.frame,ownerImageDigest:FIXED.photographSha256,ownerScreenPixelParity:false,physicalAndroidFirstHit:false,terrainMaterialCauseProven:false,poses:[],sourceMutationPerformed:false,productMutationPerformed:false,workflowMutationPerformed:false,branchCreated:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false,publicationPerformed:false,errors:[]};
  const persist=()=>fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n');
- const temp=fs.mkdtempSync(path.join(os.tmpdir(),'gen3347-first-hit-'));let server,browser;persist();
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'gen3347-first-hit-'));let browser;persist();
  try{
-  const product=checkout(temp,'product',FIXED.productHead),historic=checkout(temp,'historic',FIXED.historicOverlayHead);
-  const renderer=fs.readFileSync(path.join(product,FIXED.renderer),'utf8'),route=fs.readFileSync(path.join(product,FIXED.route),'utf8');
-  const overlay=fs.readFileSync(path.join(historic,'tools/h-earth-first-hit-material-overlay.mjs'),'utf8');
+  const [renderer,route,overlay]=await Promise.all([
+   fetchPinnedSource(PUBLIC_BASE+'/'+FIXED.renderer,FIXED.rendererBlob,'diamondgatebridge.com'),
+   fetchPinnedSource(PUBLIC_BASE+'/'+FIXED.route,FIXED.routeBlob,'diamondgatebridge.com'),
+   fetchPinnedSource(HISTORIC_BASE+'/'+FIXED.historicOverlayHead+'/tools/h-earth-first-hit-material-overlay.mjs',FIXED.historicOverlayBlob,'raw.githubusercontent.com')
+  ]);
   const adapted=retargetHistoricalOverlay(overlay,renderer),probePath=path.join(temp,'gen3347-adapted-first-hit-overlay.mjs');
   fs.writeFileSync(probePath,adapted);
   const probe=await import(pathToFileURL(probePath).href);
@@ -224,12 +227,10 @@ export async function qualify(args){
   receipt.browserEvidenceClass='EXACT_SOURCE_RECONSTRUCTED_CHROMIUM_NOT_ANDROID_PHYSICAL_PIXEL';
   const {chromium}=installChromium(temp);
   browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-  server=await serve(product,18947);
-  await capture(browser,server.base,injected,instrumentedRoute,probe,dir,receipt);
-  verifyClean(product,FIXED.productHead);verifyClean(historic,FIXED.historicOverlayHead);
+  await capture(browser,PUBLIC_BASE,injected,instrumentedRoute,probe,dir,receipt);
   receipt.status='SOURCE_BOUND_GPU_MATERIAL_SAMPLES_CAPTURED_OWNER_PARITY_UNVERIFIED';
  }catch(e){receipt.status='FAIL_CLOSED';receipt.errors.push({code:e.code||'GEN3347_QUALIFICATION_FAILED',message:String(e.message||e)});}
- finally{persist();if(server)server.process.kill();if(browser)await browser.close();fs.rmSync(temp,{recursive:true,force:true});}
+ finally{persist();if(browser)await browser.close();fs.rmSync(temp,{recursive:true,force:true});}
  return receipt;
 }
 const invoked=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);

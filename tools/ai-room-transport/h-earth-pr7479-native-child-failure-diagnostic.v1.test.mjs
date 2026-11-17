@@ -36,7 +36,7 @@ test('native command and immutable subject remain exact and read-only',()=>{
     "result: 'FAIL_CLOSED'",
     'productMutationPerformed: false'
   ]) assert.ok(actual.includes(phrase),'missing accepted contract anchor');
-  assert.equal(actual.includes('blobSha'),false);
+  assert.equal(actual.includes('blob'+'Sha'),false);
   assert.equal(actual.includes('writebackPerformed: true'),false);
 });
 

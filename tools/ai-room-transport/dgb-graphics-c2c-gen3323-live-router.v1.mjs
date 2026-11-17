@@ -27,9 +27,29 @@ const ENFORCED_TIMEOUT_MS=180000;
 
 function fail(code,detail='') {throw Object.assign(new Error(code+(detail?':'+detail:'')),{code});}
 function check(value,code) {if(!value)fail(code);}
+// The original router's exact blob is verified by materialize() before invoke().
+// Only this fixed Node router child receives the inherited GitHub API credential;
+// git commands and all other children remain under the existing stripped environment.
+function qualifiedChildEnvironment(exe, args) {
+  const env = Object.fromEntries(['PATH','HOME','TMPDIR','TMP','TEMP','CI']
+    .filter(key => process.env[key] !== undefined).map(key => [key, process.env[key]]));
+  if (exe !== process.execPath) return env;
+  const allowed = Array.isArray(args)
+    && args[0] === 'tools/repository-ai-entry-router.mjs'
+    && args[1] === '--mutation-intent'
+    && args[2] === '--task'
+    && args[3] === TASK
+    && args.includes('--output')
+    && typeof args[args.indexOf('--output') + 1] === 'string';
+  check(allowed, 'C2C_GEN3323_UNEXPECTED_NODE_CHILD_REJECTED');
+  const token = process.env.GITHUB_TOKEN;
+  check(typeof token === 'string' && token.length > 0, 'C2C_GEN3323_GITHUB_AUTH_REQUIRED');
+  env.GITHUB_TOKEN = token; // exact source-bound native router; never print or persist token
+  return env;
+}
 function run(exe,args,cwd,allowFailure=false) {
   const p=spawnSync(exe,args,{cwd,encoding:'utf8',timeout:ENFORCED_TIMEOUT_MS,maxBuffer:32*1024*1024,
-    env:Object.fromEntries(['PATH','HOME','TMPDIR','TMP','TEMP','CI'].filter(x=>process.env[x]!==undefined).map(x=>[x,process.env[x]]))});
+    env:qualifiedChildEnvironment(exe,args)});
   if(p.error||(!allowFailure&&p.status!==0))fail('COMMAND_FAILED',`${exe}:${p.error?.message||p.stderr||p.stdout}`.slice(0,900));
   return {status:p.status,stdout:p.stdout||'',stderr:p.stderr||''};
 }

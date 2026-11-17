@@ -638,7 +638,7 @@ void main(){
  // beach-facing dryland presentation, with a smooth world-space transition.
  // Accepted woodland and cavern controls lie outside this adjustment.
  float beachwardContinuity=smoothstep(70.,165.,aRoot.x)*smoothstep(-300.,-225.,aRoot.z);
- float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity);
+ float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity)*(uFine==0?1.08:1.);
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));

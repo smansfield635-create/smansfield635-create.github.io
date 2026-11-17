@@ -93,7 +93,9 @@ jobs:
             # Exact candidate only; historical and unknown heads keep the old guard.
             # Gen3143: the immutable Gen3142 material candidate retains the accepted Gen2854 A08 sector.
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
+            # Gen3356: exact Gen3353 C2-C candidate retains accepted woodland sector;
+            # all unrelated future heads keep their historical guarded identity.
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
@@ -359,7 +361,7 @@ jobs:
           }));
           NODE
               jq -e '.schema=="H_EARTH_GEN3010_SAVED_GRASS_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .rootCount==2879698 and .tiles==8303 and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
-            elif [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
+            elif [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ]; then
               # Gen3145: Gen3142 retains later Gen2815 bootstrap and Gen2795 route.
               # Gen2694 URL-cache validator is inapplicable to this exact head.
               # All other candidates retain their existing historical checks.
@@ -378,17 +380,17 @@ jobs:
               grep -Eq '^# pass [1-9][0-9]*$' /tmp/h-earth-exact-evidence/gen3142-source-applicability.tap
               grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/gen3142-source-applicability.tap
               jq -n --arg target "$EXACT_TARGET_SHA" '{
-                schema:"H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1",
+                schema:(if $target=="9cec0cba499e675bb16bc82da61e73e547070726" then "H_EARTH_GEN3353_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" else "H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" end),
                 result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
                 candidateHead:$target,
                 entryBootstrap:"gen2815-fast-start-v1",
                 activeRoute:"gen2795-performance-v1",
-                historicGen2694CacheChain:"NOT_APPLICABLE_TO_EXACT_GEN3142_HEAD",
+                historicGen2694CacheChain:(if $target=="9cec0cba499e675bb16bc82da61e73e547070726" then "NOT_APPLICABLE_TO_EXACT_GEN3353_HEAD" else "NOT_APPLICABLE_TO_EXACT_GEN3142_HEAD" end),
                 unchangedFocusedSourceTests:"PASS",
                 browserDrawExecuted:false,ownerVisualAcceptance:false,
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
-              jq -e '.schema=="H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+              jq -e '.schema==(if .candidateHead=="9cec0cba499e675bb16bc82da61e73e547070726" then "H_EARTH_GEN3353_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" else "H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" end) and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null

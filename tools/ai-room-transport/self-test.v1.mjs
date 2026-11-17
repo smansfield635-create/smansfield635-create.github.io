@@ -18,7 +18,7 @@ import {
 import { validateExecutionRequest, resolveToolset } from './toolset-resolver.v1.mjs';
 import { selectBackend } from './backend-selector.v1.mjs';
 import { parseTransportBody } from './transport-request-parser.v1.mjs';
-import { buildFixedCommand, dispatchLoaded, stageValidatedWritebackPaths } from './fixed-command-dispatcher.v1.mjs';
+import { buildFixedCommand, dispatchLoaded, stageValidatedWritebackPaths, safeEnvironmentForDescriptor } from './fixed-command-dispatcher.v1.mjs';
 import { validateCommandReceipt } from './command-receipt-validator.v1.mjs';
 import { applyContinuationGate } from './continuation-gate.v1.mjs';
 
@@ -36,8 +36,16 @@ function gitBytes(root, ...args) {
   return cp.execFileSync('git', args, { cwd: root, maxBuffer: 64 * 1024 * 1024 });
 }
 
+const COMPATIBILITY_TEST_DESCRIPTOR_ID = 'METHODS_ASSIGNMENT_GAP_CLOSURE_REPRODUCTION_DESCRIPTOR_V1';
 function fixture(registry, holder) {
-  const descriptor = registry.tools[0];
+  // Do not depend on registry insertion order: the packet compiler now precedes
+  // the legacy fixture descriptor and requires different canonical inputs.
+  const descriptor = registry.tools.find(tool => tool.descriptorId === COMPATIBILITY_TEST_DESCRIPTOR_ID);
+  if (!descriptor) fail('SELF_TEST_COMPATIBILITY_DESCRIPTOR_MISSING', COMPATIBILITY_TEST_DESCRIPTOR_ID);
+  const fixtureRegistry = {
+    ...registry,
+    tools: [descriptor, ...registry.tools.filter(tool => tool.descriptorId !== COMPATIBILITY_TEST_DESCRIPTOR_ID)]
+  };
   const request = {
     schema: 'AI_ROOM_EXECUTION_REQUEST_v1',
     requestId: `AI_ROOM_BOOTSTRAP_SELF_TEST_${holder}`,
@@ -87,7 +95,7 @@ function fixture(registry, holder) {
     disposition: 'PASS',
     routes: [{ projectId: descriptor.projectId, disposition: 'PASS' }]
   };
-  return { request, admissionReceipt, routerReceipt, registry };
+  return { request, admissionReceipt, routerReceipt, registry: fixtureRegistry };
 }
 
 function clone(value) { return structuredClone(value); }
@@ -356,7 +364,7 @@ export function runSelfTest({ root, expectedHead, holder, outputDir }) {
   const backend = selectBackend({ resolutionReceipt: resolution, capabilities: base.request.availableCapabilities });
   const commandReceipt = dispatchLoaded({ ...base, request: parsed, root, allowCandidate: true });
   if (commandReceipt.executionDisposition !== 'COMMAND_EXECUTED_AND_PASSED') fail('POSITIVE_COMMAND_EXECUTION_FAILED', commandReceipt.errorCode ?? commandReceipt.executionDisposition);
-  const descriptor = registry.tools[0];
+  const descriptor = base.registry.tools[0];
   const validation = validateCommandReceipt({ descriptor, receipt: commandReceipt });
   if (validation.validationDisposition !== 'VALIDATED_PASS') fail('POSITIVE_RECEIPT_VALIDATION_FAILED');
   const continuation = applyContinuationGate({ descriptor, validationResult: validation });
@@ -406,7 +414,50 @@ export function runSelfTest({ root, expectedHead, holder, outputDir }) {
   return receipt;
 }
 
+function verifyC2CGen3323ScopedCredential() {
+  const previous = process.env.GITHUB_TOKEN;
+  const fixtureToken = 'C2C_NON_SECRET_IN_MEMORY_FIXTURE';
+  process.env.GITHUB_TOKEN = fixtureToken;
+  const descriptor = {
+    descriptorId: 'DGB_GRAPHICS_C2C_GEN3323_LIVE_TWO_PATH_ROUTER_QUALIFICATION_DESCRIPTOR_V2',
+    toolId: 'DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFIER_V2',
+    operationId: 'DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001',
+    exactToolingHead: 'a'.repeat(40),
+    commandSpecification: { scriptPath: 'tools/ai-room-transport/dgb-graphics-c2c-gen3323-live-router.v1.mjs', executable: 'node', shell: false, extraArgumentsAllowed: false, environmentOverridesAllowed: false },
+    authenticatedProvenanceCredential: { schema: 'C2C_GEN3323_EXACT_PROVENANCE_CREDENTIAL_v1', status: 'ENABLED_EXACT_QUALIFIER_ONLY', routerSourceHead: '3a59780d37e4eaea4fa83e533ff311b5e752033e', routerGitBlob: 'a6fb641242975150831f29be00c4e12eb8f230ed', purpose: 'READ_ONLY_OWNER_COMMENT_AND_LOCK_LEDGER' }
+  };
+  const fixed = { executable: 'node', args: ['tools/ai-room-transport/dgb-graphics-c2c-gen3323-live-router.v1.mjs', '--candidate-head', '3a59780d37e4eaea4fa83e533ff311b5e752033e', '--execution-holder', 'C2C_TEST', '--output', '/tmp/c2c-test.json'] };
+  try {
+    const result = safeEnvironmentForDescriptor(descriptor, fixed);
+    if (result.GITHUB_TOKEN !== fixtureToken) throw new Error('C2C_EXACT_CREDENTIAL_POSITIVE_FAILED');
+    if (safeEnvironmentForDescriptor({ descriptorId: 'UNRELATED_TOOL' }, fixed).GITHUB_TOKEN !== undefined) throw new Error('C2C_UNRELATED_COMMAND_RECEIVED_TOKEN');
+    for (const [label, invalid, command] of [
+      ['WRONG_DESCRIPTOR', {...descriptor, descriptorId: 'UNRELATED_TOOL'}, fixed],
+      ['WRONG_OPERATION', {...descriptor, operationId: 'OTHER_OPERATION'}, fixed],
+      ['WRONG_TOOL', {...descriptor, toolId: 'OTHER_TOOL'}, fixed],
+      ['WRONG_SCRIPT', {...descriptor, commandSpecification: {...descriptor.commandSpecification, scriptPath: 'tools/other.mjs'}}, fixed],
+      ['WRONG_CHILD', descriptor, {...fixed, args: ['tools/other.mjs']}],
+      ['WRONG_ROUTER_HEAD', {...descriptor, authenticatedProvenanceCredential: {...descriptor.authenticatedProvenanceCredential, routerSourceHead: '0'.repeat(40)}}, fixed],
+      ['DISABLED_CREDENTIAL', {...descriptor, authenticatedProvenanceCredential: {...descriptor.authenticatedProvenanceCredential, status: 'DISABLED'}}, fixed],
+      ['ORIGINAL_TOOLING_HEAD', {...descriptor, exactToolingHead: '3f19f84b7ff375690c57ed28d4037a1518db3f38'}, fixed]
+    ]) {
+      let rejected = false;
+      try { safeEnvironmentForDescriptor(invalid, command); } catch (error) { rejected = error?.code === 'C2C_GEN3323_PROVENANCE_CREDENTIAL_SCOPE_REJECTED'; }
+      if (!rejected) throw new Error('C2C_EXACT_CREDENTIAL_NEGATIVE_FAILED:' + label);
+    }
+    delete process.env.GITHUB_TOKEN;
+    let missingRejected = false;
+    try { safeEnvironmentForDescriptor(descriptor, fixed); } catch (error) { missingRejected = error?.code === 'C2C_GEN3323_PROVENANCE_GITHUB_TOKEN_MISSING'; }
+    if (!missingRejected) throw new Error('C2C_MISSING_GITHUB_TOKEN_NOT_REJECTED');
+  } finally {
+    if (previous === undefined) delete process.env.GITHUB_TOKEN;
+    else process.env.GITHUB_TOKEN = previous;
+  }
+  return { schema: 'C2C_GEN3323_CREDENTIAL_BOUNDARY_SELF_TEST_v1', result: 'PASS_CLOSED', positive: 1, unrelatedStripped: 1, negatives: 8, missingCredentialRejected: true, secretOutput: false };
+}
+
 function main() {
+  verifyC2CGen3323ScopedCredential();
   const args = parseArgs(process.argv.slice(2));
   if (args['fixed-argument-placement'] === 'true') {
     process.stdout.write(`${JSON.stringify(runFixedArgumentPlacementSelfTest(), null, 2)}\n`);

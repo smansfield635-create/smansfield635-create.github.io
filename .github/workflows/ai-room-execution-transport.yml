@@ -130,6 +130,65 @@ jobs:
             exit 1
           fi
 
+
+      - name: Preserve exact Gen3364 first-party grass RGB evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import os from 'node:os';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const command=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'command-execution-receipt.json'),'utf8'));
+          if(command.descriptorId!=='H_EARTH_GEN3364_EXACT_CANDIDATE_GRASS_WEBGL2_DESCRIPTOR_V1')process.exit(0);
+          if(command.executionDisposition!=='COMMAND_EXECUTED_AND_PASSED')process.exit(0);
+          if(command.commandPayloadSchema!=='H_EARTH_GEN3364_WEBGL2_CANDIDATE_DIFFERENTIAL_RECEIPT_v1')throw Error('RGB_CUSTODY_SCHEMA_NOT_GROUNDED');
+          const payload=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'command-payload-receipt.json'),'utf8'));
+          if(payload.schema!==command.commandPayloadSchema||payload.result!=='CANDIDATE_SOURCE_BOUND_NATIVE_RGB_DIFFERENTIAL_CAPTURED_NOT_OWNER_ACCEPTED'||payload.exactProductHead!=='fe191fdc833babc45406829f209b6c0e4eb6aecd'||payload.ownerVisualAccepted!==false||payload.productMutationPerformed!==false)throw Error('RGB_CUSTODY_UNQUALIFIED_PAYLOAD');
+          const poses=['owner','groveA','groveB'];
+          const variants=['accepted','candidate'];
+          const parentCandidates=fs.readdirSync(os.tmpdir(),{withFileTypes:true}).filter(v=>v.isDirectory()&&v.name.startsWith('ai-room-tool-')).map(v=>path.join(os.tmpdir(),v.name)).filter(v=>fs.existsSync(path.join(v,'command-payload-receipt.json')));
+          if(parentCandidates.length!==1)throw Error('RGB_CUSTODY_AMBIGUOUS_PARENT');
+          const parent=parentCandidates[0];
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-gen3364-rgb-evidence');
+          fs.mkdirSync(out,{recursive:true});
+          const members=[];
+          const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+          for(const variant of variants){
+           const record=payload[variant];
+           if(record?.variant!==variant||record?.poses?.length!==3)throw Error('RGB_CUSTODY_VARIANT_SET_INVALID');
+           for(const pose of poses){
+            const group=record.poses.filter(v=>v.poseId===pose);
+            if(group.length!==1||group[0].rootCount!==3805291||group[0].gpuAllocationVerified!==true)throw Error('RGB_CUSTODY_POSE_GPU_INVALID');
+            const item=group[0];
+            for(const format of ['png','rgba']){
+             const name=variant+'-'+pose+'.'+format;
+             if(item[format+'Path']!==name||!/^[a-f0-9]{64}$/.test(item[format+'Sha256']??''))throw Error('RGB_CUSTODY_NAME_OR_DIGEST_INVALID');
+             const full=path.join(parent,name);
+             if(!fs.existsSync(full)||!fs.statSync(full).isFile())throw Error('RGB_CUSTODY_FILE_MISSING:'+name);
+             const bytes=fs.readFileSync(full);
+             if(bytes.length<1024||bytes.length>10*1024*1024||digest(bytes)!==item[format+'Sha256'])throw Error('RGB_CUSTODY_DIGEST_MISMATCH:'+name);
+             if(format==='png'&&bytes.subarray(0,8).toString('hex')!=='89504e470d0a1a0a')throw Error('RGB_CUSTODY_NOT_PNG');
+             if(format==='rgba'&&bytes.length!==602*862*4)throw Error('RGB_CUSTODY_RGBA_SIZE_INVALID');
+             fs.writeFileSync(path.join(out,name),bytes);
+             members.push({file:name,sha256:digest(bytes),byteLength:bytes.length});
+            }
+           }
+          }
+          if(members.length!==12)throw Error('RGB_CUSTODY_FILE_CENSUS_INVALID');
+          fs.writeFileSync(path.join(out,'custody-manifest.json'),JSON.stringify({schema:'H_EARTH_GEN3364_EXACT_WEBGL2_RGB_ARTIFACT_CUSTODY_v1',sourceExecutionRun:process.env.GITHUB_RUN_ID,productHead:payload.exactProductHead,sourceOperationId:payload.operationId,acceptedBaseHead:payload.acceptedBaseHead,ownerVisualAccepted:false,images:members},null,2)+'\n');
+          NODE
+
+      - name: Upload exact Gen3364 grass RGB evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3364-rgb-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen3364-rgb-evidence/
+          if-no-files-found: ignore
+          retention-days: 30
+
       - name: Upload returned command receipt
         if: always()
         uses: actions/upload-artifact@v4

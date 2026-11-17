@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { spawn,spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { pathToFileURL,fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
@@ -60,7 +60,42 @@ export function retargetHistoricalOverlay(overlay,renderer){
  insist(objectId(renderer)===FIXED.rendererBlob,'GEN3347_CURRENT_RENDERER_BLOB_DRIFT');
  let updated=one(overlay,"head: 'bcfb0650077323851f01f51d712c7f8b8ac39220'","head: '"+FIXED.productHead+"'");
  updated=one(updated,"rendererBlob: '85ee835060d5106a670077a5f4352b7ad202b49b'","rendererBlob: '"+FIXED.rendererBlob+"'");
- return updated;
+ return extendStageOverlay(updated);
+}
+
+/** Gen3375: extend only the verified, in-memory historical first-hit probe.
+ * Modes 1-7 and original source bytes stay immutable. Modes 8-11 encode
+ * soil/rock/material weights as normalized 8-bit GPU scalar readbacks.
+ * No physical Android photo-pixel parity or release authority follows. */
+export function extendStageOverlay(source){
+ let s=one(source,'firstHitMode>7','firstHitMode>11');
+ s=one(s,'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;',
+   'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;\\n  float hEarthProbeSlope=0.0,hEarthProbeRock=0.0,hEarthProbeSoilWeight=0.0,hEarthProbeSoilAuthority=0.0,hEarthProbeIdentity=0.0,hEarthProbePigment=0.0,hEarthProbeHabitat=0.0,hEarthProbeRetention=0.0;');
+ const extra=[
+  "  s=probeOnce(s,'    float shelteredSoil=clamp(',",
+  "    '    hEarthProbeSlope=slope;hEarthProbeRock=rockExposure;\\n    float shelteredSoil=clamp(');",
+  "  s=probeOnce(s,'      float worldSoilWeight=worldSoilCoverage;',",
+  "    '      float worldSoilWeight=worldSoilCoverage;\\n      hEarthProbeSoilWeight=worldSoilWeight;');",
+  "  s=probeOnce(s,'        vec3 worldSoilFinal=mix(',",
+  "    '         hEarthProbeSoilAuthority=worldSoilAlbedoAuthority;\\n        vec3 worldSoilFinal=mix(');",
+  "  s=probeOnce(s,'      palette=mix(palette,identityBase,identityWeight);',",
+  "    '       hEarthProbeIdentity=identityWeight;\\n      palette=mix(palette,identityBase,identityWeight);');",
+  "  s=probeOnce(s,'      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);',",
+  "    '       hEarthProbePigment=groundcoverPigmentWeight;\\n      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);');",
+  "  s=probeOnce(s,'    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
+  "    '     hEarthProbeHabitat=habitatColorCoverage;hEarthProbeRetention=acceptedColorRetention;\\n    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);');"
+ ].join('\n');
+ const marker="  s=probeOnce(s,'  outColor=vec4(lit,outputAlpha);',";
+ s=one(s,marker,extra+'\n'+marker);
+ const tail='    discard;\n  }\n  outColor=vec4(lit,outputAlpha);';
+ const added=[
+  "    if(uMaterialProbeMode==8){outColor=vec4(250.0,floor(clamp(hEarthProbeSlope,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRock,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==9){outColor=vec4(251.0,floor(clamp(hEarthProbeSoilWeight,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeSoilAuthority,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==10){outColor=vec4(252.0,floor(clamp(hEarthProbeIdentity,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbePigment,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
+  "    if(uMaterialProbeMode==11){outColor=vec4(253.0,floor(clamp(hEarthProbeHabitat,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRetention,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}"
+ ].join('\n');
+ s=one(s,tail,added+'\n'+tail);
+ return s;
 }
 export function injectHideGrass(source){
  return one(source,'resources.singleOwnerVegetation?.draw(packet);',
@@ -74,9 +109,18 @@ export function instrumentRoute(route){
 export function verifyReceiptRows(rows){
  insist(Array.isArray(rows)&&rows.length===3,'GEN3347_THREE_POSES_REQUIRED');
  insist(rows[0].samples?.length===4&&rows[1].samples?.length===1&&rows[2].samples?.length===1,'GEN3347_EDGE_AND_CONTROLS_INCOMPLETE');
- for(const row of rows)for(const sample of row.samples){
-  insist(sample.modeEvidence?.length===7&&sample.modeEvidence.every((v,i)=>v.mode===i+1),'GEN3347_SEVEN_MODE_EVIDENCE_MISSING');
-  insist(sample.compound?.status==='SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT','GEN3347_MATERIAL_MODE_SET_UNRESOLVED');
+ const positions=[[260.3633478294,-237.0192416266],[255.6132753491,-236.7067368582],[210.6438391699,-240.4567940795]];
+ for(let i=0;i<rows.length;i++)for(let j=0;j<rows[i].samples.length;j++){
+  const sample=rows[i].samples[j];
+  insist(sample.modeEvidence?.length===7&&sample.modeEvidence.every((v,k)=>v.mode===k+1),'GEN3347_SEVEN_MODE_EVIDENCE_MISSING');
+  insist(sample.materialModes?.length===4&&sample.materialModes.every((v,k)=>v.mode===k+8),'GEN3375_FOUR_SCALAR_MODES_REQUIRED');
+  if(i===0&&j===3){
+   insist(sample.compound?.status==='PIXEL_FIRST_HIT_UNRESOLVED'&&sample.materialModes.every(v=>v.status==='TRANSLUCENT_NOT_TERRAIN'),'GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED');
+   continue;
+  }
+  insist(sample.compound?.status==='SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT'&&sample.compound.role===1&&sample.compound.primitiveIndex===0&&sample.compound.surfaceClass===4,'GEN3375_CLASS4_TERRAIN_FIRST_HIT_MISMATCH');
+  insist(sample.materialModes.every(v=>v.status==='SOURCE_BOUND_GPU_SCALAR'&&v.values.length===2&&v.values.every(n=>Number.isFinite(n)&&n>=0&&n<=1)),'GEN3375_MATERIAL_SCALAR_READBACK_INVALID');
+  if(i===0)insist(Math.abs(sample.compound.x-positions[j][0])<1&&Math.abs(sample.compound.z-positions[j][1])<1,'GEN3375_ORIGINAL_REGION_WORLD_HIT_DRIFT');
  }
  return true;
 }
@@ -89,23 +133,24 @@ export function parseArgs(argv){
  insist(path.isAbsolute(o['--output']),'GEN3347_OUTPUT_ABSOLUTE_REQUIRED');
  return o;
 }
-const git=(dir,args)=>{const r=spawnSync('git',['-C',dir,...args],{encoding:'utf8',maxBuffer:16*1024*1024,timeout:120000});insist(r.status===0,'GEN3347_GIT_FAILURE:'+args.join(' ')+':'+String(r.stderr).slice(0,250));return r.stdout.trim()};
-function checkout(temp,subdir,sha){
- const dir=path.join(temp,subdir);fs.mkdirSync(dir,{recursive:true});
- git(dir,['init','-q']);git(dir,['remote','add','origin','https://github.com/smansfield635-create/smansfield635-create.github.io.git']);
- git(dir,['fetch','--quiet','--no-tags','--depth=1','--filter=blob:none','origin',sha]);
- git(dir,['checkout','--quiet','--detach','FETCH_HEAD']);
- insist(git(dir,['rev-parse','HEAD'])===sha,'GEN3347_CHECKOUT_NOT_PINNED');
- return dir;
-}
-function verifyClean(dir,sha){
- insist(git(dir,['rev-parse','HEAD'])===sha&&git(dir,['status','--porcelain','--untracked-files=no'])==='','GEN3347_SOURCE_CHECKOUT_CHANGED');
-}
-async function serve(dir,port){
- const process=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:'ignore'});
- const base='http://127.0.0.1:'+port;
- for(let i=0;i<90;i++){try{if((await fetch(base+FIXED.root)).ok)return {process,base}}catch{}await new Promise(resolve=>setTimeout(resolve,150))}
- process.kill();throw Error('GEN3347_LOCAL_STATIC_SERVER_FAILED');
+const PUBLIC_BASE='https://diamondgatebridge.com';
+const HISTORIC_BASE='https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io';
+const git=(dir,args)=>{
+ const started=Date.now();
+ const r=spawnSync('git',['-C',dir,...args],{encoding:'utf8',maxBuffer:16*1024*1024,timeout:120000});
+ insist(r.status===0&&!r.error,'GEN3347_GIT_FAILURE:'+args.join(' ')+':code='+String(r.error?.code||'NONE')+':status='+String(r.status)+':signal='+String(r.signal)+':elapsedMs='+String(Date.now()-started)+':stderr='+String(r.stderr||'').slice(0,250));
+ return r.stdout.trim();
+};
+async function fetchPinnedSource(url,expectedBlob,expectedHost){
+ const parsed=new URL(url);
+ insist(parsed.protocol==='https:'&&parsed.hostname===expectedHost&&parsed.port===''&&parsed.username===''&&parsed.password===''&&parsed.search===''&&parsed.hash===''&&parsed.href===url,'GEN3347_UNTRUSTED_SOURCE_URL');
+ const response=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(120000)});
+ insist(response.status===200&&!response.redirected&&response.url===url,'GEN3347_SOURCE_FETCH_FAILED:'+String(response.status));
+ const data=Buffer.from(await response.arrayBuffer());
+ insist(data.length>0&&data.length<=16*1024*1024,'GEN3347_SOURCE_SIZE_OUT_OF_BOUNDS');
+ const blob=crypto.createHash('sha1').update('blob '+data.length+'\0').update(data).digest('hex');
+ insist(blob===expectedBlob,'GEN3347_SOURCE_GIT_BLOB_MISMATCH:'+expectedHost+':'+blob);
+ return data.toString('utf8');
 }
 function installChromium(temp){
  const dep=path.join(temp,'browser-deps');fs.mkdirSync(dep,{recursive:true});
@@ -124,23 +169,188 @@ function pngCheck(data){
  insist(data.startsWith('data:image/png;base64,')&&b.length>1024&&b.toString('ascii',12,16)==='IHDR'&&b.readUInt32BE(16)===FIXED.viewport[0]&&b.readUInt32BE(20)===FIXED.viewport[1],'GEN3347_NORMAL_COLOR_PNG_INVALID');
  return b;
 }
+/** Gen3358: exact-source, normal-color WebGL2 grass ON/OFF/ON diagnostic.
+ * The sole visibility intervention is the existing source-injected grass draw switch.
+ * All three frames reuse the same navigation state; the third bounds frame drift.
+ * This produces RGB evidence, never an Android photograph-parity assertion. */
+async function captureGrassNormalColorABA(page,state,samples){
+ return page.evaluate(async ({state,samples})=>{
+  const cv=document.querySelector('#h-earth-functional-landscape-canvas');
+  const gl=cv?.getContext('webgl2');
+  if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true||
+     !String(gl.getParameter(gl.VERSION)).includes('WebGL 2.0'))throw Error('GEN3358_AB_WEBGL2_CONTEXT_REQUIRED');
+  const width=cv.width,height=cv.height;
+  if(width!==602||height!==862)throw Error('GEN3358_AB_VIEWPORT_DRIFT');
+  const frames=[];
+  for(const hidden of [false,true,false]){
+   globalThis.__hEarthFirstHitMaterialMode=0;
+   globalThis.__gen3347HideGrass=hidden;
+   globalThis.__HEarthAuditPresent(state);
+   const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+   const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,
+      viewport:{width,height,pixelRatio:1},frameSequence:state.sequence});
+   const bytes=new Uint8Array(width*height*4);
+   gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,bytes);
+   if(gl.getError()!==gl.NO_ERROR||gl.isContextLost())throw Error('GEN3358_AB_GPU_READPIXELS_FAILED');
+   const frame=gpu.frameRecords.at(-1);
+   if(frame?.navigationSequence!==state.sequence)throw Error('GEN3358_AB_FRAME_NAVIGATION_DRIFT');
+   const digest=await crypto.subtle.digest('SHA-256',bytes);
+   const hex=[...new Uint8Array(digest)].map(n=>n.toString(16).padStart(2,'0')).join('');
+   frames.push({hidden,frameSequence:frame.frameSequence,
+    viewport:[width,height],camera:{position:packet.camera.position,
+      matrix:Array.from(packet.camera.viewProjectionMatrix)},rgbaSha256:hex,bytes});
+  }
+  globalThis.__gen3347HideGrass=false;
+  if(frames.some((f,i)=>f.hidden!==(i===1))||
+     !(frames[0].frameSequence<frames[1].frameSequence&&frames[1].frameSequence<frames[2].frameSequence))
+    throw Error('GEN3358_AB_TOGGLE_OR_FRAME_ORDER_INVALID');
+  const pos=frames.map(f=>f.camera.position);
+  const mat=frames.map(f=>f.camera.matrix);
+  if(pos.some(p=>p.x!==pos[0].x||p.y!==pos[0].y||p.z!==pos[0].z)||
+     mat.some(m=>m.length!==16||m.some((v,i)=>v!==mat[0][i])))
+    throw Error('GEN3358_AB_CAMERA_MATRIX_DRIFT');
+  const a=frames[0].bytes,b=frames[1].bytes,c=frames[2].bytes;
+  const measure=(center,radius)=>{
+   const minX=center?Math.max(0,center[0]-radius):0;
+   const maxX=center?Math.min(width-1,center[0]+radius):width-1;
+   const minY=center?Math.max(0,center[1]-radius):0;
+   const maxY=center?Math.min(height-1,center[1]+radius):height-1;
+   let pixels=0,different=0,largeDifference=0,repeatDifference=0,stableGrassDifference=0;
+   let sumOnOff=0,sumRepeat=0,maxOnOff=0;
+   for(let y=minY;y<=maxY;y++)for(let x=minX;x<=maxX;x++){
+    const o=(y*width+x)*4;
+    let onOff=0,repeat=0;
+    for(let k=0;k<3;k++){
+     onOff=Math.max(onOff,Math.abs(a[o+k]-b[o+k]));
+     repeat=Math.max(repeat,Math.abs(a[o+k]-c[o+k]));
+    }
+    pixels++;sumOnOff+=onOff;sumRepeat+=repeat;maxOnOff=Math.max(maxOnOff,onOff);
+    if(onOff>=8)different++;
+    if(onOff>=24)largeDifference++;
+    if(repeat>=8)repeatDifference++;
+    if(onOff>=12&&onOff>=repeat+8)stableGrassDifference++;
+   }
+   return {pixels,changedRGBAtLeast8:different,changedRGBAtLeast24:largeDifference,
+    repeatDriftAtLeast8:repeatDifference,stableGrassEffectAtLeast12:stableGrassDifference,
+    meanMaxRGBDelta:Number((sumOnOff/pixels).toFixed(4)),
+    meanRepeatDelta:Number((sumRepeat/pixels).toFixed(4)),maxRGBDelta:maxOnOff};
+  };
+  const atPixel=([x,y])=>{const o=(y*width+x)*4;return [a,b,c].map(arr=>Array.from(arr.slice(o,o+4)));};
+  return {schema:'H_EARTH_GEN3358_NORMAL_COLOR_GRASS_ABA_v1',
+   evidenceClass:'SOURCE_BOUND_CHROMIUM_WEBGL2_NORMAL_COLOR_RGBA_NOT_PHYSICAL_ANDROID',
+   switchSequence:['GRASS_ON','GRASS_HIDDEN','GRASS_ON_REPEAT'],
+   probeModeAllFrames:0,sourceMutationPerformed:false,productMutationPerformed:false,
+   viewport:[width,height],frameSequence:frames.map(f=>f.frameSequence),
+   rgbaSha256:frames.map(f=>f.rgbaSha256),
+   camera:frames[0].camera,
+   overall:measure(null,0),
+   samples:samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom,
+    rgbaByFrame:atPixel(s.pixelBottom),neighborhood56px:measure(s.pixelBottom,28)})),
+   ownerImageParity:false,materialCausationUnproven:true};
+ },{state,samples});
+}
+
+/** Gen3380: preserve the already surfaced public-route startup exception without
+ * altering any normal WebGL2 frame, material mode, or source pin. URL queries
+ * are stripped from diagnostics; limit every collected event class to eight. */
+export function startupFailureEvidence(snapshot,events={}){
+ const scrub=value=>{
+  const raw=typeof value==='string'?value:'';
+  return raw.replace(/https?:\/\/[^\s"'()]+/g,full=>{
+   try{const u=new URL(full);return u.origin+u.pathname}
+   catch{return '[RESOURCE_URL]'}
+  }).slice(0,900);
+ };
+ const messages=value=>Array.isArray(value)?value.slice(0,8).map(scrub):[];
+ const resources=Array.isArray(events.failedResources)?events.failedResources.slice(0,8).map(item=>({
+  path:typeof item?.path==='string'&&item.path.startsWith('/')?item.path.split('?')[0].slice(0,220):'[UNKNOWN_RESOURCE]',
+  status:Number.isInteger(item?.status)?item.status:null,
+  errorText:scrub(item?.errorText).slice(0,220)
+ })):[];
+ return {
+  schema:'H_EARTH_GEN3380_PUBLIC_ROUTE_STARTUP_FAILURE_EVIDENCE_v1',
+  source:'PINNED_PUBLIC_ROUTE_DOM_AND_BROWSER_EVENT_STREAM',
+  routeReportedFailure:snapshot?.run8eError===true,
+  routeStatusText:scrub(snapshot?.routeStatusText),
+  loaderMode:scrub(snapshot?.loaderMode).slice(0,80),
+  pageErrors:messages(events.pageErrors),
+  consoleErrors:messages(events.consoleErrors),
+  failedResources:resources,
+  productMutationPerformed:false,
+  diagnosticOnly:true
+ };
+}
+
 async function capture(browser,base,renderer,route,probe,output,receipt){
- const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5});
- const page=await context.newPage();page.setDefaultTimeout(60000);const browserErrors=[];
- page.on('pageerror',e=>browserErrors.push(String(e.message)));
+ const context=await browser.newContext({viewport:{width:FIXED.browserViewport[0],height:FIXED.browserViewport[1]},deviceScaleFactor:1.5,serviceWorkers:'block'});
+ const page=await context.newPage();page.setDefaultTimeout(60000);
+ const browserErrors=[],consoleErrors=[],failedResources=[];
+ page.on('pageerror',e=>{if(browserErrors.length<8)browserErrors.push(String(e.message))});
+ page.on('console',m=>{if(m.type()==='error'&&consoleErrors.length<8)consoleErrors.push(m.text())});
+ page.on('requestfailed',request=>{
+  if(failedResources.length>=8)return;
+  try{
+   const u=new URL(request.url());
+   if(u.origin===new URL(base).origin)failedResources.push({path:u.pathname,status:null,errorText:request.failure()?.errorText??'REQUEST_FAILED'});
+  }catch{}
+ });
+ page.on('response',response=>{
+  if(response.status()<400||failedResources.length>=8)return;
+  try{
+   const u=new URL(response.url());
+   if(u.origin===new URL(base).origin)failedResources.push({path:u.pathname,status:response.status(),errorText:'HTTP_ERROR'});
+  }catch{}
+ });
  await page.addInitScript({content:'globalThis.__hEarthFirstHitMaterialMode=0;globalThis.__gen3347HideGrass=false;'});
  await page.route(url=>url.pathname==='/'+FIXED.renderer,routeHandler=>routeHandler.fulfill({status:200,contentType:'text/javascript',body:renderer}));
  await page.route(url=>url.pathname==='/'+FIXED.route,routeHandler=>routeHandler.fulfill({status:200,contentType:'text/javascript',body:route}));
  try{
   await page.goto(base+FIXED.root+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
-  insist(!(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true')),'GEN3347_RUNTIME_STARTUP_ERROR');
+  const startup=await page.evaluate(()=>({
+   run8eError:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eError==='true',
+   routeStatusText:document.getElementById('prototype-status')?.textContent??'',
+   loaderMode:document.getElementById('h-earth-loading-screen')?.dataset.mode??null
+  }));
+  if(startup.run8eError){
+   receipt.startupFailureEvidence=startupFailureEvidence(startup,{pageErrors:browserErrors,consoleErrors,failedResources});
+   const e=new Error('GEN3347_RUNTIME_STARTUP_ERROR:'+receipt.startupFailureEvidence.routeStatusText);
+   e.code='GEN3347_RUNTIME_STARTUP_ERROR';
+   throw e;
+  }
   await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
   await page.mouse.move(160,240);await page.mouse.down();await page.mouse.move(220,240,{steps:8});await page.mouse.up();
   await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});
   await page.click('[data-enter]');
   await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'&&
    document.querySelector('#h-earth-loading-screen')?.hidden===true,null,{timeout:180000});
+
+  // Gen3361: the public route exposes controls before asynchronous grass residency.
+  // A normal-color grass OFF/ON comparison before this witness is non-discriminating.
+  await page.waitForFunction(()=>{
+   const root=document.querySelector('#h-earth-functional-landscape-route');
+   if(root?.dataset.vegetationState==='failed')return true;
+   const grass=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.singleOwnerVegetation;
+   return root?.dataset.vegetationState==='prepared'&&grass?.gpuAllocationVerified===true&&
+    grass?.installedRootCount>0&&grass?.coarseRootCount>0&&
+    grass?.drawCallCount>0&&grass?.visibleCoarseRoots>0;
+  },null,{timeout:600000});
+  const grassResidency=await page.evaluate(()=>{
+   const root=document.querySelector('#h-earth-functional-landscape-route');
+   if(root?.dataset.vegetationState==='failed')throw Error('GEN3361_BACKGROUND_GRASS_FAILED');
+   const grass=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.singleOwnerVegetation;
+   if(root?.dataset.vegetationState!=='prepared'||grass?.gpuAllocationVerified!==true||
+      !(grass?.installedRootCount>0&&grass?.coarseRootCount>0&&
+        grass?.drawCallCount>0&&grass?.visibleCoarseRoots>0))
+    throw Error('GEN3361_GRASS_RESIDENCY_NOT_PROVEN');
+   return {schema:'H_EARTH_GEN3361_PRE_CAPTURE_GRASS_RESIDENCY_v1',
+    state:root.dataset.vegetationState,installedRootCount:grass.installedRootCount,
+    coarseRootCount:grass.coarseRootCount,visibleCoarseRoots:grass.visibleCoarseRoots,
+    drawCallCount:grass.drawCallCount,gpuAllocationVerified:true,
+    source:'PUBLIC_ROUTE_SINGLE_OWNER_RESIDENT_RECEIPT',sourceMutationPerformed:false};
+  });
+  receipt.grassResidency=grassResidency;fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+
   await page.evaluate(async()=>{
    const urls=[...new Set(performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)))];
    if(urls.length!==1)throw Error('GEN3347_NAV_MODULE_AMBIGUOUS');
@@ -170,9 +380,13 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
    validatePoseReport(normal,pose.owner);
    const png=pngCheck(normal.data),filename='gen3347-'+pose.id+'-normal.png';
    fs.writeFileSync(path.join(output,filename),png);
-   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],compound:null}))};
-   let previousFrame=normal.frame.frameSequence;
-   for(let mode=1;mode<=7;mode++){
+   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],materialModes:[],compound:null}))};
+   row.grassNormalColorABA=await captureGrassNormalColorABA(page,state,row.samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom})));
+   validatePoseReport({camera:row.grassNormalColorABA.camera,viewport:row.grassNormalColorABA.viewport},pose.owner);
+   receipt.grassVisibleHiddenComparisonObserved=true;
+   receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+   let previousFrame=row.grassNormalColorABA.frameSequence.at(-1);
+   for(let mode=1;mode<=11;mode++){
     const raw=await page.evaluate(({state,mode,pixels})=>{
      globalThis.__gen3347HideGrass=true;globalThis.__hEarthFirstHitMaterialMode=mode;
      globalThis.__HEarthAuditPresent(state);
@@ -191,14 +405,31 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
     const drawSignature=sha256(String(raw.renderer)+':'+String(raw.packageId));
     for(let i=0;i<row.samples.length;i++){
      const rec=row.samples[i],capture={target:'published',sourceHead:FIXED.productHead,rendererObjectId:FIXED.rendererBlob,instrumentedSha256:receipt.instrumentedSourceSha256,webgl2:true,readbackClass:probe.PROBE_READBACK_CLASS,appliedMode:mode,poseId:pose.id,assetSignature,drawSignature,cameraPosition:[raw.camera.position.x,raw.camera.position.y,raw.camera.position.z],viewProjectionMatrix:raw.camera.matrix,viewport:FIXED.viewport,pixel:rec.pixelBottom,webglErrors:[]};
-     const decoded=probe.decodeModePixel(mode,new Uint8Array(raw.values[i]),capture);
-     rec.modeEvidence.push(decoded);
+     if(mode<=7){
+      const decoded=probe.decodeModePixel(mode,new Uint8Array(raw.values[i]),capture);
+      rec.modeEvidence.push(decoded);
+     }else{
+      const rgba=raw.values[i];
+      if(rgba[0]===249&&rgba[3]===255){
+       rec.materialModes.push({mode,status:'TRANSLUCENT_NOT_TERRAIN',rgba,capture});
+      }else{
+       insist(rgba[0]===mode+242&&rgba[3]===255,'GEN3375_SCALAR_SENTINEL_OR_ALPHA_MISMATCH');
+       rec.materialModes.push({mode,status:'SOURCE_BOUND_GPU_SCALAR',values:[rgba[1]/255,rgba[2]/255],rgba,capture});
+      }
+     }
     }
    }
    for(const sample of row.samples)sample.compound=probe.combinePixelReceipts(sample.modeEvidence);
-   receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
+   fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
   }
   insist(browserErrors.length===0,'GEN3347_BROWSER_PAGE_ERRORS:'+browserErrors.join('|'));
+  const [owner,groveA,groveB]=receipt.poses;
+  const pair=r=>r?.grassNormalColorABA?.rgbaSha256;
+  insist(pair(owner)?.length===3&&pair(groveA)?.length===3&&pair(groveB)?.length===3&&
+   pair(owner)[0]!==pair(owner)[1]&&pair(groveB)[0]!==pair(groveB)[1]&&
+   pair(groveA)[0]===pair(groveA)[1],
+   'GEN3375_OWNER_B_POSITIVE_A_NEGATIVE_CONTROL_REQUIRED');
+  receipt.grassAbaControlValidity='OWNER_AND_GROVE_B_POSITIVE_GROVE_A_NEGATIVE';
   verifyReceiptRows(receipt.poses);
  }finally{await context.close()}
 }
@@ -206,11 +437,13 @@ export async function qualify(args){
  const out=args['--output'],dir=path.dirname(out);fs.mkdirSync(dir,{recursive:true});
  const receipt={schema:'H_EARTH_GEN3347_FIRST_HIT_EXACT_HEAD_QUALIFICATION_RECEIPT_v1',operationId:FIXED.operationId,exactProductHead:FIXED.productHead,toolingHead:null,executionHolder:args['--execution-holder'],status:'INCOMPLETE',frame:FIXED.frame,ownerImageDigest:FIXED.photographSha256,ownerScreenPixelParity:false,physicalAndroidFirstHit:false,terrainMaterialCauseProven:false,poses:[],sourceMutationPerformed:false,productMutationPerformed:false,workflowMutationPerformed:false,branchCreated:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false,publicationPerformed:false,errors:[]};
  const persist=()=>fs.writeFileSync(out,JSON.stringify(receipt,null,2)+'\n');
- const temp=fs.mkdtempSync(path.join(os.tmpdir(),'gen3347-first-hit-'));let server,browser;persist();
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'gen3347-first-hit-'));let browser;persist();
  try{
-  const product=checkout(temp,'product',FIXED.productHead),historic=checkout(temp,'historic',FIXED.historicOverlayHead);
-  const renderer=fs.readFileSync(path.join(product,FIXED.renderer),'utf8'),route=fs.readFileSync(path.join(product,FIXED.route),'utf8');
-  const overlay=fs.readFileSync(path.join(historic,'tools/h-earth-first-hit-material-overlay.mjs'),'utf8');
+  const [renderer,route,overlay]=await Promise.all([
+   fetchPinnedSource(PUBLIC_BASE+'/'+FIXED.renderer,FIXED.rendererBlob,'diamondgatebridge.com'),
+   fetchPinnedSource(PUBLIC_BASE+'/'+FIXED.route,FIXED.routeBlob,'diamondgatebridge.com'),
+   fetchPinnedSource(HISTORIC_BASE+'/'+FIXED.historicOverlayHead+'/tools/h-earth-first-hit-material-overlay.mjs',FIXED.historicOverlayBlob,'raw.githubusercontent.com')
+  ]);
   const adapted=retargetHistoricalOverlay(overlay,renderer),probePath=path.join(temp,'gen3347-adapted-first-hit-overlay.mjs');
   fs.writeFileSync(probePath,adapted);
   const probe=await import(pathToFileURL(probePath).href);
@@ -224,12 +457,10 @@ export async function qualify(args){
   receipt.browserEvidenceClass='EXACT_SOURCE_RECONSTRUCTED_CHROMIUM_NOT_ANDROID_PHYSICAL_PIXEL';
   const {chromium}=installChromium(temp);
   browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-  server=await serve(product,18947);
-  await capture(browser,server.base,injected,instrumentedRoute,probe,dir,receipt);
-  verifyClean(product,FIXED.productHead);verifyClean(historic,FIXED.historicOverlayHead);
+  await capture(browser,PUBLIC_BASE,injected,instrumentedRoute,probe,dir,receipt);
   receipt.status='SOURCE_BOUND_GPU_MATERIAL_SAMPLES_CAPTURED_OWNER_PARITY_UNVERIFIED';
  }catch(e){receipt.status='FAIL_CLOSED';receipt.errors.push({code:e.code||'GEN3347_QUALIFICATION_FAILED',message:String(e.message||e)});}
- finally{persist();if(server)server.process.kill();if(browser)await browser.close();fs.rmSync(temp,{recursive:true,force:true});}
+ finally{persist();if(browser)await browser.close();fs.rmSync(temp,{recursive:true,force:true});}
  return receipt;
 }
 const invoked=process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url);

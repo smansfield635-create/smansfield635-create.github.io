@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-17T01:25:52Z",
+  "generatedAt": "2026-11-17T18:27:52Z",
   "window": {
-    "start": "2026-08-19T01:25:52Z",
-    "end": "2026-11-17T01:25:52Z"
+    "start": "2026-08-19T18:27:52Z",
+    "end": "2026-11-17T18:27:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,50 +17,42 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3575,
-    "visits": 1072,
+    "pageLoads": 3485,
+    "visits": 1042,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3575,
-        "visits": 1072
+        "pageLoads": 3485,
+        "visits": 1042
       }
     },
     "byPath": {
-      "/developer/": {
-        "pageLoads": 50,
-        "visits": 20
-      },
       "/": {
-        "pageLoads": 762,
-        "visits": 582
+        "pageLoads": 752,
+        "visits": 572
       },
-      "/governance/": {
-        "pageLoads": 30,
-        "visits": 10
-      },
-      "/laws/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/coherence-diagnostic/": {
-        "pageLoads": 20,
+      "/index.html": {
+        "pageLoads": 90,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 70,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 470,
-        "visits": 0
-      },
-      "/index.html": {
-        "pageLoads": 90,
-        "visits": 0
-      },
       "/showroom/globe/audralia/": {
         "pageLoads": 120,
         "visits": 10
+      },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/showroom/": {
         "pageLoads": 40,
@@ -74,11 +66,7 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+      "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
       },
@@ -86,9 +74,9 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 63,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -98,24 +86,32 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 63,
-        "visits": 10
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/developer/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
@@ -126,10 +122,6 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
       "/laws/categories/reality/measure.html": {
         "pageLoads": 30,
         "visits": 0
@@ -137,6 +129,10 @@
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 20,
+        "visits": 10
       },
       "/instruments/": {
         "pageLoads": 10,
@@ -170,24 +166,20 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
-      "/characters/legacy-dossiers.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/about/": {
-        "pageLoads": 40,
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -196,6 +188,10 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/about/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -216,6 +212,10 @@
       },
       "/door/canonical-object.html": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
         "visits": 0
       },
       "/showroom/story/invitation/": {
@@ -301,16 +301,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2503,
+        "pageLoads": 2443,
         "visits": 0
       },
-      "(none)": {
-        "pageLoads": 512,
-        "visits": 512
-      },
       "www.google.com": {
-        "pageLoads": 550,
-        "visits": 550
+        "pageLoads": 540,
+        "visits": 540
+      },
+      "(none)": {
+        "pageLoads": 492,
+        "visits": 492
       },
       "raw.githack.com": {
         "pageLoads": 10,

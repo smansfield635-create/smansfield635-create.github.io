@@ -131,7 +131,7 @@ jobs:
           fi
 
 
-      - name: Preserve exact Gen3364 first-party grass RGB evidence
+      - name: Preserve exact Gen3364 or PR7478 first-party RGB evidence
         if: always()
         run: |
           set -euo pipefail
@@ -141,11 +141,15 @@ jobs:
           import path from 'node:path';
           import crypto from 'node:crypto';
           const command=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'command-execution-receipt.json'),'utf8'));
-          if(command.descriptorId!=='H_EARTH_GEN3364_EXACT_CANDIDATE_GRASS_WEBGL2_DESCRIPTOR_V1')process.exit(0);
+          const isGen3364=command.descriptorId==='H_EARTH_GEN3364_EXACT_CANDIDATE_GRASS_WEBGL2_DESCRIPTOR_V1';
+          const isPr7478=command.descriptorId==='H_EARTH_PR7478_MATERIAL_WEBGL2_DESCRIPTOR_V1';
+          if(!isGen3364&&!isPr7478)process.exit(0);
           if(command.executionDisposition!=='COMMAND_EXECUTED_AND_PASSED')process.exit(0);
-          if(command.commandPayloadSchema!=='H_EARTH_GEN3364_WEBGL2_CANDIDATE_DIFFERENTIAL_RECEIPT_v1')throw Error('RGB_CUSTODY_SCHEMA_NOT_GROUNDED');
+          const expectedSchema=isPr7478?'H_EARTH_PR7478_MATERIAL_WEBGL2_AB_RECEIPT_v1':'H_EARTH_GEN3364_WEBGL2_CANDIDATE_DIFFERENTIAL_RECEIPT_v1';
+          if(command.commandPayloadSchema!==expectedSchema)throw Error('RGB_CUSTODY_SCHEMA_NOT_GROUNDED');
           const payload=JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP,'command-payload-receipt.json'),'utf8'));
-          if(payload.schema!==command.commandPayloadSchema||payload.result!=='CANDIDATE_SOURCE_BOUND_NATIVE_RGB_DIFFERENTIAL_CAPTURED_NOT_OWNER_ACCEPTED'||payload.exactProductHead!=='fe191fdc833babc45406829f209b6c0e4eb6aecd'||payload.ownerVisualAccepted!==false||payload.productMutationPerformed!==false)throw Error('RGB_CUSTODY_UNQUALIFIED_PAYLOAD');
+          const expectedProductHead=isPr7478?'840d2800d058c4234adc9c73e65a0129f82b5c94':'fe191fdc833babc45406829f209b6c0e4eb6aecd';
+          if(payload.schema!==command.commandPayloadSchema||payload.result!=='CANDIDATE_SOURCE_BOUND_NATIVE_RGB_DIFFERENTIAL_CAPTURED_NOT_OWNER_ACCEPTED'||payload.exactProductHead!==expectedProductHead||payload.ownerVisualAccepted!==false||payload.productMutationPerformed!==false)throw Error('RGB_CUSTODY_UNQUALIFIED_PAYLOAD');
           const poses=['owner','groveA','groveB'];
           const variants=['accepted','candidate'];
           const parentCandidates=fs.readdirSync(os.tmpdir(),{withFileTypes:true}).filter(v=>v.isDirectory()&&v.name.startsWith('ai-room-tool-')).map(v=>path.join(os.tmpdir(),v.name)).filter(v=>fs.existsSync(path.join(v,'command-payload-receipt.json')));
@@ -177,10 +181,10 @@ jobs:
            }
           }
           if(members.length!==12)throw Error('RGB_CUSTODY_FILE_CENSUS_INVALID');
-          fs.writeFileSync(path.join(out,'custody-manifest.json'),JSON.stringify({schema:'H_EARTH_GEN3364_EXACT_WEBGL2_RGB_ARTIFACT_CUSTODY_v1',sourceExecutionRun:process.env.GITHUB_RUN_ID,productHead:payload.exactProductHead,sourceOperationId:payload.operationId,acceptedBaseHead:payload.acceptedBaseHead,ownerVisualAccepted:false,images:members},null,2)+'\n');
+          fs.writeFileSync(path.join(out,'custody-manifest.json'),JSON.stringify({schema:isPr7478?'H_EARTH_PR7478_EXACT_WEBGL2_RGB_ARTIFACT_CUSTODY_v1':'H_EARTH_GEN3364_EXACT_WEBGL2_RGB_ARTIFACT_CUSTODY_v1',sourceExecutionRun:process.env.GITHUB_RUN_ID,productHead:payload.exactProductHead,sourceOperationId:payload.operationId,acceptedBaseHead:payload.acceptedBaseHead,ownerVisualAccepted:false,images:members},null,2)+'\n');
           NODE
 
-      - name: Upload exact Gen3364 grass RGB evidence
+      - name: Upload exact Gen3364 or PR7478 RGB evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:

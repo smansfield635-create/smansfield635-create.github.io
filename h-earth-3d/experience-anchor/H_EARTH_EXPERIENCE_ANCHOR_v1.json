@@ -1,6 +1,6 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_v1",
-  "status": "HARD_ACCEPTANCE_CRITERION",
+  "status": "HISTORICAL_SUPERSEDED",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "sourceVideo": {
     "originalFilename": "22713.mp4",
@@ -16,7 +16,7 @@
   "repositoryVisualProxy": {
     "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
     "sha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
-    "purpose": "Durable in-repository visual proxy for future H-Earth upgrade review. The original-video SHA-256 remains the controlling source identity."
+    "purpose": "Historical proxy only, documenting the pre-current-world H-Earth prototype; not a controlling baseline for modern acceptance."
   },
   "controllingLaw": "AN_H_EARTH_UPGRADE_FAILS_IF_ENTERING_H_EARTH_FEELS_LIKE_ENTERING_A_DIFFERENT_PRODUCT",
   "sameWorldLaw": "PLANETARY_GLOBE_REGIONAL_AND_LOCAL_GROUND_VIEWS_MUST_READ_AS_SCALE_CHANGES_WITHIN_ONE_CANONICAL_NAVIGABLE_WORLD",
@@ -39,21 +39,21 @@
     "h-earth-3d/"
   ],
   "upgradeAcceptance": {
-    "comparisonAgainstAnchorRequired": true,
-    "visualEvidenceRequired": true,
-    "interactionEvidenceRequired": true,
-    "continuityEvidenceRequired": true,
-    "receiptRequired": true,
+    "comparisonAgainstAnchorRequired": false,
+    "visualEvidenceRequired": false,
+    "interactionEvidenceRequired": false,
+    "continuityEvidenceRequired": false,
+    "receiptRequired": false,
     "receiptDirectory": "h-earth-3d/experience-anchor/receipts/",
-    "allRequiredInvariantsMustPass": true,
-    "failureDisposition": "BLOCK_H_EARTH_EXPERIENCE_UPGRADE",
-    "mayWaiveWithoutExplicitUserReplacementOfAnchor": false
+    "allRequiredInvariantsMustPass": false,
+    "failureDisposition": "HISTORICAL_ARCHIVE_NO_ACTIVE_BLOCK",
+    "mayWaiveWithoutExplicitUserReplacementOfAnchor": true
   },
   "authority": {
     "createsProductMutationAuthority": false,
     "createsMergeAuthority": false,
     "createsCanonicalWorldAuthority": false,
-    "controlsAcceptanceOfExperienceChangingUpgrades": true
+    "controlsAcceptanceOfExperienceChangingUpgrades": false
   },
   "scopedPerformanceRelease": {
     "schema": "H_EARTH_EXACT_GEN3187_SCOPED_PERFORMANCE_RELEASE_v1",
@@ -88,5 +88,14 @@
     "fullAnchorRequiredForAllOtherExperienceChanges": true,
     "cannotDeclareAllInvariantsIndependentlyReproven": true,
     "noMergeDeploymentOrPublicationAuthorityCreated": true
+  },
+  "supersededBy": {
+    "path": "h-earth-3d/experience-anchor/H_EARTH_CURRENT_WORLD_ACCEPTANCE_v2.json",
+    "schema": "H_EARTH_CURRENT_WORLD_ACCEPTANCE_POLICY_v2",
+    "canonicalAdmissionGeneration": 3401,
+    "ownerCommentId": 6968200453,
+    "originalVideoPreserved": true,
+    "originalVideoIsCurrentProductBaseline": false,
+    "historicalReceiptsImmutable": true
   }
 }

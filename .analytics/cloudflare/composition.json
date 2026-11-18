@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-18T17:23:43Z",
+  "generatedAt": "2026-11-18T18:27:35Z",
   "window": {
-    "start": "2026-10-19T17:23:43Z",
-    "end": "2026-11-18T17:23:43Z"
+    "start": "2026-10-19T18:27:35Z",
+    "end": "2026-11-18T18:27:35Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 668,
-        "visits": 668
+        "pageLoads": 588,
+        "visits": 588
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 316,
-        "visits": 265
+        "pageLoads": 276,
+        "visits": 225
       },
       {
-        "value": "/",
-        "pageLoads": 85,
-        "visits": 75
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 80,
+        "visits": 80
       },
       {
         "value": "/products/education/personal-training/",
@@ -28,9 +28,9 @@
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
-        "pageLoads": 80,
-        "visits": 80
+        "value": "/",
+        "pageLoads": 65,
+        "visits": 55
       },
       {
         "value": "/nine-summits/universe/",
@@ -58,17 +58,17 @@
         "visits": 11
       },
       {
+        "value": "/release-proof/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/showroom/globe/audralia/diagnostic/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/preflight/app/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/build/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -86,6 +86,11 @@
         "value": "/characters/",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 10,
+        "visits": 0
       },
       {
         "value": "/products/archcoin/contract/",
@@ -161,8 +166,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1205,
-        "visits": 1205
+        "pageLoads": 1225,
+        "visits": 1225
       },
       {
         "value": "diamondgatebridge.com",
@@ -188,8 +193,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1317,
-        "visits": 1232
+        "pageLoads": 1247,
+        "visits": 1172
       },
       {
         "value": "CN",
@@ -197,12 +202,12 @@
         "visits": 40
       },
       {
-        "value": "BR",
-        "pageLoads": 10,
-        "visits": 10
+        "value": "CA",
+        "pageLoads": 20,
+        "visits": 20
       },
       {
-        "value": "CA",
+        "value": "BR",
         "pageLoads": 10,
         "visits": 10
       }

@@ -74,6 +74,60 @@ function decide(r,{base,head,paths,coreUnchanged}){
     return deny('RECEIPT_MUST_NOT_CREATE_RELEASE_AUTHORITY');
  return {result:'PASS',reason:'CONTEMPORARY_WORLD_EXACT_SOURCE_AND_RUNTIME_PROVEN'};
 }
+
+const GH_REPO='smansfield635-create/smansfield635-create.github.io';
+const GH_API='https://api.github.com/repos/'+GH_REPO;
+const C2C_REGISTERED_RUNNER='.github/workflows/h-earth-neutral-exact-head-runner.yml';
+function remoteRuntimeMatches(proof,run,artifact,sourceHead){
+ return run?.status==='completed'&&run?.conclusion==='success'&&
+   run?.path===C2C_REGISTERED_RUNNER&&run?.id===proof.runId&&
+   artifact?.id===proof.artifactId&&artifact?.expired===false&&
+   artifact?.workflow_run?.id===proof.runId&&
+   artifact?.digest==='sha256:'+proof.archiveSha256&&
+   artifact?.name==='h-earth-neutral-exact-head-'+sourceHead;
+}
+function parseReviewLocator(url){
+ const match=typeof url==='string'?/^https:\/\/github\.com\/smansfield635-create\/smansfield635-create\.github\.io\/pull\/([1-9]\d*)#pullrequestreview-([1-9]\d*)$/.exec(url):null;
+ return match?{pr:Number(match[1]),id:Number(match[2])}:null;
+}
+function remoteReviewMatches(receipt,pr,review,locator){
+ return Boolean(locator&&pr?.number===locator.pr&&
+   pr?.head?.sha===receipt.productSourceHead&&
+   pr?.user?.login&&review?.id===locator.id&&
+   review?.commit_id===receipt.productSourceHead&&
+   review?.user?.login&&review.user.login!==pr.user.login&&
+   (review.state==='APPROVED'||
+    (review.state==='COMMENTED'&&typeof review.body==='string'&&
+     review.body.includes('PASS_SOURCE_BOUND'))));
+}
+async function requireAuthenticGithubEvidence(receipt){
+ const get=async suffix=>{
+   let response;
+   try{
+     const headers={Accept:'application/vnd.github+json','User-Agent':'H-Earth-current-world-evidence-gate'};
+     if(process.env.GITHUB_TOKEN)headers.Authorization='Bearer '+process.env.GITHUB_TOKEN;
+     response=await fetch(GH_API+suffix,{headers,signal:AbortSignal.timeout(20000)});
+   }catch{fail('GITHUB_EVIDENCE_TRANSPORT_UNAVAILABLE');}
+   if(!response.ok)fail('GITHUB_EVIDENCE_API_REJECTED:'+response.status);
+   try{return await response.json();}
+   catch{fail('GITHUB_EVIDENCE_API_RESPONSE_INVALID');}
+ };
+ for(const proof of receipt.runtimeProofs){
+   const run=await get('/actions/runs/'+proof.runId);
+   const listing=await get('/actions/runs/'+proof.runId+'/artifacts?per_page=100');
+   const artifact=Array.isArray(listing?.artifacts)?
+     listing.artifacts.find(a=>a.id===proof.artifactId):null;
+   if(!remoteRuntimeMatches(proof,run,artifact,receipt.productSourceHead))
+     fail('GITHUB_RUNTIME_ARTIFACT_PROVENANCE_MISMATCH');
+ }
+ const locator=parseReviewLocator(receipt.independentReview?.url);
+ if(!locator)fail('GITHUB_REVIEW_LOCATOR_INVALID');
+ const pr=await get('/pulls/'+locator.pr);
+ const review=await get('/pulls/'+locator.pr+'/reviews/'+locator.id);
+ if(!remoteReviewMatches(receipt,pr,review,locator))
+   fail('GITHUB_INDEPENDENT_SOURCE_REVIEW_NOT_AUTHENTICATED');
+}
+
 function selfTest(){
  const base='a'.repeat(40),head='b'.repeat(40),src='c'.repeat(40),path='showroom/globe/h-earth/vegetation-prototype/route.js';
  const ok={schema:current.receiptSchema,policyId:current.policyId,disposition:'PASS_CURRENT_WORLD',
@@ -115,8 +169,29 @@ function selfTest(){
  }
  if(decide(ok,{...env,coreUnchanged:false}).result==='PASS')
    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:SOURCE_DRIFT');
+
+ const mockProof={runId:13,artifactId:17,archiveSha256:'f'.repeat(64)};
+ const mockRun={id:13,status:'completed',conclusion:'success',path:C2C_REGISTERED_RUNNER};
+ const mockArtifact={id:17,expired:false,workflow_run:{id:13},
+  digest:'sha256:'+'f'.repeat(64),name:'h-earth-neutral-exact-head-'+src};
+ if(!remoteRuntimeMatches(mockProof,mockRun,mockArtifact,src)||
+    remoteRuntimeMatches(mockProof,{...mockRun,conclusion:'failure'},mockArtifact,src)||
+    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,digest:'sha256:'+'0'.repeat(64)},src)||
+    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,workflow_run:{id:14}},src)||
+    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,name:'other'},src))
+    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_RUNTIME_PROVENANCE');
+ const locator=parseReviewLocator('https://github.com/'+GH_REPO+'/pull/7462#pullrequestreview-123');
+ const mockPr={number:7462,head:{sha:src},user:{login:'builder'}};
+ const mockReview={id:123,commit_id:src,state:'APPROVED',user:{login:'verifier'}};
+ if(!remoteReviewMatches(ok,mockPr,mockReview,locator)||
+    remoteReviewMatches(ok,mockPr,{...mockReview,user:{login:'builder'}},locator)||
+    remoteReviewMatches(ok,mockPr,{...mockReview,commit_id:head},locator)||
+    remoteReviewMatches(ok,mockPr,{...mockReview,state:'COMMENTED',body:'No independent pass'},locator)||
+    parseReviewLocator('https://example.com/other')!==null)
+    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_SOURCE_REVIEW');
+
  return {schema:'H_EARTH_CURRENT_WORLD_GATE_SELF_TEST_v2',result:'PASS',
-  cases:cases.length+1,oldVideoNotAuthority:true,missingEvidenceFailClosed:true};
+  cases:cases.length+1,oldVideoNotAuthority:true,missingEvidenceFailClosed:true,githubEvidenceMockChecks:10};
 }
 if(process.argv.includes('--self-test')){console.log(JSON.stringify(selfTest(),null,2));process.exit(0);}
 const base=(process.env.BASE_SHA||'').trim(),head=(process.env.HEAD_SHA||'HEAD').trim();
@@ -162,6 +237,7 @@ for(const kind of ['visualEvidence','interactionEvidence','continuityEvidence'])
   if(!exists(f.path)||hash(f.path)!==f.sha256)
     fail('EVIDENCE_DIGEST_MISMATCH:'+f.path);
  }
+await requireAuthenticGithubEvidence(receipt);
 console.log(JSON.stringify({schema:'H_EARTH_CURRENT_WORLD_GATE_RECEIPT_v2',result:'PASS',
  reason:decision.reason,policyId:current.policyId,candidateHead:head,sourceHead:receipt.productSourceHead,
  oldVideoNotControlling:true,releaseAuthorized:false},null,2));

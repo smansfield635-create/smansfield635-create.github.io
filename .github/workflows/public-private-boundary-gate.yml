@@ -103,13 +103,70 @@ jobs:
           assert not public_new_metadata_schema(".github/ai-router/projects/example/secret.py")
           assert not public_new_metadata_schema("control-plane/private.json")
 
+          # A declared directory *exclusion* in this exact, registered public
+          # H-Earth policy is not a private implementation file reference.
+          # This exception cannot authorize an arbitrary control-plane path,
+          # unregistered policy, traversal, or another file's added reference.
+          policy_metadata_path = "h-earth-3d/experience-anchor/H_EARTH_CURRENT_WORLD_ACCEPTANCE_v2.json"
+          directory_exclusion = "h-earth-3d/control-plane/"
+          def is_registered_directory_exclusion(source_path, added_text):
+              return (source_path == policy_metadata_path
+                      and added_text.strip() == '"h-earth-3d/control-plane/",')
+
+          def verify_registered_directory_exclusion():
+              head = os.environ["HEAD_SHA"]
+              tree = subprocess.run(
+                  ["git", "ls-tree", head, "--", policy_metadata_path],
+                  check=True, capture_output=True, text=True,
+              ).stdout
+              if not tree.startswith("100644 blob "):
+                  violation()
+              result = subprocess.run(
+                  ["git", "show", head + ":" + policy_metadata_path],
+                  check=True, capture_output=True, text=True,
+              )
+              try:
+                  policy = json.loads(result.stdout)
+              except (ValueError, UnicodeError):
+                  violation()
+              if (not isinstance(policy, dict)
+                      or policy.get("schema") != "H_EARTH_CURRENT_WORLD_ACCEPTANCE_POLICY_v2"
+                      or policy.get("policyId") != "H_EARTH_CURRENT_ACCEPTED_PRODUCT_WORLD_V2"
+                      or policy.get("status") != "ACTIVE_FAIL_CLOSED"
+                      or policy.get("historicalAnchor", {}).get("currentVisualAuthority") is not False
+                      or not isinstance(policy.get("excludePrefixes"), list)
+                      or policy["excludePrefixes"].count(directory_exclusion) != 1
+                      or "h-earth-3d/" not in policy.get("protectedPrefixes", [])):
+                  violation()
+
+          # Security regressions: only the single exact public policy metadata
+          # value may use this directory-classification rule.
+          assert is_registered_directory_exclusion(policy_metadata_path,
+                                                    '    "h-earth-3d/control-plane/",')
+          assert not is_registered_directory_exclusion("h-earth-3d/AGENTS.md",
+                                                        '    "h-earth-3d/control-plane/",')
+          assert not is_registered_directory_exclusion(
+              "h-earth-3d/experience-anchor/unregistered.json",
+              '    "h-earth-3d/control-plane/",')
+          assert not is_registered_directory_exclusion(policy_metadata_path,
+                                                        '    "h-earth-3d/control-plane/private.json",')
+          assert not is_registered_directory_exclusion(policy_metadata_path,
+                                                        '    "h-earth-3d/control-plane/../secret",')
+          assert not is_registered_directory_exclusion(policy_metadata_path,
+                                                        '    "h-earth-3d/control-plane/", "private"')
+
           in_hunk = False
+          current_file = None
           for line in diff.splitlines():
               if line.startswith("diff --git "):
+                  current_file = line.rsplit(" b/", 1)[-1] if " b/" in line else None
                   in_hunk = False
               elif line.startswith("@@ "):
                   in_hunk = True
               if not in_hunk or not line.startswith("+"):
+                  continue
+              if is_registered_directory_exclusion(current_file, line[1:]):
+                  verify_registered_directory_exclusion()
                   continue
               paths = protected_references(line[1:])
               if sensitive.search(line) or (paths and "geodiametrics1" in line.lower()):

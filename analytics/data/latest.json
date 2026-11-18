@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-17T18:27:52Z",
+  "generatedAt": "2026-11-18T04:25:37Z",
   "window30d": {
-    "start": "2026-10-18T18:27:52Z",
-    "end": "2026-11-17T18:27:52Z"
+    "start": "2026-10-19T04:25:37Z",
+    "end": "2026-11-18T04:25:37Z"
   },
   "daily": [
-    {
-      "date": "2026-10-19",
-      "pageLoads": 40
-    },
     {
       "date": "2026-10-20",
       "pageLoads": 30
@@ -92,11 +88,11 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 22
+      "pageLoads": 10
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 38
+      "pageLoads": 34
     },
     {
       "date": "2026-11-11",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 47
+      "pageLoads": 53
+    },
+    {
+      "date": "2026-11-18",
+      "pageLoads": 4
     }
   ],
   "summary": {
-    "pageLoads": 1376,
-    "botPageLoads": 785,
-    "nonBotPageLoads": 591
+    "pageLoads": 1330,
+    "botPageLoads": 777,
+    "nonBotPageLoads": 553
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1263,
-      "visits": 1263
+      "pageLoads": 1238,
+      "visits": 1238
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 92,
+      "pageLoads": 75,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 8,
-      "visits": 8
+      "pageLoads": 4,
+      "visits": 4
     },
     {
       "host": "m.facebook.com",
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 602,
-      "visits": 602
+      "pageLoads": 606,
+      "visits": 606
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 316,
-      "visits": 248
+      "pageLoads": 267,
+      "visits": 216
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 67,
-      "visits": 57
+      "pageLoads": 66,
+      "visits": 56
     },
     {
       "path": "/nine-summits/universe/",

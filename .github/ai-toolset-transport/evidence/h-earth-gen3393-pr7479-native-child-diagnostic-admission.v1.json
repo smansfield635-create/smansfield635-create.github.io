@@ -1,0 +1,17 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_PR7479_NATIVE_CHILD_FAILURE_SAFE_DIAGNOSTIC_BINDING_20261117_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_PR7479_NATIVE_CHILD_FAILURE_SAFE_DIAGNOSTIC_BINDING_20261117_001",
+    "lockGeneration": 3393,
+    "lockScope": "H_EARTH:PR7479:NATIVE_CHILD_FAILURE_SAFE_DIAGNOSTIC:20261117",
+    "lockAcquired": true,
+    "acquisitionCommitSha": "d3261703f4d3c32ab76efeb201d5a9aedea739cd"
+  }
+}

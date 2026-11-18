@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-18T16:24:56Z",
+  "generatedAt": "2026-11-18T17:23:43Z",
   "window": {
-    "start": "2026-08-20T16:24:56Z",
-    "end": "2026-11-18T16:24:56Z"
+    "start": "2026-08-20T17:23:43Z",
+    "end": "2026-11-18T17:23:43Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3312,
-    "visits": 1001,
+    "pageLoads": 3372,
+    "visits": 1011,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3312,
-        "visits": 1001
+        "pageLoads": 3372,
+        "visits": 1011
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 681,
+        "pageLoads": 671,
         "visits": 541
       },
       "/index.html": {
@@ -46,6 +46,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
@@ -57,10 +61,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -130,21 +130,21 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
       },
+      "/instruments/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -166,15 +166,23 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
       },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -182,20 +190,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 170,
-        "visits": 10
-      },
       "/about/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -234,6 +234,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
@@ -250,10 +254,6 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
         "visits": 0
@@ -261,6 +261,10 @@
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -301,12 +305,12 @@
         "visits": 510
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2311,
+        "pageLoads": 2361,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 481,
-        "visits": 481
+        "pageLoads": 491,
+        "visits": 491
       },
       "raw.githack.com": {
         "pageLoads": 10,

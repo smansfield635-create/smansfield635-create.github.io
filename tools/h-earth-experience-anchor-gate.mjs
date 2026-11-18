@@ -93,6 +93,22 @@ function parseReviewLocator(url){
  const match=typeof url==='string'?/^https:\/\/github\.com\/smansfield635-create\/smansfield635-create\.github\.io\/pull\/([1-9]\d*)#pullrequestreview-([1-9]\d*)$/.exec(url):null;
  return match?{pr:Number(match[1]),id:Number(match[2])}:null;
 }
+function parseOwnerCommentLocator(url){
+ const match=typeof url==='string'?
+  /^https:\/\/github\.com\/smansfield635-create\/smansfield635-create\.github\.io\/(?:issues|pull)\/[1-9]\d*#issuecomment-([1-9]\d*)$/.exec(url):null;
+ return match?{id:Number(match[1]),url}:null;
+}
+function remoteOwnerCommentMatches(receipt,owner,locator){
+ if(!locator||owner?.id!==locator.id||owner?.html_url!==locator.url||
+    owner?.user?.login!=='smansfield635-create'||typeof owner.body!=='string')
+    return false;
+ const lines=owner.body.split(/\r?\n/).map(x=>x.trim());
+ return lines.some(x=>/^disposition\s*[:=]\s*KEEP$/i.test(x))&&
+   lines.some(x=>x==='candidateHead: '+receipt.productSourceHead||
+      x==='candidateHead='+receipt.productSourceHead||
+      x==='candidateSha: '+receipt.productSourceHead||
+      x==='candidateSha='+receipt.productSourceHead);
+}
 function remoteReviewMatches(receipt,pr,review,locator){
  return Boolean(locator&&pr?.number===locator.pr&&
    pr?.head?.sha===receipt.productSourceHead&&
@@ -127,6 +143,13 @@ async function requireAuthenticGithubEvidence(receipt){
  const review=await get('/pulls/'+locator.pr+'/reviews/'+locator.id);
  if(!remoteReviewMatches(receipt,pr,review,locator))
    fail('GITHUB_INDEPENDENT_SOURCE_REVIEW_NOT_AUTHENTICATED');
+ if(receipt.ownerReview?.required===true){
+   const ownerLocator=parseOwnerCommentLocator(receipt.ownerReview.url);
+   if(!ownerLocator)fail('GITHUB_OWNER_KEEP_LOCATOR_INVALID');
+   const ownerComment=await get('/issues/comments/'+ownerLocator.id);
+   if(!remoteOwnerCommentMatches(receipt,ownerComment,ownerLocator))
+     fail('GITHUB_OWNER_KEEP_DISPOSITION_NOT_AUTHENTICATED');
+ }
 }
 
 function selfTest(){
@@ -196,6 +219,18 @@ function selfTest(){
  const locator=parseReviewLocator('https://github.com/'+GH_REPO+'/pull/7462#pullrequestreview-123');
  const mockPr={number:7462,head:{sha:src},user:{login:'builder'}};
  const mockReview={id:123,commit_id:src,state:'APPROVED',user:{login:'verifier'}};
+ const ownerUrl='https://github.com/'+GH_REPO+'/issues/7108#issuecomment-888';
+ const ownerLocator=parseOwnerCommentLocator(ownerUrl);
+ const ownerMock={id:888,html_url:ownerUrl,user:{login:'smansfield635-create'},
+   body:'candidateHead: '+src+'\ndisposition: KEEP'};
+ if(!ownerLocator||!remoteOwnerCommentMatches(ok,ownerMock,ownerLocator)||
+    remoteOwnerCommentMatches(ok,{...ownerMock,user:{login:'not-owner'}},ownerLocator)||
+    remoteOwnerCommentMatches(ok,{...ownerMock,body:'candidateHead: '+src+'\ndisposition: REJECT'},ownerLocator)||
+    remoteOwnerCommentMatches(ok,{...ownerMock,body:'candidateHead: '+head+'\ndisposition: KEEP'},ownerLocator)||
+    remoteOwnerCommentMatches(ok,{...ownerMock,html_url:ownerUrl+'-other'},ownerLocator)||
+    parseOwnerCommentLocator('https://example.com/issues/7108#issuecomment-888')!==null)
+    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_OWNER_KEEP');
+
  if(!remoteReviewMatches(ok,mockPr,mockReview,locator)||
     remoteReviewMatches(ok,mockPr,{...mockReview,user:{login:'builder'}},locator)||
     remoteReviewMatches(ok,mockPr,{...mockReview,commit_id:head},locator)||

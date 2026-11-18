@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-18T10:24:41Z",
+  "generatedAt": "2026-11-18T11:25:48Z",
   "window": {
-    "start": "2026-08-20T10:24:41Z",
-    "end": "2026-11-18T10:24:41Z"
+    "start": "2026-08-20T11:25:48Z",
+    "end": "2026-11-18T11:25:48Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,24 +18,24 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 3422,
-    "visits": 1021,
+    "visits": 1011,
     "byDevice": {
       "tablet": {
         "pageLoads": 3422,
-        "visits": 1021
+        "visits": 1011
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 721,
-        "visits": 551
+        "pageLoads": 711,
+        "visits": 541
       },
       "/index.html": {
         "pageLoads": 90,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 120,
+        "pageLoads": 100,
         "visits": 10
       },
       "/coherence-diagnostic/": {
@@ -259,7 +259,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
+        "pageLoads": 250,
         "visits": 70
       },
       "/products/archcoin/allocation/": {
@@ -274,6 +274,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/analytics/": {
+        "pageLoads": 80,
+        "visits": 0
+      },
       "/home/": {
         "pageLoads": 10,
         "visits": 10
@@ -281,10 +285,6 @@
       "/governance-bridge/": {
         "pageLoads": 150,
         "visits": 120
-      },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
@@ -301,11 +301,11 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 520,
-        "visits": 520
+        "pageLoads": 510,
+        "visits": 510
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2401,
+        "pageLoads": 2411,
         "visits": 0
       },
       "(none)": {

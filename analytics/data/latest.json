@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-18T10:24:41Z",
+  "generatedAt": "2026-11-18T11:25:48Z",
   "window30d": {
-    "start": "2026-10-19T10:24:41Z",
-    "end": "2026-11-18T10:24:41Z"
+    "start": "2026-10-19T11:25:48Z",
+    "end": "2026-11-18T11:25:48Z"
   },
   "daily": [
     {
@@ -56,11 +56,11 @@
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-11-03",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 37
+      "pageLoads": 36
     },
     {
       "date": "2026-11-11",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-18",
-      "pageLoads": 10
+      "pageLoads": 11
     }
   ],
   "summary": {
-    "pageLoads": 1309,
-    "botPageLoads": 758,
-    "nonBotPageLoads": 551
+    "pageLoads": 1329,
+    "botPageLoads": 768,
+    "nonBotPageLoads": 561
   },
   "referrers": [
     {
@@ -162,13 +162,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 597,
-      "visits": 597
+      "pageLoads": 557,
+      "visits": 557
     },
     {
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 276,
       "visits": 225
+    },
+    {
+      "path": "/",
+      "pageLoads": 95,
+      "visits": 75
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -179,11 +184,6 @@
       "path": "/products/education/personal-training/",
       "pageLoads": 80,
       "visits": 80
-    },
-    {
-      "path": "/",
-      "pageLoads": 65,
-      "visits": 55
     },
     {
       "path": "/nine-summits/universe/",

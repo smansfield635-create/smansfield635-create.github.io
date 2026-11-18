@@ -95,7 +95,7 @@ jobs:
             # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
             # Gen3356: exact Gen3353 C2-C candidate retains accepted woodland sector;
             # all unrelated future heads keep their historical guarded identity.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ]; then
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ] || [ "$EXACT_TARGET_SHA" = '9cec0cba499e675bb16bc82da61e73e547070726' ] || [ "$EXACT_TARGET_SHA" = '0f00a42cf605979e4f6d21c415823b02d82ecdd9' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03

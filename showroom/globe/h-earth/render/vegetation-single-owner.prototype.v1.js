@@ -638,14 +638,14 @@ void main(){
  // beach-facing dryland presentation, with a smooth world-space transition.
  // Accepted woodland and cavern controls lie outside this adjustment.
  float beachwardContinuity=smoothstep(70.,165.,aRoot.x)*smoothstep(-300.,-225.,aRoot.z);
- float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity);
+ float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity)*mix(1.36,1.58,tuftVariation);
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));
  float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
  float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
  float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
- float height=mix(mix(.11,.21,h),entranceHeight,entrance)*scale;
+ float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale;
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.81));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;

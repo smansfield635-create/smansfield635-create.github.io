@@ -1,0 +1,17 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "H_EARTH_PR7479_SECONDARY_SPARSE_WORKTREE_REPAIR_20261117_001",
+  "projectId": "H_EARTH",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "H_EARTH_PR7479_SECONDARY_SPARSE_WORKTREE_REPAIR_20261117_001",
+    "lockGeneration": 3406,
+    "lockScope": "H_EARTH:PR7479:SECONDARY_SPARSE_WORKTREE_REPAIR:20261117",
+    "lockAcquired": true,
+    "acquisitionCommitSha": "52b95a14eb7f22a7fb31ba7742a720ac424050a9"
+  }
+}

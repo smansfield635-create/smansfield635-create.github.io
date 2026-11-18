@@ -391,6 +391,35 @@ jobs:
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema==(if .candidateHead=="9cec0cba499e675bb16bc82da61e73e547070726" then "H_EARTH_GEN3353_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" else "H_EARTH_GEN3142_MODERN_BOOTSTRAP_SOURCE_BINDING_v1" end) and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .unchangedFocusedSourceTests=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = '0f00a42cf605979e4f6d21c415823b02d82ecdd9' ]; then
+              # Gen3397: this exact GPU-qualified modern C2-C head uses the Gen2815/Gen2795 route,
+              # not the Gen2694 historical URL cache chain. Unknown heads retain legacy fail-closed validation.
+              entry=showroom/globe/h-earth/index.html
+              bootstrap=showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js
+              active_route=showroom/globe/h-earth/vegetation-prototype/route.js
+              renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              test "$(git hash-object "$entry")" = 8e5bb97d74308ac8a54db73b5d232d8b09cd13f5
+              test "$(git hash-object "$bootstrap")" = 59c77d100d793f9dd28e9db7bd357ef078de0165
+              test "$(git hash-object "$active_route")" = 90c0bb936c9fa599289b1a83eb25aa41ae4ff226
+              test "$(git hash-object "$renderer")" = 757a21f621e8ee5bfe766637cd9ef56f42deec80
+              grep -Fq 'id="h-earth-current-run8e-module"' "$entry"
+              grep -Fq 'data-route="./vegetation-prototype/route.js?rev=gen2795-performance-v1"' "$entry"
+              grep -Fq 'src="./vegetation-prototype/bootstrap.v1.js?rev=gen2815-fast-start-v1"' "$entry"
+              grep -Fq '<script type="importmap">' "$entry"
+              node --check "$bootstrap"
+              node --check "$active_route"
+              node --check "$renderer"
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN3397_EXACT_MODERN_SOURCE_BINDING_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                exactCandidateSha:$target,
+                historicalGen2694CacheChain:"NOT_APPLICABLE_TO_THIS_EXACT_MODERN_C2C_HEAD",
+                sourceGitBlobs:{entry:"8e5bb97d74308ac8a54db73b5d232d8b09cd13f5",bootstrap:"59c77d100d793f9dd28e9db7bd357ef078de0165",route:"90c0bb936c9fa599289b1a83eb25aa41ae4ff226",renderer:"757a21f621e8ee5bfe766637cd9ef56f42deec80"},
+                entryBootstrap:"gen2815-fast-start-v1",activeRoute:"gen2795-performance-v1",
+                exactSourceAndSyntaxChecks:"PASS",
+                browserDrawExecuted:false,ownerVisualAcceptance:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3397_EXACT_MODERN_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .exactSourceAndSyntaxChecks=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null

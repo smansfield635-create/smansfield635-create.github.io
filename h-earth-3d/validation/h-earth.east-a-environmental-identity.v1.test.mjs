@@ -7,7 +7,9 @@ import { sampleHEarthTerrainElevation } from '../terrain/h-earth.terrain-field.j
 
 // Source-only Stage A checks. These do NOT constitute GLSL compilation,
 // camera screenshots, physical-device validation or owner acceptance.
-const renderPath = new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js', import.meta.url);
+// Pin the changed renderer's browser-visible request identity for the
+// static-asset gate; Node file URLs ignore search when reading source bytes.
+const renderPath = new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?v=a369cc6a1cce8b2ce84cc967f7ee3958b2a849a9', import.meta.url);
 const terrainPath = new URL('../terrain/h-earth.terrain-field.js', import.meta.url);
 const surfacePath = new URL('../environment/h-earth.successor-surface-material.run8c.js', import.meta.url);
 const source = readFileSync(renderPath, 'utf8');
@@ -71,6 +73,40 @@ test('Stage A does not alter canonical B2 terrain or successor material source b
 
 // Next gates: WebGL2 shader link, actual source-to-pixel comparison, mobile
 // performance and root/vegetation identity, then owner KEEP|ONE_REPAIR|REJECT.
+
+// Gen3382 owner-directed product restoration: source-level material-class
+// contract only. Physical-device visual acceptance remains a separate gate.
+test('Ordinary soil inherits the approved woodland photo-material composition, not regional repaint', () => {
+  const donor = source.indexOf('vec3 worldSoilActualAlbedo=');
+  const ordinary = source.indexOf('ordinaryLandDonorMaterial=geologicalEarthRock?0.0:worldSoilEligibility;');
+  const identity = source.indexOf('identityWeight*=1.0-ordinaryLandDonorMaterial;');
+  const groundcover = source.indexOf('groundcoverPigmentWeight*=1.0-ordinaryLandDonorMaterial;');
+  assert.ok(donor > 0 && ordinary > 0 && identity > ordinary && groundcover > identity,
+    'DONOR_MATERIAL_STAGE_ORDER_CHANGED');
+  assert.ok(source.indexOf('float worldSoilEligibility=clamp(') < ordinary,
+    'ORDINARY_CLASS_NOT_DERIVED_FROM_PHYSICAL_SOIL_ELIGIBILITY');
+  for (const protectedToken of [
+    'uClearingSoil,worldSoilXZ*0.28',
+    'vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;',
+    'worldSoilReference*worldSoilEarthTint*worldSoilBroadTonal',
+    'terrainRoughnessForLighting,0.94,worldSoilWeight',
+    'terrainReflectanceForLighting,0.02,worldSoilWeight',
+    'float worldSoilNearRelief=worldSoilWeight*',
+    'float sandCoverage=renderedBeachCoverage(',
+    'float steepBank=materialHillsideWeight',
+    'bool geologicalEarthRock=vPrimitiveIndex==62001u;',
+    'float protectedGrove=1.0-smoothstep('
+  ]) assert.ok(source.includes(protectedToken), 'DONOR_OR_NATIVE_BOUNDARY_MISSING: ' + protectedToken);
+  for (const authority of [0, 0.25, 0.75, 1]) {
+    const residualSyntheticWeight = 1 - authority;
+    assert.ok(residualSyntheticWeight >= 0 && residualSyntheticWeight <= 1);
+    if (authority === 1) assert.equal(residualSyntheticWeight, 0,
+      'SYNTHETIC_COLOR_REPLACED_ELIGIBLE_ORDINARY_SOIL');
+    if (authority === 0) assert.equal(residualSyntheticWeight, 1,
+      'NATIVE_BEACH_OR_ROCK_ECOTONE_SUPPRESSED');
+  }
+  // This enforces the source path, not first-hit camera or visual causation.
+});
 
 // Qualified product boundary: the published Gen2666 mesh was not rebaked
 // after the B2 canonical sampler changed. A passing witness verifies the

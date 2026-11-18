@@ -722,6 +722,8 @@ jobs:
           let residencySamples=[];
           let vegetationExercise=null;
           let continuityCapture=null;
+          const activeExactCandidate=targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='';
+          let activeExperienceEvidence=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
@@ -746,6 +748,113 @@ jobs:
             initial=await sample('initial');
             await page.waitForTimeout(3000);
             later=await sample('later');
+          if(activeExactCandidate){
+            const evidence={schema:'H_EARTH_C2C_ACTIVE_NORMAL_ROUTE_EXPERIENCE_EVIDENCE_v1',candidate:targetSha,route,query,sourceRun:44216509211,realPointerEvents:false,realEnterClicked:false,defaultFramebufferReadbackVerified:false,ownerVisualAcceptance:false,anchorAccepted:false,physicalAndroidAcceptance:false,productMutationPerformed:false,result:'NOT_PROVEN'};
+            const observe=()=>page.evaluate(()=>{
+              const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE,loader=window.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+              const nav=api?.getIntakeReceipt?.()?.currentNavigationState??null;
+              const gpu=api?.getLiveGpuReceipt?.()??null;
+              const frame=gpu?.frameRecords?.at(-1)??null;
+              const shell=document.querySelector('#h-earth-loading-screen');
+              const button=shell?.querySelector('[data-enter]');
+              return {loaderMode:shell?.dataset.mode??null,loaderHidden:shell?.hidden??null,buttonDisabled:button?.disabled??null,routeReady:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady??null,loaderReceipt:loader?{mode:loader.mode,firstInputCameraChangeMilliseconds:loader.firstInputCameraChangeMilliseconds,firstInputPoseRenderedMilliseconds:loader.firstInputPoseRenderedMilliseconds,nextAnimationFrameOpportunityMilliseconds:loader.nextAnimationFrameOpportunityMilliseconds,loaderDismissedMilliseconds:loader.loaderDismissedMilliseconds}:null,navigation:nav?{sequence:nav.sequence,yawDegrees:nav.yawDegrees,pitchDegrees:nav.pitchDegrees,position:nav.position}:null,frame:frame?{frameSequence:frame.frameSequence,navigationSequence:frame.navigationSequence}:null,presentations:gpu?.counters?.gpuFramebufferPresentationCount??null,renderer:gpu?.selectedRendererPath??null};
+            });
+            try{
+              await page.waitForFunction(()=>{const shell=document.querySelector('#h-earth-loading-screen'),root=document.querySelector('#h-earth-functional-landscape-route');return root?.dataset.run8eError==='true'||['test','ready'].includes(shell?.dataset.mode)},null,{timeout:180000});
+              const before=await observe();evidence.before=before;
+              if(!Number.isFinite(before.navigation?.sequence))throw Error('BEFORE_NATIVE_INPUT_NAVIGATION_NOT_OBSERVABLE');
+              const canvas=page.locator('#h-earth-functional-landscape-canvas');
+              const bounds=await canvas.boundingBox();
+              if(!bounds||bounds.width<250||bounds.height<180)throw Error('NATIVE_CANVAS_BOUNDARY_NOT_VISIBLE');
+              const x=bounds.x+bounds.width*.50,y=bounds.y+bounds.height*.50;
+              await page.mouse.move(x-60,y);await page.mouse.down();
+              try{await page.mouse.move(x+80,y+25,{steps:16})}finally{await page.mouse.up()}
+              await page.mouse.wheel(0,-360);
+              evidence.realPointerEvents=true;
+              await page.waitForFunction(initialSequence=>{
+                const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE,nav=api?.getIntakeReceipt?.()?.currentNavigationState;
+                const l=window.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+                const shell=document.querySelector('#h-earth-loading-screen');
+                return Number.isFinite(nav?.sequence)&&nav.sequence>initialSequence&&
+                  Number.isFinite(l?.firstInputCameraChangeMilliseconds)&&Number.isFinite(l?.firstInputPoseRenderedMilliseconds)&&
+                  Number.isFinite(l?.nextAnimationFrameOpportunityMilliseconds)&&shell?.dataset.mode==='ready'&&shell?.querySelector('[data-enter]')?.disabled===false;
+              },before.navigation.sequence,{timeout:180000});
+              const input=await observe();
+              await page.waitForFunction(sequence=>{
+                const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE,frame=api?.getLiveGpuReceipt?.()?.frameRecords?.at(-1);
+                return Number.isFinite(frame?.frameSequence)&&frame.navigationSequence===sequence;
+              },input.navigation.sequence,{timeout:60000});
+              evidence.afterInput=await observe();
+              const p0=before.navigation.position,p1=evidence.afterInput.navigation.position;
+              const positionShift=p0&&p1?Math.hypot(p1.x-p0.x,p1.z-p0.z):0;
+              const yawShift=Math.abs((((evidence.afterInput.navigation.yawDegrees-before.navigation.yawDegrees)+540)%360)-180);
+              if(!(positionShift>.05||yawShift>.1))throw Error('NATIVE_INPUT_NO_CAMERA_POSE_CHANGE');
+              const looked=await sample('active-look-before-enter');
+              await page.locator('#h-earth-loading-screen [data-enter]').click({timeout:30000});
+              evidence.realEnterClicked=true;
+              await page.waitForFunction(()=>{
+                const root=document.querySelector('#h-earth-functional-landscape-route'),shell=document.querySelector('#h-earth-loading-screen');
+                return root?.dataset.run8eReady==='true'&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&shell?.hidden===true;
+              },null,{timeout:120000});
+              evidence.afterEnter=await observe();
+              const entered=await sample('active-entered-ground');
+              const enteredSequence=evidence.afterEnter.navigation?.sequence;
+              if(!Number.isFinite(enteredSequence))throw Error('ENTERED_NAVIGATION_MISSING');
+              await page.mouse.wheel(0,-480);
+              await page.waitForFunction(previous=>Number(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()?.currentNavigationState?.sequence)>previous,enteredSequence,{timeout:90000});
+              const travelInput=await observe();
+              await page.waitForFunction(sequence=>{
+                const gpu=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+                const frame=gpu?.frameRecords?.at(-1);
+                return frame?.navigationSequence===sequence&&Number(gpu?.counters?.gpuFramebufferPresentationCount)>0;
+              },travelInput.navigation.sequence,{timeout:60000});
+              evidence.afterTravel=await observe();
+              const enteredPos=evidence.afterEnter.navigation?.position,travelPos=evidence.afterTravel.navigation?.position;
+              if(!enteredPos||!travelPos||Math.hypot(travelPos.x-enteredPos.x,travelPos.z-enteredPos.z)<=.05)throw Error('NATIVE_WHEEL_NO_TRAVEL');
+              const traveled=await sample('active-travel-ground');
+              const compare=async(a,b)=>page.evaluate(async images=>{
+                const rgba=async base64=>{
+                  const bytes=Uint8Array.from(atob(base64),v=>v.charCodeAt(0));
+                  const bitmap=await createImageBitmap(new Blob([bytes],{type:'image/png'}));
+                  const c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;
+                  const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(bitmap,0,0);
+                  const result={width:c.width,height:c.height,rgba:ctx.getImageData(0,0,c.width,c.height).data};bitmap.close();return result;
+                };
+                const x=await rgba(images.a),y=await rgba(images.b);
+                if(x.width!==y.width||x.height!==y.height)return {valid:false,reason:'CAPTURE_DIMENSION_DRIFT'};
+                let changed=0,nonblank=0;
+                for(let i=0;i<x.rgba.length;i+=4){
+                  const delta=Math.abs(x.rgba[i]-y.rgba[i])+Math.abs(x.rgba[i+1]-y.rgba[i+1])+Math.abs(x.rgba[i+2]-y.rgba[i+2]);
+                  if(delta>30)changed++;
+                  if(y.rgba[i]+y.rgba[i+1]+y.rgba[i+2]>30)nonblank++;
+                }
+                return {valid:true,changedPixels:changed,totalPixels:x.width*x.height,afterNonblankPixels:nonblank,thresholdPixels:512,pass:changed>512&&nonblank>512};
+              },{a:Buffer.from(await fs.readFile(out+'/'+a)).toString('base64'),b:Buffer.from(await fs.readFile(out+'/'+b)).toString('base64')});
+              evidence.pixelComparison=await compare(entered.canvasScreenshot,traveled.canvasScreenshot);
+              evidence.gpuReadback=await page.evaluate(()=>{
+                const canvas=document.getElementById('h-earth-functional-landscape-canvas'),gl=canvas?.getContext('webgl2');
+                if(!gl||gl.isContextLost())return {available:false,reason:'WEBGL2_CONTEXT_UNAVAILABLE'};
+                const width=Math.min(32,canvas.width),height=Math.min(32,canvas.height);
+                if(!width||!height)return {available:false,reason:'FRAMEBUFFER_DIMENSIONS_ZERO'};
+                const pixels=new Uint8Array(width*height*4);
+                gl.finish();gl.readPixels(Math.floor((canvas.width-width)/2),Math.floor((canvas.height-height)/2),width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+                let nonzero=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]||pixels[i+1]||pixels[i+2]||pixels[i+3])nonzero++;
+                return {available:true,glError:gl.getError(),readPixelsCalled:true,samplePixels:width*height,nonzeroPixels:nonzero,defaultFramebufferReadbackVerified:nonzero>0};
+              });
+              evidence.defaultFramebufferReadbackVerified=evidence.gpuReadback.defaultFramebufferReadbackVerified===true;
+              evidence.captureFiles=[looked.canvasScreenshot,entered.canvasScreenshot,traveled.canvasScreenshot];
+              evidence.captureSha256=[looked.canvasScreenshotSha256,entered.canvasScreenshotSha256,traveled.canvasScreenshotSha256];
+              evidence.genuinePresentedPose=evidence.afterTravel.frame?.navigationSequence===evidence.afterTravel.navigation.sequence;
+              evidence.assertions={realInput:evidence.realPointerEvents,changedPose:positionShift>.05||yawShift>.1,renderedChangedPose:evidence.afterInput.frame?.navigationSequence===evidence.afterInput.navigation.sequence,entered:evidence.realEnterClicked&&evidence.afterEnter.routeReady==='true'&&evidence.afterEnter.loaderHidden===true,travel:Math.hypot(travelPos.x-enteredPos.x,travelPos.z-enteredPos.z)>.05,travelPresented:evidence.genuinePresentedPose,pixelsChanged:evidence.pixelComparison?.pass===true,webgl2:evidence.gpuReadback?.available===true&&evidence.gpuReadback.glError===0};
+              if(Object.values(evidence.assertions).some(v=>v!==true))throw Error('ACTIVE_ASSERTIONS_NOT_PROVEN:'+Object.entries(evidence.assertions).filter(([,v])=>v!==true).map(([k])=>k).join(','));
+              evidence.result='ACTIVE_BROWSER_INTERACTION_EVIDENCE_CAPTURED_ANCHOR_PENDING';
+            }catch(error){
+              evidence.result='NOT_PROVEN';
+              evidence.failure={message:error?.message??String(error),stack:error?.stack??null};
+            }
+            activeExperienceEvidence=evidence;
+            await fs.writeFile(out+'/active-experience-anchor.json',JSON.stringify(evidence,null,2)+'\n');
+          }
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
             continuityCapture=await captureContinuityReplay(page,sample,query,exerciseVegetation);
             if(exerciseVegetation&&!continuityCaptureRequested(query)){
@@ -945,6 +1054,7 @@ jobs:
             integratedQualification,
             vegetationExercise,
             continuityCapture,
+            activeExperienceEvidence,
             vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
             residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
           };
@@ -960,6 +1070,7 @@ jobs:
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(activeExactCandidate&&activeExperienceEvidence?.result!=='ACTIVE_BROWSER_INTERACTION_EVIDENCE_CAPTURED_ANCHOR_PENDING')process.exitCode=1;
           if(continuityCaptureRequested(query)&&continuityCapture?.passed!==true)process.exitCode=1;
           if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
           if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached||!integratedQualification.boulderAimReached||!integratedQualification.boulderViewCanvasSha256))process.exitCode=1;

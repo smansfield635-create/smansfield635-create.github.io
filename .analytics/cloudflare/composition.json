@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-18T19:24:42Z",
+  "generatedAt": "2026-11-18T20:25:13Z",
   "window": {
-    "start": "2026-10-19T19:24:42Z",
-    "end": "2026-11-18T19:24:42Z"
+    "start": "2026-10-19T20:25:13Z",
+    "end": "2026-11-18T20:25:13Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 225
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
@@ -34,8 +34,8 @@
       },
       {
         "value": "/nine-summits/universe/",
-        "pageLoads": 51,
-        "visits": 51
+        "pageLoads": 50,
+        "visits": 50
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -53,17 +53,17 @@
         "visits": 20
       },
       {
-        "value": "/showroom/globe/",
-        "pageLoads": 11,
-        "visits": 11
-      },
-      {
         "value": "/release-proof/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/showroom/globe/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -128,11 +128,6 @@
         "visits": 0
       },
       {
-        "value": "/explore/frontier/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/products/archcoin/contract/overview/",
         "pageLoads": 1,
         "visits": 1
@@ -166,8 +161,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1226,
-        "visits": 1226
+        "pageLoads": 1223,
+        "visits": 1223
       },
       {
         "value": "diamondgatebridge.com",
@@ -193,8 +188,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1248,
-        "visits": 1173
+        "pageLoads": 1245,
+        "visits": 1170
       },
       {
         "value": "CN",
@@ -215,8 +210,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1158,
-        "visits": 1104
+        "pageLoads": 1155,
+        "visits": 1101
       },
       {
         "value": "mobile",
@@ -252,8 +247,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 68,
-        "visits": 56
+        "pageLoads": 65,
+        "visits": 53
       },
       {
         "value": "Firefox",
@@ -294,8 +289,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 68,
-        "visits": 56
+        "pageLoads": 65,
+        "visits": 53
       },
       {
         "value": "iOS",
@@ -311,15 +306,15 @@
       },
       {
         "value": "0",
-        "pageLoads": 558,
-        "visits": 483
+        "pageLoads": 555,
+        "visits": 480
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1278,
-        "visits": 1243
+        "pageLoads": 1275,
+        "visits": 1240
       },
       {
         "value": "routing-apis",
@@ -330,8 +325,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1288,
-        "visits": 1243
+        "pageLoads": 1285,
+        "visits": 1240
       },
       {
         "value": "cache",
@@ -342,15 +337,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1318,
-        "visits": 1243
+        "pageLoads": 1315,
+        "visits": 1240
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1318,
-        "visits": 1243
+        "pageLoads": 1315,
+        "visits": 1240
       }
     ]
   }

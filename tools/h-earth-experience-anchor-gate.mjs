@@ -64,9 +64,12 @@ function decide(r,{base,head,paths,coreUnchanged}){
     !/^https:\/\/github\.com\//.test(r.independentReview.url||''))
       return deny('INDEPENDENT_REVIEW_MISSING');
  if(r.ownerReview?.required===true){
-   if(!['KEEP','ONE_REPAIR','REJECT'].includes(r.ownerReview.disposition)||
+   // A repair request or rejection cannot ever authorize a PASS receipt.
+   if(r.ownerReview.disposition!=='KEEP'||
       !/^https:\/\/github\.com\//.test(r.ownerReview.url||''))
-      return deny('OWNER_DECISION_MISSING');
+      return deny('OWNER_KEEP_DISPOSITION_NOT_PROVEN');
+ }else if(current.declaredOwnerReviewRequired===true){
+      return deny('OWNER_REVIEW_REQUIRED_BY_POLICY');
  }else if(r.ownerReview?.required!==false||
     typeof r.ownerReview.reason!=='string'||!r.ownerReview.reason.trim())
       return deny('OWNER_REVIEW_APPLICABILITY_MISSING');
@@ -96,9 +99,7 @@ function remoteReviewMatches(receipt,pr,review,locator){
    pr?.user?.login&&review?.id===locator.id&&
    review?.commit_id===receipt.productSourceHead&&
    review?.user?.login&&review.user.login!==pr.user.login&&
-   (review.state==='APPROVED'||
-    (review.state==='COMMENTED'&&typeof review.body==='string'&&
-     review.body.includes('PASS_SOURCE_BOUND'))));
+   review.state==='APPROVED');
 }
 async function requireAuthenticGithubEvidence(receipt){
  const get=async suffix=>{
@@ -142,7 +143,7 @@ function selfTest(){
    exactSourceHead:src,result:'PASS_EXACT_SOURCE_RUNTIME'}],
   crossScale:{mode:current.acceptanceModes[0],unchangedPaths:current.protectedSameWorldSources},
   independentReview:{result:'PASS_SOURCE_BOUND',sourceHead:src,url:'https://github.com/example/repo/issues/1'},
-  ownerReview:{required:false,reason:'fixture has no declared physical review'},
+  ownerReview:{required:true,disposition:'KEEP',url:'https://github.com/example/repo/issues/1'},
   productMergeAuthorized:false,deploymentAuthorized:false};
  const env={base,head,paths:[path],coreUnchanged:true};
  const cases=[
@@ -169,6 +170,18 @@ function selfTest(){
  }
  if(decide(ok,{...env,coreUnchanged:false}).result==='PASS')
    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:SOURCE_DRIFT');
+ // Fail closed even if a receipt falsely asserts PASS while the owner
+ // explicitly rejected, requested repair, or supposedly waived mandatory review.
+ for(const disposition of ['REJECT','ONE_REPAIR']){
+   const fixture=structuredClone(ok);fixture.ownerReview.disposition=disposition;
+   if(decide(fixture,env).result==='PASS')
+     throw Error('CURRENT_WORLD_SELF_TEST_FAILED:OWNER_'+disposition+'_MUST_NOT_PASS');
+ }
+ const skippedOwner=structuredClone(ok);
+ skippedOwner.ownerReview={required:false,reason:'self-declared nonapplicability'};
+ if(decide(skippedOwner,env).result==='PASS')
+   throw Error('CURRENT_WORLD_SELF_TEST_FAILED:OWNER_REVIEW_SELF_WAIVER');
+
 
  const mockProof={runId:13,artifactId:17,archiveSha256:'f'.repeat(64)};
  const mockRun={id:13,status:'completed',conclusion:'success',path:C2C_REGISTERED_RUNNER};
@@ -187,6 +200,7 @@ function selfTest(){
     remoteReviewMatches(ok,mockPr,{...mockReview,user:{login:'builder'}},locator)||
     remoteReviewMatches(ok,mockPr,{...mockReview,commit_id:head},locator)||
     remoteReviewMatches(ok,mockPr,{...mockReview,state:'COMMENTED',body:'No independent pass'},locator)||
+     remoteReviewMatches(ok,mockPr,{...mockReview,state:'COMMENTED',body:'PASS_SOURCE_BOUND'},locator)||
     parseReviewLocator('https://example.com/other')!==null)
     throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_SOURCE_REVIEW');
 

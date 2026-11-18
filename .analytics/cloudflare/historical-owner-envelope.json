@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-18T18:27:35Z",
+  "generatedAt": "2026-11-18T19:24:42Z",
   "window": {
-    "start": "2026-08-20T18:27:35Z",
-    "end": "2026-11-18T18:27:35Z"
+    "start": "2026-08-20T19:24:42Z",
+    "end": "2026-11-18T19:24:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3342,
+    "pageLoads": 3322,
     "visits": 1011,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3342,
+        "pageLoads": 3322,
         "visits": 1011
       }
     },
@@ -29,10 +29,6 @@
       "/": {
         "pageLoads": 671,
         "visits": 541
-      },
-      "/index.html": {
-        "pageLoads": 60,
-        "visits": 0
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 120,
@@ -46,13 +42,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -65,6 +61,10 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/index.html": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
@@ -94,6 +94,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -110,11 +114,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/developer/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/developer/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -133,10 +137,6 @@
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
@@ -242,13 +242,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
@@ -305,7 +305,7 @@
         "visits": 510
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2331,
+        "pageLoads": 2311,
         "visits": 0
       },
       "(none)": {

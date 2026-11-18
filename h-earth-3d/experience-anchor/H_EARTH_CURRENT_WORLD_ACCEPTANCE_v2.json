@@ -1,0 +1,63 @@
+{
+  "schema": "H_EARTH_CURRENT_WORLD_ACCEPTANCE_POLICY_v2",
+  "policyId": "H_EARTH_CURRENT_ACCEPTED_PRODUCT_WORLD_V2",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "baseline": "LATEST_ACCEPTED_H_EARTH_PRODUCT_SOURCE_PLUS_EXACT_CANDIDATE_BROWSER_AND_GPU_EVIDENCE",
+  "historicalAnchor": {
+    "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "status": "HISTORICAL_SUPERSEDED",
+    "currentVisualAuthority": false,
+    "requiresVideoReplay": false,
+    "preserveHistoricalReceipts": true
+  },
+  "sourceOfAuthority": {
+    "ownerCommentId": 6968200453,
+    "canonicalIntakeGeneration": 3401
+  },
+  "protectedPrefixes": [
+    "h-earth-3d/",
+    "showroom/globe/h-earth/",
+    "showroom/globe/audralia/"
+  ],
+  "excludePrefixes": [
+    "h-earth-3d/registry/",
+    "h-earth-3d/control-plane/",
+    "h-earth-3d/experience-anchor/",
+    "h-earth-3d/evaluation/",
+    "h-earth-3d/evidence/",
+    "showroom/globe/h-earth/diagnostic/",
+    "showroom/globe/h-earth/awards/",
+    "showroom/globe/audralia/disposition/",
+    "showroom/globe/audralia/diagnostic/"
+  ],
+  "instructionsOnly": [
+    "h-earth-3d/AGENTS.md",
+    "showroom/globe/h-earth/AGENTS.md",
+    "showroom/globe/audralia/AGENTS.md"
+  ],
+  "protectedSameWorldSources": [
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/app.mjs",
+    "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+  ],
+  "currentRequiredChecks": [
+    "EXACT_SOURCE_INTEGRITY",
+    "NATIVE_GPU_FRAME_PRESENTATION",
+    "DIRECT_CAMERA_ENTER_AND_TRAVEL",
+    "TERRAIN_WATER_WORLD_NONREGRESSION",
+    "ONE_WORLD_NO_PARALLEL_PRODUCT",
+    "VISUAL_AND_DEVICE_LIMITATIONS_DISCLOSED"
+  ],
+  "acceptanceModes": [
+    "UNCHANGED_WORLD_DEPENDENCIES_WITH_RUNTIME_PROOF",
+    "DIRECT_CURRENT_WORLD_CONTINUITY_PROOF"
+  ],
+  "receiptSchema": "H_EARTH_CURRENT_WORLD_ACCEPTANCE_RECEIPT_v2",
+  "receiptDirectory": "h-earth-3d/experience-anchor/receipts/",
+  "independentSourceReviewRequired": true,
+  "declaredOwnerReviewRequired": true,
+  "missingEvidenceDisposition": "FAIL_CLOSED",
+  "noAutomaticSourceMutationMergeDeploymentOrProductReleaseAuthority": true
+}

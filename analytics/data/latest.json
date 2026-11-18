@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-18T00:45:29Z",
+  "generatedAt": "2026-11-18T01:25:51Z",
   "window30d": {
-    "start": "2026-10-19T00:45:29Z",
-    "end": "2026-11-18T00:45:29Z"
+    "start": "2026-10-19T01:25:51Z",
+    "end": "2026-11-18T01:25:51Z"
   },
   "daily": [
     {
       "date": "2026-10-20",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-10-21",
-      "pageLoads": 70
+      "pageLoads": 50
     },
     {
       "date": "2026-10-22",
@@ -68,11 +68,11 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 70
+      "pageLoads": 60
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 90
+      "pageLoads": 170
     },
     {
       "date": "2026-11-06",
@@ -88,11 +88,11 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 10
+      "pageLoads": 60
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 38
+      "pageLoads": 37
     },
     {
       "date": "2026-11-11",
@@ -124,34 +124,34 @@
     },
     {
       "date": "2026-11-18",
-      "pageLoads": 0
+      "pageLoads": 1
     }
   ],
   "summary": {
-    "pageLoads": 1300,
-    "botPageLoads": 727,
-    "nonBotPageLoads": 573
+    "pageLoads": 1350,
+    "botPageLoads": 787,
+    "nonBotPageLoads": 563
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1268,
-      "visits": 1268
+      "pageLoads": 1178,
+      "visits": 1178
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 75,
+      "pageLoads": 105,
       "visits": 0
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 14,
-      "visits": 14
     },
     {
       "host": "www.facebook.com",
       "pageLoads": 12,
       "visits": 12
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 4,
+      "visits": 4
     },
     {
       "host": "m.facebook.com",
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 616,
-      "visits": 616
+      "pageLoads": 536,
+      "visits": 536
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 267,
-      "visits": 216
+      "pageLoads": 327,
+      "visits": 266
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -176,14 +176,9 @@
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 80,
-      "visits": 80
-    },
-    {
       "path": "/",
-      "pageLoads": 56,
-      "visits": 46
+      "pageLoads": 66,
+      "visits": 56
     },
     {
       "path": "/nine-summits/universe/",
@@ -191,12 +186,17 @@
       "visits": 51
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 30,
-      "visits": 30
+      "path": "/products/education/personal-training/",
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/showroom/globe/audralia/",
+      "pageLoads": 40,
+      "visits": 40
+    },
+    {
+      "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
       "pageLoads": 20,
       "visits": 20
     }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T20:25:15Z",
+  "generatedAt": "2026-11-19T21:23:55Z",
   "window": {
-    "start": "2026-08-21T20:25:15Z",
-    "end": "2026-11-19T20:25:15Z"
+    "start": "2026-08-21T21:23:55Z",
+    "end": "2026-11-19T21:23:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3172,
-    "visits": 871,
+    "pageLoads": 3162,
+    "visits": 861,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3172,
-        "visits": 871
+        "pageLoads": 3162,
+        "visits": 861
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 531,
-        "visits": 401
+        "pageLoads": 521,
+        "visits": 391
       },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
@@ -206,8 +206,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/prelude/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -216,14 +224,6 @@
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 460,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
@@ -301,8 +301,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 380,
-        "visits": 380
+        "pageLoads": 370,
+        "visits": 370
       },
       "(none)": {
         "pageLoads": 481,

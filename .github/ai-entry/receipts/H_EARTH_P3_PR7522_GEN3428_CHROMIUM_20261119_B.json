@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_P3_PR7522_GEN3428_CHROMIUM_20261119_B",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7527,
+  "requestBranch": "ai-dispatch-request-h-earth-p3-pr7522-gen3428-20261119-b",
+  "requestCommit": "d8252fe37df73978187cfb8a49adb9954a1435d9",
+  "requestCommitParent": "8e7330feba072359c2ab14340bd606aca91df057",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "8e7330feba072359c2ab14340bd606aca91df057",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "086eadaf40b96584086ccaf53ac65fd9b00d93fe",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "44603430971",
+  "dispatchedRunId": 44603458901,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44603458901",
+  "dispatchedRunHeadSha": "8e7330feba072359c2ab14340bd606aca91df057",
+  "dispatchedAt": "2026-11-19T19:56:16.650Z",
+  "resolvedAt": "2026-11-19T19:56:23.473Z"
+}

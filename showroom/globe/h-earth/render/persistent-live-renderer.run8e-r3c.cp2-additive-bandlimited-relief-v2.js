@@ -1243,6 +1243,17 @@ void main(){
     vec3 sand=mix(mix(wetSand,dampSand,smoothstep(2.0,14.0,inlandMeters)),drySand,smoothstep(10.0,24.0,inlandMeters));
     sand*=0.965+0.07*grain;
     palette=mix(palette,sand,sandCoverage);
+    // Source-authentic freshwater bank sediment, carried only by the existing
+    // ERODED_TERRAIN material channel. Unlike coast/contact distances, this
+    // cannot turn the river into ocean beach material or affect tree roles.
+    float nativeRiverBank=clamp((vMaterialParameters.z-.035)/.92,0.0,1.0);
+    if(nativeRiverBank>0.001 && !geologicalEarthRock){
+      float bankGrain=noise2(world*.51+vec2(13.0,-19.0));
+      vec3 riparianEarth=mix(vec3(.178,.148,.107),vec3(.298,.260,.204),
+        smoothstep(.025,.24,slope));
+      riparianEarth*=.88+.23*bankGrain;
+      palette=mix(palette,riparianEarth,nativeRiverBank*.64*(1.0-sandCoverage));
+    }
     presentationContact*=1.0-0.85*sandCoverage;
     presentationHighlight*=1.0-0.70*sandCoverage;
 // SHORELINE_SOIL_BEGIN shade
@@ -2802,6 +2813,54 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(oasisTrees.meshes)>5*1024*1024)throw Error('OASIS_GROUP_GPU_MEMORY_BUDGET_EXCEEDED');
+    // Derive the rear river's true wet/dry material boundary from the actual
+    // emitted water triangles, not the planned dry continuation or ocean coast.
+    // Index boundary edges once; no new GPU buffer, pass, root or tree change.
+    const nativeRiverBankBins=new Map(),bankBinMeters=12,bankReachMeters=16;
+    for(const {role:waterRole,mesh:waterMesh} of model.meshes){
+      if(waterRole!=='FRESHWATER_RIVER'&&waterRole!=='OASIS_WATER')continue;
+      const edges=new Map(),localPoints=new Map(),indices=waterMesh.indices;
+      const localPoint=id=>{
+        if(!localPoints.has(id))localPoints.set(id,unprojectPlanetVertex(
+          waterMesh.positions[id*3],waterMesh.positions[id*3+1],waterMesh.positions[id*3+2]));
+        return localPoints.get(id);
+      };
+      for(let i=0;i<indices.length;i+=3){
+        const a=indices[i],b=indices[i+1],c=indices[i+2];
+        for(const [u,v] of [[a,b],[b,c],[c,a]]){
+          const key=u<v?u+':'+v:v+':'+u,prior=edges.get(key);
+          if(prior)prior.count++;else edges.set(key,{u,v,count:1});
+        }
+      }
+      for(const edge of edges.values()){
+        if(edge.count!==1)continue;
+        const a=localPoint(edge.u),b=localPoint(edge.v),dx=b.x-a.x,dz=b.z-a.z,lenSq=dx*dx+dz*dz;
+        if(lenSq<1e-10)continue;
+        const segment={ax:a.x,az:a.z,dx,dz,lenSq};
+        const x0=Math.floor((Math.min(a.x,b.x)-bankReachMeters)/bankBinMeters);
+        const x1=Math.floor((Math.max(a.x,b.x)+bankReachMeters)/bankBinMeters);
+        const z0=Math.floor((Math.min(a.z,b.z)-bankReachMeters)/bankBinMeters);
+        const z1=Math.floor((Math.max(a.z,b.z)+bankReachMeters)/bankBinMeters);
+        for(let ix=x0;ix<=x1;ix++)for(let iz=z0;iz<=z1;iz++){
+          const key=ix+':'+iz,bucket=nativeRiverBankBins.get(key);
+          if(bucket)bucket.push(segment);else nativeRiverBankBins.set(key,[segment]);
+        }
+      }
+    }
+    if(!nativeRiverBankBins.size)throw Error('NATIVE_RIVERBANK_WATER_EDGE_MISSING');
+    const nativeRiverBankMaterialAt=(x,z)=>{
+      const bucket=nativeRiverBankBins.get(Math.floor(x/bankBinMeters)+':'+Math.floor(z/bankBinMeters));
+      if(!bucket)return 0;
+      let nearestSq=bankReachMeters*bankReachMeters;
+      for(const e of bucket){
+        const t=Math.max(0,Math.min(1,((x-e.ax)*e.dx+(z-e.az)*e.dz)/e.lenSq));
+        const dx=x-e.ax-t*e.dx,dz=z-e.az-t*e.dz;
+        nearestSq=Math.min(nearestSq,dx*dx+dz*dz);
+      }
+      if(nearestSq>=bankReachMeters*bankReachMeters||model.sampleWaterAt(x,z))return 0;
+      const t=Math.max(0,Math.min(1,(Math.sqrt(nearestSq)-1)/(bankReachMeters-1)));
+      return 1-t*t*(3-2*t);
+    };
     for(const {role,part:treePart,mesh,colors:palmColors,leaflets,clearingAttributes,colorsAreLinear} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
       const meshStarted=performance.now(),partTiming={role,part:treePart??null,vertices:mesh.vertexCount,triangles:mesh.indices.length/3};
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
@@ -2872,7 +2931,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           const access=sky.reduce((sum,d)=>sum+model.cavernLightVisibility(origin,d),0)/sky.length;
           cavernVisibilityMilliseconds+=performance.now()-visibilityStarted;
           mats.set([.89,.025,direct,access],i*4);
-        }else mats.set([.89,.025,.035,.13],i*4);
+        }else {
+          // Existing role-1 material channel z is unused by ordinary soil;
+          // encode only the actual emitted freshwater dry-bank proximity.
+          const riverBank=role==='ERODED_TERRAIN'?nativeRiverBankMaterialAt(local.x,local.z):0;
+          mats.set([.89,.025,.035+.92*riverBank,.13],i*4);
+        }
       }
       partTiming.terrainColorAndMaterialsMilliseconds=performance.now()-materialsStarted;
       const rimStarted=performance.now();

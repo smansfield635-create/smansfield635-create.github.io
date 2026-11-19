@@ -2120,7 +2120,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const grassResult=await grassPromise;if(grassResult.error)throw grassResult.error;const presentation=grassResult.value;
       const generationMs=performance.now()-generationStarted;
       const gpuStarted=performance.now();
-      resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
+      resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,uploadBudget:{maxBytes:1048576},entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
       // The admitted entrance roots and their soil coverage are finalized together.
       const installedHabitat=resources.singleOwnerVegetation.habitat;
       // Frozen Gen3238 occupancy signal: fail closed on any drift, never invent map cells.

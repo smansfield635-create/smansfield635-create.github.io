@@ -373,7 +373,7 @@ jobs:
               node --check showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js
               node --check showroom/globe/h-earth/vegetation-prototype/route.js
               node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
-              node --test \
+              node --test --test-reporter=tap \
                 h-earth-3d/validation/h-earth.groundcover-dark-core-multitone-20261106.test.mjs \
                 h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs \
                 > /tmp/h-earth-exact-evidence/gen3142-source-applicability.tap

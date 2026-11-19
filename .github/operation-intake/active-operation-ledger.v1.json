@@ -23539,6 +23539,50 @@
       "scopeHash": "9d09d5182bc7910355d432d73fa67b07efff19985391b9f0315673fa13aca02c",
       "state": "ADMITTED_LOCKED"
     },
+    "9d121c6f41afcd2a5dc58ae2bdf0ccb093fe6602661c815b2e537d9008301771": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ba31810f869163d408e95483f1b0efeea3934a9a",
+          "lockGeneration": 3431,
+          "lockScope": "H_EARTH:P1:REAR_RIVER_NATIVE_WATER_BANK_SOIL_MATERIAL_ONLY:20261119",
+          "operationId": "H_EARTH_P1_REAR_RIVER_NATIVE_WATER_CONTACT_MATERIAL_20261119_001",
+          "procedureLocatorDigest": "1c2f2070fcd5defc0ab37c6e514164a952519f411314744dce90b41396980a1f",
+          "requestDigest": "9a1a5081045a36f3675907cdd8a59526a524d25de0cea4fb222298a4ce5220f1",
+          "scopeHash": "9d121c6f41afcd2a5dc58ae2bdf0ccb093fe6602661c815b2e537d9008301771"
+        },
+        "bindingDigest": "92ac0a610a0dfa031d6b4a71ebd45b86c30df22eade840c26efdf8dcc5fdeb06",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ef3301d13d44f882abb37722f99fc125365b07e7c042a151cfa0f2af45397318",
+          "commentId": 7023648108,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44626326956,
+          "workflowSha": "ba31810f869163d408e95483f1b0efeea3934a9a"
+        },
+        "lineageAnchorCommitSha": "8a5eae5d2ec118ea41c7fdcd76a6d4709737eb8c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ba31810f869163d408e95483f1b0efeea3934a9a",
+      "lockGeneration": 3431,
+      "lockScope": "H_EARTH:P1:REAR_RIVER_NATIVE_WATER_BANK_SOIL_MATERIAL_ONLY:20261119",
+      "operationId": "H_EARTH_P1_REAR_RIVER_NATIVE_WATER_CONTACT_MATERIAL_20261119_001",
+      "procedureLocatorDigest": "1c2f2070fcd5defc0ab37c6e514164a952519f411314744dce90b41396980a1f",
+      "released": false,
+      "requestDigest": "9a1a5081045a36f3675907cdd8a59526a524d25de0cea4fb222298a4ce5220f1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9d121c6f41afcd2a5dc58ae2bdf0ccb093fe6602661c815b2e537d9008301771",
+      "state": "ADMITTED_LOCKED"
+    },
     "9d5d1a2cb5a19b17fb7fa528f59433f016a7f2f8268c139e7f0310b9e2955dab": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -38723,7 +38767,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3430,
+  "lockGeneration": 3431,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

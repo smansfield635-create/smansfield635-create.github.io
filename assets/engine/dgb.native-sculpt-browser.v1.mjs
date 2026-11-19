@@ -313,7 +313,7 @@ function sourceGeometry(source,p,n){
   if(!(map instanceof Uint32Array)||map.length!==1409||!(source.uvs instanceof Float32Array)||source.uvs.length!==2818||
       !(source.renderTriangles instanceof Uint16Array)||source.renderTriangles.length!==6792||
       !(source.atlasPixels instanceof Uint8Array)||source.atlasPixels.length!==source.atlasWidth*source.atlasHeight*4||
-      source.readOnlyOriginal!==true)throw new TypeError('M13_RENDER_SOURCE_INVALID');
+      (source.readOnlyOriginal!==true&&source.editableDerivative!==true))throw new TypeError('M13_RENDER_SOURCE_INVALID');
   const positions=new Float32Array(map.length*3),normals=new Float32Array(map.length*3);
   for(let i=0;i<map.length;i++){const sourceIndex=map[i];
     if(sourceIndex>=p.length/3)throw new RangeError('M13_RENDER_MASTER_OUT_OF_RANGE');
@@ -373,9 +373,12 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   if(!['AUTO','WEBGL1','WEBGL2'].includes(backend)||typeof onStatus!=='function')throw new TypeError('STUDIO_OPTIONS_INVALID');
   if(!controls||!['radius','strength','falloff','mode','region','undo','redo','save','load'].every(k=>controls[k]))throw new TypeError('STUDIO_CONTROLS_REQUIRED');
   const originalSource=fixture.sourceRender?.readOnlyOriginal===true?fixture.sourceRender:null;
+  const editableSource=fixture.sourceRender?.editableDerivative===true?fixture.sourceRender:null;
+  if(originalSource&&editableSource)throw new Error('M13_SOURCE_MODE_CONFLICT');
+  const texturedSource=originalSource??editableSource;
   let session=createSculptSession(fixture),fixtureSource=fixture,sourceMetadata=null;
-  let uv=originalSource?null:makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs??null);
-  const originalRender=originalSource?sourceGeometry(originalSource,session.getPositions(),session.getNormals()):null;
+  let uv=texturedSource?null:makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs??null);
+  const originalRender=texturedSource?sourceGeometry(texturedSource,session.getPositions(),session.getNormals()):null;
   let stages=[],selectedFace=null;
   if(Math.max(...session.getTriangles())>65535)throw new Error('WEBGL1_NEUTRAL_FIXTURE_INDEX_LIMIT');
   let disposed=false,failed=false,active=null;const views=[];const listeners=[];
@@ -389,27 +392,27 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       const device=createNativeWebGLDevice(canvas,{backend:be,contextAttributes:{alpha:false,antialias:true,depth:true,preserveDrawingBuffer:true}});
       const view={name:names[i],canvas,device};views.push(view);
       const pipeline=createNativeFramePipeline(device);
-      const program=device.createProgram(originalSource?originalTexturedShaders(be):shaders(be));
-      const mesh=originalSource?device.createMesh({attributes:[
+      const program=device.createProgram(texturedSource?originalTexturedShaders(be):shaders(be));
+      const mesh=texturedSource?device.createMesh({attributes:[
         {name:'aPosition',data:originalRender.positions,size:3,dynamic:true},
         {name:'aNormal',data:originalRender.normals,size:3,dynamic:true},
         {name:'aUV',data:originalRender.uvs,size:2}
       ],indices:new Uint16Array(originalRender.indices),vertexCount:originalRender.positions.length/3})
         :device.createMesh(sculptMeshSpecification(session,uv));
-      const texture=originalSource?device.createTexture2D({width:originalSource.atlasWidth,height:originalSource.atlasHeight,
-        pixels:originalSource.atlasPixels,filter:'LINEAR'}):null;
+      const texture=texturedSource?device.createTexture2D({width:texturedSource.atlasWidth,height:texturedSource.atlasHeight,
+        pixels:texturedSource.atlasPixels,filter:'LINEAR'}):null;
       const scene=createNativeSpatialScene();view.scene=scene;
-      const eye=originalSource?
+      const eye=texturedSource?
         [[2.4,1.25,3.5],[0,.3,4.8],[4.8,.15,0],[-2.4,1.3,-3.5]][i]:eyes[i];
-      const basis=lookAtQuaternion(eye),center=originalSource?[.37,.48,-.03]:[0,0,0];
+      const basis=lookAtQuaternion(eye),center=texturedSource?[.37,.48,-.03]:[0,0,0];
       const camera=scene.createCamera({position:eye.map((v,k)=>v+center[k]),rotation:basis.rotation,
-        projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,orthoHeight:originalSource?2.05:3.15});
+        projection:'ORTHOGRAPHIC',near:.1,far:40,aspect:canvas.width/canvas.height,orthoHeight:texturedSource?2.05:3.15});
       const node=scene.createNode();
       scene.setRenderable(node,{program,mesh,pass:'OPAQUE',cull:'NONE',bounds:{center:[0,0,0],radius:3},
-        beforeDraw:originalSource?(gl,handle)=>{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture.gpu);
+        beforeDraw:texturedSource?(gl,handle)=>{gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture.gpu);
           gl.uniform1i(gl.getUniformLocation(handle,'uAtlas'),0);}:null});
-      if(originalSource?.eye){
-        const e=originalSource.eye;
+      if(texturedSource?.eye){
+        const e=texturedSource.eye;
         if(!(e.positions instanceof Float32Array)||!(e.normals instanceof Float32Array)||
           !(e.colors instanceof Float32Array)||!(e.fade instanceof Float32Array)||
           e.positions.length!==e.normals.length||e.positions.length!==e.colors.length||
@@ -442,8 +445,11 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     return {views:views.length,revision:session.state().revision};
   }
   function updateAll(){assertReady();
-    if(originalSource)return drawAll(); // Original M1.3 is a viewing reference, never an editable GPU candidate.
-    const spec=sculptMeshSpecification(session,uv),p=spec.attributes[0].data,n=spec.attributes[1].data;
+    if(originalSource)return drawAll(); // Original immutable rabbit never mutates its GPU buffers.
+    const spec=editableSource?sourceGeometry(editableSource,session.getPositions(),session.getNormals()):
+      sculptMeshSpecification(session,uv);
+    const p=editableSource?spec.positions:spec.attributes[0].data,
+      n=editableSource?spec.normals:spec.attributes[1].data;
     try{
       for(const view of views){view.device.updateMeshAttribute(view.mesh,'aPosition',p);view.device.updateMeshAttribute(view.mesh,'aNormal',n);}
       return drawAll();
@@ -455,6 +461,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   function adoptTopology(nextSession,nextUv,nextStages,nextFixture=fixtureSource,nextSource=sourceMetadata){
     assertReady();
     if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
+    if(editableSource)throw new Error('A4_DERIVATIVE_TOPOLOGY_CHANGE_FORBIDDEN');
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     const previous=sculptMeshSpecification(session,uv),replacement=sculptMeshSpecification(nextSession,nextUv);
     const result=replaceFourSculptViewMeshes(views,previous,replacement,drawAll,
@@ -470,6 +477,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   function subdivide(faceIndex=selectedFace){
     assertReady();
     if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
+    if(editableSource)throw new Error('A4_DERIVATIVE_TOPOLOGY_CHANGE_FORBIDDEN');
     if(active)throw new Error('STUDIO_STROKE_ACTIVE');
     validateSculptFaceIndex(faceIndex,session.getTriangles().length/3);
     referenceImports.cancel(); // A pending image import cannot overwrite this topology edit.
@@ -561,7 +569,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     }catch(error){status('Topology edit rejected: '+error.message);}
   });
   if(controls.reference)add(controls.reference,'change',async event=>{
-    if(originalSource){status('Original M1.3 is read-only; return to neutral before importing a reference.');event.target.value='';return;}
+    if(texturedSource){status('M1.3 source mode: reference-image replacement is disabled.');event.target.value='';return;}
     const token=referenceImports.begin();
     const file=event.target.files?.[0];if(!file)return;
     let bitmap=null;
@@ -594,7 +602,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     finally{bitmap?.close?.();if(referenceImports.isCurrent(token))event.target.value='';}
   });
   add(controls.save,'click',()=>{
-    try{assertReady();if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');const data=serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
+    try{assertReady();if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');const data=editableSource?session.serialize():serializeSculptStudioState(session,stages,sourceMetadata),blob=new Blob([data],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=editableSource?'dgb-a4-editable-derivative-v1.json':(stages.length||sourceMetadata)?'dgb-native-sculpt-topology-v2.json':'dgb-native-sculpt-mesh-v1.json';a.click();URL.revokeObjectURL(url);status('Saved deterministic editable mesh.');}catch(e){status('Save failed: '+e.message);}
   });
   add(controls.load,'change',async event=>{
     // Reloads share the image generation gate: a delayed file.text() may not
@@ -606,21 +614,38 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       assertReady();
       const source=await file.text();
       if(!referenceImports.isCurrent(token))return;
-      const restored=restoreSculptStudioState(source,fixture);
-      if(!referenceImports.isCurrent(token))return;
-      adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);
-      status('Reloaded verified editable mesh and topology lineage.');
+      if(editableSource){
+        // The verified original fixture supplies all source bytes; the JSON stores deltas only.
+        const nextSession=createSculptSession(fixture);
+        nextSession.restore(source);
+        if(!referenceImports.isCurrent(token))return;
+        const previous=session;session=nextSession;
+        try{updateAll();}catch(error){session=previous;throw error;}
+        status('Reloaded source-bound A4 derivative deltas across four textured views.');
+      }else{
+        const restored=restoreSculptStudioState(source,fixture);
+        if(!referenceImports.isCurrent(token))return;
+        adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);
+        status('Reloaded verified editable mesh and topology lineage.');
+      }
     }catch(e){if(referenceImports.isCurrent(token))status('Reload rejected: '+e.message);}
     finally{if(referenceImports.isCurrent(token))event.target.value='';}
   });
   try{
     drawAll();
-    status(originalSource?'Original M1.3 protected reference: four native WebGL views.':'Ready: four actual synchronized engine WebGL views.');
+    status(originalSource?'Original M1.3 protected reference: four native WebGL views.':
+      editableSource?'Editable A4 derivative: foreleg mask, original coat and eyes.':'Ready: four actual synchronized engine WebGL views.');
   }catch(error){releaseSculptStudioResources(views,listeners);throw error;}
   return Object.freeze({get session(){return session;},drawAll,updateAll,subdivide,
-    saveState:()=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');return serializeSculptStudioState(session,stages,sourceMetadata);},
-    loadState:text=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
+    saveState:()=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');return editableSource?session.serialize():serializeSculptStudioState(session,stages,sourceMetadata);},
+    loadState:text=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');
+      referenceImports.cancel();
+      if(editableSource){const nextSession=createSculptSession(fixture);nextSession.restore(text);
+        const previous=session;session=nextSession;try{return updateAll();}catch(error){session=previous;throw error;}}
+      const restored=restoreSculptStudioState(text,fixture);
+      return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
     views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
-    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:originalSource?.originalPose??null,originalAtlasMapped:Boolean(originalSource)}),
+    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:texturedSource?.originalPose??null,originalAtlasMapped:Boolean(texturedSource),
+      editableA4Derivative:Boolean(editableSource)}),
     dispose(){if(disposed)return;referenceImports.cancel();releaseSculptStudioResources(views,listeners);disposed=true;}});
 }

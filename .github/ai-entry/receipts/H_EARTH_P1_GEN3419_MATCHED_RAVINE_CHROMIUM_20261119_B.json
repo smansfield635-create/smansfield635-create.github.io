@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_P1_GEN3419_MATCHED_RAVINE_CHROMIUM_20261119_B",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7536,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3419-ravine-20261119-b",
+  "requestCommit": "95189934704b708f672c7ed6a84ee5e25bb7f4f9",
+  "requestCommitParent": "bffa4a0d4dd5d8a95371877071c1d1ed09fa838a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "bffa4a0d4dd5d8a95371877071c1d1ed09fa838a",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "24b1869740d88e5f304dd4e6cba8c2428dea6567",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "44633161571",
+  "dispatchedRunId": 44633245488,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44633245488",
+  "dispatchedRunHeadSha": "bffa4a0d4dd5d8a95371877071c1d1ed09fa838a",
+  "dispatchedAt": "2026-11-19T22:56:38.186Z",
+  "resolvedAt": "2026-11-19T22:56:47.713Z"
+}

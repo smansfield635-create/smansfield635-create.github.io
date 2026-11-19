@@ -1579,6 +1579,166 @@
     },
     {
       "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "DGB_A4_GEN3430_EXACT_PUBLIC_NEUTRAL_NODE22_WEBGL12_QUALIFIER_DESCRIPTOR_V1",
+      "operationId": "DGB_A4_GEN3430_EXACT_QUALIFIER_COMPATIBILITY_20261119_001",
+      "operationClass": "DGB_A4_GEN3430_EXACT_PUBLIC_NEUTRAL_NODE22_WEBGL12_QUALIFICATION",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "DGB_A4_GEN3430_EXACT_PUBLIC_NEUTRAL_QUALIFIER_V1",
+      "exactToolingHead": "960f94929861d5733773e133893fadbe970a96cb",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          },
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "DGB_A4_GEN3430_EXACT_PUBLIC_NEUTRAL_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "9ff56aba65fc8fd8b2f6ca8e90c319760df45dd1"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "DGB_A4_GEN3430_EXACT_PUBLIC_QUALIFIER_V1_RECEIPT",
+        "required": [
+          "schema",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "governingHead",
+          "status",
+          "cases",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "workflowMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed",
+          "historicalGen3310QualifierPreserved",
+          "originalPrivateAssetInCI",
+          "originalPrivateM13HttpAccepted",
+          "rabbitArtAccepted",
+          "physicalDeviceAccepted",
+          "qualificationCeiling"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "assets/",
+        "graphics-engine/",
+        "showroom/",
+        "characters/",
+        "h-earth-3d/",
+        "products/",
+        "nine-summits/",
+        "tools/ai-room-transport/dgb-sculpt-gen3273-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-gen3296-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-reviewed-webgl12.v1.mjs",
+        "ORIGINAL_PRIVATE_M13_ARCHIVE_FIXTURE_ATLAS_EYE_SOURCE",
+        "OWNER_PRIVATE_DRIVE_OR_LOCAL_ASSET_CUSTODY",
+        "OWNER_PRIVATE_A4_M13_ARCHIVE_AND_ATLAS",
+        "PR_7530_SOURCE_MUTATION"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "WORKFLOW_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WEBGL_ENGINE_MUTATION",
+        "RABBIT_SOURCE_MUTATION",
+        "ORIGINAL_GEN3273_QUALIFIER_MUTATION",
+        "C2B_SOURCE_BRANCH_MUTATION",
+        "WORLD_CONSUMER_MUTATION",
+        "ORIGINAL_GEN3298_QUALIFIER_MUTATION",
+        "GEN3310_SOURCE_MUTATION",
+        "PRIVATE_M13_ARCHIVE_UPLOAD",
+        "PRIVATE_RABBIT_ORIGINAL_WEBGL_POSITIVE_CLAIM",
+        "ORIGINAL_GEN3302_TOOLING_MUTATION",
+        "PRIVATE_A4_ZIP_IN_CI",
+        "PRIVATE_RABBIT_VISUAL_ACCEPTANCE",
+        "GEN3430_SOURCE_MUTATION",
+        "GEN3310_HISTORICAL_TEST_REGRESSION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_AUTHENTIC_GEN3430_NODE22_AND_PUBLIC_NEUTRAL_WEBGL12_ONLY_A4_PRIVATE_ORIGINAL_AND_ART_ACCEPTANCE_REMAIN_OPEN",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_WITH_EXACT_NATIVE_OR_PUBLIC_WEBGL_ASSERTION_RECEIPT",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_WITH_NO_EXECUTION_RECEIPT",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "REQUIRES_INDEPENDENT_GEN3432_SOURCE_REVIEW_AND_SEPARATE_TOOLSET_ADOPTION_BEFORE_ACTIVE_EXECUTION; NO_GEN3430_PRODUCT_MERGE_OR_PRIVATE_A4_ACCEPTANCE",
+      "terminationRule": "FIXED_EXACT_GEN3430_PUBLIC_SOURCE_NODE22_AND_NEUTRAL_WEBGL12_ONLY; NO_PRIVATE_A4_ZIP_NO_PRODUCT_MUTATION_NO_HARVEST_ADOPTION_NO_DEPLOYMENT",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
       "descriptorId": "DGB_GRAPHICS_C2C_GEN3323_LIVE_TWO_PATH_ROUTER_QUALIFICATION_DESCRIPTOR_V1",
       "operationId": "DGB_GRAPHICS_C2C_GEN3323_FIXED_LIVE_TWO_PATH_ROUTER_QUALIFICATION_20261116_001",
       "operationClass": "DGB_GRAPHICS_C2C_GEN3323_FIXED_EXACT_HEAD_LIVE_READONLY_ROUTER_QUALIFICATION",

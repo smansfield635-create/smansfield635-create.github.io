@@ -279,7 +279,7 @@ export function startHarvest(canvas, controls = {}) {
   const activePointers=new Map();
   function draw(now=0) {
     state.raf=0;
-    if(state.disposed||document.hidden||device.status().lost)return;
+    if(state.disposed||document.hidden||device.status().lost||gl.isContextLost?.())return;
     if(!state.paused&&!reduced&&state.last)state.phase+=Math.min(.06,Math.max(0,(now-state.last)/1000));
     state.last=now;
     const rect=canvas.getBoundingClientRect();
@@ -293,12 +293,18 @@ export function startHarvest(canvas, controls = {}) {
       Math.sin(state.elevation)*state.distance,Math.cos(state.yaw)*Math.cos(state.elevation)*state.distance];
     const view=lookAt(eye,[0,.6,-.75]);
     const vp=mul(perspective(.80,w/h,.12,90),view);
-    device.draw({program,mesh,beforeDraw(context,handle){
-      const active=currentUniforms(handle);
-      context.uniformMatrix4fv(active.vp,false,vp);
-      context.uniform3fv(active.eye,new Float32Array(eye));
-      context.uniform1f(active.time,state.phase);
-    }});
+    try {
+      device.draw({program,mesh,beforeDraw(context,handle){
+        const active=currentUniforms(handle);
+        context.uniformMatrix4fv(active.vp,false,vp);
+        context.uniform3fv(active.eye,new Float32Array(eye));
+        context.uniform1f(active.time,state.phase);
+      }});
+    } catch(error) {
+      // The GPU can become lost between the frame guard and the device draw.
+      if(gl.isContextLost?.()||device.status().lost)return;
+      throw error;
+    }
     if(!state.paused&&!reduced)schedule();
   }
   function schedule(){if(!state.disposed&&!state.raf&&!document.hidden)state.raf=requestAnimationFrame(draw);}
@@ -358,7 +364,12 @@ export function startHarvest(canvas, controls = {}) {
   }
   function onMotion(){state.paused=!state.paused;state.last=0;label();schedule();}
   function onVisibility(){state.last=0;schedule();}
-  function onRestore(){state.last=0;schedule();}
+  function onRestore(){
+    // WebGL context restoration resets fixed-function GL state, even when E1
+    // correctly rebuilds programs and buffers. Restore scene depth semantics.
+    gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);
+    state.last=0;schedule();
+  }
   function onResize(){schedule();}
   canvas.addEventListener("pointerdown",onDown);
   canvas.addEventListener("pointermove",onMove);

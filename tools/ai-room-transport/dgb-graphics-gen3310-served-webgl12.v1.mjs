@@ -99,7 +99,7 @@ function serverFor(root){
     res.end(await fsp.readFile(file));
   }catch{res.statusCode=404;res.end('NOT_FOUND');}});
 }
-async function oneCase(browser,base,cfg,images){
+async function oneCase(browser,base,cfg,images,expectedBlobs=blobs){
   const result={id:cfg.id,viewport:{width:cfg.w,height:cfg.h},mobileEmulation:cfg.mobile,jsErrors:[],httpErrors:[],requestFailures:[],screenshots:[],pass:false};
   const context=await browser.newContext({viewport:{width:cfg.w,height:cfg.h},isMobile:cfg.mobile,hasTouch:cfg.mobile,deviceScaleFactor:1,reducedMotion:'reduce'});
   const page=await context.newPage();page.setDefaultTimeout(30000);
@@ -408,7 +408,7 @@ async function oneCase(browser,base,cfg,images){
       JSON.parse(await page.evaluate(()=>window.__dgbSculptLab.studio.saveState())).source?.mask?.length===576,
       'C2B_REFERENCE_RELOAD_OR_RENDER_MISMATCH');
     const htmlBlob=await served.get(ROUTE),controllerBlob=await served.get('/assets/engine/dgb.native-sculpt-browser.v1.mjs');
-    check(htmlBlob===blobs[ROUTE.slice(1)]&&controllerBlob===blobs['assets/engine/dgb.native-sculpt-browser.v1.mjs'],'SERVED_ASSET_BYTES_MISMATCH');
+    check(htmlBlob===expectedBlobs[ROUTE.slice(1)]&&controllerBlob===expectedBlobs['assets/engine/dgb.native-sculpt-browser.v1.mjs'],'SERVED_ASSET_BYTES_MISMATCH');
     check(!result.jsErrors.length&&!result.httpErrors.length&&!result.requestFailures.length,'BROWSER_ERRORS_PRESENT');
     result.behavior={realWebGL2Views:4,strictNoEditCanvasStability:true,realPixelChangeAllFour:true,renderedCanvasPixelChangeAllFour:true,undoRedo:true,legacyV1SaveReopen:true,c2bTopologyUI:true,c2bV2SaveReopen:true,c2bReferenceImage:true,c2bReferenceSourceReload:true,sourceVertexCount:273,sourceTriangles:480};
     result.served={status:response.status(),htmlBlob,controllerBlob};
@@ -543,7 +543,123 @@ async function webgl1FallbackCase(browser,base,images) {
   return result;
 }
 
+
+// Gen3432 additive immutable Gen3430 mode: no owner-private A4 archive in CI.
+// The historical Gen3310 command, test population, constant SHA guards and
+// existing descriptor remain executable without a compatibility downgrade.
+const GEN3430_HEAD='9ff56aba65fc8fd8b2f6ca8e90c319760df45dd1';
+const GEN3430_GOVERNING='621874562762504bf4cbc2aedc3f62116472b24f';
+const GEN3430_OPERATION='DGB_A4_GEN3430_EXACT_QUALIFIER_COMPATIBILITY_20261119_001';
+const GEN3430_SCHEMA='DGB_A4_GEN3430_EXACT_PUBLIC_QUALIFIER_V1_RECEIPT';
+const GEN3430_BLOBS=Object.freeze({
+  'assets/engine/dgb.native-sculpt-browser.v1.mjs':'87dc4b9c5a5cefd6fe4c6ec2be06b7ba42ff8940',
+  'assets/engine/dgb.native-sculpt-browser.v1.test.mjs':'650aab7d76ab1a5d48a13642b1b3b978ec558a9b',
+  'assets/engine/dgb.native-sculpt-session.v1.mjs':'327aadbe4d352197c43a144c651785d27ffa2dbf',
+  'assets/engine/dgb.native-sculpt-session.v1.test.mjs':'148620fc1f8993e7b1936275e21fa345e807efa3',
+  'graphics-engine/sculpt-lab/index.html':'aa0a10ff12fa4949a86bcbf7c9f6d41c5465d429'
+});
+function gen3430Args(v){
+  check(v.length===8,'FIXED_ARGUMENT_COUNT');const r={};
+  for(let i=0;i<v.length;i+=2){const k=v[i],val=v[i+1];check(['--candidate-head','--execution-holder','--output','--manifest-output'].includes(k)&&val&&!Object.hasOwn(r,k),'FIXED_ARGS_INVALID');r[k]=val;}
+  check(r['--candidate-head']===GEN3430_HEAD,'UNAUTHORIZED_CANDIDATE_HEAD');
+  check(/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(r['--execution-holder']),'INVALID_HOLDER');
+  check(path.isAbsolute(r['--output'])&&path.isAbsolute(r['--manifest-output'])&&r['--output']!==r['--manifest-output'],'OUTPUT_PATHS_INVALID');
+  return r;
+}
+function gen3430Checkout(root){
+  fs.mkdirSync(root,{recursive:true});
+  run('git',['init','--quiet','.'],root);run('git',['remote','add','origin',REPO],root);
+  run('git',['sparse-checkout','init','--cone','--sparse-index'],root);
+  run('git',['sparse-checkout','set','assets/engine','graphics-engine/sculpt-lab','.github/ai-router'],root);
+  run('git',['fetch','--no-tags','--depth=4','--filter=blob:none','origin',GEN3430_HEAD],root);
+  run('git',['checkout','--detach','FETCH_HEAD'],root);
+  check(run('git',['rev-parse','GEN3430_HEAD'],root)===GEN3430_HEAD,'HEAD_DRIFT');
+  run('git',['fetch','--no-tags','--depth=4','--filter=blob:none','origin',GEN3430_GOVERNING],root);
+  const diff=run('git',['diff','--name-only',GEN3430_GOVERNING,GEN3430_HEAD],root).split('\n').filter(Boolean).sort();
+  check(JSON.stringify(diff)===JSON.stringify(Object.keys(GEN3430_BLOBS).sort()),'GEN3310_FIVE_PATH_CHANGED_SET_MISMATCH');
+  for(const [p,id] of Object.entries({...GEN3430_BLOBS,...protectedBlobs}))check(run('git',['hash-object',p],root)===id,'GIT_BLOB_MISMATCH:'+p);
+  const html=fs.readFileSync(path.join(root,ROUTE.slice(1)),'utf8');
+  check(html.includes('dgb.native-sculpt-browser.v1.mjs?asset='+GEN3430_BLOBS['assets/engine/dgb.native-sculpt-browser.v1.mjs']),'GEN3430_HTML_SCRIPT_PIN_MISMATCH');
+  check(html.includes('dgb.native-sculpt-session.v1.mjs?asset='+GEN3430_BLOBS['assets/engine/dgb.native-sculpt-session.v1.mjs']),'GEN3430_HTML_SESSION_PIN_MISMATCH');
+  check(html.includes('Create Editable A4 Derivative')&&html.includes('m13Archive'),'GEN3430_UI_MISSING');
+  check(run('git',['status','--porcelain','--untracked-files=no'],root)==='','TRACKED_WORKTREE_DIRTY');
+  return diff;
+}
+function gen3430NativeTests(root){
+  const files=['dgb.native-sculpt-session.v1.test.mjs','dgb.native-sculpt-browser.v1.test.mjs'].map(s=>'assets/engine/'+s);
+  // Preserve the original native process output even when Node tests fail.
+  // Do not use run(), which discards the complete stdout on nonzero exit.
+  const r=spawnSync(process.execPath,['--test',...files],{cwd:root,encoding:'utf8',timeout:360000,maxBuffer:32*1024*1024});
+  const stdout=r.stdout??'',stderr=r.stderr??'';
+  const pass=stdout.match(/^# pass (\d+)$/m),fail=stdout.match(/^# fail (\d+)$/m);
+  const firstFailure=stdout.split('\n').find(line=>/^not ok \d+ /.test(line))??null;
+  return {selectedFiles:files,exitStatus:r.status,signal:r.signal??null,processError:r.error?.message??null,
+    pass:pass?Number(pass[1]):null,fail:fail?Number(fail[1]):null,
+    firstFailure,tapSha256:sha(stdout),stdout,stderr};
+}
+
+async function mainGen3430(){
+  const opts=gen3430Args(process.argv.slice(2));
+  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'dgb-gen3430-http-'));
+  const root=path.join(tmp,'candidate'),deps=path.join(tmp,'browser-deps');
+  const receipt={schema:GEN3430_SCHEMA,operationId:GEN3430_OPERATION,
+    executionHolder:opts['--execution-holder'],candidateHead:GEN3430_HEAD,governingHead:GEN3430_GOVERNING,
+    status:'INCOMPLETE',cases:[],sourceMutationPerformed:false,productMutationPerformed:false,
+    workflowMutationPerformed:false,branchCreated:false,mergePerformed:false,deploymentPerformed:false,
+    releasePerformed:false,publicationPerformed:false,originalPrivateAssetInCI:false,
+    originalPrivateM13HttpAccepted:false,physicalDeviceAccepted:false,rabbitArtAccepted:false,
+    historicalGen3310QualifierPreserved:true,
+    qualificationCeiling:'EXACT_GEN3430_NODE22_AND_PUBLIC_NEUTRAL_WEBGL12_ONLY'};
+  const manifest={schema:'DGB_A4_GEN3430_PUBLIC_NEUTRAL_SCREENSHOT_MANIFEST_v1',
+    candidateHead:GEN3430_HEAD,images:[]};
+  let browser=null,server=null;
+  try{
+    receipt.changedPaths=gen3430Checkout(root);
+    receipt.sourceBlobs={...GEN3430_BLOBS,...protectedBlobs};
+    receipt.native=gen3430NativeTests(root);
+    check(receipt.native.exitStatus===0&&receipt.native.processError===null&&
+      receipt.native.fail===0&&receipt.native.pass===77,
+      'GEN3430_NATIVE_NODE22_FAILED:'+receipt.native.firstFailure+':'+receipt.native.exitStatus);
+    fs.mkdirSync(deps,{recursive:true});
+    run('npm',['install','--prefix',deps,'--no-save','--no-package-lock','--no-audit','playwright@1.56.1'],tmp,400000);
+    run(process.execPath,[path.join(deps,'node_modules/playwright/cli.js'),'install','--with-deps','chromium'],tmp,400000);
+    const {chromium}=createRequire(path.join(deps,'package.json'))('playwright');
+    server=serverFor(root);
+    await new Promise((ok,bad)=>{server.once('error',bad);server.listen(0,'127.0.0.1',ok);});
+    browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
+    receipt.browserVersion=browser.version();receipt.transport='ACTUAL_HTTP_EXACT_GEN3430_PUBLIC_NEUTRAL';
+    const base='http://127.0.0.1:'+server.address().port;
+    for(const cfg of cases)receipt.cases.push(await oneCase(browser,base,cfg,manifest.images,GEN3430_BLOBS));
+    receipt.cases.push(await webgl1FallbackCase(browser,base,manifest.images));
+    receipt.status=receipt.cases.length===4&&receipt.cases.every(v=>v.pass)&&manifest.images.length===172?'PASS_CLOSED':'FAIL_CLOSED';
+    if(receipt.status!=='PASS_CLOSED')receipt.errorCode='GEN3430_PUBLIC_BROWSER_CHECK_FAILED';
+  }catch(e){
+    receipt.status='FAIL_CLOSED';receipt.errorCode=receipt.errorCode||'GEN3430_FIXED_QUALIFICATION_FAILED';
+    receipt.error=String(e.stack||e).slice(0,1900);
+  }finally{
+    if(browser)await browser.close().catch(()=>{});
+    if(server)await new Promise(ok=>server.close(ok));
+    try{receipt.checkoutClean=run('git',['status','--porcelain','--untracked-files=no'],root)==='';}
+    catch{receipt.checkoutClean=false;}
+    if(!receipt.checkoutClean){receipt.status='FAIL_CLOSED';receipt.errorCode=receipt.errorCode||'GEN3430_WORKTREE_CLEANLINESS_UNVERIFIED';}
+    manifest.imageCount=manifest.images.length;
+    fs.mkdirSync(path.dirname(opts['--output']),{recursive:true});
+    fs.mkdirSync(path.dirname(opts['--manifest-output']),{recursive:true});
+    fs.writeFileSync(opts['--output'],JSON.stringify(receipt,null,2)+'\n');
+    fs.writeFileSync(opts['--manifest-output'],JSON.stringify(manifest)+'\n');
+    fs.rmSync(tmp,{recursive:true,force:true});
+  }
+  console.log(JSON.stringify({status:receipt.status,head:GEN3430_HEAD,native:receipt.native?.pass,
+    cases:receipt.cases.map(x=>({id:x.id,pass:x.pass,error:x.error?.slice(0,250)})),
+    images:manifest.images.length}));
+  if(receipt.status!=='PASS_CLOSED')process.exitCode=1;
+}
 async function main(){
+  if(process.argv.includes('--candidate-head')&&process.argv[process.argv.indexOf('--candidate-head')+1]===GEN3430_HEAD)return mainGen3430();
+  if(process.argv.length===3&&process.argv[2]==='--self-test-gen3430'){
+    check(Object.keys(GEN3430_BLOBS).length===5&&GEN3430_HEAD!==HEAD,'GEN3430_ISOLATION_SELF_TEST');
+    console.log('GEN3430_FIXED_QUALIFIER_SELF_TEST_PASS');return;
+  }
   if(process.argv.length===3&&process.argv[2]==='--self-test'){
     check(blob(Buffer.from('hello\n'))==='ce013625030ba8dba906f756967f9e9ca394464a','GIT_BLOB_HASH_TEST');
     check(Object.keys(blobs).length===5&&Object.keys(protectedBlobs).length===10,'GEN3310_FROZEN_SOURCE_POPULATION_TEST');

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T07:26:29Z",
+  "generatedAt": "2026-11-19T08:28:15Z",
   "window": {
-    "start": "2026-08-21T07:26:29Z",
-    "end": "2026-11-19T07:26:29Z"
+    "start": "2026-08-21T08:28:15Z",
+    "end": "2026-11-19T08:28:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,16 +18,16 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 3222,
-    "visits": 901,
+    "visits": 921,
     "byDevice": {
       "tablet": {
         "pageLoads": 3222,
-        "visits": 901
+        "visits": 921
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 561,
+        "pageLoads": 581,
         "visits": 451
       },
       "/coherence-diagnostic/": {
@@ -83,7 +83,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 81,
+        "pageLoads": 61,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -167,8 +167,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 70,
-        "visits": 20
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -290,6 +290,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/prototypes/abc-roofing/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -301,7 +305,7 @@
         "visits": 430
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2321,
+        "pageLoads": 2301,
         "visits": 0
       },
       "raw.githack.com": {
@@ -309,8 +313,8 @@
         "visits": 10
       },
       "(none)": {
-        "pageLoads": 461,
-        "visits": 461
+        "pageLoads": 481,
+        "visits": 481
       }
     }
   }

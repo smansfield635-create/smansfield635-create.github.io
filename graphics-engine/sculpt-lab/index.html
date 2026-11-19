@@ -20,7 +20,7 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
 <header><h1>Diamond Gate — Native Sculpt Lab V1</h1><div class="small">Private off-product engine vertical slice • Four actual 3D views of one editable mesh • Neutral regional test surface, not an accepted rabbit</div></header>
 <div class="toolbar" aria-label="Sculpting controls">
   <label class="control">Mode<select id="mode"><option value="PULL">Pull</option><option value="PUSH">Push</option><option value="MOVE">Reposition</option><option value="ORGANIC_INFLATE">Organic inflate</option><option value="ORGANIC_GRAB">Organic grab</option><option value="ORGANIC_FLATTEN">Organic flatten</option></select></label>
-  <label class="control">Editable region<select id="region"><option value="ALL">All unlocked</option><option value="skull">Skull</option><option value="cheek">Cheek</option><option value="nape">Nape</option><option value="shoulder">Shoulder</option></select></label>
+  <label class="control">Editable region<select id="region"><option value="ALL">All unlocked</option><option value="skull">Skull</option><option value="cheek">Cheek</option><option value="nape">Nape</option><option value="shoulder">Shoulder</option><option value="foreleg">A4 foreleg (derived)</option></select></label>
   <label class="control">Radius<input id="radius" type="range" min=".10" max="1.2" step=".05" value=".40"></label>
   <label class="control">Strength<input id="strength" type="range" min=".1" max="2" step=".1" value=".8"></label>
   <label class="control">Falloff<input id="falloff" type="range" min=".2" max="4" step=".2" value="1.4"></label>
@@ -35,9 +35,10 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
   <button id="capture" type="button">Capture four views</button>
   <label class="fileLabel" for="m13Archive">Open protected original M1.3 ZIP<input id="m13Archive" type="file" accept=".zip,application/zip"></label>
   <label class="control">Original M1.3 pose<select id="m13Pose" disabled><option value="52">52 · Rest</option></select></label>
+  <button id="createDerivative" type="button" disabled>Create Editable A4 Derivative</button>
   <button id="returnNeutral" type="button">Return to neutral editing</button>
 </div>
-<p class="small" id="m13Notice">The original M1.3 ZIP remains on this device. Its complete SHA-256 and original fixture, atlas and eye-only appearance are verified locally. Rabbit anatomy is read-only.</p>
+<p class="small" id="m13Notice">The original M1.3 ZIP remains on this device. Its SHA-256, atlas, eye-only appearance and pose data are verified locally. The original is always read-only. Create Editable A4 Derivative for isolated foreleg-only sculpting and source-bound delta save/reload; original animation is not retargeted.</p>
 <p class="small">Reference image: load a high-contrast PNG/JPEG/WebP. The studio derives a 24×24 binary silhouette and heuristic depth, not trained photo-to-3D reconstruction. Pointer: press directly on the surface and drag to deform. Use a region selector to protect unrelated vertices; exterior boundary vertices stay frozen. Organic modes share this original stroke history and adjustable X/Y/Z influence. Unsafe faces fail closed; undo/redo acts on an entire brush stroke. Select a surface triangle in any view or enter its index in the keyboard-operable Face index field, then use Subdivide selected face for a verified connected C2-A topology edit. Original rabbit and worlds remain untouched.</p>
 <div class="views" aria-label="Simultaneous real 3D render views">
   <section class="view"><h2>HERO</h2><canvas id="hero" width="600" height="400" tabindex="0" aria-label="Hero sculpt view"></canvas></section>
@@ -48,8 +49,8 @@ footer{font-size:12px;color:#b3c1d1;padding-top:14px} @media(max-width:800px){bo
 <pre id="status" class="status" role="status" aria-live="polite">Initializing native Graphics Engine WebGL contexts…</pre>
 <footer>Software acceptance and artistic acceptance remain independent. This laboratory does not alter the approved Generosity Harvest artwork, animation, GLB, or production scene. Connected edits use deterministic v2 lineage replay; unmodified v1 mesh files remain loadable.</footer>
 <script type="module">
-import {createNativeSculptStudio,replaceSculptStudioAtomically} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=1054a89fdf3334f26d3a61a9c50f19a1ee04b6a8';
-import {createM13OriginalSource} from '../../assets/engine/dgb.native-sculpt-session.v1.mjs?asset=c3e0bc555d5376eb53bc1b8cf27f988a88c0e6fb';
+import {createNativeSculptStudio,replaceSculptStudioAtomically} from '../../assets/engine/dgb.native-sculpt-browser.v1.mjs?asset=87dc4b9c5a5cefd6fe4c6ec2be06b7ba42ff8940';
+import {createM13OriginalSource,createM13EditableDerivative} from '../../assets/engine/dgb.native-sculpt-session.v1.mjs?asset=327aadbe4d352197c43a144c651785d27ffa2dbf';
 const $=id=>document.getElementById(id);
 const M13_ZIP_SHA='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
 const M13_MEMBER_HASHES={
@@ -137,7 +138,7 @@ function originalEyeAt(module,raw,frame,restFrame){
   return {positions:convert(eyeAttributes.a_position),normals:convert(eyeAttributes.a_normal),
     colors:eyeAttributes.a_color,fade:eyeAttributes.a_fade};
 }
-let studio=null,source=null,rawM13=null,eyeModule=null,atlas=null,originalImportGeneration=0;
+let studio=null,source=null,rawM13=null,eyeModule=null,atlas=null,originalImportGeneration=0,originalRestFrame=null;
 const canvases=['hero','side','front','rear'].map($);
 const controls=Object.fromEntries(['radius','strength','falloff','mode','region','fieldX','fieldY','fieldZ','undo','redo','subdivide','faceIndex','reference','save','load'].map(id=>[id,$(id)]));
 function install(fixture){
@@ -152,7 +153,8 @@ function install(fixture){
   studio=next;
   window.__dgbSculptLab={get studio(){return studio;},canvases,controls,
     get ready(){return Boolean(studio&&!studio.status().disposed&&!studio.status().failed);},
-    get originalM13(){return Boolean(studio?.status().originalM13ReadOnly);}};
+    get originalM13(){return Boolean(studio?.status().originalM13ReadOnly);},
+    get editableA4Derivative(){return Boolean(studio?.status().editableA4Derivative);}};
 }
 function showOriginalPose(index,original={source,rawM13,eyeModule,atlas}){
   const {source:nextSource,rawM13:nextRaw,eyeModule:nextEyeModule,atlas:nextAtlas}=original;
@@ -165,6 +167,10 @@ function showOriginalPose(index,original={source,rawM13,eyeModule,atlas}){
   install(frame);
   // Publish source-mode state only after the replacement studio exists.
   source=nextSource;rawM13=nextRaw;eyeModule=nextEyeModule;atlas=nextAtlas;
+  originalRestFrame=restFrame;
+  $('createDerivative').disabled=index!==52;
+  $('subdivide').disabled=false;
+  $('reference').disabled=false;
   $('m13Notice').textContent='Original M1.3 imported locally, immutable reference pose '+index+
     ' of 63. Master vertices 1,134; UV-split render vertices 1,409; original 16 morph targets and 64 pose rows retained. Anatomical editing remains disabled.';
 }
@@ -186,10 +192,24 @@ async function importOriginalZip(file,generation){
   for(let i=0;i<64;i++){const option=document.createElement('option');option.value=String(i);
     option.textContent=i===52?'52 · Rest':i===24?'24 · Hop':String(i);
     $('m13Pose').append(option);}
-  $('m13Pose').value='52';$('m13Pose').disabled=false;
+  $('m13Pose').value='52';$('m13Pose').disabled=false;$('createDerivative').disabled=false;
 }
 try{
   install(undefined);
+  $('createDerivative').addEventListener('click',()=>{
+    try{
+      if(!source||!originalRestFrame||studio?.status().originalM13ReadOnly!==true||
+         $('m13Pose').value!=='52')throw Error('A4_DERIVATIVE_ORIGINAL_REST_REQUIRED');
+      const derived=createM13EditableDerivative(originalRestFrame,M13_ZIP_SHA);
+      install(derived);
+      $('createDerivative').disabled=true;
+      $('m13Pose').disabled=true;
+      $('subdivide').disabled=true; // Preserve exact original 2264-face topology.
+      $('reference').disabled=true;
+      $('region').value='foreleg';
+      $('m13Notice').textContent='A4 EDITABLE DERIVATIVE — isolated near-side foreleg mask; original archive, UV seams, coat, eyes, 16 morph targets and 64 pose rows remain immutable. Draw in four views, save/reload source-bound delta JSON. No animation retargeting or consumer adoption.';
+    }catch(error){$('status').textContent='Editable derivative creation rejected: '+error.message;}
+  });
   $('capture').addEventListener('click',()=>{
     const c=document.createElement('canvas');c.width=1200;c.height=800;
     const g=c.getContext('2d');canvases.forEach((v,i)=>g.drawImage(v,600*(i%2),400*Math.floor(i/2),600,400));
@@ -215,7 +235,10 @@ try{
     ++originalImportGeneration;
     try{
       install(undefined);
-      source=null;rawM13=null;eyeModule=null;atlas=null;
+      source=null;rawM13=null;eyeModule=null;atlas=null;originalRestFrame=null;
+      $('createDerivative').disabled=true;
+      $('subdivide').disabled=false;
+      $('reference').disabled=false;
       $('m13Pose').disabled=true;
       $('m13Notice').textContent='Neutral editing restored; private archive remains on this device.';
     }catch(error){$('status').textContent='Neutral reload rejected: '+error.message;}

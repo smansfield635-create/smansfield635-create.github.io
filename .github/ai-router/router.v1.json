@@ -511,7 +511,7 @@
     },
     {
       "projectId": "NINE_SUMMITS_GENEROSITY_HARVEST",
-      "status": "ACTIVE_REGISTERED_PROJECT",
+      "status": "HELD",
       "ownedPathPrefixes": [],
       "ownedExactPaths": [
         "nine-summits/generosity-harvest/index.html",

@@ -77,7 +77,7 @@ function buildWorld() {
     for(let j=0;j<lat;j++){
       const t0=-Math.PI/2+j*Math.PI/lat,t1=-Math.PI/2+(j+1)*Math.PI/lat;
       for(let i=0;i<lon;i++){const p=i*TAU/lon,q=(i+1)*TAU/lon;
-        quad(point(t0,p),point(t0,q),point(t1,q),point(t1,p),col,role);
+        quad(point(t1,p),point(t1,q),point(t0,q),point(t0,p),col,role);
       }
     }
   }
@@ -259,11 +259,20 @@ export function startHarvest(canvas, controls = {}) {
     {name:"a_color",size:3,data:geometry.colors},
     {name:"a_role",size:1,data:geometry.roles}
   ],vertexCount:geometry.positions.length/3});
-  const uniforms={
-    vp:gl.getUniformLocation(program.gpu,"u_viewProjection"),
-    eye:gl.getUniformLocation(program.gpu,"u_eye"),
-    time:gl.getUniformLocation(program.gpu,"u_time")
-  };
+  // Uniform locations belong to a specific linked GPU program; E1 recreates
+  // programs on context restoration, so never retain locations across handles.
+  let uniformProgram=null,uniforms=null;
+  function currentUniforms(handle){
+    if(handle!==uniformProgram){
+      uniformProgram=handle;
+      uniforms={
+        vp:gl.getUniformLocation(handle,"u_viewProjection"),
+        eye:gl.getUniformLocation(handle,"u_eye"),
+        time:gl.getUniformLocation(handle,"u_time")
+      };
+    }
+    return uniforms;
+  }
   const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const state={yaw:.48,elevation:.49,distance:25.5,phase:0,paused:reduced,disposed:false,drag:null,raf:0,last:0};
   function draw(now=0) {
@@ -283,9 +292,10 @@ export function startHarvest(canvas, controls = {}) {
     const view=lookAt(eye,[0,.6,-.75]);
     const vp=mul(perspective(.80,w/h,.12,90),view);
     device.draw({program,mesh,beforeDraw(context,handle){
-      context.uniformMatrix4fv(uniforms.vp,false,vp);
-      context.uniform3fv(uniforms.eye,new Float32Array(eye));
-      context.uniform1f(uniforms.time,state.phase);
+      const active=currentUniforms(handle);
+      context.uniformMatrix4fv(active.vp,false,vp);
+      context.uniform3fv(active.eye,new Float32Array(eye));
+      context.uniform1f(active.time,state.phase);
     }});
     if(!state.paused&&!reduced)schedule();
   }

@@ -361,6 +361,47 @@ jobs:
           }));
           NODE
               jq -e '.schema=="H_EARTH_GEN3010_SAVED_GRASS_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .rootCount==2879698 and .tiles==8303 and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = '88872fc9f5c0c06198b0107d6757355bc83c6f3f' ]; then
+              # Gen3433: exact P1 material-only candidate. No historical selector
+              # or unknown-head fallback is changed; no browser/owner PASS here.
+              entry=showroom/globe/h-earth/index.html
+              renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              geology=showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js
+              owner=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+              route=showroom/globe/h-earth/vegetation-prototype/route.js
+              test "$(git hash-object "$entry")" = 597f9fb6931ece33b73d6f68178891d5a7e49534
+              test "$(git hash-object "$renderer")" = 9a64a65f4974b8c426b007bb1b08c4b2c9cf3227
+              test "$(git hash-object "$geology")" = cf293b9e3f19ae40395df24bdd74d10ca6da3273
+              test "$(git hash-object "$owner")" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+              test "$(git hash-object "$route")" = bddf7dcf22c33ba4fa04928016016c37a78e031f
+              test "$(git hash-object showroom/globe/h-earth/render/landscape-coherence-field.v1.js)" = a7627f13459d127fa44a90c67780643dc75f4332
+              test "$(git hash-object showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js)" = 59c77d100d793f9dd28e9db7bd357ef078de0165
+              test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+              test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+              grep -Fq 'nativeRiverBankMaterialAt' "$renderer"
+              grep -Fq 'vRoleCode==1u && vPrimitiveIndex==62000u' "$renderer"
+              grep -Fq 'sha-9a64a65f4974' "$entry"
+              node --check "$renderer"
+              node --check "$geology"
+              node --check "$route"
+              node --test --test-reporter=tap h-earth-3d/validation/h-earth.continuity-capture.v1.test.mjs > /tmp/h-earth-exact-evidence/p1-source-applicability.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p1-source-applicability.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_P1_PR7531_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                candidateHead:$target,
+                rendererGitBlob:"9a64a65f4974b8c426b007bb1b08c4b2c9cf3227",
+                entryGitBlob:"597f9fb6931ece33b73d6f68178891d5a7e49534",
+                protectedTreeSourceExact:true,
+                protectedGrassOwnerExact:true,
+                nativeRiverSourceExact:true,
+                nativeRavineRouteAvailable:true,
+                exactSourceAndSyntaxChecks:"PASS",
+                browserDrawExecuted:false,
+                ownerVisualAcceptance:false,
+                releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_P1_PR7531_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .candidateHead=="88872fc9f5c0c06198b0107d6757355bc83c6f3f" and .exactSourceAndSyntaxChecks=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             elif [ "$EXACT_TARGET_SHA" = '086eadaf40b96584086ccaf53ac65fd9b00d93fe' ]; then
               # Gen3424: ONE exact SHA, accepted P3 uploader option only. Historical branches unchanged.
               entry=showroom/globe/h-earth/index.html

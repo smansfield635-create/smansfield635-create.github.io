@@ -645,12 +645,15 @@ void main(){
  float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
  float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
  float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
- float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale;
+ // Landform response changes only the silhouette of already installed roots.
+ // The entrance keeps its accepted growth law; no contact/LOD/buffer changes.
+ float foothillDry=max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz));
+ float meadowGrowth=meadowGrowthCoherence(aRoot.xz,foothillDry);
+ float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale*mix(meadowGrowth,1.,entrance);
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.81));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
- // One world-space palette for existing grass and occupied ground.
- float foothillDry=max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz));
+ // Reuse the exact same dry signal and organic field in the occupied ground.
  vec3 palette=landscapeCoverPalette(aRoot.xz,foothillDry);
  palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);

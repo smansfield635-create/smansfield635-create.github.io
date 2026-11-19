@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3419-neutral-real-gpu-20261118-001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7513,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3419-actual-gpu-20261118",
+  "requestCommit": "3f754d4847971202f45c6493bc7a469fb6794e5d",
+  "requestCommitParent": "a5b2c03e247015c226f4301782c2ab1f9ca98995",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a5b2c03e247015c226f4301782c2ab1f9ca98995",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "24b1869740d88e5f304dd4e6cba8c2428dea6567",
+    "route_path": "/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "44447244574",
+  "dispatchedRunId": 44447260018,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44447260018",
+  "dispatchedRunHeadSha": "a5b2c03e247015c226f4301782c2ab1f9ca98995",
+  "dispatchedAt": "2026-11-19T02:50:56.540Z",
+  "resolvedAt": "2026-11-19T02:51:03.024Z"
+}

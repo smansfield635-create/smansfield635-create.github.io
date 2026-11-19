@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T22:23:43Z",
+  "generatedAt": "2026-11-19T23:24:37Z",
   "window": {
-    "start": "2026-08-21T22:23:43Z",
-    "end": "2026-11-19T22:23:43Z"
+    "start": "2026-08-21T23:24:37Z",
+    "end": "2026-11-19T23:24:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,15 +17,19 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3142,
-    "visits": 851,
+    "pageLoads": 3132,
+    "visits": 841,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3142,
-        "visits": 851
+        "pageLoads": 3132,
+        "visits": 841
       }
     },
     "byPath": {
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -35,16 +39,12 @@
         "visits": 381
       },
       "/showroom/": {
-        "pageLoads": 40,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 0
       },
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -82,12 +82,12 @@
         "pageLoads": 110,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -162,19 +162,19 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -307,10 +307,6 @@
       "diamondgatebridge.com": {
         "pageLoads": 2291,
         "visits": 0
-      },
-      "raw.githack.com": {
-        "pageLoads": 10,
-        "visits": 10
       }
     }
   }

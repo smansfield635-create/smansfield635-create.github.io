@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "H_EARTH_P1_PR7531_GEN3434_RAVINE_CHROMIUM_20261119_B",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "88872fc9f5c0c06198b0107d6757355bc83c6f3f",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1",
+    "exercise_vegetation_residency": "false"
   }
 }

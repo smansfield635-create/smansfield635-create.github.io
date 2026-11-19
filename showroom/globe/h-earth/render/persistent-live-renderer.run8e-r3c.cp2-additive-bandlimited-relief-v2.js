@@ -1247,7 +1247,7 @@ void main(){
     // ERODED_TERRAIN material channel. Unlike coast/contact distances, this
     // cannot turn the river into ocean beach material or affect tree roles.
     float nativeRiverBank=clamp((vMaterialParameters.z-.035)/.92,0.0,1.0);
-    if(nativeRiverBank>0.001 && !geologicalEarthRock){
+    if(nativeRiverBank>0.001 && vRoleCode==1u && vPrimitiveIndex==62000u && !geologicalEarthRock){
       float bankGrain=noise2(world*.51+vec2(13.0,-19.0));
       vec3 riparianEarth=mix(vec3(.178,.148,.107),vec3(.298,.260,.204),
         smoothstep(.025,.24,slope));

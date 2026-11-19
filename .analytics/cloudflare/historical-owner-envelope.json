@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T16:25:57Z",
+  "generatedAt": "2026-11-19T17:24:40Z",
   "window": {
-    "start": "2026-08-21T16:25:57Z",
-    "end": "2026-11-19T16:25:57Z"
+    "start": "2026-08-21T17:24:40Z",
+    "end": "2026-11-19T17:24:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3212,
-    "visits": 911,
+    "pageLoads": 3202,
+    "visits": 901,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3212,
-        "visits": 911
+        "pageLoads": 3202,
+        "visits": 901
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 571,
-        "visits": 441
+        "pageLoads": 561,
+        "visits": 431
       },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
@@ -37,6 +37,10 @@
       "/coherence-diagnostic/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/showroom/": {
         "pageLoads": 40,
@@ -49,10 +53,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/governance/": {
+        "pageLoads": 20,
+        "visits": 10
+      },
       "/instruments/": {
         "pageLoads": 10,
         "visits": 0
@@ -141,10 +145,6 @@
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 20,
-        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -166,6 +166,10 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
@@ -178,13 +182,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/wave/": {
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/about/": {
         "pageLoads": 40,
@@ -192,10 +196,6 @@
       },
       "/door/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -254,10 +254,6 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
         "visits": 0
@@ -265,6 +261,10 @@
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -301,8 +301,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 420,
-        "visits": 420
+        "pageLoads": 410,
+        "visits": 410
       },
       "(none)": {
         "pageLoads": 481,

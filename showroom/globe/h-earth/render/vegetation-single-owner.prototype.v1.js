@@ -345,7 +345,13 @@ export async function buildWideExistingGrassTrial({
     (1-smooth((side-2)/Math.max(1,width-2)))*(.66+.34*patch)*(.75+.25*longitudinal):0;
   // Source-root distance provides a broad ecological footprint rather than
   // relying on a photo-inferred ground hit or an arbitrary narrow corridor.
-  let nearest=Infinity;for(const stand of stands)nearest=Math.min(nearest,Math.hypot(x-stand.x,z-stand.z));
+  let nearest=Infinity;
+  // If either coordinate gap already exceeds the nearest radius, its Euclidean distance cannot improve the result.
+  for(const stand of stands){
+   const dx=x-stand.x,dz=z-stand.z;
+   if(Math.abs(dx)>=nearest||Math.abs(dz)>=nearest)continue;
+   nearest=Math.min(nearest,Math.hypot(dx,dz));
+  }
   const reach=1-smooth((nearest-12)/95);
   const organic=.48*field(x,z,21,281)+.52*field(x,z,8,317);
   const regionalFeather=(.20+.60*reach)*smooth((organic-.18)/.65);

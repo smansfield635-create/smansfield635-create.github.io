@@ -292,6 +292,82 @@ export function sculptScreenRay({x,y,width,height,viewProjection}){
   function unproject(z){const p=[ndc[0],ndc[1],z,1],r=Array.from({length:4},(_,i)=>m[i]*p[0]+m[i+4]*p[1]+m[i+8]*p[2]+m[i+12]*p[3]);if(Math.abs(r[3])<1e-12)throw new Error('SCREEN_RAY_INVALID');return r.slice(0,3).map(x=>x/r[3]);}
   const a=unproject(-1),b=unproject(1);return {origin:a,direction:norm(sub(b,a))};
 }
+
+/** Verify that an A4 edit introduces no new face/face penetration.
+ * Existing original crossings remain baseline evidence, never an exemption
+ * for a newly created crossing. Only pairs incident to changed faces can be new.
+ */
+export function verifyA4DerivativeNoNewIntersections(reference,candidate,triangles){
+  const src=floatPositions(reference),out=floatPositions(candidate),idx=intTriangles(triangles);
+  if(src.length!==out.length)throw new Error('A4_DERIVATIVE_SOURCE_SHAPE_CHANGED');
+  const moved=new Uint8Array(src.length/3);
+  for(let i=0;i<moved.length;i++)if(src[3*i]!==out[3*i]||
+      src[3*i+1]!==out[3*i+1]||src[3*i+2]!==out[3*i+2])moved[i]=1;
+  const n=idx.length/3,affected=[];
+  const bounds=Array.from({length:n},(_,f)=>{
+    const ids=[idx[3*f],idx[3*f+1],idx[3*f+2]];
+    if(ids.some(i=>i>=moved.length))throw new Error('A4_DERIVATIVE_FACE_INDEX_INVALID');
+    if(ids.some(i=>moved[i]))affected.push(f);
+    const vertices=ids.map(id=>pos(out,id));
+    return {ids,vertices,min:[0,1,2].map(k=>Math.min(...vertices.map(v=>v[k]))),
+      max:[0,1,2].map(k=>Math.max(...vertices.map(v=>v[k])))};
+  });
+  const changed=new Set(affected);
+  for(const i of affected){
+    const a=bounds[i];
+    for(let j=0;j<n;j++){
+      if(i===j||(changed.has(j)&&j<i))continue;
+      const b=bounds[j];
+      if([0,1,2].some(k=>a.max[k]<b.min[k]||b.max[k]<a.min[k]))continue;
+      if(!trianglesIntersect(...a.vertices,...b.vertices))continue;
+      const beforeA=a.ids.map(id=>pos(src,id)),beforeB=b.ids.map(id=>pos(src,id));
+      if(!trianglesIntersect(...beforeA,...beforeB))
+        throw new Error('A4_DERIVATIVE_NEW_SELF_INTERSECTION');
+    }
+  }
+  return Object.freeze({changedFaces:affected.length,newIntersections:0});
+}
+
+/** Original M1.3 stays read-only. This off-product authoring copy has a
+ * distinct safety and serialization identity, preserving source UV seams,
+ * original 16 morph targets, 64 pose rows and atlas outside the derivative.
+ */
+export function createM13EditableDerivative(restFrame,archiveSha256){
+  const exactArchive='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
+  const render=restFrame?.sourceRender;
+  if(archiveSha256!==exactArchive||restFrame?.sourceGuards?.readOnlyOriginalBaseline!==true||
+     render?.readOnlyOriginal!==true||render.originalPose!==52||
+     restFrame.positions?.length!==1134*3||restFrame.triangles?.length!==2264*3||
+     render.renderToMaster?.length!==1409||render.uvs?.length!==1409*2||
+     render.renderTriangles?.length!==2264*3||
+     !(render.atlasPixels instanceof Uint8Array)||!render.eye)
+    throw new Error('A4_DERIVATIVE_VERIFIED_REST_SOURCE_REQUIRED');
+  const positions=new Float32Array(restFrame.positions);
+  const regions=new Array(1134),protectedVertices=[];
+  for(let id=0;id<1134;id++){
+    const x=positions[3*id],y=positions[3*id+1],z=positions[3*id+2];
+    // A4 original: +X forward, +Y up after the accepted source handoff,
+    // +Z = near-side. Conservatively exclude face, torso and opposite limb.
+    const foreleg=x>=0.34&&x<=0.73&&y>=0.05&&y<=0.44&&z>=0.04&&z<=0.32;
+    regions[id]=foreleg?'foreleg':'ORIGINAL_PROTECTED';
+    if(!foreleg)protectedVertices.push(id);
+  }
+  for(const eye of [991,1001,1008])if(!protectedVertices.includes(eye))
+    throw new Error('A4_DERIVATIVE_EYE_REGION_NOT_FROZEN');
+  for(const joint of [776,764,947,121,123])if(protectedVertices.includes(joint))
+    throw new Error('A4_DERIVATIVE_FORELEG_REGION_NOT_INCLUDED');
+  const copyEye=Object.fromEntries(Object.entries(render.eye).map(([key,value])=>
+    [key,ArrayBuffer.isView(value)?new value.constructor(value):value]));
+  const sourceRender={...render,readOnlyOriginal:false,editableDerivative:true,
+    originalArchiveSha256:archiveSha256,renderToMaster:new Uint32Array(render.renderToMaster),
+    renderTriangles:new Uint16Array(render.renderTriangles),uvs:new Float32Array(render.uvs),
+    atlasPixels:new Uint8Array(render.atlasPixels),eye:copyEye};
+  return {positions,triangles:new Uint16Array(restFrame.triangles),regions,protectedVertices,
+    sourceGuards:{editableM13Derivative:true,originalArchiveSha256:archiveSha256,
+      originalReferencePose:52,minNormalCosine:0.2,minAreaRatio:0.5,maxAreaRatio:2},
+    sourceRender};
+}
+
 export function createSculptSession({positions,triangles,regions,protectedVertices=[],maxHistory=40,sourceGuards={}}={}){
   let current=floatPositions(positions);const faces=intTriangles(triangles),count=current.length/3;
   if(!Array.isArray(regions)||regions.length!==count||regions.some(x=>typeof x!=='string'||!x))throw new TypeError('REGION_IDS_REQUIRED');
@@ -301,10 +377,19 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
   // The original M1.3 reference is view-only; its pre-existing self-intersections
   // are not an exemption for any editable candidate or future topology bake.
   const readOnlyOriginal=sourceGuards.readOnlyOriginalBaseline===true;
+  const editableM13Derivative=sourceGuards.editableM13Derivative===true;
+  if(editableM13Derivative){
+    if(readOnlyOriginal||count!==1134||faces.length!==2264*3||
+       sourceGuards.originalArchiveSha256!=='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567'||
+       sourceGuards.originalReferencePose!==52||frozen.size<900||
+       originalRegions.some((region,id)=>region!==(frozen.has(id)?'ORIGINAL_PROTECTED':'foreleg'))||
+       [991,1001,1008].some(id=>!frozen.has(id)))
+      throw new Error('A4_DERIVATIVE_SOURCE_GUARDS_INVALID');
+  }
   if(readOnlyOriginal&&(frozen.size!==count||originalRegions.some(x=>x!=='ORIGINAL_PROTECTED')))
     throw new Error('M13_ORIGINAL_READONLY_FULL_PROTECTION_REQUIRED');
   const reference=new Float32Array(current),guardOptions={...sourceGuards,protectedVertices:[...frozen]};
-  verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal});
+  verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal&&!editableM13Derivative});
   verifySculptSourceRelative(reference,current,faces,guardOptions);let active=null,revision=0;
   function pick(origin,direction){
     v3(origin,'PICK_ORIGIN');v3(direction,'PICK_DIRECTION');const ray=norm(direction);let best=null;
@@ -353,8 +438,9 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
       for(let j=0;j<3;j++)candidate[3*i+j]+=shift[j]*active.strength*w;
     }
     try{
-      verifySculptGeometry(candidate,faces);
+      verifySculptGeometry(candidate,faces,{checkSelfIntersection:!editableM13Derivative});
       verifySculptSourceRelative(reference,candidate,faces,guardOptions);
+      if(editableM13Derivative)verifyA4DerivativeNoNewIntersections(reference,candidate,faces);
     }catch(e){current=new Float32Array(active.before);active=null;throw e;}
     current=candidate;active.changed=true;revision++;return true;
   }
@@ -364,14 +450,43 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
   function cancelStroke(){if(!active)return false;current=active.before;active=null;revision++;return true;}
   function undoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!undo.length)return false;redo.push(current);current=undo.pop();revision++;return true;}
   function redoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!redo.length)return false;undo.push(current);current=redo.pop();revision++;return true;}
-  function serialize(){if(active)throw new Error('STROKE_ACTIVE');return JSON.stringify({schema:'DGB_NATIVE_SCULPT_MESH_V1',positions:[...current],triangles:[...faces],regions:originalRegions,protectedVertices:[...frozen].sort((a,b)=>a-b)});}
+  function serialize(){if(active)throw new Error('STROKE_ACTIVE');
+    if(editableM13Derivative){
+      const deltas=[];for(let i=0;i<count;i++){
+        const d=[0,1,2].map(k=>current[3*i+k]-reference[3*i+k]);
+        if(d.some(x=>x!==0))deltas.push({id:i,delta:d});
+      }
+      return JSON.stringify({schema:'DGB_A4_EDITABLE_DERIVATIVE_V1',sourceArchiveSha256:sourceGuards.originalArchiveSha256,
+        originalPose:52,masterCount:count,triangleCount:faces.length/3,deltas});
+    }
+    return JSON.stringify({schema:'DGB_NATIVE_SCULPT_MESH_V1',positions:[...current],triangles:[...faces],regions:originalRegions,protectedVertices:[...frozen].sort((a,b)=>a-b)});
+  }
   function restore(text){if(active)throw new Error('STROKE_ACTIVE');let obj;try{obj=JSON.parse(text);}catch{throw new TypeError('SCULPT_SAVE_JSON_INVALID');}
+    if(editableM13Derivative){
+      if(obj?.schema!=='DGB_A4_EDITABLE_DERIVATIVE_V1'||
+         obj.sourceArchiveSha256!==sourceGuards.originalArchiveSha256||obj.originalPose!==52||
+         obj.masterCount!==count||obj.triangleCount!==faces.length/3||!Array.isArray(obj.deltas)||
+         obj.deltas.length>count)throw new Error('A4_DERIVATIVE_SAVE_IDENTITY_MISMATCH');
+      const restored=new Float32Array(reference);let last=-1;
+      for(const item of obj.deltas){
+        if(!Number.isInteger(item?.id)||item.id<=last||item.id>=count||frozen.has(item.id)||
+           !Array.isArray(item.delta)||item.delta.length!==3||
+           item.delta.some(n=>typeof n!=='number'||!finite(n)))
+          throw new Error('A4_DERIVATIVE_DELTA_INVALID');
+        for(let k=0;k<3;k++)restored[3*item.id+k]+=item.delta[k];
+        last=item.id;
+      }
+      verifySculptGeometry(restored,faces,{checkSelfIntersection:false});
+      verifySculptSourceRelative(reference,restored,faces,guardOptions);
+      verifyA4DerivativeNoNewIntersections(reference,restored,faces);
+      current=restored;undo.length=0;redo.length=0;revision++;return true;
+    }
     if(obj?.schema!=='DGB_NATIVE_SCULPT_MESH_V1'||!Array.isArray(obj.positions)||!Array.isArray(obj.triangles)||JSON.stringify(obj.triangles)!==JSON.stringify([...faces])||JSON.stringify(obj.regions)!==JSON.stringify(originalRegions)||JSON.stringify(obj.protectedVertices)!==JSON.stringify([...frozen].sort((a,b)=>a-b)))throw new Error('SCULPT_SAVE_IDENTITY_MISMATCH');
     const restored=new Float32Array(obj.positions);verifySculptGeometry(restored,faces,{checkSelfIntersection:!readOnlyOriginal});verifySculptSourceRelative(reference,restored,faces,guardOptions);current=restored;undo.length=0;redo.length=0;revision++;return true;}
   return Object.freeze({pick,beginStroke,applyStroke,endStroke,cancelStroke,undo:undoStroke,redo:redoStroke,serialize,restore,
     getPositions:()=>new Float32Array(current),getTriangles:()=>new Uint32Array(faces),getRegions:()=>[...originalRegions],
-    getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal}),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions),originalReferenceSelfIntersectionNotAdjudicated:readOnlyOriginal,editableMeshSafetyQualified:!readOnlyOriginal}),
-    state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3,originalReferenceReadOnly:readOnlyOriginal})});
+    getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal&&!editableM13Derivative}),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions),originalReferenceSelfIntersectionNotAdjudicated:readOnlyOriginal,editableMeshSafetyQualified:!readOnlyOriginal,derivativeNoNewIntersections:editableM13Derivative?verifyA4DerivativeNoNewIntersections(reference,current,faces):null}),
+    state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3,originalReferenceReadOnly:readOnlyOriginal,editableM13Derivative})});
 }
 
 

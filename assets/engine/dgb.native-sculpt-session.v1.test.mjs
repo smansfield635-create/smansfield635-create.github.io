@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createSculptSession,createM13OriginalSource,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,verifySculptProspectiveBake,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
+import {createSculptSession,createM13OriginalSource,createM13EditableDerivative,verifyA4DerivativeNoNewIntersections,verifySculptGeometry,verifySculptSourceRelative,createSculptSourceHandoff,verifySculptProspectiveBake,sculptScreenRay,invertSculptMatrix} from './dgb.native-sculpt-session.v1.mjs';
 const fixture=()=>({positions:new Float32Array([-1,-1,0, 0,-1,0, 1,-1,0, -1,0,0, 0,0,0, 1,0,0, -1,1,0, 0,1,0, 1,1,0]),triangles:new Uint16Array([0,1,4,0,4,3, 1,2,5,1,5,4, 3,4,7,3,7,6, 4,5,8,4,8,7]),regions:['skull','skull','nape','skull','skull','nape','shoulder','shoulder','shoulder'],protectedVertices:[0,3,6]});
 test('actual ray-to-triangle intersection returns 3D hit and barycentrics',()=>{
   const s=createSculptSession(fixture());const hit=s.pick([0,0,5],[0,0,-1]);assert(hit);assert(Math.abs(hit.position[2])<1e-8);assert(Math.abs(hit.barycentric.reduce((a,b)=>a+b,0)-1)<1e-7);assert.equal(hit.vertexIds.length,3);
@@ -509,4 +509,72 @@ test('original intersecting reference is viewable only if every master is frozen
   assert.throws(()=>session.restore(JSON.stringify(edited)),/SCULPT_PROTECTED_SOURCE_CHANGED/);
   assert.throws(()=>createSculptSession({positions,triangles,regions,protectedVertices:[0,1,2,3,4],
     sourceGuards:{readOnlyOriginalBaseline:true}}),/M13_ORIGINAL_READONLY_FULL_PROTECTION_REQUIRED/);
+});
+
+
+test('Gen3430 original archive identity and source-derived eye protection fail closed',()=>{
+  const source=createM13OriginalSource(syntheticM13()),frame=source.pose(52);
+  const correct='7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567';
+  assert.throws(()=>createM13EditableDerivative(frame,'0'.repeat(64)),/A4_DERIVATIVE_VERIFIED_REST_SOURCE_REQUIRED/);
+  assert.throws(()=>createM13EditableDerivative(frame,correct),/A4_DERIVATIVE_VERIFIED_REST_SOURCE_REQUIRED/);
+  const fake={...frame,sourceRender:{...frame.sourceRender,atlasPixels:new Uint8Array(4),
+    atlasWidth:1,atlasHeight:1,eye:{positions:new Float32Array(3),
+      normals:new Float32Array(3),colors:new Float32Array(3),fade:new Float32Array(1)}}};
+  // Synthetic spherical coordinates have different anatomical landmarks;
+  // they cannot impersonate the separately archived original A4 rabbit.
+  assert.throws(()=>createM13EditableDerivative(fake,correct),
+    /A4_DERIVATIVE_FORELEG_REGION_NOT_INCLUDED|A4_DERIVATIVE_EYE_REGION_NOT_FROZEN/);
+  assert.equal(frame.sourceRender.readOnlyOriginal,true);
+  assert.equal(frame.protectedVertices.length,1134);
+});
+
+test('Gen3430 source-relative A4 derivative checks only new self penetrations',()=>{
+  const source=new Float32Array([
+    -1,-1,0,1,-1,0,0,1,0,
+    2,-1,2,4,-1,2,3,1,2
+  ]);
+  const triangles=new Uint16Array([0,1,2,3,4,5]);
+  assert.equal(verifyA4DerivativeNoNewIntersections(source,source,triangles).newIntersections,0);
+  const across=new Float32Array(source);
+  across[9]=-.3;across[10]=-.3;across[11]=-1;
+  across[12]=-.3;across[13]=-.3;across[14]=1;
+  across[15]=-.3;across[16]=.8;across[17]=0;
+  assert.throws(()=>verifyA4DerivativeNoNewIntersections(source,across,triangles),
+    /A4_DERIVATIVE_NEW_SELF_INTERSECTION/);
+});
+
+test('Gen3430 A4 derivative stores source-bound vertex deltas, not private master bytes',()=>{
+  const frame=createM13OriginalSource(syntheticM13()).pose(52);
+  const ids=new Set(Array.from({length:14},(_,i)=>116+i)),regions=Array.from({length:1134},
+    (_,i)=>ids.has(i)?'foreleg':'ORIGINAL_PROTECTED');
+  const protectedVertices=Array.from({length:1134},(_,i)=>i).filter(i=>!ids.has(i));
+  const f={positions:frame.positions,triangles:frame.triangles,regions,protectedVertices,
+    sourceGuards:{editableM13Derivative:true,
+      originalArchiveSha256:'7f01296b6dd165bd835d64fc173db2dd270ef15916b01716b8e9845a479b4567',
+      originalReferencePose:52}};
+  const session=createSculptSession(f);
+  assert.equal(session.state().editableM13Derivative,true);
+  assert.equal(session.verify().derivativeNoNewIntersections.newIntersections,0);
+  const first=JSON.parse(session.serialize());
+  assert.equal(first.schema,'DGB_A4_EDITABLE_DERIVATIVE_V1');
+  assert.deepEqual(first.deltas,[]);
+  assert(!JSON.stringify(first).includes('"positions"'));
+  const input=new Float32Array(frame.positions);
+  const i=121,loc=[input[3*i],input[3*i+1],input[3*i+2]];
+  const activated=session.beginStroke({position:loc,normal:[0,0,1],
+    vertexIds:[i],triangle:0},{radius:.12,region:'foreleg',strength:.25});
+  assert(activated.affectedVertexIds.includes(i));
+  assert(session.applyStroke({mode:'MOVE',delta:[0,0,.002]}));
+  session.endStroke();
+  const saved=session.serialize(),receipt=JSON.parse(saved);
+  assert(receipt.deltas.length>0);
+  assert(receipt.deltas.every(item=>ids.has(item.id)));
+  const replay=createSculptSession(f);assert(replay.restore(saved));
+  assert.deepEqual([...replay.getPositions()],[...session.getPositions()]);
+  assert.equal(replay.serialize(),saved);
+  assert.throws(()=>replay.restore(JSON.stringify({...receipt,sourceArchiveSha256:'0'.repeat(64)})),
+    /A4_DERIVATIVE_SAVE_IDENTITY_MISMATCH/);
+  const tampered={...receipt,deltas:[{id:991,delta:[0,0,.01]}]};
+  assert.throws(()=>replay.restore(JSON.stringify(tampered)),/A4_DERIVATIVE_DELTA_INVALID/);
+  assert.equal(replay.serialize(),saved);
 });

@@ -63,9 +63,10 @@ function buildWorld() {
     const x0=x-sx/2,x1=x+sx/2,y0=y-sy/2,y1=y+sy/2,z0=z-sz/2,z1=z+sz/2;
     const a=[x0,y0,z0],b=[x1,y0,z0],c=[x1,y0,z1],d=[x0,y0,z1];
     const e=[x0,y1,z0],f=[x1,y1,z0],g=[x1,y1,z1],h=[x0,y1,z1];
-    quad(a,b,f,e,col,role);quad(b,c,g,f,col,role);
-    quad(c,d,h,g,col,role);quad(d,a,e,h,col,role);
-    quad(e,f,g,h,col,role);quad(d,c,b,a,col,role);
+    // Exterior-facing normals. The prior six surfaces had reversed winding.
+    quad(e,f,b,a,col,role);quad(f,g,c,b,col,role);
+    quad(g,h,d,c,col,role);quad(h,e,a,d,col,role);
+    quad(h,g,f,e,col,role);quad(a,b,c,d,col,role);
   }
   function beam(a,b,r,col,sides=7,role=0) {
     const axis=unit(sub(b,a)), right=unit(cross(axis,Math.abs(axis[1])>.92?[1,0,0]:[0,1,0])), up=unit(cross(axis,right));
@@ -274,7 +275,8 @@ export function startHarvest(canvas, controls = {}) {
     return uniforms;
   }
   const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state={yaw:.48,elevation:.49,distance:25.5,phase:0,paused:reduced,disposed:false,drag:null,raf:0,last:0};
+  const state={yaw:.48,elevation:.49,distance:25.5,phase:0,paused:reduced,disposed:false,drag:null,pinch:null,raf:0,last:0};
+  const activePointers=new Map();
   function draw(now=0) {
     state.raf=0;
     if(state.disposed||document.hidden||device.status().lost)return;
@@ -301,14 +303,42 @@ export function startHarvest(canvas, controls = {}) {
   }
   function schedule(){if(!state.disposed&&!state.raf&&!document.hidden)state.raf=requestAnimationFrame(draw);}
   function reset(){state.yaw=.48;state.elevation=.49;state.distance=25.5;state.last=0;schedule();}
-  function onDown(e){if(e.button!==0&&e.pointerType!=="touch")return;state.drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture?.(e.pointerId);}
+  function onDown(e){
+    if(e.button!==0&&e.pointerType!=="touch")return;
+    activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    canvas.setPointerCapture?.(e.pointerId);
+    state.drag=null;
+    if(activePointers.size===1)state.drag={id:e.pointerId,x:e.clientX,y:e.clientY};
+    if(activePointers.size===2){
+      const [a,b]=[...activePointers.values()];
+      state.pinch={gap:Math.max(1,Math.hypot(b.x-a.x,b.y-a.y)),distance:state.distance};
+    }
+  }
   function onMove(e){
-    if(!state.drag)return;
+    if(!activePointers.has(e.pointerId))return;
+    activePointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(activePointers.size===2){
+      const [a,b]=[...activePointers.values()];
+      const gap=Math.hypot(b.x-a.x,b.y-a.y);
+      if(state.pinch&&gap>1){
+        state.distance=clamp(state.pinch.distance*state.pinch.gap/gap,16,36);
+        schedule();
+      }
+      return;
+    }
+    if(!state.drag||state.drag.id!==e.pointerId)return;
     const dx=e.clientX-state.drag.x,dy=e.clientY-state.drag.y;
     state.yaw+=dx*.006;state.elevation=clamp(state.elevation+dy*.004,.18,1.05);
-    state.drag={x:e.clientX,y:e.clientY};schedule();
+    state.drag={id:e.pointerId,x:e.clientX,y:e.clientY};schedule();
   }
-  function onUp(){state.drag=null;}
+  function onUp(e){
+    activePointers.delete(e.pointerId);
+    state.drag=null;state.pinch=null;
+    if(activePointers.size===1){
+      const [id,point]=activePointers.entries().next().value;
+      state.drag={id,x:point.x,y:point.y};
+    }
+  }
   function onWheel(e){e.preventDefault();state.distance=clamp(state.distance*Math.exp(e.deltaY*.0008),16,36);schedule();}
   function onKey(e){
     const key=e.key;

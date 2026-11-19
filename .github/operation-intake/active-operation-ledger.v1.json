@@ -24103,6 +24103,50 @@
       "scopeHash": "a393543023cfa04a3cf37a2c5901e95d92c1e9ad906af64199eb6d282d8f7c81",
       "state": "ADMITTED_LOCKED"
     },
+    "a3aaa4929613bd6a216c3b5ba6d9fe1b1ef7646d6b6c5e3f75d5480a8a27a68c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "6dc09bf91d9e0182b954ee526d169cc234a1f0a5",
+          "lockGeneration": 3422,
+          "lockScope": "NINE_SUMMITS_GENEROSITY_HARVEST:NATIVE_3D_CONSUMER_CONSTRUCTION:20261118",
+          "operationId": "C3_A5_HARVEST_NATIVE_3D_CONSUMER_CONSTRUCTION_20261118_001",
+          "procedureLocatorDigest": "15f64dc1c2a86cdd7f77466588d2c8339f96c928fc1f66c1f6592f0b3c9a93fc",
+          "requestDigest": "dd031443c200815db7e928da8215b646d1286fe94af61d45e7d233c8f9e60791",
+          "scopeHash": "a3aaa4929613bd6a216c3b5ba6d9fe1b1ef7646d6b6c5e3f75d5480a8a27a68c"
+        },
+        "bindingDigest": "6984410bb8184412a1f931539a351d300d48b36b9a3644ed67c11fffe35944ba",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c0e7f8607282828f26e810ad01f1972154de009e73db47943fde250f9f86bbb2",
+          "commentId": 7000354445,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7163,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44463294160,
+          "workflowSha": "6dc09bf91d9e0182b954ee526d169cc234a1f0a5"
+        },
+        "lineageAnchorCommitSha": "cceede96a49ae0394ee26dcf3f319646f1bbd681",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "6dc09bf91d9e0182b954ee526d169cc234a1f0a5",
+      "lockGeneration": 3422,
+      "lockScope": "NINE_SUMMITS_GENEROSITY_HARVEST:NATIVE_3D_CONSUMER_CONSTRUCTION:20261118",
+      "operationId": "C3_A5_HARVEST_NATIVE_3D_CONSUMER_CONSTRUCTION_20261118_001",
+      "procedureLocatorDigest": "15f64dc1c2a86cdd7f77466588d2c8339f96c928fc1f66c1f6592f0b3c9a93fc",
+      "released": false,
+      "requestDigest": "dd031443c200815db7e928da8215b646d1286fe94af61d45e7d233c8f9e60791",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a3aaa4929613bd6a216c3b5ba6d9fe1b1ef7646d6b6c5e3f75d5480a8a27a68c",
+      "state": "ADMITTED_LOCKED"
+    },
     "a3b3ccc25db568926a5b4303f29e6036a0e0fef39c642c0129266543b4f3c660": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -38327,7 +38371,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3421,
+  "lockGeneration": 3422,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

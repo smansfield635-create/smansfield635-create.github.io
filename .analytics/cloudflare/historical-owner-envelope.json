@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T00:44:42Z",
+  "generatedAt": "2026-11-19T01:25:08Z",
   "window": {
-    "start": "2026-08-21T00:44:42Z",
-    "end": "2026-11-19T00:44:42Z"
+    "start": "2026-08-21T01:25:08Z",
+    "end": "2026-11-19T01:25:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3262,
-    "visits": 931,
+    "pageLoads": 3252,
+    "visits": 951,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3262,
-        "visits": 931
+        "pageLoads": 3252,
+        "visits": 951
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 581,
-        "visits": 451
+        "pageLoads": 611,
+        "visits": 481
       },
       "/coherence-diagnostic/": {
         "pageLoads": 10,
@@ -37,6 +37,14 @@
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -50,20 +58,12 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
       },
       "/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/inspection/compass/brain-v10-g1-1/": {
@@ -75,7 +75,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 91,
+        "pageLoads": 61,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -83,7 +83,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 90,
+        "pageLoads": 110,
         "visits": 10
       },
       "/evidence/": {
@@ -163,40 +163,36 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/characters/legacy-dossiers.html": {
-        "pageLoads": 10,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 30
       },
-      "/products/": {
-        "pageLoads": 50,
-        "visits": 10
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 20,
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
       },
-      "/nine-summits-of-love/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/archcoin/": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 30,
-        "visits": 10
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/door/": {
         "pageLoads": 20,
@@ -250,6 +246,10 @@
         "pageLoads": 30,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 30,
+        "visits": 10
+      },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
         "visits": 0
@@ -263,15 +263,15 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 250,
+        "pageLoads": 260,
         "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
         "visits": 30
       },
-      "/analytics/": {
-        "pageLoads": 100,
+      "/meet-sean-mansfield/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/home/": {
@@ -286,6 +286,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/analytics/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/prototypes/abc-roofing/": {
         "pageLoads": 10,
         "visits": 10
@@ -297,11 +301,11 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 430,
-        "visits": 430
+        "pageLoads": 460,
+        "visits": 460
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2331,
+        "pageLoads": 2301,
         "visits": 0
       },
       "raw.githack.com": {
@@ -309,8 +313,8 @@
         "visits": 10
       },
       "(none)": {
-        "pageLoads": 491,
-        "visits": 491
+        "pageLoads": 481,
+        "visits": 481
       }
     }
   }

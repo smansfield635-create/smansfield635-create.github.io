@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T06:35:43Z",
+  "generatedAt": "2026-11-19T07:26:29Z",
   "window": {
-    "start": "2026-08-21T06:35:43Z",
-    "end": "2026-11-19T06:35:43Z"
+    "start": "2026-08-21T07:26:29Z",
+    "end": "2026-11-19T07:26:29Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,16 +18,16 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 3222,
-    "visits": 921,
+    "visits": 901,
     "byDevice": {
       "tablet": {
         "pageLoads": 3222,
-        "visits": 921
+        "visits": 901
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 581,
+        "pageLoads": 561,
         "visits": 451
       },
       "/coherence-diagnostic/": {
@@ -83,7 +83,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 61,
+        "pageLoads": 81,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -167,8 +167,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 70,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -234,13 +234,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -290,10 +290,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/prototypes/abc-roofing/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -305,7 +301,7 @@
         "visits": 430
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2301,
+        "pageLoads": 2321,
         "visits": 0
       },
       "raw.githack.com": {
@@ -313,8 +309,8 @@
         "visits": 10
       },
       "(none)": {
-        "pageLoads": 481,
-        "visits": 481
+        "pageLoads": 461,
+        "visits": 461
       }
     }
   }

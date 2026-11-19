@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Generosity Harvest — Native World Candidate</title>
+<style>
+  :root { font-family: Georgia, "Times New Roman", serif; color: #f6eddb; background: #19251f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; }
+  body { display: flex; flex-direction: column; min-height: 100svh; overflow-x: hidden; }
+  header { z-index: 2; position: relative; padding: clamp(1rem, 3vw, 2.2rem) clamp(1rem, 4vw, 3.5rem) .8rem; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1rem; }
+  h1 { font-size: clamp(1.55rem, 3vw, 2.7rem); font-weight: 400; letter-spacing: .035em; margin: 0; }
+  .eyebrow { display: block; color: #e7cba4; font: 600 .68rem/1.6 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .2em; }
+  .return { color: #f4e6cf; font: 500 .84rem/1.6 system-ui, sans-serif; text-decoration-thickness: 1px; text-underline-offset: .3em; }
+  main { position: relative; flex: 1; display: grid; min-height: 480px; max-height: 920px; overflow: hidden; background: radial-gradient(ellipse 110% 100% at 56% 10%, #dfe6d0 0, #a9c5bb 44%, #718e81 72%, #4d655c 100%); }
+  canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline-offset: -4px; }
+  canvas:active { cursor: grabbing; }
+  .caption { position: absolute; left: clamp(1rem,4vw,3.5rem); bottom: clamp(5rem, 9vw, 7.5rem); max-width: min(28rem, 80vw); pointer-events: none; text-shadow: 0 2px 12px #20342599; }
+  .caption strong { font-size: clamp(1.18rem, 2.6vw, 2rem); font-weight: 400; display: block; }
+  .caption span { font: 400 .8rem/1.65 system-ui, sans-serif; color: #e5eadf; }
+  .controls { position: absolute; bottom: 1.25rem; left: clamp(1rem,4vw,3.5rem); right: clamp(1rem,4vw,3.5rem); display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+  button { color: #f7eddb; background: #1c332dbb; border: 1px solid #eee0c190; border-radius: 999px; font: 600 .77rem system-ui, sans-serif; letter-spacing: .02em; padding: .72rem 1.1rem; cursor: pointer; backdrop-filter: blur(8px); }
+  button:hover { background: #30544c; }
+  button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid #fff0c7; outline-offset: 3px; }
+  button:disabled { opacity: .6; cursor: not-allowed; }
+  .hint { margin-left: auto; color: #f4eddf; font: 400 .73rem system-ui, sans-serif; text-shadow: 0 1px 7px #203425; }
+  footer { padding: .65rem clamp(1rem,4vw,3.5rem) .9rem; color: #c7d0c5; font: 400 .69rem/1.5 system-ui, sans-serif; }
+  @media (max-width: 680px) {
+    header { padding: .85rem 1rem .5rem; }
+    main { min-height: 66svh; max-height: none; }
+    .caption { bottom: 8rem; }
+    .caption span { font-size: .73rem; }
+    .controls { bottom: .8rem; }
+    .hint { width: 100%; margin-left: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<header>
+  <div><span class="eyebrow">Nine Summits · Generosity</span><h1>Generosity Harvest</h1></div>
+  <a class="return" href="../universe/index.html">Return to the Nine Summits</a>
+</header>
+<main aria-label="Native 3D landscape viewport">
+  <canvas id="harvest-scene" tabindex="0" role="img" aria-label="An interactive three-dimensional harvest landscape with winding path, bridge and flowing water, fruit trees, flowers, fences and birds. The protected rabbit has not yet been integrated."></canvas>
+  <div class="caption"><strong>A place where care takes root.</strong><span>Pastoral landscape construction candidate. The owner-private rabbit and its qualified S7 movement remain outside this public source.</span></div>
+  <div class="controls">
+    <button id="motion-toggle" type="button" aria-pressed="false">Pause world motion</button>
+    <button id="view-reset" type="button">Reset view</button>
+    <span class="hint" id="scene-status" role="status" aria-live="polite">Preparing native WebGL scene…</span>
+  </div>
+</main>
+<footer>Native WebGL candidate · registration HELD · character integration and artistic C1 acceptance pending. Drag to look around; scroll or pinch to change distance.</footer>
+<script type="module" src="./harvest.motion.js"></script>
+</body>
+</html>

@@ -14,8 +14,8 @@
   h1 { font-size: clamp(1.55rem, 3vw, 2.7rem); font-weight: 400; letter-spacing: .035em; margin: 0; }
   .eyebrow { display: block; color: #e7cba4; font: 600 .68rem/1.6 system-ui, sans-serif; text-transform: uppercase; letter-spacing: .2em; }
   .return { color: #f4e6cf; font: 500 .84rem/1.6 system-ui, sans-serif; text-decoration-thickness: 1px; text-underline-offset: .3em; }
-  main { position: relative; flex: 1; display: grid; min-height: 480px; max-height: 920px; overflow: hidden; background: radial-gradient(ellipse 110% 100% at 56% 10%, #dfe6d0 0, #a9c5bb 44%, #718e81 72%, #4d655c 100%); }
-  canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline-offset: -4px; }
+  main { position: relative; flex: 1; display: grid; min-height: 480px; max-height: 920px; overflow: hidden; background: linear-gradient(180deg, #c89e9b 0%, #e6b2a2 27%, #f0c99e 60%, #b5b48c 100%); }
+  canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline-offset: -4px; background: linear-gradient(180deg, #c8a1b4 0%, #e9b0a2 26%, #f4c5a0 60%, #e9cca1 100%); }
   canvas:active { cursor: grabbing; }
   .caption { position: absolute; left: clamp(1rem,4vw,3.5rem); bottom: clamp(5rem, 9vw, 7.5rem); max-width: min(28rem, 80vw); pointer-events: none; text-shadow: 0 2px 12px #20342599; }
   .caption strong { font-size: clamp(1.18rem, 2.6vw, 2rem); font-weight: 400; display: block; }
@@ -45,14 +45,14 @@
 </header>
 <main aria-label="Native 3D landscape viewport">
   <canvas id="harvest-scene" tabindex="0" role="img" aria-label="An interactive three-dimensional harvest landscape with winding path, bridge and flowing water, fruit trees, flowers, fences and birds. The protected rabbit has not yet been integrated."></canvas>
-  <div class="caption"><strong>A place where care takes root.</strong><span>Pastoral landscape construction candidate. The owner-private rabbit and its qualified S7 movement remain outside this public source.</span></div>
+  <div class="caption"><strong>Where generosity takes root.</strong><span>A native landscape of orchards, stone, water and harvest. Original character and qualified movement remain in private custody.</span></div>
   <div class="controls">
     <button id="motion-toggle" type="button" aria-pressed="false">Pause world motion</button>
     <button id="view-reset" type="button">Reset view</button>
     <span class="hint" id="scene-status" role="status" aria-live="polite">Preparing native WebGL scene…</span>
   </div>
 </main>
-<footer>Native WebGL candidate · registration HELD · character integration and artistic C1 acceptance pending. Drag to look around; scroll or pinch to change distance.</footer>
+<footer>Native world study · registration HELD · original rabbit private · artistic C1 acceptance pending. Drag to look around; scroll or pinch to change distance.</footer>
 <script type="module" src="./harvest.motion.js"></script>
 </body>
 </html>

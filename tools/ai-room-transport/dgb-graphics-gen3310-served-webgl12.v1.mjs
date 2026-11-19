@@ -573,7 +573,7 @@ function gen3430Checkout(root){
   run('git',['sparse-checkout','set','assets/engine','graphics-engine/sculpt-lab','.github/ai-router'],root);
   run('git',['fetch','--no-tags','--depth=4','--filter=blob:none','origin',GEN3430_HEAD],root);
   run('git',['checkout','--detach','FETCH_HEAD'],root);
-  check(run('git',['rev-parse','GEN3430_HEAD'],root)===GEN3430_HEAD,'HEAD_DRIFT');
+  check(run('git',['rev-parse','HEAD'],root)===GEN3430_HEAD,'HEAD_DRIFT');
   run('git',['fetch','--no-tags','--depth=4','--filter=blob:none','origin',GEN3430_GOVERNING],root);
   const diff=run('git',['diff','--name-only',GEN3430_GOVERNING,GEN3430_HEAD],root).split('\n').filter(Boolean).sort();
   check(JSON.stringify(diff)===JSON.stringify(Object.keys(GEN3430_BLOBS).sort()),'GEN3310_FIVE_PATH_CHANGED_SET_MISMATCH');

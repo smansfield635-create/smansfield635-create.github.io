@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-19T01:25:08Z",
+  "generatedAt": "2026-11-19T02:28:47Z",
   "window": {
-    "start": "2026-08-21T01:25:08Z",
-    "end": "2026-11-19T01:25:08Z"
+    "start": "2026-08-21T02:28:47Z",
+    "end": "2026-11-19T02:28:47Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3252,
-    "visits": 951,
+    "pageLoads": 3222,
+    "visits": 921,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3252,
-        "visits": 951
+        "pageLoads": 3222,
+        "visits": 921
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 611,
-        "visits": 481
+        "pageLoads": 581,
+        "visits": 451
       },
       "/coherence-diagnostic/": {
         "pageLoads": 10,
@@ -54,13 +54,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/index.html": {
         "pageLoads": 40,
@@ -258,13 +258,13 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -301,8 +301,8 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 460,
-        "visits": 460
+        "pageLoads": 430,
+        "visits": 430
       },
       "diamondgatebridge.com": {
         "pageLoads": 2301,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-19T01:25:08Z",
+  "generatedAt": "2026-11-19T02:28:47Z",
   "window": {
-    "start": "2026-10-20T01:25:08Z",
-    "end": "2026-11-19T01:25:08Z"
+    "start": "2026-10-20T02:28:47Z",
+    "end": "2026-11-19T02:28:47Z"
   },
   "dimensions": {
     "requestPath": [
@@ -172,23 +172,23 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 764,
-        "visits": 764
+        "pageLoads": 737,
+        "visits": 737
       },
       {
         "value": "Chrome",
-        "pageLoads": 207,
-        "visits": 195
+        "pageLoads": 204,
+        "visits": 193
+      },
+      {
+        "value": "Edge",
+        "pageLoads": 192,
+        "visits": 60
       },
       {
         "value": "ChromeMobile",
         "pageLoads": 106,
         "visits": 96
-      },
-      {
-        "value": "Edge",
-        "pageLoads": 94,
-        "visits": 61
       },
       {
         "value": "Unknown",
@@ -197,8 +197,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 64,
-        "visits": 55
+        "pageLoads": 61,
+        "visits": 53
       },
       {
         "value": "Safari",
@@ -214,8 +214,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 837,
-        "visits": 837
+        "pageLoads": 777,
+        "visits": 777
       },
       {
         "value": "Windows",
@@ -224,18 +224,18 @@
       },
       {
         "value": "Android",
-        "pageLoads": 108,
-        "visits": 97
+        "pageLoads": 88,
+        "visits": 77
       },
       {
         "value": "Unknown",
-        "pageLoads": 71,
-        "visits": 61
+        "pageLoads": 61,
+        "visits": 51
       },
       {
         "value": "MacOSX",
-        "pageLoads": 66,
-        "visits": 66
+        "pageLoads": 56,
+        "visits": 56
       },
       {
         "value": "iOS",
@@ -251,8 +251,8 @@
       },
       {
         "value": "0",
-        "pageLoads": 567,
-        "visits": 493
+        "pageLoads": 557,
+        "visits": 483
       }
     ],
     "navigationType": [

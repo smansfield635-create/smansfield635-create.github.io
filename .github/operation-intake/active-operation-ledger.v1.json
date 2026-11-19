@@ -37357,6 +37357,50 @@
       "scopeHash": "f2b927e1438dabdf8efd4e58c4a42d5c331fc7c7d1dfe584315cec619e49cae8",
       "state": "ADMITTED_LOCKED"
     },
+    "f2bdf7fd617a7c88d7dec01e1578bd7e6cd42bd606ab9fd7e575157d0fc1fb3a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "412290396821398e76cced4e3226e66e38064422",
+          "lockGeneration": 3436,
+          "lockScope": "H_EARTH:P1:EXISTING_LANDSCAPE_COHERENCE_AND_DRY_TERRAIN_PRESENTATION:20261119",
+          "operationId": "H_EARTH_P1_TERRAIN_GRASS_SHARED_MATERIAL_ECOTONE_20261119_001",
+          "procedureLocatorDigest": "4da60e9deb4fe3476802f6c519c4ed8868143b57ac4f1884e7b461b44072dd35",
+          "requestDigest": "415a1a8f842f8849c1692b1ce738e4dae7fa26b42b6507da96f6168e1490f82a",
+          "scopeHash": "f2bdf7fd617a7c88d7dec01e1578bd7e6cd42bd606ab9fd7e575157d0fc1fb3a"
+        },
+        "bindingDigest": "ed32a5bda86e118c3e6535046da2634b3197ed41d77fd0c1ed90995e117a3a75",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3ed9b89c1298327843b9b512a4e85a1c144e544154d4ca1fd60a213da53e659a",
+          "commentId": 7025647212,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44641788880,
+          "workflowSha": "412290396821398e76cced4e3226e66e38064422"
+        },
+        "lineageAnchorCommitSha": "0590b3a1c2bf4bd426feed612093f41cb2460f77",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "412290396821398e76cced4e3226e66e38064422",
+      "lockGeneration": 3436,
+      "lockScope": "H_EARTH:P1:EXISTING_LANDSCAPE_COHERENCE_AND_DRY_TERRAIN_PRESENTATION:20261119",
+      "operationId": "H_EARTH_P1_TERRAIN_GRASS_SHARED_MATERIAL_ECOTONE_20261119_001",
+      "procedureLocatorDigest": "4da60e9deb4fe3476802f6c519c4ed8868143b57ac4f1884e7b461b44072dd35",
+      "released": false,
+      "requestDigest": "415a1a8f842f8849c1692b1ce738e4dae7fa26b42b6507da96f6168e1490f82a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f2bdf7fd617a7c88d7dec01e1578bd7e6cd42bd606ab9fd7e575157d0fc1fb3a",
+      "state": "ADMITTED_LOCKED"
+    },
     "f2dfe8a94bfab64b5eeb0308e2fac1373a71abfcbcd5d505db3d5586630e484d": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -38943,7 +38987,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3435,
+  "lockGeneration": 3436,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

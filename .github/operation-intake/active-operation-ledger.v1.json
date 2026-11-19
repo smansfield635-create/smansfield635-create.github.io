@@ -32809,6 +32809,50 @@
       "scopeHash": "d67b2a3979a35f7524b6b655a0423b1e5145d7d5b78345d25699ec3159b0f635",
       "state": "ADMITTED_LOCKED"
     },
+    "d691171886c277793a6388e38fb2ce9e19748c3dd34de85f4201d941705cd06d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "621874562762504bf4cbc2aedc3f62116472b24f",
+          "lockGeneration": 3430,
+          "lockScope": "GRAPHICS_ENGINE:SCULPT_LAB:A4_EDITABLE_DERIVATIVE:20261119",
+          "operationId": "DGB_A4_SCULPT_EDITABLE_DERIVATIVE_20261119_001",
+          "procedureLocatorDigest": "40053e64313c2f753e425a1f151bc97f89f8d8076435175dd34db0be05a0cf0c",
+          "requestDigest": "c97038b1dc9a761b1ec24f89e0bd41522b31fe6e643bbc27913440ffece7fed6",
+          "scopeHash": "d691171886c277793a6388e38fb2ce9e19748c3dd34de85f4201d941705cd06d"
+        },
+        "bindingDigest": "7c621e1f6580731cba19b498a616b63d66fd0306bf50f989ca71d90e139e5419",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "efcda7312b716ab4e1a9c3bfffa2e6f8118970de0a97d48cc820287a5971916a",
+          "commentId": 7022460013,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7163,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44617215926,
+          "workflowSha": "621874562762504bf4cbc2aedc3f62116472b24f"
+        },
+        "lineageAnchorCommitSha": "859c4f96dc55d7db956e3175a3de9baaf41042dc",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "621874562762504bf4cbc2aedc3f62116472b24f",
+      "lockGeneration": 3430,
+      "lockScope": "GRAPHICS_ENGINE:SCULPT_LAB:A4_EDITABLE_DERIVATIVE:20261119",
+      "operationId": "DGB_A4_SCULPT_EDITABLE_DERIVATIVE_20261119_001",
+      "procedureLocatorDigest": "40053e64313c2f753e425a1f151bc97f89f8d8076435175dd34db0be05a0cf0c",
+      "released": false,
+      "requestDigest": "c97038b1dc9a761b1ec24f89e0bd41522b31fe6e643bbc27913440ffece7fed6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d691171886c277793a6388e38fb2ce9e19748c3dd34de85f4201d941705cd06d",
+      "state": "ADMITTED_LOCKED"
+    },
     "d6c7560a3072bdec58027758395d734b277d4cfbf1f80e30a584289c094c06c7": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -38679,7 +38723,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3429,
+  "lockGeneration": 3430,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

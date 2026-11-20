@@ -2513,13 +2513,16 @@ jobs:
            page.on('requestfailed',r=>requestErrors.push(r.url()+':'+r.failure()));
            v.userAgent=await page.evaluate(()=>navigator.userAgent);
            await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'domcontentloaded',timeout:120000});
-           const enter=page.locator('#h-earth-loading-screen [data-enter]');
-           await enter.waitFor({state:'visible',timeout:180000});
+           // Exact diagnostic replay bypasses the public Enter gate by design.
+           // Its route.js sets loader=null on vegetation-prototype.html; do not
+           // fabricate a public button or treat this as an owner entry acceptance.
+           const diagnosticRoute=await page.evaluate(()=>location.pathname.endsWith('/vegetation-prototype.html')&&document.querySelector('#h-earth-loading-screen [data-enter]')===null);
+           assert.equal(diagnosticRoute,true,'DIAGNOSTIC_REPLAY_WITH_NO_PUBLIC_ENTER_REQUIRED');
            await page.waitForFunction(()=>{
             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
             return ws.some(w=>(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.counters?.gpuFramebufferPresentationCount??0)>0);
            },null,{timeout:180000,polling:500});
-           await enter.click({timeout:120000});
+           // Replay autonomously prepares its grass after the first painted terrain frame.
            await page.waitForFunction(()=>{
             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
             return ws.some(w=>['OWNER_PREPARED','FAILED'].includes(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.vegetationBackground?.phase));

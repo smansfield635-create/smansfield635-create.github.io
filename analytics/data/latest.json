@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-20T12:31:32Z",
+  "generatedAt": "2026-11-20T13:25:36Z",
   "window30d": {
-    "start": "2026-10-21T12:31:32Z",
-    "end": "2026-11-20T12:31:32Z"
+    "start": "2026-10-21T13:25:36Z",
+    "end": "2026-11-20T13:25:36Z"
   },
   "daily": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "date": "2026-10-29",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-30",
@@ -72,15 +72,15 @@
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 60
+      "pageLoads": 40
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 50
+      "pageLoads": 60
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-11-10",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 21
+      "pageLoads": 20
     },
     {
       "date": "2026-11-13",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-20",
-      "pageLoads": 11
+      "pageLoads": 12
     }
   ],
   "summary": {
-    "pageLoads": 1261,
+    "pageLoads": 1291,
     "botPageLoads": 741,
-    "nonBotPageLoads": 520
+    "nonBotPageLoads": 550
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 81,
+      "pageLoads": 91,
       "visits": 0
     },
     {
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 588,
-      "visits": 588
+      "pageLoads": 628,
+      "visits": 628
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 267,
-      "visits": 207
+      "pageLoads": 277,
+      "visits": 217
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 65,
-      "visits": 55
+      "pageLoads": 55,
+      "visits": 45
     },
     {
       "path": "/nine-summits/universe/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",

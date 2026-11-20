@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-20T12:31:32Z",
+  "generatedAt": "2026-11-20T13:25:36Z",
   "window": {
-    "start": "2026-10-21T12:31:32Z",
-    "end": "2026-11-20T12:31:32Z"
+    "start": "2026-10-21T13:25:36Z",
+    "end": "2026-11-20T13:25:36Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 588,
-        "visits": 588
+        "pageLoads": 628,
+        "visits": 628
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 267,
-        "visits": 207
+        "pageLoads": 277,
+        "visits": 217
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 65,
-        "visits": 55
+        "pageLoads": 55,
+        "visits": 45
       },
       {
         "value": "/nine-summits/universe/",
@@ -39,8 +39,8 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -58,7 +58,7 @@
         "visits": 10
       },
       {
-        "value": "/showroom/globe/",
+        "value": "/governance-bridge/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -81,11 +81,6 @@
         "value": "/characters/",
         "pageLoads": 10,
         "visits": 10
-      },
-      {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 10,
-        "visits": 0
       },
       {
         "value": "/products/archcoin/payable/overview/",
@@ -111,7 +106,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 81,
+        "pageLoads": 91,
         "visits": 0
       },
       {
@@ -133,8 +128,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1191,
-        "visits": 1110
+        "pageLoads": 1201,
+        "visits": 1090
       },
       {
         "value": "CN",
@@ -155,13 +150,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1112,
-        "visits": 1042
+        "pageLoads": 1172,
+        "visits": 1102
       },
       {
         "value": "mobile",
-        "pageLoads": 147,
-        "visits": 137
+        "pageLoads": 157,
+        "visits": 147
       },
       {
         "value": "tablet",
@@ -172,23 +167,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 740,
-        "visits": 740
+        "pageLoads": 820,
+        "visits": 820
       },
       {
         "value": "Chrome",
-        "pageLoads": 180,
-        "visits": 168
+        "pageLoads": 160,
+        "visits": 148
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 94,
-        "visits": 94
-      },
-      {
-        "value": "Firefox",
-        "pageLoads": 80,
-        "visits": 53
+        "pageLoads": 104,
+        "visits": 104
       },
       {
         "value": "Unknown",
@@ -199,6 +189,11 @@
         "value": "Edge",
         "pageLoads": 69,
         "visits": 38
+      },
+      {
+        "value": "Firefox",
+        "pageLoads": 60,
+        "visits": 53
       },
       {
         "value": "MobileSafari",
@@ -219,23 +214,23 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 791,
-        "visits": 791
+        "pageLoads": 751,
+        "visits": 751
       },
       {
         "value": "Windows",
-        "pageLoads": 224,
-        "visits": 155
+        "pageLoads": 254,
+        "visits": 195
       },
       {
         "value": "Android",
-        "pageLoads": 96,
-        "visits": 95
+        "pageLoads": 126,
+        "visits": 115
       },
       {
         "value": "Unknown",
-        "pageLoads": 72,
-        "visits": 61
+        "pageLoads": 82,
+        "visits": 71
       },
       {
         "value": "MacOSX",
@@ -244,8 +239,8 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 13,
-        "visits": 13
+        "pageLoads": 23,
+        "visits": 23
       }
     ],
     "bot": [
@@ -256,8 +251,8 @@
       },
       {
         "value": "0",
-        "pageLoads": 520,
-        "visits": 440
+        "pageLoads": 550,
+        "visits": 470
       }
     ],
     "navigationType": [
@@ -294,8 +289,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1261,
-        "visits": 1180
+        "pageLoads": 1281,
+        "visits": 1190
       }
     ]
   }

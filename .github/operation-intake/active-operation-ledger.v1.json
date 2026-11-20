@@ -9647,6 +9647,50 @@
       "scopeHash": "41373cefad09412f3e3cfa2b236fbc83b66fe58b661363d0a4b0afc257e39760",
       "state": "ADMITTED_LOCKED"
     },
+    "4156dc470d9538a534ecd92f52c8ea04fda3d91edde7a6ff84a7c06e045a7658": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "107ba639590df6aedba61bee9f655890bb16176f",
+          "lockGeneration": 3443,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_HELD_TWO_PATH_BOOTSTRAP:20261120",
+          "operationId": "DGB_HARVEST_HELD_TWO_PATH_ROUTER_BOOTSTRAP_REPAIR_20261120_001",
+          "procedureLocatorDigest": "976f77a1892a31fdf2a6dd13d25cf3158279a968498dd177ee6367c9f7f7daa8",
+          "requestDigest": "872fbf17e2da21a649a1908897ef6dc42e1c388b0507b56b387d1c8f23ef8e27",
+          "scopeHash": "4156dc470d9538a534ecd92f52c8ea04fda3d91edde7a6ff84a7c06e045a7658"
+        },
+        "bindingDigest": "a9f993b18c483a710dc3d421e9e3eec3a57ee8e38b77d0587f26fcb54db6a331",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0be0433b0d5c894864ba2b662a1adf6358c1eecd801edbfc181ee4c51012ce31",
+          "commentId": 7028662231,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7163,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44662750423,
+          "workflowSha": "107ba639590df6aedba61bee9f655890bb16176f"
+        },
+        "lineageAnchorCommitSha": "6d4b0edf2681c2b9c31bf26739e7ace72c6ceba7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "107ba639590df6aedba61bee9f655890bb16176f",
+      "lockGeneration": 3443,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_HELD_TWO_PATH_BOOTSTRAP:20261120",
+      "operationId": "DGB_HARVEST_HELD_TWO_PATH_ROUTER_BOOTSTRAP_REPAIR_20261120_001",
+      "procedureLocatorDigest": "976f77a1892a31fdf2a6dd13d25cf3158279a968498dd177ee6367c9f7f7daa8",
+      "released": false,
+      "requestDigest": "872fbf17e2da21a649a1908897ef6dc42e1c388b0507b56b387d1c8f23ef8e27",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4156dc470d9538a534ecd92f52c8ea04fda3d91edde7a6ff84a7c06e045a7658",
+      "state": "ADMITTED_LOCKED"
+    },
     "416807bde8849e7473d500e8d16150412466736bbd03a57be174732d5745ebae": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -39251,7 +39295,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3442,
+  "lockGeneration": 3443,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

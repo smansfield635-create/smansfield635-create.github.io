@@ -38,7 +38,11 @@ function geometryBuilder(){
     for(const v of [a,b,c]){data.p.push(...v);data.n.push(...normal);data.uv.push(0,0);}
     data.i.push(start,start+1,start+2);
   }
-  function quad(name,a,b,c,d){tri(name,a,b,c);tri(name,a,c,d);}
+  function quad(name,a,b,c,d){
+    const n=cross(vector(b,a),vector(c,a));
+    if(['grass','grassLight','water','waterLight','path','pathLight','bank'].includes(name)&&n[1]<0){tri(name,a,d,c);tri(name,a,c,b);}
+    else {tri(name,a,b,c);tri(name,a,c,d);}
+  }
   function box(name,c,s){
     const [x,y,z]=c,[w,h,d]=s,lo=[x-w/2,y-h/2,z-d/2],hi=[x+w/2,y+h/2,z+d/2];
     const p=(X,Y,Z)=>[X?hi[0]:lo[0],Y?hi[1]:lo[1],Z?hi[2]:lo[2]];
@@ -55,7 +59,7 @@ function geometryBuilder(){
       for(let k=0;k<lon;k++){
         const p0=k*2*Math.PI/lon,p1=(k+1)*2*Math.PI/lon;
         const at=(t,p)=>[c[0]+r[0]*Math.cos(t)*Math.cos(p),c[1]+r[1]*Math.sin(t),c[2]+r[2]*Math.cos(t)*Math.sin(p)];
-        quad(name,at(t0,p0),at(t0,p1),at(t1,p1),at(t1,p0));
+        quad(name,at(t0,p0),at(t1,p0),at(t1,p1),at(t0,p1));
       }
     }
   }
@@ -80,13 +84,13 @@ function buildPastoral(){
   const riverZ=x=>-7.0+.63*Math.sin(x*.23);
   for(let x=-13;x<13;x+=.50){
     const z=riverZ(x),q=riverZ(x+.50);
-    g.quad('water',[x,.065,z-1.14],[x+.5,.065,q-1.14],[x+.5,.065,q+1.14],[x,.065,z+1.14]);
+    g.quad('water',[x,.14,z-1.14],[x+.5,.14,q-1.14],[x+.5,.14,q+1.14],[x,.14,z+1.14]);
     for(const side of [-1,1])g.quad('bank',
       [x,ground(x,z+side*1.22)+.024,z+side*1.22],
       [x+.5,ground(x+.5,q+side*1.22)+.024,q+side*1.22],
       [x+.5,ground(x+.5,q+side*1.53)+.026,q+side*1.53],
       [x,ground(x,z+side*1.53)+.026,z+side*1.53]);
-    if(Math.round(x*2)%7===0)g.quad('waterLight',[x,.078,z-.7],[x+.25,.078,q-.7],[x+.28,.078,q-.63],[x,.078,z-.63]);
+    if(Math.round(x*2)%7===0)g.quad('waterLight',[x,.153,z-.7],[x+.25,.153,q-.7],[x+.28,.153,q-.63],[x,.153,z-.63]);
   }
   // The walkway is interrupted by a raised wooden footbridge at the crossing.
   for(let z=-23;z<8;z+=.42){

@@ -361,6 +361,44 @@ jobs:
           }));
           NODE
               jq -e '.schema=="H_EARTH_GEN3010_SAVED_GRASS_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .rootCount==2879698 and .tiles==8303 and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'be9e63f25346d3d468bb6a2c5c6155881398048c' ]; then
+              # Gen3440: repaired GLSL reserved identifier, read-only exact source.
+              # All previous SHA branches, unknown-head rejection, roots and trees preserved.
+              entry=showroom/globe/h-earth/index.html
+              renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              coherence=showroom/globe/h-earth/render/landscape-coherence-field.v1.js
+              test "$(git hash-object "$entry")" = 726a40a5e260f995154655dbc9b90e4eb9aa253f
+              test "$(git hash-object "$renderer")" = c87253261fe7fecb292faf45c4d34e89bb1e1bdd
+              test "$(git hash-object "$coherence")" = d4fa6f45ddeb7bc2bbe34d259102c62bf56fdd70
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+              test "$(git hash-object showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js)" = cf293b9e3f19ae40395df24bdd74d10ca6da3273
+              test "$(git hash-object showroom/globe/h-earth/vegetation-prototype/route.js)" = bddf7dcf22c33ba4fa04928016016c37a78e031f
+              test "$(git hash-object showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js)" = 59c77d100d793f9dd28e9db7bd357ef078de0165
+              test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+              test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+              grep -Fq 'landscapeSubstrateTone' "$coherence"
+              grep -Fq 'patchWeight=smoothstep(.18,.88,coherenceNoise(p/13.))' "$coherence"
+              grep -Fq 'landscapeSubstrateTone' "$renderer"
+              grep -Fq 'sha-c87253261fe7' "$entry"
+              grep -Fq 'd4fa6f45ddeb7bc2bbe34d259102c62bf56fdd70' "$entry"
+              node --check "$renderer"
+              node --check "$coherence"
+              node --check showroom/globe/h-earth/vegetation-prototype/route.js
+              node --test --test-reporter=tap h-earth-3d/validation/h-earth.continuity-capture.v1.test.mjs > /tmp/h-earth-exact-evidence/p1-gen3440-source-applicability.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p1-gen3440-source-applicability.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_P1_PR7538_GEN3440_REPAIRED_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                candidateHead:$target,
+                rendererGitBlob:"c87253261fe7fecb292faf45c4d34e89bb1e1bdd",
+                coherenceGitBlob:"d4fa6f45ddeb7bc2bbe34d259102c62bf56fdd70",
+                pageGitBlob:"726a40a5e260f995154655dbc9b90e4eb9aa253f",
+                protectedTreeSourceExact:true,protectedGrassOwnerExact:true,
+                geologicalBridgeAndNativeRavineRouteExact:true,
+                exactSourceAndSyntaxChecks:"PASS",
+                browserDrawExecuted:false,ownerVisualAcceptance:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_P1_PR7538_GEN3440_REPAIRED_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .candidateHead=="be9e63f25346d3d468bb6a2c5c6155881398048c" and .exactSourceAndSyntaxChecks=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             elif [ "$EXACT_TARGET_SHA" = '2d9dbbca8c9fac361470a0cd66af17967f405274' ]; then
               # Gen3437: exact three-file shared terrain/grass material successor.
               # Existing grass owner, trees, geology, route and historical guards unchanged.

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-20T08:27:54Z",
+  "generatedAt": "2026-11-20T09:25:25Z",
   "window30d": {
-    "start": "2026-10-21T08:27:54Z",
-    "end": "2026-11-20T08:27:54Z"
+    "start": "2026-10-21T09:25:25Z",
+    "end": "2026-11-20T09:25:25Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 25
+      "pageLoads": 24
     },
     {
       "date": "2026-11-13",
@@ -124,24 +124,29 @@
     },
     {
       "date": "2026-11-20",
-      "pageLoads": 7
+      "pageLoads": 8
     }
   ],
   "summary": {
-    "pageLoads": 1261,
-    "botPageLoads": 741,
-    "nonBotPageLoads": 520
+    "pageLoads": 1331,
+    "botPageLoads": 731,
+    "nonBotPageLoads": 600
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1153,
-      "visits": 1153
+      "pageLoads": 1183,
+      "visits": 1183
     },
     {
       "host": "diamondgatebridge.com",
       "pageLoads": 81,
       "visits": 0
+    },
+    {
+      "host": "www.google.com",
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "host": "bing.com",
@@ -162,33 +167,33 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 588,
-      "visits": 588
+      "pageLoads": 578,
+      "visits": 578
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 267,
-      "visits": 207
-    },
-    {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 80,
-      "visits": 80
+      "pageLoads": 287,
+      "visits": 217
     },
     {
       "path": "/products/education/personal-training/",
-      "pageLoads": 80,
-      "visits": 80
+      "pageLoads": 70,
+      "visits": 70
+    },
+    {
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 60,
+      "visits": 60
     },
     {
       "path": "/",
-      "pageLoads": 65,
-      "visits": 55
+      "pageLoads": 45,
+      "visits": 35
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 50,
-      "visits": 50
+      "pageLoads": 40,
+      "visits": 40
     },
     {
       "path": "/products/education/",

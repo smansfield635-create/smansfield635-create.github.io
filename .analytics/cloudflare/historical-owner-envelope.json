@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T08:27:54Z",
+  "generatedAt": "2026-11-20T09:25:25Z",
   "window": {
-    "start": "2026-08-22T08:27:54Z",
-    "end": "2026-11-20T08:27:54Z"
+    "start": "2026-08-22T09:25:25Z",
+    "end": "2026-11-20T09:25:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3062,
-    "visits": 801,
+    "pageLoads": 3092,
+    "visits": 831,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3062,
-        "visits": 801
+        "pageLoads": 3092,
+        "visits": 831
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 20
       },
       "/": {
-        "pageLoads": 461,
-        "visits": 341
+        "pageLoads": 491,
+        "visits": 371
       },
       "/showroom/": {
         "pageLoads": 30,
@@ -59,7 +59,7 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/inspection/compass/brain-v10-g1-1/": {
@@ -71,7 +71,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 71,
+        "pageLoads": 61,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -163,7 +163,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 210,
+        "pageLoads": 220,
         "visits": 20
       },
       "/door/": {
@@ -171,11 +171,11 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -207,7 +207,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 450,
+        "pageLoads": 460,
         "visits": 0
       },
       "/showroom/story/invitation/": {
@@ -301,8 +301,8 @@
         "visits": 481
       },
       "www.google.com": {
-        "pageLoads": 320,
-        "visits": 320
+        "pageLoads": 350,
+        "visits": 350
       },
       "diamondgatebridge.com": {
         "pageLoads": 2261,

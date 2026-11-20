@@ -2472,7 +2472,8 @@ jobs:
             h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs \
             | tee "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
           grep -Fxq '# pass 23' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
-          grep -Fxq '# skipped 15' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# tests 23' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# skipped 0' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
           grep -Fxq '# fail 0' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
       - name: Use existing native Chromium dependency
         run: |

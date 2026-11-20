@@ -639,6 +639,126 @@ function m163ScopeSelfTest() {
   return {result:cases.every(Boolean)?'PASS':'FAIL',passed:cases.filter(Boolean).length,total:cases.length};
 }
 
+
+/* Gen3443: exact HELD Harvest bootstrap; Gen3442 authenticated source admission only. */
+const H_OP='DGB_GENEROSITY_HARVEST_NATIVE_TWO_FILE_CONSUMER_20261120_001';
+const H_HEAD='923fbbeb61ea32bbda96af45201a6f0feb9a8ddf';
+const H_SCOPE='NINE_SUMMITS:GENEROSITY_HARVEST:NATIVE_CONSUMER:EXACT_TWO_FILES:20261120';
+const H_PROJECT='NINE_SUMMITS_GENEROSITY_HARVEST';
+const H_COMMENT=7028354118;
+const H_PATHS=Object.freeze(['nine-summits/generosity-harvest/index.html','nine-summits/generosity-harvest/harvest.motion.js']);
+const hFail=code=>({eligible:false,code,authorityEffect:'NONE'});
+function hEvidence({source,ledger,head,paths,task,mutationIntent}={}){
+  try{
+    if(mutationIntent!==true||task!==H_OP||paths?.length!==2||
+      !m163Equal([...new Set(paths)].sort(),[...H_PATHS].sort()))
+      return hFail('EXACT_TASK_TWO_PATHS_REQUIRED');
+    if(!/^[a-f0-9]{40}$/.test(head??'')||source?.id!==H_COMMENT||
+      source?.user?.login!=='smansfield635-create'||source?.author_association!=='OWNER'||
+      !String(source?.issue_url).endsWith('/7163')||
+      !source?.body?.startsWith('CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'))
+      return hFail('CANONICAL_OWNER_COMMENT_INVALID');
+    const packet=JSON.parse(source.body.slice(source.body.indexOf('\n')+1));
+    const r=packet.operationRequest,p=packet.constructionProcedure;
+    if(packet.schema!=='CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1'||
+      !m163Equal(Object.keys(packet).sort(),['constructionProcedure','operationRequest','schema'])||
+      r?.operationId!==H_OP||r?.projectId!==H_PROJECT||r?.operationClass!=='RUNTIME_OR_AUTHORITY'||
+      r?.lockScope!==H_SCOPE||r?.exactGoverningHead!==H_HEAD||p?.exactGoverningHead!==H_HEAD||
+      !m163Equal(r?.allowedPaths,H_PATHS)||!m163Equal(p?.exactAllowedRepositoryPaths,H_PATHS)||
+      r?.fingerprintDomain?.domain!=='DGB_GENEROSITY_HARVEST_NATIVE_CONSUMER_TWO_FILE_V1'||
+      r?.fingerprintDomain?.artisticAcceptance!=='HOLD'||
+      r?.fingerprintDomain?.privateAssetsRemainOffRepository!==true||
+      r?.subjectIdentity?.routeStatus!=='HELD')
+      return hFail('CANONICAL_PACKET_SCOPE_INVALID');
+    const locks=Object.values(ledger?.activeScopes??{}).filter(x=>x?.operationId===H_OP);
+    if(locks.length!==1)return hFail('ACTIVE_LOCK_NOT_UNIQUE');
+    const lock=locks[0],inv=lock.authorityProvenance?.invocation;
+    if(lock.lockGeneration!==3442||lock.governingHead!==H_HEAD||lock.lockScope!==H_SCOPE||
+      lock.released!==false||!['ADMITTED_LOCKED','EXECUTING'].includes(lock.state)||
+      lock.scopeHash!==m163Hash(lock.lockScope.trim().toUpperCase())||
+      lock.requestDigest!==m163Hash(JSON.stringify(m163Stable(r)))||
+      lock.procedureLocatorDigest!==m163Hash(JSON.stringify(m163Stable(p)))||
+      inv?.commentId!==H_COMMENT||inv?.repository!==M163_REPO||
+      inv?.commentBodySha256!==m163Hash(source.body)||
+      inv?.commentAuthorLogin!=='smansfield635-create'||inv?.commentAuthorAssociation!=='OWNER'||
+      inv?.workflowRunId!==44660331045||inv?.workflowSha!==H_HEAD)
+      return hFail('ACTIVE_CANONICAL_LOCK_PROVENANCE_INVALID');
+    return {eligible:true,operationId:H_OP,lockGeneration:3442,projectId:H_PROJECT,
+      allowedPaths:H_PATHS,lockRefHead:head,activationAuthority:false,authorityEffect:'NONE_PATH_RECOGNITION_ONLY'};
+  }catch{return hFail('CANONICAL_EVIDENCE_PARSE_FAILED');}
+}
+function hPromote(raw,registry,proof){
+  if(proof?.eligible!==true)throw new Error('HARVEST_ADMISSION_MISSING');
+  const projects=(registry?.projects??[]).filter(x=>x.projectId===H_PROJECT);
+  if(projects.length!==1||projects[0].status!=='HELD'||
+    !m163Equal(projects[0].ownedPathPrefixes,[])||
+    !m163Equal([...(projects[0].ownedExactPaths??[])].sort(),[...H_PATHS].sort()))
+    throw new Error('HARVEST_HELD_REGISTERED_PATHS_MISMATCH');
+  if(raw?.disposition!=='BLOCK'||raw.routes?.length!==2||
+    !m163Equal(raw.routes.map(x=>x.path).sort(),[...H_PATHS].sort())||
+    raw.routes.some(x=>x.routeClass!=='UNREGISTERED'||x.disposition!=='BLOCK'||x.projectId!=null))
+    throw new Error('HARVEST_LEGACY_ROUTES_NOT_EXACT_TWO_UNREGISTERED');
+  return {...raw,disposition:'PASS',legacyDisposition:raw.disposition,
+    admittedCandidateScopeRecognition:'GEN3442_HELD_EXACT_TWO_PATHS',separateActivationRequired:true,
+    routes:raw.routes.map(x=>({...x,routeClass:'GEN3442_AUTHENTIC_HELD_HARVEST_CANDIDATE',
+      projectId:H_PROJECT,disposition:'PASS'}))};
+}
+async function hLive(paths,task,mutationIntent){
+  if(task!==H_OP||mutationIntent!==true||paths.length!==2||
+    !m163Equal([...new Set(paths)].sort(),[...H_PATHS].sort()))
+    throw new Error('HARVEST_EXACT_TASK_PATHS_REQUIRED');
+  const api='https://api.github.com/repos/'+M163_REPO;
+  const [source,ref]=await Promise.all([
+    fetchM163Json(api+'/issues/comments/'+H_COMMENT),
+    fetchM163Json(api+'/git/ref/heads/operation-locks/repository-operation-intake-v1')
+  ]);
+  const head=ref?.object?.sha;
+  if(!/^[a-f0-9]{40}$/.test(head??''))throw new Error('HARVEST_LOCK_REF_INVALID');
+  const doc=await fetchM163Json(api+'/contents/.github/operation-intake/active-operation-ledger.v1.json?ref='+head);
+  if(!/^[a-f0-9]{40}$/.test(doc?.sha??''))throw new Error('HARVEST_LEDGER_BLOB_INVALID');
+  const blob=doc.encoding==='base64'&&doc.content?.trim()?doc:await fetchM163Json(api+'/git/blobs/'+doc.sha);
+  if(blob?.encoding!=='base64'||typeof blob.content!=='string')
+    throw new Error('HARVEST_LEDGER_CONTENT_INVALID');
+  const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
+  const proof=hEvidence({source,ledger,head,paths,task,mutationIntent});
+  if(!proof.eligible)throw new Error('HARVEST_PROVENANCE_INVALID:'+proof.code);
+  return proof;
+}
+function hScopeSelfTest(){
+  const paths=[...H_PATHS];
+  const r={operationId:H_OP,projectId:H_PROJECT,operationClass:'RUNTIME_OR_AUTHORITY',
+    lockScope:H_SCOPE,exactGoverningHead:H_HEAD,allowedPaths:paths,
+    fingerprintDomain:{domain:'DGB_GENEROSITY_HARVEST_NATIVE_CONSUMER_TWO_FILE_V1',
+      artisticAcceptance:'HOLD',privateAssetsRemainOffRepository:true},subjectIdentity:{routeStatus:'HELD'}};
+  const p={exactGoverningHead:H_HEAD,exactAllowedRepositoryPaths:paths};
+  const source={id:H_COMMENT,user:{login:'smansfield635-create'},author_association:'OWNER',
+    issue_url:'https://api.github.com/repos/'+M163_REPO+'/issues/7163',
+    body:'CANONICAL_OPERATION_INTAKE_REQUEST_V1\n'+JSON.stringify({
+      schema:'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1',
+      operationRequest:r,constructionProcedure:p})};
+  const lock={operationId:H_OP,lockGeneration:3442,governingHead:H_HEAD,lockScope:H_SCOPE,
+    state:'ADMITTED_LOCKED',released:false,scopeHash:m163Hash(H_SCOPE.toUpperCase()),
+    requestDigest:m163Hash(JSON.stringify(m163Stable(r))),
+    procedureLocatorDigest:m163Hash(JSON.stringify(m163Stable(p))),
+    authorityProvenance:{invocation:{commentId:H_COMMENT,repository:M163_REPO,
+      commentBodySha256:m163Hash(source.body),commentAuthorLogin:'smansfield635-create',
+      commentAuthorAssociation:'OWNER',workflowRunId:44660331045,workflowSha:H_HEAD}}};
+  const args={source,ledger:{activeScopes:{one:lock}},head:'a'.repeat(40),paths,task:H_OP,mutationIntent:true};
+  const proof=hEvidence(args),raw={disposition:'BLOCK',routes:paths.map(path=>({
+    path,routeClass:'UNREGISTERED',projectId:null,disposition:'BLOCK'}))};
+  const registry={projects:[{projectId:H_PROJECT,status:'HELD',ownedPathPrefixes:[],ownedExactPaths:paths}]};
+  const rejects=fn=>{try{fn();return false;}catch{return true;}};
+  const results=[proof.eligible===true,hPromote(raw,registry,proof).disposition==='PASS',
+    rejects(()=>hPromote({...raw,routes:[...raw.routes,{...raw.routes[0],path:'unregistered.js'}]},registry,proof)),
+    rejects(()=>hPromote(raw,{projects:[{...registry.projects[0],status:'ACTIVE_REGISTERED_PROJECT'}]},proof)),
+    hEvidence({...args,task:'FOREIGN'}).eligible===false,
+    hEvidence({...args,paths:[paths[0]]}).eligible===false,
+    hEvidence({...args,source:{...source,id:0}}).eligible===false,
+    hEvidence({...args,ledger:{activeScopes:{one:{...lock,released:true}}}}).eligible===false,
+    hEvidence({...args,ledger:{activeScopes:{one:lock,two:lock}}}).eligible===false];
+  return {result:results.every(Boolean)?'PASS':'FAIL',passed:results.filter(Boolean).length,total:results.length};
+}
+
 function selfTest(root) {
   const cases = [
     ['HTML_INSTRUCTION_COPY_IS_MICRO',['index.html'],'add approved instructions copy','STATIC_EDITORIAL_MICRO'],
@@ -677,7 +797,8 @@ function selfTest(root) {
   const m163CandidateScope=m163ScopeSelfTest();
   const gen3290CandidateScope=gen3290ScopeSelfTest();
   const gen3323C2CCandidateScope=gen3323C2CScopeSelfTest();
-  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'&&gen3290CandidateScope.result==='PASS'&&gen3323C2CCandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope,gen3290CandidateScope,gen3323C2CCandidateScope };
+  const harvestCandidateScope=hScopeSelfTest();
+  return { schema:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_SELF_TEST_v1', instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1', result:cases.every((c)=>c.pass)&&decisionChecks.every(Boolean)&&legacyPass&&m163CandidateScope.result==='PASS'&&gen3290CandidateScope.result==='PASS'&&gen3323C2CCandidateScope.result==='PASS'&&harvestCandidateScope.result==='PASS'?'PASS':'FAIL', scenarios:cases, wholeEstateExecutionDecisionChecks:decisionChecks, legacyRouterSelfTest:legacyPass?'PASS':'FAIL', m163CandidateScope,gen3290CandidateScope,gen3323C2CCandidateScope,harvestCandidateScope };
 }
 const root = discoverRoot(process.cwd());
 const argv = process.argv.slice(2);
@@ -765,7 +886,17 @@ if(parsed.task===GEN3323_C2C_SOURCE_OPERATION&&parsed.mutationIntent){
     gen3323C2CScopeFailure=String(error.code??error.message??'GEN3323_INVALID_PROVENANCE');
   }
 }
-const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof&&!gen3290ScopeProof&&!gen3323C2CScopeProof)||routeReceipt.disposition!=='PASS';
+let harvestScopeProof=null;
+let harvestScopeFailure=null;
+if(parsed.task===H_OP&&parsed.mutationIntent){
+  try{
+    const proof=await hLive(paths,parsed.task,parsed.mutationIntent);
+    const registry=JSON.parse(fs.readFileSync(path.join(root,'.github/ai-router/router.v1.json'),'utf8'));
+    routeReceipt=hPromote(rawRouteReceipt,registry,proof);
+    harvestScopeProof=proof;
+  }catch(error){harvestScopeFailure=String(error.code??error.message??'HARVEST_PROVENANCE_INVALID');}
+}
+const blocked=(legacy.status!==0&&!gen3096ScopeProof&&!m163ScopeProof&&!gen3290ScopeProof&&!gen3323C2CScopeProof&&!harvestScopeProof)||routeReceipt.disposition!=='PASS';
 const isStatic = classification.mutationClass==='STATIC_EDITORIAL_MICRO';
 const passResult = isStatic ? 'PASS_STATIC_EDITORIAL_MICRO' : 'PASS_BOUNDED_PAGE_RELEASE';
 const executionResult = isStatic ? 'NOT_REQUIRED_STATIC_EDITORIAL_MICRO' : 'NOT_REQUIRED_BOUNDED_PAGE_RELEASE';
@@ -784,7 +915,9 @@ const receipt={
   ...(gen3323C2CScopeProof ? {gen3323C2CAdmissionProvenance:gen3323C2CScopeProof} : {}),
   ...(gen3323C2CScopeFailure ? {gen3323C2CProvenanceFailure:gen3323C2CScopeFailure} : {}),
   ...(m163ScopeFailure ? {gen3264ProvenanceFailure:m163ScopeFailure} : {}),
-  pageMutationClassification:{
+  ...(harvestScopeProof?{harvestAdmissionProvenance:harvestScopeProof}:{}),
+   ...(harvestScopeFailure?{harvestProvenanceFailure:harvestScopeFailure}:{}),
+   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',
     instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1',
     result:blocked?'BLOCK':(proportionalBypass?passResult:'PASS_GOVERNED_RUNTIME_OR_AUTHORITY'),

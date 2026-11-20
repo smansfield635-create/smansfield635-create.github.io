@@ -1,21 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-20T06:34:13Z",
+  "generatedAt": "2026-11-20T07:26:47Z",
   "window": {
-    "start": "2026-10-21T06:34:13Z",
-    "end": "2026-11-20T06:34:13Z"
+    "start": "2026-10-21T07:26:47Z",
+    "end": "2026-11-20T07:26:47Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 588,
-        "visits": 588
+        "pageLoads": 578,
+        "visits": 578
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 267,
-        "visits": 207
+        "pageLoads": 257,
+        "visits": 197
+      },
+      {
+        "value": "/",
+        "pageLoads": 95,
+        "visits": 75
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -28,19 +33,29 @@
         "visits": 80
       },
       {
-        "value": "/",
-        "pageLoads": 65,
-        "visits": 55
-      },
-      {
         "value": "/nine-summits/universe/",
         "pageLoads": 50,
         "visits": 50
       },
       {
+        "value": "/showroom/globe/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
         "value": "/products/education/",
         "pageLoads": 20,
         "visits": 20
+      },
+      {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "/door/",
+        "pageLoads": 20,
+        "visits": 0
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -53,32 +68,12 @@
         "visits": 10
       },
       {
-        "value": "/showroom/globe/audralia/diagnostic/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/preflight/app/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/about/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/characters/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/earth/",
+        "value": "/laws/test/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -106,18 +101,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1153,
-        "visits": 1153
+        "pageLoads": 1123,
+        "visits": 1123
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 81,
+        "pageLoads": 91,
         "visits": 0
       },
       {
         "value": "bing.com",
-        "pageLoads": 14,
-        "visits": 14
+        "pageLoads": 24,
+        "visits": 24
       },
       {
         "value": "www.facebook.com",
@@ -133,8 +128,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1191,
-        "visits": 1110
+        "pageLoads": 1231,
+        "visits": 1150
       },
       {
         "value": "CN",
@@ -155,8 +150,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1112,
-        "visits": 1042
+        "pageLoads": 1122,
+        "visits": 1052
       },
       {
         "value": "mobile",
@@ -172,8 +167,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 740,
-        "visits": 740
+        "pageLoads": 750,
+        "visits": 750
       },
       {
         "value": "Chrome",

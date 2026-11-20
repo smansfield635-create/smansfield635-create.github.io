@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T00:43:08Z",
+  "generatedAt": "2026-11-20T01:23:46Z",
   "window": {
-    "start": "2026-08-22T00:43:08Z",
-    "end": "2026-11-20T00:43:08Z"
+    "start": "2026-08-22T01:23:46Z",
+    "end": "2026-11-20T01:23:46Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3132,
-    "visits": 841,
+    "pageLoads": 3102,
+    "visits": 831,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3132,
-        "visits": 841
+        "pageLoads": 3102,
+        "visits": 831
       }
     },
     "byPath": {
@@ -34,10 +34,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/": {
-        "pageLoads": 511,
-        "visits": 381
-      },
       "/showroom/": {
         "pageLoads": 30,
         "visits": 0
@@ -46,13 +42,9 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
+      "/": {
+        "pageLoads": 501,
+        "visits": 371
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -194,6 +186,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
         "visits": 0
@@ -220,6 +216,10 @@
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 460,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
@@ -300,13 +300,13 @@
         "pageLoads": 481,
         "visits": 481
       },
-      "www.google.com": {
-        "pageLoads": 360,
-        "visits": 360
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 2291,
+        "pageLoads": 2271,
         "visits": 0
+      },
+      "www.google.com": {
+        "pageLoads": 350,
+        "visits": 350
       }
     }
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T22:24:28Z",
+  "generatedAt": "2026-11-20T23:24:25Z",
   "window": {
-    "start": "2026-08-22T22:24:28Z",
-    "end": "2026-11-20T22:24:28Z"
+    "start": "2026-08-22T23:24:25Z",
+    "end": "2026-11-20T23:24:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3042,
-    "visits": 791,
+    "pageLoads": 3032,
+    "visits": 781,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3042,
-        "visits": 791
+        "pageLoads": 3032,
+        "visits": 781
       }
     },
     "byPath": {
@@ -47,10 +47,6 @@
         "visits": 10
       },
       "/inspection/compass/brain-v10-continuous/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/compass-isolated-clone/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -146,19 +142,19 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -289,8 +285,8 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 441,
-        "visits": 441
+        "pageLoads": 431,
+        "visits": 431
       },
       "www.google.com": {
         "pageLoads": 350,

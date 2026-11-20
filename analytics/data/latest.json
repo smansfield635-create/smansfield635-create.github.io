@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-19T23:24:37Z",
+  "generatedAt": "2026-11-20T00:43:08Z",
   "window30d": {
-    "start": "2026-10-20T23:24:37Z",
-    "end": "2026-11-19T23:24:37Z"
+    "start": "2026-10-21T00:43:08Z",
+    "end": "2026-11-20T00:43:08Z"
   },
   "daily": [
-    {
-      "date": "2026-10-21",
-      "pageLoads": 70
-    },
     {
       "date": "2026-10-22",
       "pageLoads": 30
@@ -92,7 +88,7 @@
     },
     {
       "date": "2026-11-11",
-      "pageLoads": 51
+      "pageLoads": 50
     },
     {
       "date": "2026-11-12",
@@ -125,22 +121,26 @@
     {
       "date": "2026-11-19",
       "pageLoads": 31
+    },
+    {
+      "date": "2026-11-20",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 1325,
-    "botPageLoads": 754,
-    "nonBotPageLoads": 571
+    "pageLoads": 1304,
+    "botPageLoads": 753,
+    "nonBotPageLoads": 551
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1217,
-      "visits": 1217
+      "pageLoads": 2136,
+      "visits": 2136
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 81,
+      "pageLoads": 71,
       "visits": 0
     },
     {
@@ -162,8 +162,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 600,
-      "visits": 600
+      "pageLoads": 599,
+      "visits": 599
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -192,11 +192,11 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 40,
-      "visits": 40
+      "pageLoads": 30,
+      "visits": 30
     },
     {
-      "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
+      "path": "/products/education/",
       "pageLoads": 20,
       "visits": 20
     }

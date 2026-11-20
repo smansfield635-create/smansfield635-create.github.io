@@ -1205,10 +1205,10 @@ void main(){
         smoothstep(24.0,78.0,max(0.0,vCoastDistanceMeters))*
         (1.0-smoothstep(.16,.47,slope))*
         (1.0-smoothstep(.22,.57,rockExposure));
-      float acceptedLandscapeKeep=smoothstep(38.0,88.0,
+      float acceptedLandscapeKeep=smoothstep(38.0,58.0,
         min(distance(world,vec2(-139.40268,-210.74617)),
             distance(world,vec2(40.0,-260.0))));
-      float ecotoneStrength=eligibleDrySoil*acceptedLandscapeKeep*.68;
+      float ecotoneStrength=eligibleDrySoil*acceptedLandscapeKeep*.88;
       if(ecotoneStrength>.002){
         vec3 substrateTone=landscapeSubstrateTone(world,ecotoneDry);
         base*=mix(vec3(1.0),substrateTone,ecotoneStrength);

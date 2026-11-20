@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_P1_REPAIRED_PR7538_NATIVE_RAVINE_20261119_001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7543,
+  "requestBranch": "ai-dispatch-request-h-earth-p1-glsl-repaired-gen3441-20261119-001",
+  "requestCommit": "900085718eb8c9736667ca407a4ea8851aa3d2a4",
+  "requestCommitParent": "107ba639590df6aedba61bee9f655890bb16176f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "107ba639590df6aedba61bee9f655890bb16176f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "be9e63f25346d3d468bb6a2c5c6155881398048c",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1",
+    "route_path": "/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "44664613397",
+  "dispatchedRunId": 44664641256,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44664641256",
+  "dispatchedRunHeadSha": "107ba639590df6aedba61bee9f655890bb16176f",
+  "dispatchedAt": "2026-11-20T02:59:48.244Z",
+  "resolvedAt": "2026-11-20T02:59:54.712Z"
+}

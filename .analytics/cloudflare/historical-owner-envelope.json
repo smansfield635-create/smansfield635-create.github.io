@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T04:27:28Z",
+  "generatedAt": "2026-11-20T05:26:23Z",
   "window": {
-    "start": "2026-08-22T04:27:28Z",
-    "end": "2026-11-20T04:27:28Z"
+    "start": "2026-08-22T05:26:23Z",
+    "end": "2026-11-20T05:26:23Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3092,
-    "visits": 831,
+    "pageLoads": 3072,
+    "visits": 821,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3092,
-        "visits": 831
+        "pageLoads": 3072,
+        "visits": 821
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 20
       },
       "/": {
-        "pageLoads": 491,
-        "visits": 371
+        "pageLoads": 481,
+        "visits": 361
       },
       "/showroom/": {
         "pageLoads": 30,
@@ -50,13 +50,13 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 110,
-        "visits": 10
-      },
       "/evidence/": {
         "pageLoads": 40,
         "visits": 0
+      },
+      "/showroom/globe/audralia/": {
+        "pageLoads": 110,
+        "visits": 10
       },
       "/index.html": {
         "pageLoads": 40,
@@ -71,7 +71,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 61,
+        "pageLoads": 51,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -297,15 +297,15 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 481,
-        "visits": 481
+        "pageLoads": 471,
+        "visits": 471
       },
       "www.google.com": {
         "pageLoads": 350,
         "visits": 350
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2261,
+        "pageLoads": 2251,
         "visits": 0
       }
     }

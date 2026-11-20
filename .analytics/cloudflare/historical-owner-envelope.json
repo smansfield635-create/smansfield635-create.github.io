@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T01:23:46Z",
+  "generatedAt": "2026-11-20T02:28:20Z",
   "window": {
-    "start": "2026-08-22T01:23:46Z",
-    "end": "2026-11-20T01:23:46Z"
+    "start": "2026-08-22T02:28:20Z",
+    "end": "2026-11-20T02:28:20Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3102,
+    "pageLoads": 3092,
     "visits": 831,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3102,
+        "pageLoads": 3092,
         "visits": 831
       }
     },
@@ -34,6 +34,14 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-composite/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/": {
+        "pageLoads": 491,
+        "visits": 371
+      },
       "/showroom/": {
         "pageLoads": 30,
         "visits": 0
@@ -41,14 +49,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/": {
-        "pageLoads": 501,
-        "visits": 371
-      },
-      "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/index.html": {
         "pageLoads": 40,
@@ -300,13 +300,13 @@
         "pageLoads": 481,
         "visits": 481
       },
-      "diamondgatebridge.com": {
-        "pageLoads": 2271,
-        "visits": 0
-      },
       "www.google.com": {
         "pageLoads": 350,
         "visits": 350
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 2261,
+        "visits": 0
       }
     }
   }

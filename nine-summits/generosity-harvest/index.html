@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Generosity Harvest — Native Construction Candidate</title>
+<style>
+  :root {font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color:#233529; background:#f2efe6}
+  * {box-sizing:border-box}
+  body {margin:0;min-height:100svh}
+  .page {max-width:1510px;margin:0 auto;padding:clamp(12px,2.8vw,34px)}
+  header {display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+  .overline {margin:0;color:#647461;font-size:.77rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+  h1 {font: 500 clamp(1.65rem,3.7vw,3.3rem)/1.1 Georgia,serif;letter-spacing:-.025em;margin:6px 0 0}
+  .label {font-size:.78rem;color:#5a665c}
+  .view {position:relative;overflow:hidden;background:linear-gradient(#bbd5cb 0%,#e8dac0 55%,#628569 100%);border-radius:8px;
+    box-shadow:0 5px 22px #283b3020}
+  canvas {display:block;width:100%;height:auto;aspect-ratio:1672 / 941;outline-offset:-3px}
+  canvas:focus-visible {outline:3px solid #274c3a}
+  .pending {position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#304b40;
+    background:#d6e0cf;font-size:clamp(.83rem,2vw,1.1rem);text-align:center;padding:24px}
+  .pending[hidden] {display:none}
+  .tools {display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .controls {display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+  button {border:1px solid #4c6657;color:#244735;background:#fffdf8;border-radius:5px;
+    min-height:44px;padding:8px 18px;font:600 .9rem system-ui;cursor:pointer}
+  button:hover {background:#e4eee3}
+  button:focus-visible {outline:3px solid #557b62;outline-offset:3px}
+  button:disabled {cursor:not-allowed;opacity:.55}
+  .state {font:.79rem/1.5 ui-monospace,Consolas,monospace;color:#4e6658}
+  .scope {margin:19px 0 0;border-top:1px solid #cbd5c8;padding-top:14px;display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;color:#526456;font-size:.84rem}
+  .scope p {margin:0}
+  .scope strong {color:#274a35}
+  @media(max-width:700px){
+    .page {padding:12px}
+    .view {border-radius:5px}
+    .scope {grid-template-columns:1fr;gap:8px}
+    .tools {align-items:flex-start}
+    header {margin-bottom:12px}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div>
+      <p class="overline">Nine Summits · Generosity</p>
+      <h1>Generosity Harvest</h1>
+    </div>
+    <span class="label">Gen3442 · HELD construction candidate · not published</span>
+  </header>
+  <section class="view" aria-label="Native three-dimensional Generosity Harvest scene">
+    <canvas id="harvest" width="1280" height="720" tabindex="0" role="img"
+      aria-label="Three-dimensional pastoral environment with a bridge, water, flowering orchard, woodland paths and birds."></canvas>
+    <div class="pending" id="pending" role="status" aria-live="polite">Initializing first-party native WebGL scene…</div>
+  </section>
+  <div class="tools">
+    <div class="controls">
+      <button id="motion" type="button" disabled aria-pressed="false">Pause motion</button>
+      <button id="still" type="button" disabled>Render still</button>
+    </div>
+    <output id="status" class="state" aria-live="polite">Not yet qualified</output>
+  </div>
+  <section class="scope" aria-label="Evidence and acceptance boundaries">
+    <p><strong>Source boundary.</strong> This is a 3D spatial construction, not the owner-approved original 1672×941 illustration. The original pastoral artwork, coat and rabbit geometry remain private and unchanged. The private A4 17-frame character is bound only through an in-memory interface when lawful source is supplied.</p>
+    <p><strong>Acceptance boundary.</strong> Artistic C1 remains HOLD. WebGL1/WebGL2, desktop/tablet/phone, private rabbit provenance, contact/shadow, exact two-path router PASS, and independent candidate qualification are still pending. This candidate carries no activation, merge or publication authority.</p>
+  </section>
+</main>
+<script type="module">
+import {createHarvestScene} from './harvest.motion.js';
+const canvas=document.getElementById('harvest');
+const pending=document.getElementById('pending');
+const motion=document.getElementById('motion');
+const still=document.getElementById('still');
+const status=document.getElementById('status');
+const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)');
+const query=new URLSearchParams(location.search);
+const requested=query.get('backend');
+const backend=requested==='WEBGL1'||requested==='WEBGL2'?requested:'AUTO';
+let scene=null,autoPaused=false;
+try {
+  scene=createHarvestScene(canvas,{backend,reducedMotion:prefersReduced.matches,onStatus:s=>{
+    status.textContent=s.backend+' · frames '+s.frames+' · rabbit '+(s.privateRabbitAttached?'private in-memory':'not loaded')+' · C1 HOLD';
+    motion.setAttribute('aria-pressed',String(s.playing));
+    motion.textContent=s.playing?'Pause motion':'Play motion';
+  }});
+  function size(){
+    if(!scene)return;
+    const r=canvas.getBoundingClientRect();
+    if(r.width>0&&r.height>0)scene.resize(r.width,r.height,Math.min(devicePixelRatio||1,2));
+  }
+  if(typeof ResizeObserver!=='undefined'){new ResizeObserver(size).observe(canvas);}
+  else addEventListener('resize',size,{passive:true});
+  size();
+  motion.disabled=false;still.disabled=false;
+  motion.addEventListener('click',()=>scene.status().playing?scene.pause():scene.play());
+  still.addEventListener('click',()=>{scene.pause();scene.render();});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){autoPaused=scene.status().playing;scene.pause();}
+    else if(autoPaused&&!prefersReduced.matches){autoPaused=false;scene.play();}
+  });
+  prefersReduced.addEventListener?.('change',e=>{if(e.matches)scene.pause();});
+  pending.hidden=true;
+  if(!prefersReduced.matches)scene.play();
+} catch(error) {
+  pending.textContent='Native WebGL scene unavailable on this device. No fallback artwork substituted.';
+  status.textContent='CONSTRUCTION_CANDIDATE_NOT_RENDERED: '+String(error?.message||error);
+  console.error('Harvest source-candidate initialization',error);
+}
+</script>
+</body>
+</html>

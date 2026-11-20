@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-20T05:26:23Z",
+  "generatedAt": "2026-11-20T06:34:13Z",
   "window": {
-    "start": "2026-08-22T05:26:23Z",
-    "end": "2026-11-20T05:26:23Z"
+    "start": "2026-08-22T06:34:13Z",
+    "end": "2026-11-20T06:34:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3072,
-    "visits": 821,
+    "pageLoads": 3092,
+    "visits": 831,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3072,
-        "visits": 821
+        "pageLoads": 3092,
+        "visits": 831
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 20
       },
       "/": {
-        "pageLoads": 481,
-        "visits": 361
+        "pageLoads": 491,
+        "visits": 371
       },
       "/showroom/": {
         "pageLoads": 30,
@@ -71,7 +71,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 51,
+        "pageLoads": 61,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -122,6 +122,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
@@ -129,10 +133,6 @@
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -297,15 +297,15 @@
     },
     "byReferer": {
       "(none)": {
-        "pageLoads": 471,
-        "visits": 471
+        "pageLoads": 481,
+        "visits": 481
       },
       "www.google.com": {
         "pageLoads": 350,
         "visits": 350
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2251,
+        "pageLoads": 2261,
         "visits": 0
       }
     }

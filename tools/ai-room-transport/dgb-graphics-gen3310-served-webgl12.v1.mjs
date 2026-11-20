@@ -654,7 +654,223 @@ async function mainGen3430(){
     images:manifest.images.length}));
   if(receipt.status!=='PASS_CLOSED')process.exitCode=1;
 }
+
+// Gen3450: read-only, fixed-head Harvest mode. Reuses the original Gen3310
+// served-HTTP browser infrastructure; prior Gen3310/Gen3430 modes remain intact.
+// No approved image, private rabbit data or world source enters this runner.
+const HARVEST_HEAD='8dfd8622684e09bb6435e20d67f95c7e40231138';
+const HARVEST_BASE='716757d92750579f54b3b962b73c925e955bfe5a';
+const HARVEST_OPERATION='GENEROSITY_HARVEST_EXISTING_BROWSER_QUALIFIER_ADAPTATION_20261120_001';
+const HARVEST_SCHEMA='HARVEST_EXACT_HEAD_BROWSER_QUALIFICATION_RECEIPT_v1';
+const HARVEST_ROUTE='/nine-summits/generosity-harvest/index.html';
+const HARVEST_BLOBS=Object.freeze({
+  'nine-summits/generosity-harvest/index.html':'fd2078fa00b1e74b68534a0ce0fa4febe5497489',
+  'nine-summits/generosity-harvest/harvest.motion.js':'621b0f6069e4783574aa071cc04fb4f7e75907a7',
+  'assets/engine/dgb.native-webgl-device.v1.mjs':'044fc3b67468072ce2574e324c371bb18f4fecc8',
+  'assets/engine/dgb.native-frame-pipeline.v1.mjs':'c6a5d4081193d27cb364b1d1507218e7227a19ee',
+  'assets/engine/dgb.native-scene-spatial.v1.mjs':'483736aaf4448e36bc3412c0fc8671f9556539c5',
+  'assets/engine/dgb.native-material-light.v1.mjs':'bd7b29bd5ff2f008c41deaf9630d19f2a82e9c68'
+});
+const HARVEST_CASES=Object.freeze([
+  {id:'desktop',w:1440,h:900,mobile:false},
+  {id:'tablet',w:820,h:1180,mobile:false},
+  {id:'phone',w:390,h:844,mobile:true}
+]);
+function harvestArgs(v){
+  check(v.length===8,'HARVEST_FIXED_ARGUMENT_COUNT');const out={};
+  for(let i=0;i<v.length;i+=2){const k=v[i],val=v[i+1];
+    check(['--candidate-head','--execution-holder','--output','--manifest-output'].includes(k)&&val&&!Object.hasOwn(out,k),'HARVEST_FIXED_ARGS_INVALID');
+    out[k]=val;
+  }
+  check(out['--candidate-head']===HARVEST_HEAD,'HARVEST_UNAUTHORIZED_HEAD');
+  check(/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(out['--execution-holder']),'HARVEST_HOLDER_INVALID');
+  check(path.isAbsolute(out['--output'])&&path.isAbsolute(out['--manifest-output'])&&out['--output']!==out['--manifest-output'],'HARVEST_OUTPUT_PATHS_INVALID');
+  return out;
+}
+function harvestCheckout(root){
+  fs.mkdirSync(root,{recursive:true});
+  run('git',['init','--quiet','.'],root);
+  run('git',['remote','add','origin',REPO],root);
+  run('git',['sparse-checkout','init','--cone','--sparse-index'],root);
+  run('git',['sparse-checkout','set','assets/engine','nine-summits/generosity-harvest'],root);
+  run('git',['fetch','--no-tags','--depth=8','--filter=blob:none','origin',HARVEST_HEAD],root);
+  run('git',['checkout','--detach','FETCH_HEAD'],root);
+  check(run('git',['rev-parse','HEAD'],root)===HARVEST_HEAD,'HARVEST_HEAD_DRIFT');
+  run('git',['fetch','--no-tags','--depth=8','--filter=blob:none','origin',HARVEST_BASE],root);
+  const delta=run('git',['diff','--name-only',HARVEST_BASE,HARVEST_HEAD],root).split('\n').filter(Boolean).sort();
+  const expected=['nine-summits/generosity-harvest/harvest.motion.js','nine-summits/generosity-harvest/index.html'].sort();
+  check(JSON.stringify(delta)===JSON.stringify(expected),'HARVEST_EXACT_TWO_FILE_DELTA_MISMATCH');
+  for(const [p,id] of Object.entries(HARVEST_BLOBS))
+    check(run('git',['hash-object',p],root)===id,'HARVEST_SOURCE_BLOB_MISMATCH:'+p);
+  const html=fs.readFileSync(path.join(root,HARVEST_ROUTE.slice(1)),'utf8');
+  check(html.includes("from './harvest.motion.js'"),'HARVEST_HTML_MODULE_BINDING_MISMATCH');
+  check(html.includes("query.get('backend')"),'HARVEST_BACKEND_SELECTION_UNAVAILABLE');
+  check(run('git',['status','--porcelain','--untracked-files=no'],root)==='','HARVEST_TRACKED_WORKTREE_DIRTY');
+  return delta;
+}
+function harvestNativeChecks(root,tmp){
+  const files=Object.keys(HARVEST_BLOBS).filter(p=>p.endsWith('.js')||p.endsWith('.mjs'));
+  for(const name of files)run(process.execPath,['--check',name],root);
+  const html=fs.readFileSync(path.join(root,HARVEST_ROUTE.slice(1)),'utf8');
+  const match=html.match(/<script type="module">([\s\S]*?)<\/script>/);
+  check(Boolean(match),'HARVEST_HTML_INLINE_MODULE_MISSING');
+  const inline=path.join(tmp,'harvest-inline-check.mjs');
+  fs.writeFileSync(inline,match[1]);
+  run(process.execPath,['--check',inline],tmp);
+  return {pass:true,nodeVersion:process.version,checkedFiles:files,inlineModuleSha256:sha(Buffer.from(match[1]))};
+}
+async function harvestBrowserCase(browser,base,cfg,backend,images){
+  const id=cfg.id+'-'+backend.toLowerCase();
+  const result={id,backend,viewport:{width:cfg.w,height:cfg.h},mobileEmulation:cfg.mobile,
+    jsErrors:[],requestFailures:[],httpErrors:[],pass:false};
+  const context=await browser.newContext({viewport:{width:cfg.w,height:cfg.h},isMobile:cfg.mobile,
+    hasTouch:cfg.mobile,deviceScaleFactor:1,reducedMotion:'no-preference'});
+  let page;
+  try{
+    page=await context.newPage();page.setDefaultTimeout(30000);
+    await page.addInitScript(()=>{
+      const trace={contexts:[],draws:0,gl:null};
+      Object.defineProperty(window,'__harvestTrace',{value:trace});
+      const originalContext=HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext=function(kind,...rest){
+        const gl=originalContext.call(this,kind,...rest);
+        if(gl&&['webgl','webgl2','experimental-webgl'].includes(kind)){
+          trace.contexts.push(kind);trace.gl=gl;
+        }
+        return gl;
+      };
+      for(const name of ['WebGLRenderingContext','WebGL2RenderingContext']){
+        const proto=window[name]?.prototype;
+        if(!proto)continue;
+        for(const fn of ['drawElements','drawArrays']){
+          const original=proto[fn];
+          if(typeof original!=='function')continue;
+          proto[fn]=function(...a){trace.draws++;return original.apply(this,a);};
+        }
+      }
+    });
+    page.on('pageerror',e=>result.jsErrors.push(e.message));
+    page.on('requestfailed',req=>result.requestFailures.push(req.url()));
+    page.on('response',res=>{
+      if(res.status()>=400&&/\.(?:html|mjs|js)(?:\?|$)/.test(res.url()))result.httpErrors.push({url:res.url(),status:res.status()});
+    });
+    const response=await page.goto(base+HARVEST_ROUTE+'?backend='+backend,{waitUntil:'load',timeout:30000});
+    check(response?.status()===200,'HARVEST_ROUTE_NOT_HTTP_200:'+id);
+    await page.waitForFunction(expected=>{
+      const status=document.getElementById('status')?.textContent||'';
+      const canvas=document.getElementById('harvest');
+      return status.includes(expected+' · frames')&&canvas?.width>0&&canvas?.height>0&&window.__harvestTrace?.draws>0;
+    },backend,{timeout:30000});
+    const initial=await page.evaluate(()=>({draws:window.__harvestTrace.draws}));
+    await page.waitForTimeout(350);
+    const after=await page.evaluate(()=>{
+      const c=document.getElementById('harvest'),t=window.__harvestTrace;
+      return {draws:t.draws,contextKinds:t.contexts,contextLost:t.gl?.isContextLost?.()??true,
+        glError:t.gl?.getError?.()??-1,buffer:{width:c.width,height:c.height},
+        status:document.getElementById('status')?.textContent||'',
+        motionEnabled:!document.getElementById('motion')?.disabled,
+        artisticAcceptance:document.body.textContent.includes('C1 HOLD')};
+    });
+    check(after.draws>initial.draws,'HARVEST_ANIMATION_NOT_ADVANCING:'+id);
+    check(after.contextKinds.includes(backend==='WEBGL1'?'webgl':'webgl2'),'HARVEST_REAL_CONTEXT_MISMATCH:'+id);
+    check(!after.contextLost&&after.glError===0,'HARVEST_WEBGL_CONTEXT_ERROR:'+id+':'+after.glError);
+    check(after.motionEnabled&&after.artisticAcceptance,'HARVEST_UI_OR_C1_DISCLOSURE_MISSING:'+id);
+    check(result.jsErrors.length===0&&result.httpErrors.length===0&&result.requestFailures.length===0,'HARVEST_BROWSER_OR_HTTP_ERROR:'+id);
+    const png=await page.locator('#harvest').screenshot({type:'png'});
+    const metrics=await page.evaluate(async encoded=>{
+      const binary=atob(encoded),u8=Uint8Array.from(binary,c=>c.charCodeAt(0));
+      const bitmap=await createImageBitmap(new Blob([u8],{type:'image/png'}));
+      try{
+        const c=document.createElement('canvas');c.width=80;c.height=45;
+        const ctx=c.getContext('2d',{willReadFrequently:true});
+        ctx.drawImage(bitmap,0,0,80,45);
+        const pixels=ctx.getImageData(0,0,80,45).data,distinct=new Set();
+        for(let i=0;i<pixels.length;i+=4)distinct.add(pixels[i]+','+pixels[i+1]+','+pixels[i+2]);
+        return {distinctColors:distinct.size,width:bitmap.width,height:bitmap.height};
+      }finally{bitmap.close();}
+    },png.toString('base64'));
+    check(png.length>1500&&metrics.distinctColors>=30,'HARVEST_RASTER_BLANK_OR_INCOMPLETE:'+id+':'+metrics.distinctColors);
+    result.framesAdvanced=after.draws-initial.draws;
+    result.drawCount=after.draws;result.contextKinds=after.contextKinds;
+    result.glError=after.glError;result.buffer=after.buffer;
+    result.status=after.status;result.raster=metrics;
+    result.screenshot={name:'harvest-'+id+'.png',bytes:png.length,sha256:sha(png)};
+    images.push({name:result.screenshot.name,caseId:id,sha256:result.screenshot.sha256,
+      bytes:png.length,encoding:'base64',image:png.toString('base64')});
+    result.pass=true;
+  }catch(e){
+    result.error=String(e.stack||e).slice(0,1500);
+  }finally{await context.close().catch(()=>{});}
+  return result;
+}
+async function mainHarvest(){
+  const opts=harvestArgs(process.argv.slice(2));
+  const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'dgb-gen3450-harvest-'));
+  const root=path.join(tmp,'candidate'),deps=path.join(tmp,'browser-deps');
+  const receipt={schema:HARVEST_SCHEMA,operationId:HARVEST_OPERATION,
+    executionHolder:opts['--execution-holder'],candidateHead:HARVEST_HEAD,
+    governingHead:HARVEST_BASE,status:'INCOMPLETE',cases:[],
+    sourceMutationPerformed:false,productMutationPerformed:false,workflowMutationPerformed:false,
+    branchCreated:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false,
+    publicationPerformed:false,originalPrivateAssetInCI:false,rabbitArtAccepted:false,
+    artisticC1Accepted:false,physicalDeviceAccepted:false,
+    historicalGen3310QualifierPreserved:true,historicalGen3430QualifierPreserved:true,
+    qualificationCeiling:'REAL_PUBLIC_HTTP_SWIFTSHADER_WEBGL12_NO_PRIVATE_A4_NO_ARTISTIC_KEEP'};
+  const manifest={schema:'HARVEST_EXACT_HEAD_BROWSER_SCREENSHOT_MANIFEST_v1',
+    candidateHead:HARVEST_HEAD,images:[]};
+  let browser=null,server=null;
+  try{
+    receipt.changedPaths=harvestCheckout(root);
+    receipt.sourceBlobs={...HARVEST_BLOBS};
+    receipt.native=harvestNativeChecks(root,tmp);
+    fs.mkdirSync(deps,{recursive:true});
+    run('npm',['install','--prefix',deps,'--no-save','--no-package-lock','--no-audit','playwright@1.56.1'],tmp,400000);
+    run(process.execPath,[path.join(deps,'node_modules/playwright/cli.js'),'install','--with-deps','chromium'],tmp,400000);
+    const {chromium}=createRequire(path.join(deps,'package.json'))('playwright');
+    server=serverFor(root);
+    await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
+    browser=await chromium.launch({headless:true,args:['--no-sandbox','--use-angle=swiftshader',
+      '--enable-unsafe-swiftshader','--disable-dev-shm-usage']});
+    receipt.browserVersion=browser.version();
+    receipt.transport='ORIGINAL_EXACT_HEAD_SERVED_HTTP_NATIVE_MODULES';
+    const base='http://127.0.0.1:'+server.address().port;
+    for(const cfg of HARVEST_CASES){
+      for(const backend of ['WEBGL1','WEBGL2']){
+        receipt.cases.push(await harvestBrowserCase(browser,base,cfg,backend,manifest.images));
+      }
+    }
+    receipt.status=receipt.cases.length===6&&receipt.cases.every(c=>c.pass)&&manifest.images.length===6?'PASS_CLOSED':'FAIL_CLOSED';
+    if(receipt.status!=='PASS_CLOSED')receipt.errorCode='HARVEST_REAL_WEBGL_CASE_FAILURE';
+  }catch(e){
+    receipt.status='FAIL_CLOSED';receipt.errorCode=receipt.errorCode||'HARVEST_QUALIFIER_EXCEPTION';
+    receipt.error=String(e.stack||e).slice(0,2000);
+  }finally{
+    if(browser)await browser.close().catch(()=>{});
+    if(server)await new Promise(resolve=>server.close(resolve));
+    try{receipt.checkoutClean=run('git',['status','--porcelain','--untracked-files=no'],root)==='';}
+    catch{receipt.checkoutClean=false;}
+    if(!receipt.checkoutClean){receipt.status='FAIL_CLOSED';receipt.errorCode=receipt.errorCode||'HARVEST_WORKTREE_NOT_CLEAN';}
+    manifest.imageCount=manifest.images.length;
+    fs.mkdirSync(path.dirname(opts['--output']),{recursive:true});
+    fs.mkdirSync(path.dirname(opts['--manifest-output']),{recursive:true});
+    fs.writeFileSync(opts['--output'],JSON.stringify(receipt,null,2)+'\n');
+    fs.writeFileSync(opts['--manifest-output'],JSON.stringify(manifest)+'\n');
+    fs.rmSync(tmp,{recursive:true,force:true});
+  }
+  console.log(JSON.stringify({status:receipt.status,candidateHead:HARVEST_HEAD,errorCode:receipt.errorCode??null,
+    cases:receipt.cases.map(c=>({id:c.id,pass:c.pass,error:c.error?.slice(0,400)})),
+    images:manifest.images.length}));
+  if(receipt.status!=='PASS_CLOSED')process.exitCode=1;
+}
+
 async function main(){
+  if(process.argv.length===3&&process.argv[2]==='--self-test-harvest'){
+    check(Object.keys(HARVEST_BLOBS).length===6&&HARVEST_HEAD!==HEAD&&HARVEST_HEAD!==GEN3430_HEAD,'HARVEST_MODE_ISOLATION');
+    check(HARVEST_CASES.length===3&&HARVEST_BASE.length===40,'HARVEST_EXACT_BINDINGS');
+    console.log('HARVEST_GEN3450_FIXED_HTTP_WEBGL12_QUALIFIER_SELF_TEST_PASS');return;
+  }
+  if(process.argv.includes('--candidate-head')&&process.argv[process.argv.indexOf('--candidate-head')+1]===HARVEST_HEAD)return mainHarvest();
+
   if(process.argv.includes('--candidate-head')&&process.argv[process.argv.indexOf('--candidate-head')+1]===GEN3430_HEAD)return mainGen3430();
   if(process.argv.length===3&&process.argv[2]==='--self-test-gen3430'){
     check(Object.keys(GEN3430_BLOBS).length===5&&GEN3430_HEAD!==HEAD,'GEN3430_ISOLATION_SELF_TEST');

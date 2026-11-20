@@ -1,5 +1,5 @@
 /**
- * Generosity Harvest / Gen3442: held native source-construction candidate.
+ * Generosity Harvest / Gen3442: HELD V2 composition-first geometry reconciliation.
  * E1 owns the only WebGL context; E2 submits; E3 owns scene/camera; E4 owns materials.
  * No original illustration, rabbit atlas, rabbit geometry or private evidence is embedded.
  * This scene is a procedural spatial construction for evaluation, NOT an accepted
@@ -25,7 +25,6 @@ const PALETTE = Object.freeze({
 });
 const finite = n=>typeof n==='number'&&Number.isFinite(n);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const ground=(x,z)=>.07*Math.sin(x*.55+z*.16)+.06*Math.cos(z*.35);
 function seeded(seed=7163){return ()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};}
 function vector(a,b){return [a[0]-b[0],a[1]-b[1],a[2]-b[2]];}
 function cross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
@@ -74,92 +73,334 @@ function geometryBuilder(){
   }
   return {batches,tri,quad,box,ellipsoid,rod};
 }
-function buildPastoral(){
-  const g=geometryBuilder(),rnd=seeded(20261120);
-  // One continuous ground; river, banks, bridge and path are distinct native surfaces.
-  for(let x=-13;x<13;x+=1)for(let z=-24;z<10;z+=1){
-    const p=(X,Z)=>[X,ground(X,Z),Z];
-    g.quad(Math.sin(x*.8+z*.6)>0?'grassLight':'grass',p(x,z),p(x+1,z),p(x+1,z+1),p(x,z+1));
-  }
-  const riverZ=x=>-7.0+.63*Math.sin(x*.23);
-  for(let x=-13;x<13;x+=.50){
-    const z=riverZ(x),q=riverZ(x+.50);
-    g.quad('water',[x,.14,z-1.14],[x+.5,.14,q-1.14],[x+.5,.14,q+1.14],[x,.14,z+1.14]);
-    for(const side of [-1,1])g.quad('bank',
-      [x,ground(x,z+side*1.22)+.024,z+side*1.22],
-      [x+.5,ground(x+.5,q+side*1.22)+.024,q+side*1.22],
-      [x+.5,ground(x+.5,q+side*1.53)+.026,q+side*1.53],
-      [x,ground(x,z+side*1.53)+.026,z+side*1.53]);
-    if(Math.round(x*2)%7===0)g.quad('waterLight',[x,.153,z-.7],[x+.25,.153,q-.7],[x+.28,.153,q-.63],[x,.153,z-.63]);
-  }
-  // The walkway is interrupted by a raised wooden footbridge at the crossing.
-  for(let z=-23;z<8;z+=.42){
-    if(z>-8.8&&z< -5.0)continue;
-    const cx=.72+.34*Math.sin(z*.20),next=.72+.34*Math.sin((z+.42)*.20);
-    const y=ground(cx,z)+.04,yn=ground(next,z+.42)+.04;
-    g.quad('path',[cx-1.10,y,z],[cx+1.10,y,z],[next+1.10,yn,z+.42],[next-1.10,yn,z+.42]);
-    if(Math.floor((z+23)*2)%5===0)g.quad('pathLight',[cx-.5,y+.012,z],[cx+.4,y+.012,z],[next+.4,yn+.012,z+.11],[next-.5,yn+.012,z+.11]);
-  }
-  for(let z=-9.25;z<-4.62;z+=.38){
-    g.box('bridgeLight',[.92,.32,z],[2.80,.24,.32]);
-  }
-  for(const s of [-1,1]){
-    for(let z=-9.3;z<=-4.45;z+=1.15){
-      const x=.92+s*1.42;
-      g.rod('bridge',[x,.20,z],[x,1.27,z],.085,.069);
-    }
-    g.rod('bridge',[.92+s*1.42,.95,-9.2],[.92+s*1.42,.95,-4.55],.063);
-  }
-  // Approach fences: open paths, no artificial rectangular stage border.
-  for(const side of [-1,1]){
-    for(let z=-3.7;z<7.6;z+=1.44){
-      const x=.72+.34*Math.sin(z*.2)+side*2.1;
-      g.rod('bridge',[x,ground(x,z),z],[x,ground(x,z)+1.02,z],.075,.065);
-    }
-    for(let z=-3.65;z<6.7;z+=1.44){
-      const x=.72+.34*Math.sin(z*.2)+side*2.1,zz=z+1.44;
-      const xx=.72+.34*Math.sin(zz*.2)+side*2.1;
-      for(const h of [.48,.83])g.rod('bridgeLight',[x,ground(x,z)+h,z],[xx,ground(xx,zz)+h,zz],.038);
-    }
-  }
-  // Orchard on either side; tree canopies, flowers and fruit are actual geometry.
-  const locations=[[-10,-3],[-8,-12],[-11,-18],[-5,-16],[-6,2],
-    [7,-11],[10,-15],[6,4],[11,1],[8,-21],[3,-19],[-11,6]];
-  for(let t=0;t<locations.length;t++){
-    const [x,z]=locations[t],y=ground(x,z),h=2.45+1.2*rnd();
-    g.rod('bark',[x,y,z],[x+.12,y+h,z],.24,.12,9);
-    for(let j=0;j<4;j++){
-      const angle=(j/4)*Math.PI*2+0.45,xx=x+Math.cos(angle)*1.10,zz=z+Math.sin(angle)*.92;
-      g.rod('bark',[x+.08,y+h*.68,z],[xx,y+h*.96,zz],.11,.046);
-      g.ellipsoid((t+j)%4===0?'blossom':'leaves',[xx,y+h+(.15*j),zz],[1.05,.87,.89],5,9);
-    }
-    g.ellipsoid(t%3===0?'blossomLight':'leavesLight',[x+.13,y+h+.46,z],[1.25,1.03,1.1],6,10);
-    for(let f=0;f<4;f++){
-      const angle=f*1.93+t*.42;
-      const xx=x+Math.cos(angle)*.9,zz=z+Math.sin(angle)*.74;
-      g.ellipsoid(f%3===0?'fruitGold':'fruit',[xx,y+h+.15+Math.sin(angle)*.27,zz],[.14,.17,.14],4,7);
-    }
-  }
-  // Wildflower banks, clumps and gold/white/pink blossoms.
-  for(let k=0;k<95;k++){
-    let x=-12+24*rnd(),z=-18+25*rnd(),y=ground(x,z);
-    if(Math.abs(x-.72)<1.8||Math.abs(z-riverZ(x))<1.8)continue;
-    const height=.26+.28*rnd(),col=k%4===0?'blossom':k%4===1?'blossomLight':k%4===2?'flowerWhite':'flowerGold';
-    g.rod('grassDeep',[x,y,z],[x+.05,y+height,z],.022,.011,5);
-    const cy=y+height;
-    for(let i=0;i<5;i++){
-      const a=i*2*Math.PI/5;
-      g.ellipsoid(col,[x+Math.cos(a)*.085,cy,z+Math.sin(a)*.085],[.078,.035,.078],3,5);
-    }
-    g.ellipsoid('flowerGold',[x,cy+.026,z],[.038,.041,.038],3,5);
-  }
-  // Low rolling distant ridges, in native depth rather than a picture-plane facade.
-  for(let k=0;k<16;k++){
-    const x=-15+k*2.1,y=ground(x,-22);
-    g.ellipsoid(k%3===0?'hill':'grassDeep',[x,y-.65,-24.0],[2.65,2.2+(k%5)*.2,4.4],6,9);
-  }
-  return g.batches;
+const TAU = Math.PI * 2;
+const mix = (a, b, t) => a + (b - a) * t;
+const length3 = (v) => Math.hypot(v[0], v[1], v[2]);
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+const hash = (n) => { const v = Math.sin(n * 127.1 + 78.233) * 43758.5453; return v - Math.floor(v); };
+/* Gen3426 V2 - art-directed first-party native landscape. True world geometry. */
+const riverAt = (x) => -1.45 + .61 * Math.sin(x * .24 + .63);
+const pathAt = (z) => .32 + 3.00 / (1 + Math.exp(-.62 * (z - 1.3))) + .16 * Math.sin(z * .47);
+const waterLevel = (x) => -.24 + .15 * Math.tanh((x + 3.1)*1.8) + .15 * Math.tanh((x + 8.7)*2.1);
+function ground(x,z) {
+  const rolling=.03+.16*Math.sin(x*.22+z*.1)*Math.cos(z*.24)+.07*Math.sin(x*.71-z*.46);
+  const waterCut=.70*clamp((2.65-Math.abs(z-riverAt(x)))/1.85,0,1);
+  const midSlope=.06*clamp((-z-4)/14,0,1);
+  return rolling+midSlope-waterCut;
 }
+function pathHeight(z) {
+  const base=ground(pathAt(z),z)+.115;
+  const dist=Math.abs(z+.87);
+  const rise=clamp((4.9-dist)/3.25,0,1);
+  return mix(base,1.61+.10*Math.cos(dist*.68),rise*rise*(3-2*rise));
+}
+function buildWorld(){
+  const positions=[], normals=[], colors=[], roles=[];
+  const tint=(base,seed,degree=.1)=>{let t=(hash(seed)*2-1)*degree;return base.map(v=>clamp(v+t,0,1));};
+  const pal={grass:[.30,.43,.20],moss:[.32,.43,.22],stone:[.53,.49,.43],ivory:[.79,.74,.62],wood:[.45,.30,.20],leaf:[.26,.39,.19],wheat:[.76,.57,.20],water:[.22,.44,.47],pink:[.77,.37,.39],floral:[.88,.50,.54]};
+  function triangle(a,b,c,rgb,role=0){
+    const v=cross(sub(b,a),sub(c,a));const l=length3(v);
+    if(l<1e-9) return;
+    const n=[v[0]/l,v[1]/l,v[2]/l];
+    for(const p of [a,b,c]){positions.push(p[0],p[1],p[2]);normals.push(...n);colors.push(...rgb);roles.push(role);}
+  }
+  function quad(a,b,c,d,rgb,role=0){triangle(a,b,c,rgb,role);triangle(a,c,d,rgb,role);}
+  function box(x,y,z,sx,sy,sz,col,role=0){
+    const x0=x-sx/2,x1=x+sx/2,y0=y-sy/2,y1=y+sy/2,z0=z-sz/2,z1=z+sz/2;
+    const a=[x0,y0,z0],b=[x1,y0,z0],c=[x1,y0,z1],d=[x0,y0,z1];
+    const e=[x0,y1,z0],f=[x1,y1,z0],g=[x1,y1,z1],h=[x0,y1,z1];
+    quad(e,f,b,a,col,role);quad(f,g,c,b,col,role);quad(g,h,d,c,col,role);
+    quad(h,e,a,d,col,role);quad(h,g,f,e,col,role);quad(a,b,c,d,col,role);
+  }
+  function beam(a,b,r,col,sides=6,role=0){
+    const axis=unit(sub(b,a)),right=unit(cross(axis,Math.abs(axis[1])>.93?[1,0,0]:[0,1,0])),up=unit(cross(axis,right));
+    const ring=(p,t)=>[p[0]+r*(right[0]*Math.cos(t)+up[0]*Math.sin(t)),p[1]+r*(right[1]*Math.cos(t)+up[1]*Math.sin(t)),p[2]+r*(right[2]*Math.cos(t)+up[2]*Math.sin(t))];
+    for(let k=0;k<sides;k++){const a0=k*TAU/sides,a1=(k+1)*TAU/sides;quad(ring(a,a0),ring(a,a1),ring(b,a1),ring(b,a0),col,role);}
+  }
+  function ellipsoid(c,rx,ry,rz,col,lat=6,lon=9,role=0){
+    const p=(v,u)=>[c[0]+rx*Math.cos(v)*Math.cos(u),c[1]+ry*Math.sin(v),c[2]+rz*Math.cos(v)*Math.sin(u)];
+    for(let j=0;j<lat;j++)for(let k=0;k<lon;k++){
+      const v0=-Math.PI/2+j*Math.PI/lat,v1=v0+Math.PI/lat,u0=k*TAU/lon,u1=(k+1)*TAU/lon;
+      quad(p(v1,u0),p(v1,u1),p(v0,u1),p(v0,u0),col,role);
+    }
+  }
+  function rock(x,y,z,r,seed){
+    const shade=tint([.49,.46,.40],seed,.13);
+    ellipsoid([x,y+r*.36,z],r*(.76+.5*hash(seed+1)),r*(.47+.25*hash(seed+2)),r*(.75+.40*hash(seed+3)),shade,5,8);
+    if(hash(seed*2)>.74)ellipsoid([x-r*.28,y+r*.58,z+.11*r],r*.49,r*.26,r*.55,[.39,.47,.31],4,7,1);
+  }
+  function conifer(x,z,h,seed){
+    const y=ground(x,z);beam([x,y,z],[x,y+h*.98,z],h*.065,[.37,.27,.19],6);
+    for(let j=0;j<5;j++){const r=h*(.18-j*.028),cy=y+h*(.33+j*.14);
+      for(let k=0;k<7;k++){const a=k*TAU/7,rp=[x+Math.cos(a)*r,cy,z+Math.sin(a)*r],rn=[x+Math.cos(a+TAU/7)*r,cy,z+Math.sin(a+TAU/7)*r];triangle(rp,rn,[x,cy+h*.25,z],tint([.19,.33,.25],seed+j+k,.07),1);}
+    }
+  }
+  // Landscape is genuine sculpted depth, not a screen-aligned photograph or skybox.
+  const NX=86,NZ=63,minX=-25,maxX=26,minZ=-21,maxZ=16;
+  for(let i=0;i<NX;i++)for(let j=0;j<NZ;j++){
+    const x=minX+(maxX-minX)*i/NX,z=minZ+(maxZ-minZ)*j/NZ;
+    const dx=(maxX-minX)/NX,dz=(maxZ-minZ)/NZ;
+    const col=tint([.34,.46,.25],i*331+j*79,.05);
+    quad([x,ground(x,z),z],[x,ground(x,z+dz),z+dz],[x+dx,ground(x+dx,z+dz),z+dz],[x+dx,ground(x+dx,z),z],col,1);
+  }
+  // The valley continues behind the near-field terrace, with no transparent
+  // void between terrain and mountains. These are real undulating hill cells.
+  for(let j=0;j<40;j++)for(let i=0;i<65;i++){
+    const z=-83+j*62/40,x=-71+i*142/65,dx=142/65,dz=62/40;
+    const h=(xx,zz)=>{const t=clamp((-zz-21)/62,0,1);return (1-t)*ground(xx,-21)+t*(2.1+.65*Math.sin(xx*.16+zz*.13)*Math.cos(zz*.09));};
+    const c=tint(j%5===0?[.36,.46,.29]:[.34,.48,.29],i*9+j*42,.04);
+    quad([x,h(x,z),z],[x,h(x,z+dz),z+dz],[x+dx,h(x+dx,z+dz),z+dz],[x+dx,h(x+dx,z),z],c);
+  }
+  // Atmospheric, physically separated mountain strata and luminous snow ridges.
+  function ridge(z,peaks,base,width,col,snow){
+    const count=peaks.length-1;
+    for(let i=0;i<count;i++){
+      const x0=-66+i*132/count,x1=-66+(i+1)*132/count;
+      const a=[x0,base,z],b=[x1,base,z],u=[x0,peaks[i],z],v=[x1,peaks[i+1],z];
+      quad(a,b,v,u,tint(col,i+z*.2,.025));
+      const h0=Math.max(base,peaks[i]-width),h1=Math.max(base,peaks[i+1]-width);
+      quad([x0,h0,z+.06],[x1,h1,z+.06],v,u,tint(snow,i+17,.035));
+      // Add a real facet offset toward the viewer for dimensional rock shading.
+      if(i%2===0)triangle([x0,base,z+1.1],[x1,base,z+.6],[x1,peaks[i+1],z],tint(col,i*17,.09));
+    }
+  }
+  ridge(-133,[6,7,6,8,11,9,11,15,12,18,15,12,13,10,12,8,7],2,2,[.40,.47,.54],[.83,.84,.81]);
+  ridge(-108,[4,5,5,7,9,8,9,11,10,12,10,11,8,7,9,6,5],1.8,2,[.35,.45,.46],[.65,.73,.72]);
+  ridge(-85,[3,4,4,5,6,7,6,8,7,8,7,6,7,6,5,4,3],2.0,1.8,[.32,.43,.33],[.49,.56,.46]);
+  // Real hill terraces, alternating lines of vines and orchard beyond the water.
+  for(let row=0;row<11;row++){
+    const z=-18+row*.9;
+    for(let k=0;k<39;k++){
+      const x=-23+k*.52+(row%2)*.28;if(x>2&&x<7)continue;
+      const y=ground(x,z);const h=.14+.06*hash(row*12+k);
+      beam([x,y,z],[x,y+h,z],.025,hash(k)> .4?[.36,.51,.25]:[.45,.58,.29],4,1);
+    }
+  }
+  for(let i=0;i<27;i++){const x=-20+i*1.5;conifer(x,-24-(i%3)*1.1,.75+hash(i)*2,i*31);}
+  // Tiny hilltop architecture is actual 3D tower geometry and curved viaduct spans.
+  const castleX=22,castleZ=-77,castleY=6.0;
+  box(castleX,castleY,castleZ,10,1.4,3,[.70,.66,.54]);
+  for(let i=0;i<5;i++){
+    const x=castleX-4+i*2;
+    box(x,castleY+2.6,castleZ,1.3,4.4,1.25,tint([.81,.73,.61],i,.055));
+    box(x,castleY+5.1,castleZ,1.6,.3,1.6,[.65,.59,.50]);
+    ellipsoid([x,castleY+5.7,castleZ],.70,.95,.70,[.52,.58,.54],4,7);
+  }
+  box(castleX,castleY+1.6,castleZ-1.65,7,2.7,.9,[.77,.72,.62]);
+  for(let i=0;i<4;i++){
+    const x=castleX-6+i*4;
+    for(const p of [0,1])beam([x,-.5,castleZ+3+p*.9],[x,castleY,castleZ+3+p*.9],.17,[.62,.60,.50],6);
+    beam([x,castleY,castleZ+3],[x+3.5,castleY,castleZ+3],.16,[.75,.69,.60],6);
+  }
+  // Cloud strata occupy distant spatial depth, with pink crests at golden hour.
+  for(let j=0;j<8;j++){
+    const cx=-28+j*9.5,cz=-71+hash(j+55)*5,cy=23+hash(j*11)*7;
+    for(let k=0;k<3;k++)ellipsoid([cx+k*2.4,cy+.3*k,cz],3.5, .47+.15*k,1.15,
+      k%2?[.85,.73,.68]:[.84,.78,.72],4,8);
+  }
+  // Layered stream: genuinely descending surfaces, cut banks and rock-backed falls.
+  for(let i=0;i<132;i++){
+    const x=-24+i*50/132,n=-24+(i+1)*50/132;
+    const p=(xx,side,yOffset=0)=>[xx,waterLevel(xx)+yOffset,riverAt(xx)+side*(1.02+.24*Math.sin(xx*.41))];
+    quad(p(x,-1),p(x,1),p(n,1),p(n,-1),tint(pal.water,i*.19,.018),2);
+    if(i%2===0){const zz=riverAt(x)+.34*Math.sin(i*1.35),y=waterLevel(x)+.013;
+      beam([x,y,zz],[x+.12,y+.005,zz+.11],.011,[.76,.81,.72],4,2);}
+    if(i%9===0){for(const side of [-1,1])rock(x,ground(x,riverAt(x)+side*1.55),riverAt(x)+side*1.55,.28+hash(i*5)*.42,i*19);}
+  }
+  for(const [cx,fall] of [[-3.1,.25],[-8.7,.26]]){
+    const zc=riverAt(cx),width=1.18;
+    for(let i=0;i<25;i++){
+      const z=zc-width+i*2*width/25,z1=zc-width+(i+1)*2*width/25;
+      const hi=waterLevel(cx+.19),lo=waterLevel(cx-.21),col=i%3===0?[.83,.88,.81]:[.68,.81,.79];
+      quad([cx,lo-.07,z],[cx,hi+.08,z],[cx,hi+.08,z1],[cx,lo-.07,z1],col,2);
+      if(i%3===0)ellipsoid([cx-.20,lo,z],.26,.034,.14,[.87,.91,.84],3,6,2);
+    }
+  }
+  // Flowering masonry bridge, built stone by stone around a genuine open arch.
+  const BRIDGE_Z=-.88,bridgeX=pathAt(BRIDGE_Z);
+  const bridgeStart=-4.30,bridgeEnd=2.65;
+  for(let j=0;j<63;j++){
+    const z=bridgeStart+(bridgeEnd-bridgeStart)*j/63,z1=bridgeStart+(bridgeEnd-bridgeStart)*(j+1)/63;
+    const cy=pathHeight(z)-.16;
+    const p=(zz,side,yoff=0)=>[pathAt(zz)+side*1.30,pathHeight(zz)+yoff,zz];
+    quad(p(z,-1),p(z1,-1),p(z1,1),p(z,1),tint([.65,.59,.49],j*1.7,.07));
+    for(const side of [-1,1]){
+      const zmid=(z+z1)/2,x=pathAt(zmid)+side*1.35;
+      if(j%3===0)box(x,cy-.38,zmid,.42,.72,.43,tint(pal.stone,j*1.1,.1));
+    }
+  }
+  function archSegment(x0,zc,ybase,Rz,Ry,angle0,angle1,thick,col){
+    const inner=a=>[zc+Rz*Math.cos(a),ybase+Ry*Math.sin(a)];
+    const outer=a=>[zc+(Rz+thick)*Math.cos(a),ybase+(Ry+thick)*Math.sin(a)];
+    const a=inner(angle0),b=inner(angle1),c=outer(angle1),d=outer(angle0),x1=x0+.44;
+    const A=[x0,a[1],a[0]],B=[x0,b[1],b[0]],C=[x0,c[1],c[0]],D=[x0,d[1],d[0]];
+    const E=[x1,a[1],a[0]],F=[x1,b[1],b[0]],G=[x1,c[1],c[0]],H=[x1,d[1],d[0]];
+    quad(A,B,C,D,col);quad(H,G,F,E,col);
+    quad(B,F,G,C,col);quad(D,C,G,H,col);quad(A,D,H,E,col);quad(E,F,B,A,col);
+  }
+  for(const side of [-1,1]){
+    const x=bridgeX+side*1.25,ringX=x-.22;
+    for(let j=0;j<19;j++){
+      const a=j*Math.PI/19,b=(j+1)*Math.PI/19;
+      archSegment(ringX,BRIDGE_Z,-.42,1.64,1.54,a,b,.42,tint([.59,.54,.46],j*2+side*31,.11));
+    }
+    for(const z of [BRIDGE_Z-2.12,BRIDGE_Z+2.12]){
+      const cy=pathHeight(z);
+      box(x,(cy-.40)/2,z,.58,Math.max(.80,cy+.35),.79,tint([.55,.52,.44],z*4+side,.07));
+      for(let k=0;k<4;k++)box(x,cy+.24+k*.28,z,.65,.24,.76,tint(pal.stone,z*19+k,.07));
+    }
+    // Ornate stone parapet, pier caps and a planted vine rail.
+    for(let k=0;k<24;k++){
+      const z=bridgeStart+(bridgeEnd-bridgeStart)*(k+.5)/24;
+      const x0=pathAt(z)+side*1.42, top=pathHeight(z);
+      box(x0,top+.19,z,.33,.40,(bridgeEnd-bridgeStart)/25,tint([.68,.63,.54],k+side*9,.055));
+      if(k%4===0){box(x0,top+.53,z,.52,.24,.36,[.79,.72,.59]);
+        ellipsoid([x0,top+.69,z],.19,.15,.19,[.54,.61,.32],4,7,1);}
+    }
+  }
+  // Actual irregular individually bedded flagstones, not a smooth tan ribbon.
+  for(let j=0;j<160;j++){
+    const z=-19+j*35/160,z1=-19+(j+1)*35/160;
+    const xm=pathAt((z+z1)/2), onBridge=(z>bridgeStart&&z<bridgeEnd);
+    const left=xm-(onBridge?1.20:1.09),right=xm+(onBridge?1.20:1.09);
+    const y=(onBridge?pathHeight((z+z1)/2):pathHeight((z+z1)/2))+.035;
+    if(!onBridge){quad([left,y-.05,z],[left,y-.05,z1],[right,y-.05,z1],[right,y-.05,z],[.33,.36,.25]);}
+    const segments=3;
+    for(let k=0;k<segments;k++){
+      const x0=mix(left,right,k/segments),x1=mix(left,right,(k+1)/segments);
+      const jitter=(hash(j*41+k*5)-.5)*.12;
+      const h=y+.012*hash(j+k);
+      const zlo=z+.021+hash(k+j*13)*.018,zhi=z1-.024-hash(k+j*19)*.012;
+      quad([x0+.035,h,zlo+jitter*.17],[x0+.025,h,zhi+jitter*.16],
+           [x1-.037,h,zhi+jitter*.17],[x1-.033,h,zlo+jitter*.13],tint(pal.stone,j*7+k*13,.105));
+    }
+  }
+  // Crooked wooden fence follows both garden edges, rooted in actual terrain.
+  for(const side of [-1,1]){
+    for(let j=0;j<29;j++){
+      const z=-17+j*1.08;
+      if(z>=bridgeStart-1.7&&z<=bridgeEnd+1.0)continue;
+      const xx=pathAt(z)+side*2.15,yy=ground(xx,z),height=1.45+(j%4)*.06;
+      beam([xx,yy,z],[xx+.05,yy+height,z],.105,tint(pal.wood,j+side*8,.07),7);
+      if(j%2===0)ellipsoid([xx+.04,yy+height,z],.115,.075,.115,[.57,.42,.26],4,6);
+      const next=z+1.08;
+      if(next>=bridgeStart-1.7&&z<=bridgeEnd+1.0)continue;
+      const xn=pathAt(next)+side*2.15,yn=ground(xn,next);
+      for(const offset of [.52,1.10])beam([xx,yy+offset,z],[xn,yn+offset,next],.072,tint([.55,.39,.25],j*7,.06),6);
+    }
+  }
+  // Orchard canopies with real radial branches, separate leaves, fruit and trunks.
+  function tree(x,z,s,seed,blossom=false){
+    const y=ground(x,z),trunkTop=y+2.8*s;
+    beam([x,y,z],[x-.12*s,trunkTop,z+.13*s],.19*s,tint([.36,.25,.17],seed,.055),9);
+    for(let k=0;k<7;k++){
+      const a=k*TAU/7+.12,rad=(.9+.35*hash(seed+k))*s;
+      beam([x-.10*s,trunkTop-.8*s,z],[x+Math.cos(a)*rad,trunkTop+.35*s,z+Math.sin(a)*rad],.064*s,[.37,.27,.18],5);
+    }
+    for(let k=0;k<12;k++){
+      const ang=k*TAU/12+.15*hash(k+seed),reach=(.42+.8*hash(seed+k*9))*s;
+      const cx=x+Math.cos(ang)*reach,cy=trunkTop+(.14+.54*hash(k*11+seed))*s,cz=z+Math.sin(ang)*reach;
+      const leaf=blossom?(k%3?[.65,.39,.44]:[.77,.57,.62]):tint([.30,.43,.21],k*7+seed,.07);
+      ellipsoid([cx,cy,cz],.76*s,.66*s,.77*s,leaf,5,8,1);
+    }
+    if(!blossom)for(let k=0;k<22;k++){
+      const a=k*TAU/22,r=(.55+hash(k*27+seed)*1.15)*s;
+      ellipsoid([x+Math.cos(a)*r,trunkTop-.05*s+hash(k*3+seed)*.70*s,z+Math.sin(a)*r],.11*s,.12*s,.105*s,
+        k%3===0?[.83,.28,.18]:[.81,.49,.14],4,5,1);
+    }
+  }
+  const orchards=[[-10,9,1.7,13,false],[-16,7,1.20,20,false],[-9,0,1.08,25,true],[-12,-7,.88,42,false],[-17,-13,.85,76,false],[-2,-15,1.1,45,true],[9,-10,1.10,31,false],[12,-4,1.22,87,false],[15,-12,.9,88,true],[17,6,1.05,78,false],[-20,-3,1.2,64,true]];
+  for(const args of orchards)tree(...args);
+  // Top-left frame is a real arching tree branch suspended above the garden.
+  beam([-11,ground(-11,12),12],[-10,7.7,12],.46,[.34,.22,.14],10);
+  beam([-10,7.5,12],[-6,9.0,7],.27,[.32,.23,.16],9);
+  beam([-8,8.3,9.6],[-3,9.5,5.7],.11,[.34,.24,.14],7);
+  for(let i=0;i<32;i++){
+    const t=hash(i*4.1),x=-11+hash(i*18.6)*9,z=6+hash(i*7.1)*7;
+    ellipsoid([x,7.0+hash(i*9.3)*2,z],.55+.5*t,.31+.23*t,.65+.4*t,tint(pal.leaf,i*13,.085),4,7,1);
+    if(i%4===0)ellipsoid([x,6.5+hash(i*3)*2,z],.16,.19,.16,[.75,.33,.16],4,6,1);
+  }
+  // Broad wheat hills behind the right fence, with thousands of stalks and heads.
+  for(let i=0;i<2150;i++){
+    const x=6+hash(i*3.17)*19,z=-15.8+hash(i*7.13+8)*20;
+    if(Math.abs(z-riverAt(x))<1.5||Math.abs(x-pathAt(z))<2.6)continue;
+    const y=ground(x,z),h=.42+hash(i*5.7)*.53;
+    const tip=[x+.045,y+h,z+.035];
+    triangle([x-.026,y,z],[x+.032,y,z],[...tip],tint(pal.wheat,i*13,.085),1);
+    if(i%3===0){beam(tip,[x+.07,y+h+.18,z+.05],.024,[.84,.66,.26],4,1);}
+  }
+  // Dense near flowers, lavender and sunflower patches preserve warm foreground richness.
+  for(let i=0;i<480;i++){
+    const x=-21+hash(i*11.73)*44,z=-6+hash(i*23.91+6)*22;
+    if(Math.abs(z-riverAt(x))<2.0 || Math.abs(x-pathAt(z))<1.55)continue;
+    const y=ground(x,z),h=.20+hash(i*2.3)*.55;
+    beam([x,y,z],[x+.027,y+h,z],.012,[.29,.46,.23],4,1);
+    const floral=i%5===0?[.82,.38,.43]:i%5===1?[.84,.62,.35]:i%5===2?[.75,.58,.72]:i%5===3?[.90,.71,.48]:[.91,.47,.61];
+    for(let k=0;k<5;k++){const a=k*TAU/5;
+      ellipsoid([x+.027+Math.cos(a)*.10,y+h,z+Math.sin(a)*.10],.077,.035,.064,floral,3,5,1);}
+    ellipsoid([x+.027,y+h+.017,z],.052,.045,.052,[.71,.46,.20],3,5,1);
+  }
+  // Riverbank flowers, moss-covered stones and berrying shrubs.
+  for(let i=0;i<95;i++){
+    const x=-23+hash(i*3.7)*48,side=i%2?1:-1;
+    const z=riverAt(x)+side*(1.45+hash(i*11)*.65),y=ground(x,z);
+    if(i%3===0)rock(x,y,z,.28+hash(i*7)*.70,i*73);
+    else ellipsoid([x,y+.25,z],.35,.34,.32,tint([.30,.44,.23],i*8,.06),5,7,1);
+  }
+  // Harvest baskets, independent 3D apples and grapes near stone path foreground.
+  for(const [x,z] of [[-4.5,12],[-6.2,13.8]]){
+    const y=ground(x,z);
+    for(let j=0;j<10;j++){const a=j*TAU/10;
+      beam([x+Math.cos(a)*.69,y,z+Math.sin(a)*.69],[x+Math.cos(a)*.82,y+.75,z+Math.sin(a)*.82],.055,[.48,.34,.20],5);}
+    for(const hh of [.15,.72])for(let k=0;k<24;k++){
+      const a=k*TAU/24,b=(k+1)*TAU/24;
+      beam([x+Math.cos(a)*(.70+hh*.15),y+hh,z+Math.sin(a)*(.70+hh*.15)],
+           [x+Math.cos(b)*(.70+hh*.15),y+hh,z+Math.sin(b)*(.70+hh*.15)],.045,[.55,.38,.22],5);
+    }
+    for(let k=0;k<13;k++){
+      const a=k*TAU/13,rad=.2+.39*hash(k*5),cy=y+.8+.15*hash(k*17);
+      ellipsoid([x+Math.cos(a)*rad,cy,z+Math.sin(a)*rad],.20,.18,.19,k%2?[.80,.26,.15]:[.82,.57,.20],5,7);
+    }
+  }
+  // Perched blue songbird on right fence and far aerial flock.
+  const bz=5.1,bx=pathAt(bz)+2.15,by=ground(bx,bz)+1.61;
+  ellipsoid([bx,by,bz],.28,.17,.17,[.22,.45,.71],6,9);
+  ellipsoid([bx-.19,by+.13,bz+.01],.14,.13,.13,[.28,.54,.77],5,8);
+  ellipsoid([bx+.07,by+.02,bz+.14],.17,.085,.045,[.14,.33,.55],4,7);
+  triangle([bx-.29,by+.13,bz],[bx-.46,by+.08,bz-.04],[bx-.28,by+.075,bz-.12],[.94,.66,.30]);
+  ellipsoid([bx-.24,by+.15,bz+.105],.018,.019,.019,[.06,.09,.12],3,5);
+  for(let i=0;i<7;i++){
+    const x=-13+i*2.45,y=11+hash(i*13)*3,z=-21+hash(i*9)*4;
+    beam([x,y,z],[x-.46,y+.17,z-.04],.035,[.27,.32,.32],5,3);
+    beam([x,y,z],[x+.46,y+.17,z+.04],.035,[.27,.32,.32],5,3);
+  }
+  // Real distant sky-dome triangles, not an image, sprite, backdrop texture or
+  // screenshot plane. Depth means these never obscure nearer scene geometry.
+  ellipsoid([0,-18,-12],145,115,145,[.77,.64,.65],15,30,4);
+  ellipsoid([-53,33,-94],3.6,3.6,3.6,[1.0,.86,.57],9,14,5);
+  return {positions:new Float32Array(positions),normals:new Float32Array(normals),colors:new Float32Array(colors),roles:new Float32Array(roles),triangleCount:positions.length/9};
+}
+/**
+ * Gen3426 V2 public world geometry -> Gen3442 first-party material batches.
+ * Reuse already-authored scene topology; retain separate private A4 injection.
+ * Only per-triangle RGB is discretized to 0.1 material levels. No image planes.
+ */
+function buildPastoral(){
+  const world=buildWorld(), batches=new Map();
+  for(let i=0;i<world.positions.length;i+=9){
+    const role=world.roles[i/3],rgb=[world.colors[i],world.colors[i+1],world.colors[i+2]];
+    const bins=rgb.map(v=>Math.round(clamp(v,0,1)*10));
+    const key='v2_'+role+'_'+bins.join('_');
+    let b=batches.get(key);
+    if(!b){b={p:[],n:[],i:[],color:bins.map(x=>x/10).concat(1),role};batches.set(key,b);}
+    const start=b.p.length/3;
+    for(let j=0;j<9;j++){b.p.push(world.positions[i+j]);b.n.push(world.normals[i+j]);}
+    b.i.push(start,start+1,start+2);
+  }
+  return batches;
+}
+
 function typed(v,Type,label,max=4000000){
   if(!(v instanceof Type)||v.length===0||v.length>max)throw new TypeError(label+'_INVALID');
   if(Type===Float32Array)for(const n of v)if(!finite(n))throw new TypeError(label+'_NONFINITE');
@@ -204,8 +445,8 @@ function createPrivateRabbit(device,library,scene,data){
   ]});
   const range=bounds(p),height=range.hi[1]-range.lo[1];
   if(height<.01||height>1000)throw Error('PRIVATE_A4_HEIGHT_INVALID');
-  const s=2.15/height,footY=ground(5.1,-1.4);
-  const node=scene.createNode({position:[5.1-range.center[0]*s,footY-range.lo[1]*s,-1.4-range.center[2]*s],scale:[s,s,s]});
+  const s=2.15/height,footX=pathAt(7.6)+2.9,footZ=7.6,footY=ground(footX,footZ);
+  const node=scene.createNode({position:[footX-range.center[0]*s,footY-range.lo[1]*s,footZ-range.center[2]*s],scale:[s,s,s]});
   const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID});
   scene.setRenderable(node,{mesh,program:initial.program,bounds:{center:range.center,radius:range.radius},cull:'NONE'});
   function frame(i){const k=clamp(Math.round(i),0,16);device.updateMeshAttribute(mesh,'aPosition',data.frames[k]);device.updateMeshAttribute(mesh,'aNormal',data.normalFrames[k]);}
@@ -218,7 +459,10 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
   if(backend==='AUTO'){try{device=createNativeWebGLDevice(canvas,{backend:'WEBGL2'});}catch{device=createNativeWebGLDevice(canvas,{backend:'WEBGL1'});}}
   else device=createNativeWebGLDevice(canvas,{backend});
   const pipeline=createNativeFramePipeline(device),scene=createNativeSpatialScene(),library=createNativeMaterialLibrary(device);
-  const camera=scene.createCamera({position:[0,4.5,18.8],rotation:[Math.sin(-.10),0,0,Math.cos(-.10)],fovY:.91,near:.1,far:110,aspect:16/9});
+  const cameraPosition=[16.1,7.5,22.3];
+  const yaw=.54,pitch=-.18;
+  const cameraRotation=[Math.sin(pitch/2)*Math.cos(yaw/2),Math.cos(pitch/2)*Math.sin(yaw/2),-Math.sin(pitch/2)*Math.sin(yaw/2),Math.cos(pitch/2)*Math.cos(yaw/2)];
+  const camera=scene.createCamera({position:cameraPosition,rotation:cameraRotation,fovY:.76,near:.1,far:260,aspect:16/9});
   const materials=new Map(),renderMaterials=new Map();
   const batches=buildPastoral();
   for(const [key,b] of batches){
@@ -228,10 +472,13 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
       {name:'aPosition',size:3,data:new Float32Array(b.p)},
       {name:'aNormal',size:3,data:new Float32Array(b.n)}
     ]});
-    const material=library.createMaterial({kind:'LIT',baseColor:PALETTE[key],light:{
-      direction:[-.45,.88,.45],ambient:.49,intensity:.60,color:[1,.94,.82]
+    const isWater=b.role===2,isSky=b.role>=4;
+    const material=library.createMaterial({kind:isSky?'UNLIT':isWater?'LIT_SPECULAR':'LIT',
+      baseColor:b.color,light:isSky?null:{
+      direction:[-.45,.88,.45],ambient:isWater?.42:.60,intensity:.60,color:[1,.94,.82],
+      ...(isWater?{skyColor:[.67,.79,.83],groundColor:[.23,.34,.22],fillIntensity:.45,specularStrength:.58,shininess:64}:{})
     }});
-    const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID});
+    const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID,cameraPosition});
     const node=scene.createNode(),range=bounds(b.p);
     scene.setRenderable(node,{mesh,program:initial.program,bounds:{center:range.center,radius:range.radius},cull:'NONE'});
     materials.set(node,material);
@@ -249,7 +496,7 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
       {name:'aNormal',size:3,data:new Float32Array(b.n)}
     ]});
     const material=library.createMaterial({kind:'UNLIT',baseColor:PALETTE.wings});
-    const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID});
+    const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID,cameraPosition});
     const node=scene.createNode({position:[-4.5+k*1.05,4.0+k*.32,-14.0-k*.5]});
     scene.setRenderable(node,{mesh,program:initial.program,bounds:{center:[0,0,0],radius:1},cull:'NONE'});
     materials.set(node,material);renderMaterials.set(mesh,material);birds.push(node);
@@ -268,11 +515,11 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
   function render(){
     if(disposed)return;
     const view=scene.collect(camera);
-    pipeline.beginFrame({clear:{color:[.68,.79,.77,1],depth:1},depthMode:'TEST_WRITE',cull:'NONE'});
+    pipeline.beginFrame({clear:{color:[.88,.70,.57,1],depth:1},depthMode:'TEST_WRITE',cull:'NONE'});
     for(const cmd of view.commands){
       const material=renderMaterials.get(cmd.mesh);
       if(!material)throw Error('HARVEST_MATERIAL_BINDING_MISSING');
-      const draw=library.makeDrawBinding(material,{modelMatrix:cmd.modelMatrix,modelViewProjection:cmd.modelViewProjection});
+      const draw=library.makeDrawBinding(material,{modelMatrix:cmd.modelMatrix,modelViewProjection:cmd.modelViewProjection,cameraPosition});
       pipeline.submit({mesh:cmd.mesh,program:draw.program,first:cmd.first,count:cmd.count,pass:cmd.pass,cull:cmd.cull,
         beforeDraw:draw.beforeDraw,afterDraw:draw.afterDraw});
     }

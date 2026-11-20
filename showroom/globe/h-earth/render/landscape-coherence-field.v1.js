@@ -26,10 +26,10 @@ vec3 landscapeCoverPalette(vec2 position,float foothillDry){
 // It never participates in root admission, geometry or allocation.
 vec3 landscapeSubstrateTone(vec2 position,float foothillDry){
  vec2 p=mat2(.8,.6,-.6,.8)*position;
- float patch=smoothstep(.18,.88,coherenceNoise(p/13.));
+ float patchWeight=smoothstep(.18,.88,coherenceNoise(p/13.));
  float dryVariation=coherenceNoise(p/29.+vec2(7.,-11.));
  float dryBlend=smoothstep(.08,.70,clamp(foothillDry,0.,1.));
- vec3 moistSoil=mix(vec3(.80,.82,.72),vec3(.98,.93,.80),patch);
+ vec3 moistSoil=mix(vec3(.80,.82,.72),vec3(.98,.93,.80),patchWeight);
  vec3 aridSoil=mix(vec3(1.16,1.06,.86),vec3(1.36,1.16,.88),dryVariation);
  return mix(moistSoil,aridSoil,dryBlend);
 }

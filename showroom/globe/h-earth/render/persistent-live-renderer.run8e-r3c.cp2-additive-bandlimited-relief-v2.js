@@ -1193,6 +1193,28 @@ void main(){
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END
     base=palette;
 
+    // P1 Gen3436: actual dry lowland-to-foothill substrate, coupled to the
+    // SAME 13m/29m organic palette and terrain dryness as existing grass blades.
+    // Colour modulation of native photographic earth only, not a planted layer.
+    // Water, beach, exposed geological rock, grove/cavern and tree materials
+    // keep their accepted shaders, geometry, contacts and illumination.
+    if(vRoleCode==1u && !geologicalEarthRock && treeMaterialWeight<=0.0){
+      float ecotoneDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),
+        hillsideDry(vWorldPosition));
+      float eligibleDrySoil=
+        smoothstep(24.0,78.0,max(0.0,vCoastDistanceMeters))*
+        (1.0-smoothstep(.16,.47,slope))*
+        (1.0-smoothstep(.22,.57,rockExposure));
+      float acceptedLandscapeKeep=smoothstep(38.0,88.0,
+        min(distance(world,vec2(-139.40268,-210.74617)),
+            distance(world,vec2(40.0,-260.0))));
+      float ecotoneStrength=eligibleDrySoil*acceptedLandscapeKeep*.68;
+      if(ecotoneStrength>.002){
+        vec3 substrateTone=landscapeSubstrateTone(world,ecotoneDry);
+        base*=mix(vec3(1.0),substrateTone,ecotoneStrength);
+      }
+    }
+
     vec2 manorCenter=vec2(80.0,-172.0);
     float manorRadius=distance(world,manorCenter);
     float manorEnvelope=radial(world,manorCenter,7.0,30.0);

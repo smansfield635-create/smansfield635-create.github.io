@@ -26393,6 +26393,50 @@
       "scopeHash": "a91d0b88736f4c9e01aa078daf65ecb79e315772221688fbac4ca616d8cc6825",
       "state": "ADMITTED_LOCKED"
     },
+    "a94196c6eea32140a42468b38455b91d48d03362a1bf9740119d4c9b221d2c0b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c0f3bda1243c08838fb0dba39d6ff040a2fafa5c",
+          "lockGeneration": 3449,
+          "lockScope": "REPOSITORY_AI_ROUTER:HARVEST:PREBUILD_ROUTER_DEPENDENCY_REDUCTION:20261120",
+          "operationId": "DGB_HARVEST_GEN3442_PREBUILD_ROUTER_TRANSPORT_DEPENDENCY_REDUCTION_20261120_001",
+          "procedureLocatorDigest": "5de16f4d47df84c17caa8c9811023f42250d425cfd8aa479005cfd76fba7c5e2",
+          "requestDigest": "0623ed36e51d80a8925e9cd3e44094837dafbb60139b0c8d98c38532127c7aa0",
+          "scopeHash": "a94196c6eea32140a42468b38455b91d48d03362a1bf9740119d4c9b221d2c0b"
+        },
+        "bindingDigest": "c4ec574b5f7e8f8ccdbc15e5d958d35ad5cc9367f700cd1f34f7de4b3569ef7f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d7dd9d5f0b11c756b6360c86cd8878caa46c27167017f16cb4542dcac1129883",
+          "commentId": 7045350685,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7163,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44777837298,
+          "workflowSha": "c0f3bda1243c08838fb0dba39d6ff040a2fafa5c"
+        },
+        "lineageAnchorCommitSha": "f1e96f8109381d76dda8390751748023781912c0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "c0f3bda1243c08838fb0dba39d6ff040a2fafa5c",
+      "lockGeneration": 3449,
+      "lockScope": "REPOSITORY_AI_ROUTER:HARVEST:PREBUILD_ROUTER_DEPENDENCY_REDUCTION:20261120",
+      "operationId": "DGB_HARVEST_GEN3442_PREBUILD_ROUTER_TRANSPORT_DEPENDENCY_REDUCTION_20261120_001",
+      "procedureLocatorDigest": "5de16f4d47df84c17caa8c9811023f42250d425cfd8aa479005cfd76fba7c5e2",
+      "released": false,
+      "requestDigest": "0623ed36e51d80a8925e9cd3e44094837dafbb60139b0c8d98c38532127c7aa0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a94196c6eea32140a42468b38455b91d48d03362a1bf9740119d4c9b221d2c0b",
+      "state": "ADMITTED_LOCKED"
+    },
     "a94ba677ec9ee20e1b2423f2d4ed7ecb4637148220db0a4f76493c5775702c68": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -39515,7 +39559,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3448,
+  "lockGeneration": 3449,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

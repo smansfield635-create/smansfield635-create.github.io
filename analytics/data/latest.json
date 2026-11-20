@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-20T15:24:39Z",
+  "generatedAt": "2026-11-20T16:24:16Z",
   "window30d": {
-    "start": "2026-10-21T15:24:39Z",
-    "end": "2026-11-20T15:24:39Z"
+    "start": "2026-10-21T16:24:16Z",
+    "end": "2026-11-20T16:24:16Z"
   },
   "daily": [
     {
@@ -60,11 +60,11 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 70
+      "pageLoads": 100
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 170
+      "pageLoads": 130
     },
     {
       "date": "2026-11-06",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 18
+      "pageLoads": 17
     },
     {
       "date": "2026-11-13",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-20",
-      "pageLoads": 14
+      "pageLoads": 15
     }
   ],
   "summary": {
-    "pageLoads": 1261,
-    "botPageLoads": 741,
-    "nonBotPageLoads": 520
+    "pageLoads": 1171,
+    "botPageLoads": 691,
+    "nonBotPageLoads": 480
   },
   "referrers": [
     {
@@ -140,18 +140,18 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 81,
+      "pageLoads": 91,
       "visits": 0
-    },
-    {
-      "host": "bing.com",
-      "pageLoads": 14,
-      "visits": 14
     },
     {
       "host": "www.facebook.com",
       "pageLoads": 12,
       "visits": 12
+    },
+    {
+      "host": "bing.com",
+      "pageLoads": 4,
+      "visits": 4
     },
     {
       "host": "m.facebook.com",
@@ -162,8 +162,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 588,
-      "visits": 588
+      "pageLoads": 598,
+      "visits": 598
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -171,19 +171,19 @@
       "visits": 207
     },
     {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 80,
-      "visits": 80
-    },
-    {
       "path": "/products/education/personal-training/",
-      "pageLoads": 80,
-      "visits": 80
+      "pageLoads": 70,
+      "visits": 70
     },
     {
       "path": "/",
       "pageLoads": 65,
       "visits": 55
+    },
+    {
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 60,
+      "visits": 60
     },
     {
       "path": "/nine-summits/universe/",
@@ -196,7 +196,7 @@
       "visits": 20
     },
     {
-      "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
+      "path": "/release-proof/",
       "pageLoads": 10,
       "visits": 10
     }

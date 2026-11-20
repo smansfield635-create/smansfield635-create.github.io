@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-20T18:27:41Z",
+  "generatedAt": "2026-11-20T19:24:53Z",
   "window": {
-    "start": "2026-10-21T18:27:41Z",
-    "end": "2026-11-20T18:27:41Z"
+    "start": "2026-10-21T19:24:53Z",
+    "end": "2026-11-20T19:24:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 207
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
@@ -63,17 +63,17 @@
         "visits": 10
       },
       {
-        "value": "/showroom/globe/earth/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/about/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/characters/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -290,7 +290,7 @@
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
         "pageLoads": 1251,
-        "visits": 1190
+        "visits": 1170
       }
     ]
   }

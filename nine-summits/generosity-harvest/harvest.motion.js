@@ -141,7 +141,10 @@ function buildWorld(){
   for(let i=0;i<NX;i++)for(let j=0;j<NZ;j++){
     const x=minX+(maxX-minX)*i/NX,z=minZ+(maxZ-minZ)*j/NZ;
     const dx=(maxX-minX)/NX,dz=(maxZ-minZ)/NZ;
-    const col=tint([.34,.46,.25],i*331+j*79,.05);
+    // Low-frequency terrain color continuity: avoid per-cell randomized checkerboards.
+    // Keep the exact sculpted mesh, positions, normals and E1-E4 material ownership.
+    const meadowWave=.60*Math.sin(x*.31+z*.13)+.40*Math.sin(x*.47-z*.16);
+    const col=[.34+.07*meadowWave,.46+.06*meadowWave,.25+.04*meadowWave];
     quad([x,ground(x,z),z],[x,ground(x,z+dz),z+dz],[x+dx,ground(x+dx,z+dz),z+dz],[x+dx,ground(x+dx,z),z],col,1);
   }
   // The valley continues behind the near-field terrace, with no transparent
@@ -149,7 +152,9 @@ function buildWorld(){
   for(let j=0;j<40;j++)for(let i=0;i<65;i++){
     const z=-83+j*62/40,x=-71+i*142/65,dx=142/65,dz=62/40;
     const h=(xx,zz)=>{const t=clamp((-zz-21)/62,0,1);return (1-t)*ground(xx,-21)+t*(2.1+.65*Math.sin(xx*.16+zz*.13)*Math.cos(zz*.09));};
-    const c=tint(j%5===0?[.36,.46,.29]:[.34,.48,.29],i*9+j*42,.04);
+    // The far valley is continuous rather than recurring one-row color stripes.
+    const valleyWave=.60*Math.sin(x*.09+z*.10)+.40*Math.cos(x*.13-z*.07);
+    const c=[.35+.04*valleyWave,.47+.035*valleyWave,.29+.025*valleyWave];
     quad([x,h(x,z),z],[x,h(x,z+dz),z+dz],[x+dx,h(x+dx,z+dz),z+dz],[x+dx,h(x+dx,z),z],c);
   }
   // Atmospheric, physically separated mountain strata and luminous snow ridges.

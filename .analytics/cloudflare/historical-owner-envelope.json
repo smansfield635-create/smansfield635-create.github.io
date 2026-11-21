@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T01:24:09Z",
+  "generatedAt": "2026-11-21T02:28:03Z",
   "window": {
-    "start": "2026-08-23T01:24:09Z",
-    "end": "2026-11-21T01:24:09Z"
+    "start": "2026-08-23T02:28:03Z",
+    "end": "2026-11-21T02:28:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3022,
-    "visits": 771,
+    "pageLoads": 3002,
+    "visits": 751,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3022,
-        "visits": 771
+        "pageLoads": 3002,
+        "visits": 751
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 491,
-        "visits": 371
-      },
       "/showroom/": {
         "pageLoads": 20,
         "visits": 0
@@ -48,10 +44,6 @@
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 61,
-        "visits": 10
-      },
-      "/compass-composite/": {
-        "pageLoads": 10,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -109,6 +101,10 @@
       "/developer/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 481,
+        "visits": 361
       },
       "/governance/": {
         "pageLoads": 20,
@@ -284,17 +280,17 @@
       }
     },
     "byReferer": {
-      "www.google.com": {
-        "pageLoads": 350,
-        "visits": 350
-      },
       "diamondgatebridge.com": {
         "pageLoads": 2251,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 421,
-        "visits": 421
+        "pageLoads": 411,
+        "visits": 411
+      },
+      "www.google.com": {
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

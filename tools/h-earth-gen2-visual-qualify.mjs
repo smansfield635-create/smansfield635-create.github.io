@@ -6,6 +6,9 @@ import crypto from 'node:crypto';
 import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
+// Gen3226 read-only exact-pair comparison, not a product/publication mutation.
+if(process.argv.includes('--gen3226-wide-grass-comparison')){await gen3226Capture();process.exit(0);}
+
 const productHeads=new Set([
   '783c6347f768565e794418ff02a0201e69e0730d',
   '192404eda2fae556c452083309061c82901a933f'
@@ -536,4 +539,429 @@ if(process.argv.includes('--self-test')){
   console.log('H_EARTH_GEN2_VISUAL_QUALIFICATION_EVIDENCE '+JSON.stringify(receipt));
   if(receipt.result!=='PASS')process.exitCode=1;
  }
+}
+
+
+async function gen3226Capture(){
+  const reasonCensus=false,positiveX=true;
+  const BASE='35d188c541064bea9f0756f7d4925503f17d20fb',
+        CAND='e3638544c4e31e3ab74907063de6fdfe90c9c772';
+  const OUTPUT='/tmp/gen2-evidence/gen3226',STAGE='/tmp/gen3226-webgl-'+process.pid;
+  const HASH=b=>crypto.createHash('sha256').update(b).digest('hex');
+  const DELAY=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const GIT=(args,cwd=process.cwd())=>execFileSync('git',args,{cwd,encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024}).trim();
+  const TARGETS=positiveX?[
+   // Source-observed installed-root center + prior authentic Station B camera.
+   // Station B remains a search anchor, not a claim of photo first-hit.
+   {id:'infillCenter_N',x:64.58312043705473,z:-314.94399624029495,yaw:0,pitch:-12},
+   {id:'infillCenter_E',x:64.58312043705473,z:-314.94399624029495,yaw:90,pitch:-12},
+   {id:'corridorObserver_NW',x:129.82571460976874,z:-389.03054421247367,yaw:-42,pitch:-12},
+   {id:'corridorObserver_W',x:129.82571460976874,z:-389.03054421247367,yaw:-90,pitch:-12}
+  ]:[{id:'woodland',x:-141,z:-214,yaw:142,pitch:-8},{id:'connectorWest',x:-108,z:-256,yaw:126,pitch:-8},{id:'connectorMid',x:-78,z:-278,yaw:101,pitch:-8},{id:'connectorEast',x:-38,z:-286,yaw:90,pitch:-8}];
+  const RECEIPT={schema:'H_EARTH_GEN3210_CAPACITY_SINGLE_OWNER_VISUAL_INSPECTION_RECEIPT_v1',result:'FAIL_CLOSED',
+    baselineHead:BASE,candidateHead:CAND,inspectionHead:GIT(['rev-parse','HEAD']),
+    browserExecuted:false,publicationPerformed:false,productMutationPerformed:false,baselineArtifactId:13825689284,baselineImagesFromRun:42954810048,baselineImagesNotRegenerated:false,sparseProductStage:true,
+    exploratoryNotFinalKeep:true,images:[],provisional:[],progress:[],errors:[]};
+  if(reasonCensus){RECEIPT.readOnlyCensus='GEN3211_ACTUAL_GROUND_ADMISSION';RECEIPT.admissionObservations=[];}
+  if(positiveX){RECEIPT.captureMode='GEN3230_EXACT_PUBLISHED_VS_OPTIMIZED_GEN3228';
+    RECEIPT.priorObserverCameraOnly=true;RECEIPT.latestOwnerPhotoFirstHitProven=false;
+    RECEIPT.sourceDifference='WIDE_GRASS_PLACEMENT_PLUS_PERMANENT_20MS_YIELD_SCHEDULING';
+    RECEIPT.nativeProductHeads={baseline:BASE,candidate:CAND};}
+  const WORKTREES=[],SERVERS=[];let BROWSER;
+  await fs.mkdir(OUTPUT,{recursive:true});
+  try{
+    if(!/^[0-9a-f]{40}$/.test(RECEIPT.inspectionHead))throw Error('INSPECTION_COMMIT_INVALID');
+    for(const [label,head] of (positiveX?[['baseline',BASE],['candidate',CAND]]:[['candidate',CAND]])){
+      GIT(['fetch','--no-tags','--depth=1','origin',head]);
+      const dir=STAGE+'-'+label;
+      // Reuse established sparse-checkout: never materialize a second 498k-file world.
+      GIT(['worktree','add','--no-checkout','--detach',dir,head]);WORKTREES.push(dir);
+      GIT(['sparse-checkout','set','--cone','showroom/globe','h-earth-3d','assets'],dir);
+      GIT(['checkout','--force',head],dir);
+      if(!await fs.stat(dir+'/showroom/globe/h-earth/index.html').then(x=>x.isFile()).catch(()=>false))throw Error('SPARSE_PUBLIC_WORLD_ENTRY_MISSING');
+      if(GIT(['rev-parse','HEAD'],dir)!==head||GIT(['status','--porcelain'],dir))throw Error('EXACT_READONLY_WORKTREE_INVALID:'+label);
+      const world=await fs.readFile(dir+'/showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
+      if(HASH(world)!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('CANONICAL_WORLD_MISMATCH:'+label);
+      RECEIPT[label]={sourceHead:head,worldSha256:HASH(world),sourceClean:true};
+    }
+    if(positiveX){
+      const testFile='h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs';
+      const runNative=(label,args)=>spawnSync(process.execPath,args,
+        {cwd:STAGE+'-'+label,encoding:'utf8',timeout:180000,maxBuffer:8*1024*1024});
+      const oldNative=runNative('baseline',['--test',testFile]);
+      const newNative=runNative('candidate',['--test',testFile]);
+      const failures=x=>[...(x.stdout??'').matchAll(/^not ok \d+ - (.+)$/gm)].map(m=>m[1]);
+      const oldFailures=failures(oldNative),newFailures=failures(newNative);
+      RECEIPT.nativeFull={
+        command:'node --test '+testFile,
+        baseline:{head:BASE,exitCode:oldNative.status,failedTestNames:oldFailures},
+        candidate:{head:CAND,exitCode:newNative.status,failedTestNames:newFailures},
+        preExistingFailureParity:oldNative.status===newNative.status&&
+          JSON.stringify(oldFailures)===JSON.stringify(newFailures),
+        claim:'FULL_NATIVE_PASS_ONLY_IF_BOTH_EXIT_ZERO',
+        knownFixtureFailuresNotWaived:true
+      };
+      if(oldNative.error||newNative.error)throw Error('GEN3226_NATIVE_TEST_EXECUTION_FAILED:'+JSON.stringify(RECEIPT.nativeFull));
+      if(!RECEIPT.nativeFull.preExistingFailureParity)RECEIPT.nativeFull.requiresIndependentReview=true;
+      // Run the unchanged relevant source-root/upload/capacity tests, without
+      // editing their assertions or claiming unrelated failing VM fixture tests pass.
+      const rootTestPrefix=/^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile|duplicate root|nonfinite |declared contact|actual RGBA|RGBA alpha|object RGB|owner uploads|float32-overflow|tile upload budget|total immutable population|owner rejects empty|shader failure|upload exception|program link failure)/;
+      const knownBaselinePassingNames=[...(oldNative.stdout??'').matchAll(/^ok \d+ - (.+)$/gm)]
+        .map(m=>m[1]).filter(name=>rootTestPrefix.test(name));
+      if(!knownBaselinePassingNames.length)throw Error('GEN3220_NO_KNOWN_PASSING_ROOT_NATIVE_ASSERTIONS');
+      const escapeName=name=>name.replace(/[|\\{}()[\]^$+*?.]/g,'\\$&');
+      const namePattern='^(?:'+knownBaselinePassingNames.map(escapeName).join('|')+')$';
+      const focused=runNative('candidate',['--test','--test-name-pattern',namePattern,testFile]);
+      RECEIPT.nativeFocused={
+        command:'node --test --test-name-pattern <EXACT_BASELINE_PASSING_SOURCE_TEST_NAMES> '+testFile,
+        exactSelectedNames:knownBaselinePassingNames,
+        excludedPreexistingFullNativeFailures:oldFailures.filter(name=>rootTestPrefix.test(name)),
+        productHead:CAND,exitCode:focused.status,
+        outputTail:(focused.stdout??'').slice(-2600),error:focused.error?.message??null,
+        selectorPolicy:'BASELINE_PASSING_SOURCE_TEST_NAMES_ONLY_FULL_SUITE_FAILURES_RETAINED'
+      };
+      if(focused.status!==0)RECEIPT.nativeFocused.requiresIndependentReview=true;
+      const capacityName='woodland population accepts the raised 950,000-root limit and rejects one beyond';
+      const capacity=runNative('candidate',['--test','--test-name-pattern',capacityName,testFile]);
+      RECEIPT.nativeCapacity={testName:capacityName,productHead:CAND,exitCode:capacity.status,outputTail:(capacity.stdout??'').slice(-1700),error:capacity.error?.message??null};
+      if(capacity.status!==0||!/(?:^|\n)ok \d+ - woodland population accepts the raised 950,000-root limit and rejects one beyond/m.test(capacity.stdout??''))
+        throw Error('GEN3230_EXACT_NATIVE_950000_950001_ASSERTION_FAILED:'+JSON.stringify(RECEIPT.nativeCapacity));
+      RECEIPT.mobileQualificationScope='PLAYWRIGHT_CHROMIUM_412x915_DPR2_MOBILE_VIEWPORT_WITH_SWIFTSHADER_NOT_PHYSICAL_ANDROID_GPU';
+    }
+        BROWSER=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
+    RECEIPT.browserExecuted=true;
+    for(const [label,port,head] of (positiveX?[['baseline',4173,BASE],['candidate',4174,CAND],['unoptimizedSchedulingControl',4175,CAND]]:[['candidate',4174,CAND]])){
+      let labelFailed=false;
+      const directory=STAGE+'-'+(label==='unoptimizedSchedulingControl'?'candidate':label);
+      if(label==='unoptimizedSchedulingControl')RECEIPT[label]={
+        sourceHead:CAND,worldSha256:RECEIPT.candidate.worldSha256,sourceClean:true,
+        browserScriptVariant:'IN_MEMORY_UNOPTIMIZED_256_ROOT_CONTROL_NOT_PRODUCT_SOURCE',
+        exactSourceHeadClaimForServedScript:false};
+      const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',directory],{stdio:'ignore'});
+      SERVERS.push(server);
+      let serving=false;
+      for(let i=0;i<100;i++){try{if((await fetch('http://127.0.0.1:'+port+'/showroom/globe/h-earth/')).ok){serving=true;break}}catch{}await DELAY(250)}
+      if(!serving)throw Error('LOCAL_FIRST_PARTY_SERVER_NOT_READY:'+label);
+      for(const device of ['phone']){
+        const viewport=device==='phone'?{width:412,height:915}:{width:1280,height:720};
+        const views=device==='phone'?(label==='unoptimizedSchedulingControl'?[TARGETS[2]]:TARGETS):[TARGETS[4]];
+        const context=await BROWSER.newContext({viewport,deviceScaleFactor:device==='phone'?2:1,isMobile:device==='phone',hasTouch:device==='phone'});
+        const page=await context.newPage(),errors=[],failures=[],fixtureHashes=[];
+        // Gen3226 read-only scheduler audit. The served product module and its root
+        // placement remain byte-for-byte untouched; native requestAnimationFrame
+        // is called with the original callback and its returned request identifier.
+        await page.addInitScript(() => {
+          const nativeRaf=globalThis.requestAnimationFrame;
+          const audit={schema:'H_EARTH_GEN3226_FRAME_WAIT_AUDIT_v1',
+            all:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            rendererYield:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            wideTrialYield:{requested:0,completed:0,waitMs:0,maxWaitMs:0},
+            sampleStacks:[],firstEnterActionElapsedMs:null};
+          globalThis.__hEarthGen3226FrameWaitAudit=audit;
+          if(typeof nativeRaf!=='function')return;
+          globalThis.requestAnimationFrame=function(callback){
+            const t=performance.now(),stack=(new Error()).stack??'';
+            const rendererYield=stack.includes('yieldToBrowserPaint');
+            const wideTrialYield=rendererYield&&stack.includes('buildWideExistingGrassTrial');
+            if(rendererYield&&audit.sampleStacks.length<6)
+              audit.sampleStacks.push(stack.split('\\n').slice(0,7).join(' | ').slice(0,650));
+            const track=[audit.all,...(rendererYield?[audit.rendererYield]:[]),...(wideTrialYield?[audit.wideTrialYield]:[])];
+            for(const p of track)p.requested++;
+            return nativeRaf.call(globalThis,function(timestamp){
+              const wait=performance.now()-t;
+              for(const p of track){p.completed++;p.waitMs+=wait;p.maxWaitMs=Math.max(p.maxWaitMs,wait);}
+              return callback(timestamp);
+            });
+          };
+        });
+        page.on('pageerror',e=>errors.push(String(e?.message||e)));
+        page.on('requestfailed',r=>failures.push({url:r.url(),reason:r.failure()}));
+        page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+        try {
+        if(label==='unoptimizedSchedulingControl'){
+          // Disposable browser-response experiment only. No on-disk source,
+          // committed product version, or original Gen3226 exact source case is
+          // modified. Only the wide pass's cadence is altered.
+          await page.route('**/render/vegetation-single-owner.prototype.v1.js*',async route=>{
+            const response=await route.fetch(),original=await response.text();
+            const a=` let added=0,candidates=0;
+ let nextWideYieldAt=performance.now()+20;
+ const filledCellKeys=new Set();`;
+            const b='   if(added%256<cellAdded&&performance.now()>=nextWideYieldAt){await yieldControl();nextWideYieldAt=performance.now()+20;}';
+            const functionStart=original.indexOf('export async function buildWideExistingGrassTrial(');
+            const functionEnd=original.indexOf('/** Extend only the existing ravine atlas',functionStart);
+            if(functionStart<0||functionEnd<=functionStart)
+              throw Error('WIDE_SCHEDULING_PROBE_FUNCTION_BOUNDARY_DRIFT');
+            const wideOriginal=original.slice(functionStart,functionEnd);
+            if(wideOriginal.split(a).length!==2||wideOriginal.split(b).length!==2)
+              throw Error('WIDE_SCHEDULING_PROBE_SOURCE_MARKER_DRIFT');
+            const wideModified=wideOriginal.replace(a,` let added=0,candidates=0;
+ const filledCellKeys=new Set();`).replace(b,'   if(added%256<cellAdded)await yieldControl();');
+            const modified=original.slice(0,functionStart)+wideModified+original.slice(functionEnd);
+            RECEIPT.schedulingVariant={schema:'H_EARTH_GEN3226_DISPOSABLE_YIELD_CADENCE_PROBE_v1',
+              label,sourceHead:CAND,browserOnly:true,productSourceChanged:false,
+              originalServedScriptSha256:HASH(original),instrumentedServedScriptSha256:HASH(modified),
+              inMemoryChange:'REVERT_OPTIMIZED_20MS_SCHEDULING_TO_PREVIOUS_EVERY_256_ROOT_FRAME_YIELD_IN_BROWSER_ONLY',
+              fullBrowserScriptNotEqualToProductBytes:true,
+              injectionApplied:true,originalHeadImmutable:true};
+            await route.fulfill({response,body:modified});
+          });
+        }
+        await page.route('**/functional-landscape/navigation.js*',async route=>{
+          const response=await route.fetch(),source=await response.text();
+          const coast="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
+          const marker='export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){';
+          if(source.split(coast).length!==2||source.split(marker).length!==2)throw Error('HISTORICAL_NAVIGATION_FIXTURE_DRIFT:'+label);
+          const waypoints=TARGETS.map(t=>"QUALIFIER_"+t.id+":{waypointId:'QUALIFIER_"+t.id+"',position:{x:"+t.x+",z:"+t.z+"},yawDegrees:"+t.yaw+",pitchDegrees:"+t.pitch+"}").join(',');
+          const modified=source.replace(coast,coast+','+waypoints)
+           .replace(marker,marker+"if(globalThis.__hEarthQualifierWaypoint){intent={action:'GOTO_WAYPOINT',waypointId:globalThis.__hEarthQualifierWaypoint};delete globalThis.__hEarthQualifierWaypoint;}");
+          fixtureHashes.push({original:HASH(source),intercepted:HASH(modified),waypoints:TARGETS.length});
+          await route.fulfill({response,body:modified});
+        });
+        await page.goto('http://127.0.0.1:'+port+'/showroom/globe/h-earth/?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:90000});
+        const observe=()=>page.evaluate(()=>{
+          const root=document.getElementById('h-earth-functional-landscape-route');
+          const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+          const route=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+          const gpu=route?.getLiveGpuReceipt?.(),resources=gpu?.resources,nav=route?.getIntakeReceipt?.()?.currentNavigationState;
+          const owner=resources?.singleOwnerVegetation,background=gpu?.vegetationBackground;
+          const uniformGroundAdmission=resources?.uniformGroundAdmission??null;
+          return {ready:root?.dataset.run8eReady==='true',error:root?.dataset.run8eError==='true',
+            canvasWidth:canvas?.width??0,canvasHeight:canvas?.height??0,
+            webgl:resources?.context?.created===true&&resources?.context?.lost===false,
+            frames:gpu?.counters?.gpuFramebufferPresentationCount??0,
+            nav:nav?{position:nav.position,sequence:nav.sequence,accepted:nav.accepted,action:nav.action,pitchDegrees:nav.pitchDegrees,yawDegrees:nav.yawDegrees,terrainSupported:nav.terrainSupported}:null,
+            owner:owner?{originalRootCount:owner.originalRootCount,installedRootCount:owner.installedRootCount,
+              gpuRequestedBytes:owner.gpuRequestedBytes,gpuUploadedBytes:owner.gpuUploadedBytes,
+              gpuAllocatedBytes:owner.gpuAllocatedBytes,maximumPackedBytes:owner.maximumPackedBytes,
+              globalMaximumPackedBytes:owner.globalMaximumPackedBytes,
+              preparationMs:owner.preparationMs,cpuDrawSubmissionMilliseconds:owner.cpuDrawSubmissionMilliseconds,
+              rootOwnerCount:owner.rootOwnerCount,gpuAllocationVerified:owner.gpuAllocationVerified,
+              gpuUploadCount:owner.gpuUploadCount,drawCallCount:owner.drawCallCount,
+              selectedFineRoots:owner.selectedFineRoots,visibleCoarseRoots:owner.visibleCoarseRoots,
+              woodlandSeamBridge:owner.woodlandSeamBridge??null,
+              wideGrassTrial:owner.wideGrassTrial??null,uploadScheduling:owner.uploadScheduling??null,
+              maximumRoots:owner.maximumRoots,maximumWoodlandRoots:owner.maximumWoodlandRoots,
+              gpuObservedBufferBytes:owner.gpuObservedBufferBytes,visibleCoarseRoots:owner.visibleCoarseRoots}:null,
+            uniformGroundAdmission,
+            backgroundPhase:background?.phase??null,backgroundError:background?.error??null,
+            firstFailure:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage??null,
+            vegetationState:root?.dataset.vegetationState??null,
+            globalGpuResident:root?.dataset.globalGroundcoverGpuResident??null,
+            woodlandGpuResident:root?.dataset.woodlandGrassGpuResident??null,
+            progressText:document.getElementById('h-earth-vegetation-progress')?.textContent?.slice(0,240)??null,
+            loaderText:document.querySelector('.h-earth-experience-loader')?.textContent?.slice(0,240)??null,
+            startupMode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,
+            enterEnabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled===false};
+        });
+        let state,ready=false,provisionalImageCaptured=false,controlGestureSent=false,entryClicked=false;
+        for(let i=0;i<420;i++){
+          state=await observe();
+          if(reasonCensus&&state.uniformGroundAdmission&&i%2===0){const a=state.uniformGroundAdmission;const last=RECEIPT.admissionObservations.at(-1);if(!last||last.receipt.tested!==a.tested)RECEIPT.admissionObservations.push({stage:'ENTER_WAIT',waitSeconds:i,vegetationState:state.vegetationState,backgroundPhase:state.backgroundPhase,receipt:a});}
+          if(i%30===0)RECEIPT.progress.push({label,device,waitSeconds:i,
+            frames:state.frames,ready:state.ready,vegetationState:state.vegetationState,
+            backgroundPhase:state.backgroundPhase,ownerBridgeRoots:state.owner?.woodlandSeamBridge?.addedRoots??null,
+            ownerWideRoots:state.owner?.wideGrassTrial?.addedRoots??null,
+            progressText:state.progressText,loaderText:state.loaderText,
+            ownerRoots:state.owner?.installedRootCount??null,firstFailure:state.firstFailure});
+          if(!provisionalImageCaptured&&state.webgl&&state.frames>0&&state.canvasWidth>=100&&state.canvasHeight>=100){
+            const filename=label+'-'+device+'-first-real-webgl-NOT-MATURE.png';
+            const bytes=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+filename});
+            if(bytes.length>=1024){
+              RECEIPT.provisional.push({label,device,head,filename,imageBytes:bytes.length,imageSha256:HASH(bytes),
+                actualWebglPresentationCount:state.frames,vegetationMaturity:'NOT_PROVEN',
+                sourceStateAtCapture:state});
+              provisionalImageCaptured=true;
+            }
+          }
+          // The real entrance intentionally keeps run8eReady=false until a changed
+          // canvas view has rendered and its Enter Gratitude control was clicked.
+          // Perform the existing user interaction, never fabricate READY or bypass it.
+          if(state.startupMode==='test'&&!controlGestureSent){
+            const accepted=await page.evaluate(()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              return c?.dispatchEvent(new WheelEvent('wheel',{deltaY:-280,bubbles:true,cancelable:true}))??false;
+            });
+            controlGestureSent=true;
+            RECEIPT.progress.push({label,device,stage:'ACTUAL_CONTROL_GESTURE_SENT',gesture:'wheel',eventDispatchReturned:accepted});
+          }
+          if(state.startupMode==='ready'&&state.enterEnabled&&!entryClicked){
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            entryClicked=true;
+            RECEIPT.progress.push({label,device,stage:'EXISTING_GRATITUDE_ENTRANCE_CLICKED'});
+            await page.evaluate(()=>{const a=globalThis.__hEarthGen3226FrameWaitAudit;
+              if(a&&a.firstEnterActionElapsedMs===null)a.firstEnterActionElapsedMs=performance.now();});
+          }
+          if(state.ready&&state.canvasWidth>=100&&state.canvasHeight>=100&&state.webgl&&state.frames>0){ready=true;break}
+          if(state.error||state.firstFailure||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(!ready)throw Error('ACTUAL_WEBGL_NOT_RENDERED:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,4),failures:failures.slice(0,4)}));
+        const early=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:OUTPUT+'/'+label+'-'+device+'-early.png'});
+        if(early.length<1024)throw Error('ACTUAL_EARLY_CANVAS_EMPTY:'+label);
+        let mature=false;
+        for(let i=0;i<540;i++){
+          state=await observe();const o=state.owner;
+          if(reasonCensus&&state.uniformGroundAdmission&&i%2===0){const a=state.uniformGroundAdmission;const last=RECEIPT.admissionObservations.at(-1);if(!last||last.receipt.tested!==a.tested)RECEIPT.admissionObservations.push({stage:'VEGETATION_WAIT',waitSeconds:i,vegetationState:state.vegetationState,backgroundPhase:state.backgroundPhase,receipt:a});}
+          if(state.vegetationState==='prepared'&&state.backgroundPhase==='OWNER_PREPARED'&&
+             o?.installedRootCount>0&&o?.rootOwnerCount===1&&o?.gpuAllocationVerified===true&&
+             o?.gpuUploadCount>0&&state.frames>0&&
+             (label==='baseline'||o.woodlandSeamBridge?.addedRoots>0)){
+            if(o.drawCallCount>0&&o.selectedFineRoots>0){mature=true;break}
+            if(i%8===0){await page.locator('#h-earth-functional-landscape-canvas').hover();await page.mouse.wheel(0,1)}
+          }
+          if(state.error||state.firstFailure||state.backgroundError||errors.length||failures.length)break;
+          await DELAY(1000);
+        }
+        if(positiveX&&label!=='baseline'&&state.owner?.wideGrassTrial?.failureCode)
+          throw Error('GEN3226_WIDE_DRYLAND_REJECTED:'+JSON.stringify(state.owner.wideGrassTrial));
+        if(positiveX&&label!=='baseline'&&state.owner?.woodlandSeamBridge?.failureCode){
+          throw Error('GEN3217_DRY_STAND_CONNECTION_NOT_AVAILABLE:'+JSON.stringify(state.owner.woodlandSeamBridge));
+        }
+        if(!mature){
+          await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-incomplete-residency.png',fullPage:true});
+          throw Error('MATURE_VEGETATION_NOT_PROVEN:'+label+':'+device+':'+JSON.stringify({state,errors:errors.slice(0,3),failures:failures.slice(0,3)}));
+        }
+        RECEIPT.frameSchedulingAudit??={schema:'H_EARTH_GEN3226_FRAME_WAIT_COMPARISON_v1',
+          methodology:'Browser native RAF delegated unchanged; call stacks identify renderer yield origins. Stack sampling and measurement add overhead. This is instrumented first-party Chromium/SwiftShader, not phone GPU, and not a perfect causal attribution.',cases:{}};
+        RECEIPT.frameSchedulingAudit.cases[label+'-'+device]=await page.evaluate(()=>{
+          const a=globalThis.__hEarthGen3226FrameWaitAudit;
+          if(!a)return {instrumentationUnavailable:true};
+          const copy=p=>({requested:p.requested,completed:p.completed,
+            waitMs:p.waitMs,maxWaitMs:p.maxWaitMs});
+          return {all:copy(a.all),rendererYield:copy(a.rendererYield),
+            wideTrialYield:copy(a.wideTrialYield),sampleStacks:a.sampleStacks,
+            firstEnterActionElapsedMs:a.firstEnterActionElapsedMs,
+            elapsedAtMatureMs:performance.now(),timestampBasis:'navigation performance.now()',
+            scope:'ORIGINAL_SERVED_SOURCE_WITH_REQUEST_ANIMATION_FRAME_OBSERVATION_WRAPPER'};
+        });
+        if(reasonCensus){const a=state.uniformGroundAdmission;if(a?.schema!=='H_EARTH_UNIFORM_GROUND_ADMISSION_v1'||!Number.isInteger(a.tested)||!a.rejections||a.maximumSandCoverage!==0.12)throw Error('GEN3211_ACTUAL_ADMISSION_RECEIPT_INVALID:'+JSON.stringify(a));RECEIPT.admissionCensus={scope:'ALL_SHARED_ADMISSION_CALLS_DURING_CURRENT_SINGLE_OWNER_PREPARATION_NOT_ISOLATED_BRIDGE_DELTA',source:'EXISTING_GET_LIVE_GPU_RECEIPT',exactProductHead:CAND,fullAtMature:a,bridgeGroupedRejections:state.owner?.woodlandSeamBridge?.rejected??null,bridgeAddedRoots:state.owner?.woodlandSeamBridge?.addedRoots??null};}
+        const canvas=page.locator('#h-earth-functional-landscape-canvas');
+        for(const target of views){
+          const before=await observe();
+          const navigationStarted=Date.now();
+          await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id},target.id);
+          await canvas.hover();await page.mouse.wheel(0,1);
+          let actual,match=false;
+          for(let i=0;i<120;i++){
+            actual=await observe();const n=actual.nav;
+            if(n?.sequence>before.nav?.sequence&&n?.accepted===true&&n.action?.startsWith('GOTO_WAYPOINT')&&n.terrainSupported===true&&
+              Math.hypot(n.position?.x-target.x,n.position?.z-target.z)<.04&&Math.abs(n.pitchDegrees-target.pitch)<.05&&actual.frames>before.frames){match=true;break}
+            if(actual.error||actual.firstFailure||errors.length||failures.length)break;
+            await DELAY(250);
+          }
+          if(!match)throw Error('GEN3210_MATCHED_CAMERA_NOT_REACHED:'+label+':'+device+':'+target.id+':'+JSON.stringify(actual));
+          if(actual.vegetationState!=='prepared'||actual.backgroundPhase!=='OWNER_PREPARED'||!actual.owner?.gpuAllocationVerified||actual.owner.gpuUploadCount<=0||!(actual.owner.installedRootCount>0)||(label==='candidate'&&!(actual.owner.woodlandSeamBridge?.addedRoots>0)))
+            throw Error('GEN3210_SINGLE_OWNER_GPU_RESIDENCY_REGRESSION:'+label+':'+target.id+':'+JSON.stringify(actual.owner));
+          // A mature, GPU-resident population can be fully frustum-culled in one
+          // camera direction. Zero per-view draw calls are visibility evidence,
+          // not missing allocation/upload; keep the exact recorded state.
+          const filename=label+'-'+target.id+'-'+device+'-mature-webgl.png';
+          const bytes=await canvas.screenshot({path:OUTPUT+'/'+filename});
+          if(bytes.length<1024)throw Error('EMPTY_WEBGL_CAPTURE:'+filename);
+          RECEIPT.images.push({label,head,device,view:target.id,target,actualCamera:actual.nav,
+            navigationToFrameMilliseconds:Date.now()-navigationStarted,
+            filename,imageSha256:HASH(bytes),imageBytes:bytes.length,
+            singleOwner:actual.owner,perViewCulled:actual.owner.drawCallCount===0, ...(reasonCensus?{sharedGroundAdmission:actual.uniformGroundAdmission}:{}),preparationPhase:actual.backgroundPhase,ownerDisposition:'PENDING',photographedSeamLocationUnverified:true});
+        }
+        RECEIPT[label][device]={viewport,fixtureHashes,errors,failedRequests:failures};
+        await context.close();
+        }catch(e){
+          RECEIPT.errors.push('CAPTURE_CASE_FAILED:'+label+':'+device+':'+String(e?.stack||e));
+          try{await page.screenshot({path:OUTPUT+'/'+label+'-'+device+'-failure-page.png',fullPage:true})}catch{}
+          await context.close().catch(()=>{});
+          labelFailed=true;
+          break;
+        }
+      }
+      server.kill('SIGTERM');
+      if(labelFailed)continue;
+      if(GIT(['status','--porcelain'],directory))throw Error('CANDIDATE_SOURCE_MUTATED:'+label);
+    }
+    if(RECEIPT.images.length!==(positiveX?9:4)||RECEIPT.images.filter(v=>v.label==='candidate').length!==4||
+       (positiveX&&RECEIPT.images.filter(v=>v.label==='unoptimizedSchedulingControl').length!==1))
+      throw Error('GEN3210_EXACT_CANDIDATE_IMAGE_SET_INCOMPLETE');
+    if(positiveX){
+      const before=RECEIPT.images.find(x=>x.label==='baseline')?.singleOwner;
+      const after=RECEIPT.images.find(x=>x.label==='candidate')?.singleOwner;
+      if(!before||!after||!(after.wideGrassTrial?.addedRoots>0)||
+         before.originalRootCount!==after.originalRootCount||
+         after.installedRootCount-before.installedRootCount!==after.wideGrassTrial.addedRoots||
+         (after.woodlandSeamBridge?.addedRoots??0)!==(before.woodlandSeamBridge?.addedRoots??0))
+        throw Error('GEN3217_ORIGINAL_ROOT_PARITY_OR_NEW_ROOT_DELTA_FAILED:'+JSON.stringify({before,after}));
+      if(after.wideGrassTrial.addedRoots>500000||
+         after.gpuUploadedBytes!==after.gpuRequestedBytes||
+         after.gpuAllocatedBytes<after.gpuRequestedBytes||
+         after.gpuAllocatedBytes>after.maximumPackedBytes)
+        throw Error('GEN3220_ROOT_OR_GPU_ALLOCATION_BOUND_FAILED:'+JSON.stringify(after));
+      if(RECEIPT.frameSchedulingAudit){
+        const b=RECEIPT.frameSchedulingAudit.cases['baseline-phone'],
+              c=RECEIPT.frameSchedulingAudit.cases['candidate-phone'];
+        if(b&&c&&!b.instrumentationUnavailable&&!c.instrumentationUnavailable){
+          RECEIPT.frameSchedulingAudit.delta={
+            rendererYieldRequestDelta:c.rendererYield.requested-b.rendererYield.requested,
+            rendererYieldWaitMsDelta:c.rendererYield.waitMs-b.rendererYield.waitMs,
+            wideTrialYieldRequested:c.wideTrialYield.requested,
+            wideTrialYieldWaitMs:c.wideTrialYield.waitMs,
+            elapsedAtMatureMsDelta:c.elapsedAtMatureMs-b.elapsedAtMatureMs,
+            wideAttributionDefinitive:false};
+        }
+      }
+      RECEIPT.rootDelta={coverageTarget:'FULL_SOURCE_GROUNDED_POSITIVE_X_DRY_CORRIDOR',beforeInstalled:before.installedRootCount,afterInstalled:after.installedRootCount,baselineBridgeRoots:before.woodlandSeamBridge?.addedRoots??0,
+        newRoots:after.wideGrassTrial.addedRoots,wideGrassTrial:after.wideGrassTrial,
+        priorInterimRoots:before.woodlandSeamBridge?.addedRoots??0,
+        preparationMsBaseline:before.preparationMs,preparationMsCandidate:after.preparationMs,
+        comparisonOfOriginalExactByteMatchedVersions:true,
+        originalRootParity:true,verifiedGpuUpload:after.gpuUploadCount>0,
+        observedGrassDrawnInCandidateDirections:RECEIPT.images.filter(x=>x.label==='candidate'&&x.singleOwner.drawCallCount>0).map(x=>x.view)};
+      if(!RECEIPT.rootDelta.observedGrassDrawnInCandidateDirections.length)
+        throw Error('GEN3217_NO_GRASS_VISIBLE_IN_ANY_MATCHED_CAMERA');
+      RECEIPT.imageDifferences=['infillCenter_N','infillCenter_E','corridorObserver_NW','corridorObserver_W'].map(view=>{
+        const baseline=RECEIPT.images.find(x=>x.label==='baseline'&&x.view===view);
+        const candidate=RECEIPT.images.find(x=>x.label==='candidate'&&x.view===view);
+        return {view,pngBytesDifferent:baseline.imageSha256!==candidate.imageSha256,
+          baselineSha256:baseline.imageSha256,candidateSha256:candidate.imageSha256};
+      });
+      if(!RECEIPT.imageDifferences.some(x=>x.pngBytesDifferent))
+        throw Error('GEN3217_MATCHED_WEBGL_IMAGES_BYTE_IDENTICAL');
+      const sampled=RECEIPT.images.find(x=>x.label==='unoptimizedSchedulingControl')?.singleOwner;
+      if(!RECEIPT.schedulingVariant?.injectionApplied||!sampled||
+        sampled.installedRootCount!==after.installedRootCount||
+        sampled.originalRootCount!==after.originalRootCount||
+        sampled.gpuRequestedBytes!==after.gpuRequestedBytes||
+        sampled.gpuUploadedBytes!==after.gpuUploadedBytes||
+        sampled.gpuAllocatedBytes!==after.gpuAllocatedBytes||
+        sampled.wideGrassTrial?.addedRoots!==after.wideGrassTrial?.addedRoots||
+        sampled.wideGrassTrial?.cellsFilled!==after.wideGrassTrial?.cellsFilled||
+        JSON.stringify(sampled.wideGrassTrial?.rejected)!==JSON.stringify(after.wideGrassTrial?.rejected))
+        throw Error('GEN3226_IN_MEMORY_SCHEDULING_ROOT_GPU_CENSUS_PARITY_FAILED');
+      const nativeTiming=RECEIPT.frameSchedulingAudit?.cases?.['candidate-phone'],
+            probeTiming=RECEIPT.frameSchedulingAudit?.cases?.['unoptimizedSchedulingControl-phone'];
+      RECEIPT.schedulingVariant.measured={
+        optimizedPreparationMs:after.preparationMs,unoptimizedControlPreparationMs:sampled.preparationMs,
+        optimizedPreparationSavedMs:sampled.preparationMs-after.preparationMs,
+        originalWideWaitMs:nativeTiming?.wideTrialYield?.waitMs??null,
+        variantWideWaitMs:probeTiming?.wideTrialYield?.waitMs??null,
+        originalWideYieldRequests:nativeTiming?.wideTrialYield?.requested??null,
+        variantWideYieldRequests:probeTiming?.wideTrialYield?.requested??null,
+        originalEnterElapsedMs:nativeTiming?.firstEnterActionElapsedMs??null,
+        variantEnterElapsedMs:probeTiming?.firstEnterActionElapsedMs??null,
+        originalMatureElapsedMs:nativeTiming?.elapsedAtMatureMs??null,
+        variantMatureElapsedMs:probeTiming?.elapsedAtMatureMs??null,
+        rootGpuCensusParity:true,rootIdentityByteParityNotDirectlyMeasured:true,
+        physicalAndroidMeasured:false};
+      const optimizedNW=RECEIPT.images.find(v=>v.label==='candidate'&&v.view==='corridorObserver_NW');
+      const controlNW=RECEIPT.images.find(v=>v.label==='unoptimizedSchedulingControl'&&v.view==='corridorObserver_NW');
+      RECEIPT.schedulingVariant.matureNwPngSha256Identical=!!optimizedNW&&!!controlNW&&optimizedNW.imageSha256===controlNW.imageSha256;
+      if(!RECEIPT.schedulingVariant.matureNwPngSha256Identical)throw Error('GEN3230_OPTIMIZED_TO_UNOPTIMIZED_MATURE_NW_PNG_PARITY_FAIL');
+      RECEIPT.schedulingVariant.result='GEN3230_OPTIMIZED_VS_UNOPTIMIZED_CONTROL_BROWSER_COMPARISON_CAPTURED';
+    }
+    RECEIPT.result=RECEIPT.nativeFull?.requiresIndependentReview||RECEIPT.nativeFocused?.requiresIndependentReview?'CAPTURED_WITH_UNRESOLVED_NATIVE_TEST_DIFFERENCES':'CAPTURED_EXPLORATORY_OWNER_REVIEW_PENDING';
+  }catch(e){RECEIPT.errors.push(String(e?.stack||e));throw e}
+  finally{
+    await fs.writeFile(OUTPUT+'/receipt.json',JSON.stringify(RECEIPT,null,2)+'\n');
+    if(BROWSER)await BROWSER.close().catch(()=>{});
+    for(const server of SERVERS)server.kill('SIGTERM');
+    for(const dir of WORKTREES.reverse())try{GIT(['worktree','remove','--force',dir])}catch{}
+  }
 }

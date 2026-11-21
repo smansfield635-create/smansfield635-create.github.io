@@ -371,7 +371,7 @@ test('Gen3310 original M1.3 remains protected while C2-B editing paths survive',
   for(const marker of ["new DecompressionStream('deflate-raw')","crypto.subtle.digest","M13_ZIP_SHA","M13_MEMBER_HASHES","originalEyeAt","nextSource.pose(index)"])
     assert(html.includes(marker),marker);
   assert(!html.includes('src="https://drive.google.com'));
-  for(const marker of ['sourceGeometry(originalSource','originalTexturedShaders','originalEyeShaders','originalSource?device.createMesh','Original M1.3 is read-only','restoreSculptStudioState','replaceFourSculptViewMeshes','createSculptReferenceImportGate'])
+  for(const marker of ['sourceGeometry(texturedSource','originalTexturedShaders','originalEyeShaders','texturedSource?device.createMesh','Original M1.3 is read-only','restoreSculptStudioState','replaceFourSculptViewMeshes','createSculptReferenceImportGate'])
     assert(browser.includes(marker),marker);
   assert(browser.includes('if(originalSource)throw new Error(\'M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN\')'));
   assert(session.includes('forequarterEditAllowed:false'));
@@ -403,7 +403,7 @@ test('Gen3310 source-mode installation commits state only on success and exposes
   const {readFileSync}=await import('node:fs');
   const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
   const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
-  assert.match(browser,/const view=\{name:names\[i\],canvas,device\};views\.push\(view\);[\s\S]*?const texture=originalSource/);
+  assert.match(browser,/const view=\{name:names\[i\],canvas,device\};views\.push\(view\);[\s\S]*?const texture=texturedSource/);
   assert.match(browser,/catch\(e\)\{releaseSculptStudioResources\(views,listeners\);throw e;\}/);
   assert.match(browser,/catch\(error\)\{releaseSculptStudioResources\(views,listeners\);throw error;\}/);
   assert.match(html,/const next=replaceSculptStudioAtomically\(previous,build\);\s*studio=next;/);
@@ -449,4 +449,28 @@ test('Gen3310 original M1.3 eye anchor is frozen at rest and carried through hop
   assert.deepEqual(calls,['anchor-rest','follow-posed-surface','anchor-rest']);
   assert.deepEqual([...rest.positions],[.74,.668,-1].map(Math.fround));
   assert.match(html,/const restFrame=nextSource\.pose\(52\),frame=index===52\?restFrame:nextSource\.pose\(index\)/);
+});
+
+
+test('Gen3430 original remains immutable while a separate A4 derivative action is explicit',async()=>{
+  const {readFileSync}=await import('node:fs');
+  const html=readFileSync(new URL('../../graphics-engine/sculpt-lab/index.html',import.meta.url),'utf8');
+  const browser=readFileSync(new URL('./dgb.native-sculpt-browser.v1.mjs',import.meta.url),'utf8');
+  const kernel=readFileSync(new URL('./dgb.native-sculpt-session.v1.mjs',import.meta.url),'utf8');
+  assert.match(html,/id="createDerivative"[^>]*disabled/);
+  assert.match(html,/createM13EditableDerivative\(originalRestFrame,M13_ZIP_SHA\)/);
+  assert.match(html,/get editableA4Derivative\(\)/);
+  assert.match(html,/id="region"[\s\S]*?value="foreleg"/);
+  assert.match(browser,/const originalSource=fixture\.sourceRender\?\.readOnlyOriginal===true/);
+  assert.match(browser,/const editableSource=fixture\.sourceRender\?\.editableDerivative===true/);
+  assert.match(browser,/if\(originalSource\)return drawAll\(\)/);
+  assert.match(browser,/editableSource\?sourceGeometry\(editableSource,session\.getPositions\(\),session\.getNormals\(\)\)/);
+  assert.match(browser,/A4_DERIVATIVE_TOPOLOGY_CHANGE_FORBIDDEN/);
+  assert.match(browser,/sourceGeometry\(texturedSource/);
+  assert.match(browser,/const texture=texturedSource/);
+  assert.match(browser,/editableSource\?session\.serialize\(\)/);
+  assert.match(kernel,/export function createM13EditableDerivative\(/);
+  assert.match(kernel,/verifyA4DerivativeNoNewIntersections/);
+  assert.match(kernel,/DGB_A4_EDITABLE_DERIVATIVE_V1/);
+  assert.match(kernel,/if\(readOnlyOriginal\)throw new Error\('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN'\)/);
 });

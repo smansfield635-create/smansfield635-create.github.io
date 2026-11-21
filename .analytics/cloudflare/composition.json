@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-21T05:24:36Z",
+  "generatedAt": "2026-11-21T06:32:23Z",
   "window": {
-    "start": "2026-10-22T05:24:36Z",
-    "end": "2026-11-21T05:24:36Z"
+    "start": "2026-10-22T06:32:23Z",
+    "end": "2026-11-21T06:32:23Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 604,
-        "visits": 604
+        "pageLoads": 594,
+        "visits": 594
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -94,8 +94,8 @@
       },
       {
         "value": "/preflight/chamber/**",
-        "pageLoads": 2,
-        "visits": 2
+        "pageLoads": 7,
+        "visits": 7
       },
       {
         "value": "/door/canonical-object.html",
@@ -106,8 +106,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1169,
-        "visits": 1169
+        "pageLoads": 1164,
+        "visits": 1164
       },
       {
         "value": "diamondgatebridge.com",
@@ -133,8 +133,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1208,
-        "visits": 1127
+        "pageLoads": 1203,
+        "visits": 1122
       },
       {
         "value": "CN",
@@ -155,13 +155,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1139,
-        "visits": 1069
+        "pageLoads": 1132,
+        "visits": 1062
       },
       {
         "value": "mobile",
-        "pageLoads": 137,
-        "visits": 127
+        "pageLoads": 139,
+        "visits": 129
       },
       {
         "value": "tablet",
@@ -172,18 +172,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 755,
-        "visits": 755
+        "pageLoads": 745,
+        "visits": 745
       },
       {
         "value": "Chrome",
-        "pageLoads": 181,
-        "visits": 168
+        "pageLoads": 183,
+        "visits": 170
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 84,
-        "visits": 84
+        "pageLoads": 86,
+        "visits": 86
       },
       {
         "value": "Firefox",
@@ -192,8 +192,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 79,
-        "visits": 48
+        "pageLoads": 80,
+        "visits": 49
       },
       {
         "value": "Unknown",
@@ -219,18 +219,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 805,
-        "visits": 805
+        "pageLoads": 797,
+        "visits": 797
       },
       {
         "value": "Windows",
-        "pageLoads": 238,
-        "visits": 169
+        "pageLoads": 239,
+        "visits": 170
       },
       {
         "value": "Android",
-        "pageLoads": 86,
-        "visits": 85
+        "pageLoads": 88,
+        "visits": 87
       },
       {
         "value": "Unknown",
@@ -251,20 +251,20 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 756,
-        "visits": 755
+        "pageLoads": 746,
+        "visits": 745
       },
       {
         "value": "0",
-        "pageLoads": 522,
-        "visits": 442
+        "pageLoads": 527,
+        "visits": 447
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1219,
-        "visits": 1197
+        "pageLoads": 1214,
+        "visits": 1192
       },
       {
         "value": "routing-apis",
@@ -275,8 +275,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1258,
-        "visits": 1197
+        "pageLoads": 1253,
+        "visits": 1192
       },
       {
         "value": "cache",
@@ -287,15 +287,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1278,
-        "visits": 1197
+        "pageLoads": 1273,
+        "visits": 1192
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1278,
-        "visits": 1197
+        "pageLoads": 1273,
+        "visits": 1192
       }
     ]
   }

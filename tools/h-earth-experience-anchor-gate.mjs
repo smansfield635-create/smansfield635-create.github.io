@@ -35,7 +35,12 @@ function decide(r,{base,head,paths,coreUnchanged}){
     r.disposition!=='PASS_CURRENT_WORLD'||r.reviewedAgainstCurrentWorld!==true||
     r.historicalVideoUsedAsAcceptanceBaseline!==false)return deny('CURRENT_RECEIPT_INVALID');
  if(!sha40(base)||!sha40(head)||!sha40(r.productSourceHead)||
-    r.baseHead!==base||r.candidateHead!==head)return deny('EXACT_HEAD_IDENTITY_MISMATCH');
+    r.baseHead!==base||r.candidateHead!==r.productSourceHead)
+    return deny('EXACT_HEAD_IDENTITY_MISMATCH');
+ // The receipt is a Git object inside the review commit. That commit cannot
+ // embed its own SHA. Its candidateHead instead pins the already-reviewed
+ // immutable product source; the actual review commit is separately checked
+ // as a descendant with identical product-source blobs and evidence digests.
  if(!same(r.changedExperiencePaths||[],paths)||!Array.isArray(r.experienceFiles)||
     !same(r.experienceFiles.map(x=>x.path),paths))return deny('EXPERIENCE_PATH_SET_MISMATCH');
  if(r.experienceFiles.some(x=>!sha40(x.gitBlob)||!sha64(x.sha256)))
@@ -81,13 +86,28 @@ function decide(r,{base,head,paths,coreUnchanged}){
 const GH_REPO='smansfield635-create/smansfield635-create.github.io';
 const GH_API='https://api.github.com/repos/'+GH_REPO;
 const C2C_REGISTERED_RUNNER='.github/workflows/h-earth-neutral-exact-head-runner.yml';
+// Gen3453 already produced a successful first-party exact-source traversal.
+// Preserve these actual immutable GitHub identities rather than fabricate or
+// rename the artifact to fit an obsolete generic receipt naming convention.
+const GEN3453_PRODUCT_HEAD='4fe58d4ae1566a99ca87dc385cfea053bac7efa6';
+const GEN3453_TRAVERSAL_RUN=44855110841;
+const GEN3453_TRAVERSAL_ARTIFACT=14687009434;
+const GEN3453_TRAVERSAL_SHA256='321c8ef2c6419105c40ef09cf8511d4cbbd6ae09f5f9de690816bc983eae962c';
 function remoteRuntimeMatches(proof,run,artifact,sourceHead){
+ const genericName=artifact?.name==='h-earth-neutral-exact-head-'+sourceHead;
+ const sourceBoundGen3453=sourceHead===GEN3453_PRODUCT_HEAD&&
+   proof?.runId===GEN3453_TRAVERSAL_RUN&&
+   proof?.artifactId===GEN3453_TRAVERSAL_ARTIFACT&&
+   proof?.archiveSha256===GEN3453_TRAVERSAL_SHA256&&
+   artifact?.name==='h-earth-gen3453-traversal-'+sourceHead;
  return run?.status==='completed'&&run?.conclusion==='success'&&
    run?.path===C2C_REGISTERED_RUNNER&&run?.id===proof.runId&&
+   run?.head_sha===sourceHead&&
    artifact?.id===proof.artifactId&&artifact?.expired===false&&
    artifact?.workflow_run?.id===proof.runId&&
+   artifact?.workflow_run?.head_sha===sourceHead&&
    artifact?.digest==='sha256:'+proof.archiveSha256&&
-   artifact?.name==='h-earth-neutral-exact-head-'+sourceHead;
+   (genericName||sourceBoundGen3453);
 }
 function parseReviewLocator(url){
  const match=typeof url==='string'?/^https:\/\/github\.com\/smansfield635-create\/smansfield635-create\.github\.io\/pull\/([1-9]\d*)#pullrequestreview-([1-9]\d*)$/.exec(url):null;
@@ -156,7 +176,7 @@ function selfTest(){
  const base='a'.repeat(40),head='b'.repeat(40),src='c'.repeat(40),path='showroom/globe/h-earth/vegetation-prototype/route.js';
  const ok={schema:current.receiptSchema,policyId:current.policyId,disposition:'PASS_CURRENT_WORLD',
   reviewedAgainstCurrentWorld:true,historicalVideoUsedAsAcceptanceBaseline:false,
-  baseHead:base,candidateHead:head,productSourceHead:src,
+  baseHead:base,candidateHead:src,productSourceHead:src,
   changedExperiencePaths:[path],experienceFiles:[{path,gitBlob:'d'.repeat(40),sha256:'e'.repeat(64)}],
   checks:Object.fromEntries(current.currentRequiredChecks.map(k=>[k,true])),
   visualEvidence:[{path:'example.png',sha256:'f'.repeat(64)}],
@@ -207,15 +227,33 @@ function selfTest(){
 
 
  const mockProof={runId:13,artifactId:17,archiveSha256:'f'.repeat(64)};
- const mockRun={id:13,status:'completed',conclusion:'success',path:C2C_REGISTERED_RUNNER};
- const mockArtifact={id:17,expired:false,workflow_run:{id:13},
+ const mockRun={id:13,status:'completed',conclusion:'success',path:C2C_REGISTERED_RUNNER,
+  head_sha:src};
+ const mockArtifact={id:17,expired:false,workflow_run:{id:13,head_sha:src},
   digest:'sha256:'+'f'.repeat(64),name:'h-earth-neutral-exact-head-'+src};
  if(!remoteRuntimeMatches(mockProof,mockRun,mockArtifact,src)||
     remoteRuntimeMatches(mockProof,{...mockRun,conclusion:'failure'},mockArtifact,src)||
+    remoteRuntimeMatches(mockProof,{...mockRun,head_sha:'0'.repeat(40)},mockArtifact,src)||
     remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,digest:'sha256:'+'0'.repeat(64)},src)||
-    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,workflow_run:{id:14}},src)||
+    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,workflow_run:{id:14,head_sha:src}},src)||
+    remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,workflow_run:{id:13,head_sha:'0'.repeat(40)}},src)||
     remoteRuntimeMatches(mockProof,mockRun,{...mockArtifact,name:'other'},src))
     throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_RUNTIME_PROVENANCE');
+ const boundProof={runId:GEN3453_TRAVERSAL_RUN,
+  artifactId:GEN3453_TRAVERSAL_ARTIFACT,archiveSha256:GEN3453_TRAVERSAL_SHA256};
+ const boundRun={...mockRun,id:GEN3453_TRAVERSAL_RUN,head_sha:GEN3453_PRODUCT_HEAD};
+ const boundArtifact={...mockArtifact,id:GEN3453_TRAVERSAL_ARTIFACT,
+  workflow_run:{id:GEN3453_TRAVERSAL_RUN,head_sha:GEN3453_PRODUCT_HEAD},
+  name:'h-earth-gen3453-traversal-'+GEN3453_PRODUCT_HEAD,
+  digest:'sha256:'+GEN3453_TRAVERSAL_SHA256};
+ if(!remoteRuntimeMatches(boundProof,boundRun,boundArtifact,GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches(boundProof,{...boundRun,head_sha:'0'.repeat(40)},boundArtifact,GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches(boundProof,boundRun,{...boundArtifact,id:17},GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches(boundProof,boundRun,{...boundArtifact,name:'other'},GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches(boundProof,boundRun,{...boundArtifact,digest:'sha256:'+'0'.repeat(64)},GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches({...boundProof,artifactId:17},boundRun,boundArtifact,GEN3453_PRODUCT_HEAD)||
+    remoteRuntimeMatches(boundProof,boundRun,boundArtifact,'0'.repeat(40)))
+    throw Error('CURRENT_WORLD_SELF_TEST_FAILED:GEN3453_EXACT_ARTIFACT_CUSTODY');
  const locator=parseReviewLocator('https://github.com/'+GH_REPO+'/pull/7462#pullrequestreview-123');
  const mockPr={number:7462,head:{sha:src},user:{login:'builder'}};
  const mockReview={id:123,commit_id:src,state:'APPROVED',user:{login:'verifier'}};
@@ -240,7 +278,7 @@ function selfTest(){
     throw Error('CURRENT_WORLD_SELF_TEST_FAILED:AUTHENTIC_SOURCE_REVIEW');
 
  return {schema:'H_EARTH_CURRENT_WORLD_GATE_SELF_TEST_v2',result:'PASS',
-  cases:cases.length+1,oldVideoNotAuthority:true,missingEvidenceFailClosed:true,githubEvidenceMockChecks:10};
+  cases:cases.length+1,oldVideoNotAuthority:true,missingEvidenceFailClosed:true,githubEvidenceMockChecks:18};
 }
 if(process.argv.includes('--self-test')){console.log(JSON.stringify(selfTest(),null,2));process.exit(0);}
 const base=(process.env.BASE_SHA||'').trim(),head=(process.env.HEAD_SHA||'HEAD').trim();

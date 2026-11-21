@@ -2091,7 +2091,7 @@
         "properties": {
           "candidateHead": {
             "type": "string",
-            "const": "8dfd8622684e09bb6435e20d67f95c7e40231138"
+            "const": "12e04206407aae29334b33bccd6c86a38679a9fa"
           },
           "executionHolder": {
             "type": "string",

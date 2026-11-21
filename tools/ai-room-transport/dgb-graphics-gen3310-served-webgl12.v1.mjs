@@ -658,14 +658,14 @@ async function mainGen3430(){
 // Gen3450: read-only, fixed-head Harvest mode. Reuses the original Gen3310
 // served-HTTP browser infrastructure; prior Gen3310/Gen3430 modes remain intact.
 // No approved image, private rabbit data or world source enters this runner.
-const HARVEST_HEAD='8dfd8622684e09bb6435e20d67f95c7e40231138';
+const HARVEST_HEAD='12e04206407aae29334b33bccd6c86a38679a9fa';
 const HARVEST_BASE='716757d92750579f54b3b962b73c925e955bfe5a';
 const HARVEST_OPERATION='GENEROSITY_HARVEST_EXISTING_BROWSER_QUALIFIER_ADAPTATION_20261120_001';
 const HARVEST_SCHEMA='HARVEST_EXACT_HEAD_BROWSER_QUALIFICATION_RECEIPT_v1';
 const HARVEST_ROUTE='/nine-summits/generosity-harvest/index.html';
 const HARVEST_BLOBS=Object.freeze({
   'nine-summits/generosity-harvest/index.html':'fd2078fa00b1e74b68534a0ce0fa4febe5497489',
-  'nine-summits/generosity-harvest/harvest.motion.js':'621b0f6069e4783574aa071cc04fb4f7e75907a7',
+  'nine-summits/generosity-harvest/harvest.motion.js':'d57be966c244f129e2e33f972b19ac4e7b32cb53',
   'assets/engine/dgb.native-webgl-device.v1.mjs':'044fc3b67468072ce2574e324c371bb18f4fecc8',
   'assets/engine/dgb.native-frame-pipeline.v1.mjs':'c6a5d4081193d27cb364b1d1507218e7227a19ee',
   'assets/engine/dgb.native-scene-spatial.v1.mjs':'483736aaf4448e36bc3412c0fc8671f9556539c5',

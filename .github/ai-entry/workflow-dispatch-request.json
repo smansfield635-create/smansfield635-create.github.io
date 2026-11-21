@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "gen3459-alias-hash-qualify-30cf2622-20261120",
+  "capabilityId": "PUBLICATION_SURFACE_ALIAS_VERIFIER_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "30cf2622d836103112a327bf6f58764bcf631f2c",
+    "base_sha": "4fec08dc231bed8f46907c5f67ece827daa79b0a"
   }
 }

@@ -605,6 +605,29 @@ jobs:
                 browserDrawExecuted:false,ownerVisualAcceptance:false,releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3397_EXACT_MODERN_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .exactSourceAndSyntaxChecks=="PASS" and .browserDrawExecuted==false and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'f030a06268c2a98253b24ea4657edd2e7b437764' ]; then
+              # Gen3462 exact P4 candidate only. Unknown-head historical guard below remains unchanged.
+              node --check showroom/globe/h-earth/render/oasis-bank-field.v1.js
+              node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+              test "$(git hash-object showroom/globe/h-earth/render/oasis-bank-field.v1.js)" = 'c536286fde3e73a7873f2dd11dee7b6a515a3e1f'
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 'a63e1c7fd673d85b2e3d4c5df97f3202fab83f51'
+              test "$(git hash-object showroom/globe/h-earth/index.html)" = '0165e4def3601ceaf94cce280f1874e2d472434e'
+              test "$(git hash-object h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs)" = '462741f6ad7769d9b143cb6b77ec7b192868c61e'
+              node --test --test-reporter=tap --test-name-pattern='^(tile planning retains all root identities in finite immutable upload buffers|forward-return selection uses same immutable tiles and exact root identities|fine selection uses nearest tile boundary rather than tile center)$' h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs > /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              grep -Fqx -- '# pass 3' /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN3462_P4_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_BOUND_BROWSER_STILL_REQUIRED",
+                candidateHead:$target,productPr:7568,
+                originalP3Roots:3805291,maximumAdditionalBankRoots:2525,
+                bankGitBlob:"c536286fde3e73a7873f2dd11dee7b6a515a3e1f",
+                ownerGitBlob:"a63e1c7fd673d85b2e3d4c5df97f3202fab83f51",
+                pageGitBlob:"0165e4def3601ceaf94cce280f1874e2d472434e",
+                sourceTestsPassed:3,actualBrowserExecution:false,
+                ownerVisualAcceptance:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3462_P4_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .sourceTestsPassed==3 and .candidateHead=="f030a06268c2a98253b24ea4657edd2e7b437764" and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -907,7 +930,8 @@ jobs:
           let residencySamples=[];
           let vegetationExercise=null;
           let continuityCapture=null;
-          const activeExactCandidate=targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='';
+          const p4ExactHead=targetSha==='f030a06268c2a98253b24ea4657edd2e7b437764'&&requestedPath==='/showroom/globe/h-earth/'&&query==='arrival=approved-four-trees';
+          const activeExactCandidate=(targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='')||p4ExactHead;
           let activeExperienceEvidence=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
@@ -983,6 +1007,35 @@ jobs:
               },null,{timeout:120000});
               evidence.afterEnter=await observe();
               const entered=await sample('active-entered-ground');
+              if(p4ExactHead){
+                // P4 source-true bank additions become measurable only after entry.
+                await page.waitForFunction(()=>{
+                  const owner=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources?.singleOwnerVegetation;
+                  return owner?.p4Riparian?.schema==='H_EARTH_P4_CONNECTED_BANK_INFILL_v1';
+                },null,{timeout:360000});
+                evidence.p4SourceBoundGrass=await page.evaluate(()=>{
+                  const runtime=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources??{};
+                  const owner=runtime.singleOwnerVegetation??{};
+                  return {p4Riparian:owner.p4Riparian??null,
+                    originalP3RootCount:owner.installedRootCount??null,
+                    originalP3GpuBytes:owner.gpuRequestedBytes??null,
+                    p4AdditionalGpuBytes:owner.p4RiparianGpuBytes??null,
+                    p4AdditionalUploadedBytes:owner.p4RiparianUploadedBytes??null,
+                    fullRenderedRootCount:owner.totalRenderedRootCount??null,
+                    vegetationReady:runtime.vegetationResidency?.preparationComplete??false};
+                });
+                evidence.p4EnteredCanvasSha256=(await sample('p4-native-post-entry')).canvasScreenshotSha256;
+                const a=evidence.p4SourceBoundGrass;
+                if(a.originalP3RootCount!==3805291||a.originalP3GpuBytes!==60884656)
+                  throw Error('P4_IMMUTABLE_P3_ROOT_POPULATION_OR_GPU_DRIFT');
+                if(!Number.isInteger(a.p4Riparian?.addedRoots)||a.p4Riparian.addedRoots<=0||
+                   a.p4Riparian.addedRoots>2525||
+                   a.p4AdditionalGpuBytes!==a.p4Riparian.addedRoots*16||
+                   a.p4AdditionalUploadedBytes!==a.p4AdditionalGpuBytes||
+                   a.fullRenderedRootCount!==3805291+a.p4Riparian.addedRoots)
+                  throw Error('P4_REAL_RIPARIAN_BANK_INFILL_NOT_QUALIFIED:'+JSON.stringify(a));
+              }
+
               const enteredSequence=evidence.afterEnter.navigation?.sequence;
               if(!Number.isFinite(enteredSequence))throw Error('ENTERED_NAVIGATION_MISSING');
               await page.mouse.wheel(0,-480);

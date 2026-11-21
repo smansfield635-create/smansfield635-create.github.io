@@ -2434,3 +2434,786 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3333-native
           if-no-files-found: error
           retention-days: 30
+
+  # Gen3452 admitted source-bound proof: original product is NEVER committed/mutated.
+  p3-gen3452-exact-supplement-proof:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3452-exact-supplemental-acceleration-20261120' && github.event.pull_request.head.sha == '0f5d1c436c8c94918dbf0d4b546e9ec98af3d253' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted world for temporary read-only supplement capture
+        uses: actions/checkout@v4
+        with:
+          ref: 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify original owner, trees, geometry and loader
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git hash-object showroom/globe/h-earth/render/precomputed-grass.v1.js)" = 02f2fe39ef6c1f8e1ba1a51398ca9fa0512e19f4
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3452-exact-supplement"
+      - name: Use the existing native Chromium dependency
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Observe original wide and frozen tile output; emit bound supplement artifact only
+        shell: bash
+        run: |
+          set -euo pipefail
+          owner=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          python3 -m http.server 4173 --directory . >"$RUNNER_TEMP/h-earth-gen3452-exact-supplement/http.log" 2>&1 &
+          server_pid=$!
+          trap 'git restore -- "$owner" || true; kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.gen3452-shim.cjs <<'GEN3452_SHIM'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const path='showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+          const original=fs.readFileSync(path,'utf8');
+          const anchor='  const meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));';
+          assert.equal(original.split(anchor).length,2,'GEN3452_SOURCE_ANCHOR_NOT_UNIQUE');
+          const replacement=anchor+"\n  globalThis.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT={wideExtra,meadowExtra,wideReceipt:wide.receipt,frozenReceipt:meadow.receipt,originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRoots,candidateSchema:'GEN3452_TEMPORARY_ONLY_NOT_PRODUCT_SOURCE'};";
+          fs.writeFileSync(path,original.replace(anchor,replacement));
+          console.log('GEN3452_EPHEMERAL_OUTPUT_CAPTURE_ONLY');
+          GEN3452_SHIM
+          node .gen3452-shim.cjs
+          node --check "$owner"
+          test "$(git hash-object "$owner")" != 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          git hash-object "$owner" >"$RUNNER_TEMP/h-earth-gen3452-exact-supplement/temporary-shim-blob.txt"
+          cat >.gen3452-capture.mjs <<'GEN3452_CAPTURE'
+          import {chromium} from 'playwright';
+          import fs from 'node:fs/promises';
+          import zlib from 'node:zlib';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const dest=process.env.RUNNER_TEMP+'/h-earth-gen3452-exact-supplement/';
+          const report={schema:'H_EARTH_GEN3452_UNMODIFIED_GENERATION_SUPPLEMENT_PROOF_v1',productMutation:false,sourceSubstitution:true,qualifiedProduct:false,publicationAuthorized:false,sourceHead:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',ownerOriginalGitBlob:'655802ac5965e2b6166eca7f604c724da2ef3b0d',result:'NOT_EXECUTED',errors:[]};
+          let browser=null;
+          try{
+           browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+           report.browserVersion=browser.version();
+           const context=await browser.newContext({viewport:{width:1280,height:800},acceptDownloads:true});
+           const page=await context.newPage(),errors=[],requests=[];
+           page.on('pageerror',e=>errors.push(e.message));
+           page.on('requestfailed',r=>requests.push({url:r.url(),failure:r.failure()}));
+           await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1',{waitUntil:'domcontentloaded',timeout:120000});
+           await page.waitForFunction(()=>{
+            const w=window;
+            return (w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.counters?.gpuFramebufferPresentationCount??0)>0;
+           },null,{timeout:180000,polling:500});
+           await page.waitForFunction(()=>Boolean(window.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT),null,{timeout:240000,polling:500});
+           const downloadPromise=page.waitForEvent('download',{timeout:160000});
+           report.capture=await page.evaluate(async()=>{
+            const snapshot=globalThis.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT;
+            if(!snapshot)throw Error('GEN3452_SNAPSHOT_MISSING');
+            const wide=snapshot.wideExtra, frozen=snapshot.meadowExtra;
+            const sum=t=>t.reduce((a,x)=>a+x.count,0);
+            const wideRoots=sum(wide),frozenRoots=sum(frozen),total=wideRoots+frozenRoots;
+            if(wideRoots!==496748||frozenRoots!==343076||total!==839824)throw Error('GEN3452_SUPPLEMENT_COUNTS_DRIFT');
+            if(snapshot.baseRootCount+snapshot.cavernAdded+snapshot.seamRoots+total!==3805291)throw Error('GEN3452_TOTAL_ROOTS_DRIFT');
+            if(snapshot.frozenReceipt?.pointwiseShortfallRoots!==0)throw Error('GEN3452_FROZEN_SHORTFALL');
+            const selected=[...wide.map(t=>({kind:'wide',tile:t})),...frozen.map(t=>({kind:'frozen',tile:t}))];
+            let offset=snapshot.baseRootCount+snapshot.cavernAdded+snapshot.seamRoots;
+            const tiles=selected.map(({kind,tile})=>{
+             const {id,minX,minZ,count,first,packed,rootIds}=tile;
+             if(!Array.isArray(rootIds)||rootIds.length!==count||packed.byteLength!==count*16||first!==offset)throw Error('GEN3452_TILE_OR_OFFSET_DRIFT:'+id);
+             offset+=count;
+             return {kind,id,minX,minZ,first,count};
+            });
+            if(offset!==3805291)throw Error('GEN3452_FINAL_OFFSET_DRIFT');
+            const header={schema:'H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1',
+             admittedHead:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',
+             immutableOwnerGitBlob:'655802ac5965e2b6166eca7f604c724da2ef3b0d',
+             expectedFinalRootCount:3805291,expectedFinalPackedBytes:60884656,
+             expectedSupplementRootCount:total,wideRootCount:wideRoots,frozenRootCount:frozenRoots,
+             originalRootCount:snapshot.originalRootCount,oasisRoots:snapshot.oasisRoots,baseRootCount:snapshot.baseRootCount,
+             cavernAdded:snapshot.cavernAdded,seamRoots:snapshot.seamRoots,recordStrideBytes:20,tiles,
+             wideReceipt:snapshot.wideReceipt,frozenReceipt:snapshot.frozenReceipt,
+             seedIdentity:'ROOT_ID_SUFFIX_UINT32_RECONSTRUCTED_FROM_NATIVE_FLOAT32_X_Y_Z',
+             binaryOrdering:'TILES_IN_NATIVE_WIDE_THEN_FROZEN_ORDER_EACH_NATIVE_ROOT_ORDER',
+             preservation:'UNMODIFIED_PRODUCTION_SOURCE_ONLY_TEMPORARY_OBSERVATION_SHIM'};
+            const text=new TextEncoder().encode(JSON.stringify(header));
+            if(text.byteLength>2500000)throw Error('GEN3452_HEADER_TOO_LARGE');
+            const raw=new Uint8Array(4+text.byteLength+total*20),dv=new DataView(raw.buffer);
+            dv.setUint32(0,text.byteLength,true);raw.set(text,4);
+            let pos=4+text.byteLength;
+            for(const {tile} of selected){
+             for(let k=0;k<tile.count;k++){
+              const id=tile.rootIds[k],seed=Number(id.slice(id.lastIndexOf(':')+1));
+              if(!Number.isSafeInteger(seed)||seed<0||seed>4294967295)throw Error('GEN3452_BAD_SEED:'+tile.id+':'+k);
+              for(let j=0;j<4;j++)dv.setFloat32(pos+4*j,tile.packed[k*4+j],true);
+              dv.setUint32(pos+16,seed,true);pos+=20;
+             }
+            }
+            if(pos!==raw.byteLength)throw Error('GEN3452_RECORD_BYTE_DRIFT');
+            const gz=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'))).blob();
+            const url=URL.createObjectURL(gz),a=document.createElement('a');a.href=url;a.download='p3-wide-frozen-supplement.v1.bin.gz';a.style.display='none';document.body.appendChild(a);a.click();
+            return {total,wideRoots,frozenRoots,tileCount:tiles.length,rawBytes:raw.byteLength,compressedBytes:gz.size,headerBytes:text.byteLength,sourceSubstituted:true,generatedFromLiveAcceptedWorld:true};
+           });
+           const download=await downloadPromise;
+           await download.saveAs(dest+'p3-wide-frozen-supplement.v1.bin.gz');
+           report.downloadName=download.suggestedFilename();
+           const compressed=await fs.readFile(dest+'p3-wide-frozen-supplement.v1.bin.gz');
+           const raw=zlib.gunzipSync(compressed);
+           const headerLength=raw.readUInt32LE(0),header=JSON.parse(raw.subarray(4,4+headerLength).toString('utf8'));
+           assert.equal(header.schema,'H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1');
+           assert.equal(header.expectedSupplementRootCount,839824);
+           assert.equal(raw.byteLength,4+headerLength+header.expectedSupplementRootCount*20);
+           assert.equal(header.tiles.reduce((n,t)=>n+t.count,0),839824);
+           assert.equal(header.frozenReceipt.pointwiseShortfallRoots,0);
+           assert.equal(compressed.byteLength,report.capture.compressedBytes);
+           assert.equal(raw.byteLength,report.capture.rawBytes);
+           report.sha256={compressed:crypto.createHash('sha256').update(compressed).digest('hex'),raw:crypto.createHash('sha256').update(raw).digest('hex')};
+           report.tileCount=header.tiles.length;
+           report.wide=header.wideRootCount;report.frozen=header.frozenRootCount;
+           report.pageErrors=errors;report.failedRequests=requests;
+           assert.equal(errors.length,0,'CHROMIUM_PAGE_ERROR');
+           assert.equal(requests.length,0,'CHROMIUM_NETWORK_ERROR');
+           report.result='PASS_PRECOMPUTED_SUPPLEMENT_PROOF_NOT_PRODUCT_CANDIDATE';
+           await context.close();
+          }catch(e){report.result='FAIL_CLOSED';report.errors.push(e.stack??String(e));process.exitCode=1}
+          finally{await fs.writeFile(dest+'capture-receipt.json',JSON.stringify(report,null,2)+'\n');if(browser)await browser.close()}
+          
+          GEN3452_CAPTURE
+          node --check .gen3452-capture.mjs
+          timeout 650s node .gen3452-capture.mjs
+          git restore -- "$owner"
+          test "$(git hash-object "$owner")" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git status --porcelain -- showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = ""
+      - name: Preserve exact-source temporary-shim disclosure, binary payload and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3452-precompute-proof-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3452-exact-supplement/
+          if-no-files-found: warn
+          retention-days: 30
+
+  # Gen3452 bounded paired browser test of the captured immutable payload.
+  # All source substitution occurs only in clean runner checkout and is restored.
+  p3-gen3452-ephemeral-paired:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3452-exact-supplemental-acceleration-20261120' && github.event.pull_request.head.sha == '653e38f47abc67a27d01d3c1188cb1e8af5fdab2' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Exact accepted source checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Download sealed Gen3452 proof payload without modifying product
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-gen3452-precompute-proof-0f5d1c436c8c94918dbf0d4b546e9ec98af3d253
+          run-id: 44846946342
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/h-earth-gen3452-input/
+      - name: Enforce pinned owner/tree/source and asset SHA
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3452-paired"
+          cp "$RUNNER_TEMP/h-earth-gen3452-input/p3-wide-frozen-supplement.v1.bin.gz" showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.bin.gz
+          echo "c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0  showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.bin.gz" | sha256sum -c -
+      - name: Install existing native Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Repeated unchanged-versus-supplement browser comparison with exact ordered-root digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          owner=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          python3 -m http.server 4173 --directory . >"$RUNNER_TEMP/h-earth-gen3452-paired/http.log" 2>&1 &
+          pid=$!
+          trap 'git restore -- "$owner" || true; kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.p3-gen3452-patch.cjs <<'P3_PATCH'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const owner='showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+          const original=fs.readFileSync(owner,'utf8');
+          const stage=String.raw`  const wide=await buildWideExistingGrassTrial({existingTiles:[...baseTiles,...extra,...seamExtra],
+             visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,
+             maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});
+            const wideExtra=wide.tiles.length?planImmutableTiles(wide).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots})):[];
+            const meadow=await buildFrozenEcologicalMeadow({existingTiles:[...baseTiles,...extra,...seamExtra,...wideExtra],
+             visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,yieldControl,onProgress});
+            frozenMeadowReceipt=meadow.receipt;
+            if(meadow.receipt.pointwiseShortfallRoots!==0)throw Error('FROZEN_MEADOW_CONTACT_SHORTFALL:'+meadow.receipt.pointwiseShortfallRoots+':'+meadow.receipt.pointwiseShortfallCells);
+            const wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);
+            const meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));`;
+          const getter=String.raw`async function __gen3452LoadSupplement({originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRemaining}){
+           const url=new URL('./assets/p3-wide-frozen-supplement.v1.bin.gz',import.meta.url);
+           const response=await fetch(url);
+           if(!response.ok)throw Error('P3_SUPPLEMENT_NOT_FOUND:'+response.status);
+           const compressed=new Uint8Array(await response.arrayBuffer());
+           if(compressed.byteLength!==15632912)throw Error('P3_SUPPLEMENT_COMPRESSED_LENGTH_DRIFT');
+           const sha=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
+           if(await sha(compressed)!=='c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0')throw Error('P3_SUPPLEMENT_COMPRESSED_SHA_DRIFT');
+           const raw=new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+           if(raw.byteLength!==17354591||await sha(raw)!=='8dd0d4c931d5981e93ad9ca3abc1f9a82368b4153d73eb42e6766fd4b2afc2b3')throw Error('P3_SUPPLEMENT_RAW_SHA_OR_BYTES_DRIFT');
+           const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);
+           const headerBytes=view.getUint32(0,true);
+           const h=JSON.parse(new TextDecoder().decode(raw.subarray(4,4+headerBytes)));
+           if(h.schema!=='H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1'||
+              h.immutableOwnerGitBlob!=='655802ac5965e2b6166eca7f604c724da2ef3b0d'||
+              h.expectedFinalRootCount!==3805291||h.expectedFinalPackedBytes!==60884656||
+              h.recordStrideBytes!==20||h.expectedSupplementRootCount!==839824||
+              h.wideRootCount!==496748||h.frozenRootCount!==343076||
+              h.originalRootCount!==originalRootCount||h.oasisRoots!==oasisRoots||
+              h.baseRootCount!==baseRootCount||h.cavernAdded!==cavernAdded||h.seamRoots!==seamRoots||
+              496748>Math.min(500000,wideRemaining)||h.frozenReceipt?.pointwiseShortfallRoots!==0)
+            throw Error('P3_SUPPLEMENT_HEADER_OR_DYNAMIC_PREFIX_MISMATCH');
+           const byKind={wide:[],frozen:[]};
+           let pos=4+headerBytes,first=baseRootCount+cavernAdded+seamRoots,widen=0,frozen=0;
+           const tileNames=new Set();
+           for(const t of h.tiles){
+            if(!t||!['wide','frozen'].includes(t.kind)||typeof t.id!=='string'||tileNames.has(t.id)||
+               !Number.isInteger(t.count)||t.count<1||t.count>1600||
+               !Number.isFinite(t.minX)||!Number.isFinite(t.minZ)||t.first!==first||pos+t.count*20>raw.byteLength)
+             throw Error('P3_SUPPLEMENT_TILE_INVALID');
+            tileNames.add(t.id);
+            if(t.kind==='wide'&&frozen>0)throw Error('P3_SUPPLEMENT_ORDER_DRIFT');
+            if(!t.id.startsWith(t.kind==='wide'?'WIDE_GRASS_TRIAL:':'FROZEN_ECOLOGICAL_MEADOW:'))
+             throw Error('P3_SUPPLEMENT_TILE_IDENTITY_DRIFT');
+            const packed=new Float32Array(t.count*4),rootIds=new Array(t.count);
+            for(let j=0;j<t.count;j++,pos+=20){
+             const k=j*4;
+             for(let a=0;a<4;a++)packed[k+a]=view.getFloat32(pos+4*a,true);
+             const seed=view.getUint32(pos+16,true);
+             const id=[packed[k],packed[k+1],packed[k+2],seed].join(':');
+             if(packed[k]<t.minX||packed[k]>=t.minX+4||packed[k+2]<t.minZ||packed[k+2]>=t.minZ+4)throw Error('P3_SUPPLEMENT_POSITION_TILE_DRIFT');
+             rootIds[j]=id;
+            }
+            byKind[t.kind].push(Object.freeze({id:t.id,minX:t.minX,minZ:t.minZ,first:t.first,count:t.count,packed,rootIds:Object.freeze(rootIds)}));
+            if(t.kind==='wide')widen+=t.count;else frozen+=t.count;
+            first+=t.count;
+           }
+           if(pos!==raw.byteLength||first!==3805291||widen!==496748||frozen!==343076)throw Error('P3_SUPPLEMENT_POPULATION_DRIFT');
+           globalThis.__GEN3452_ASSET_TIMING={bytes:compressed.byteLength,source:'SOURCE_SHA_PINNED_GZIP',checked:true};
+           return {wideExtra:Object.freeze(byKind.wide),meadowExtra:Object.freeze(byKind.frozen),wideReceipt:h.wideReceipt,frozenReceipt:h.frozenReceipt};
+          }
+          `;
+          const replacement=String.raw`  const p3=await __gen3452LoadSupplement({originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRemaining});
+            const wideExtra=p3.wideExtra,meadowExtra=p3.meadowExtra,wide={receipt:p3.wideReceipt},meadow={receipt:p3.frozenReceipt};
+            frozenMeadowReceipt=meadow.receipt;
+            const wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);`;
+          const marker=' const rootCount=tiles.reduce((n,t)=>n+t.count,0);';
+          function instrument(){
+           assert.equal(original.split(marker).length,2,'P3_DIAG_ANCHOR_NOT_UNIQUE');
+           return original.replace(marker,marker+'\n globalThis.__GEN3452_DIGEST_TILES=tiles;');
+          }
+          const mode=process.argv[2];
+          if(!['baseline','candidate','restore'].includes(mode))throw Error('P3_UNKNOWN_MODE');
+          if(mode==='restore'){fs.writeFileSync(owner,original);process.exit(0)}
+          let source=instrument();
+          if(mode==='candidate'){
+           assert.equal(source.split(stage).length,2,'P3_GENERATION_ANCHOR_NOT_UNIQUE');
+           assert.equal(source.split('export async function createSingleOwnerVegetation').length,2,'P3_OWNER_FUNCTION_ANCHOR_NOT_UNIQUE');
+           source=source.replace('export async function createSingleOwnerVegetation',getter+'\nexport async function createSingleOwnerVegetation').replace(stage,replacement);
+          }
+          fs.writeFileSync(owner,source);
+          console.log('GEN3452_TEMP_ONLY_MODE_'+mode);
+          P3_PATCH
+          node --check .p3-gen3452-patch.cjs
+          cat >.p3-gen3452-paired.mjs <<'P3_PAIRED'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          import {chromium} from 'playwright';
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const path='showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.bin.gz';
+          const zipped=await fs.readFile(path);
+          assert.equal(zipped.byteLength,15632912);
+          assert.equal(sha(zipped),'c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0');
+          const dir=process.env.RUNNER_TEMP+'/h-earth-gen3452-paired/';
+          const results=[],originalSource=await fs.readFile('showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js','utf8');
+          const modes=['baseline','candidate','baseline','candidate','baseline','candidate'];
+          try{
+           for(let i=0;i<modes.length;i++){
+            const mode=modes[i];
+            const {execFileSync}=await import('node:child_process');
+            await fs.writeFile('showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',originalSource);
+            execFileSync('node',['.p3-gen3452-patch.cjs',mode],{stdio:'inherit'});
+            let browser=null;
+            const observation={mode,iteration:Math.floor(i/2)+1,originalWorld:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',sourceSubstituted:true,assetUsed:mode==='candidate',result:'NOT_EXECUTED',errors:[]};
+            try{
+             browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+             const context=await browser.newContext({viewport:{width:1280,height:800}});
+             const page=await context.newPage(),pageErrors=[],requestErrors=[];
+             page.on('pageerror',e=>pageErrors.push(e.message));
+             page.on('requestfailed',r=>requestErrors.push(r.url()+':'+r.failure()));
+             await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1',{waitUntil:'domcontentloaded',timeout:120000});
+             await page.waitForFunction(()=>['CAPTURED_STABLE_VIEW','FAILED'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification?.result),null,{timeout:250000,polling:500});
+             observation.capture=await page.evaluate(async()=>{
+              const route=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+              const gpu=route?.getLiveGpuReceipt?.();
+              const owner=gpu?.resources?.singleOwnerVegetation;
+              const qualification=route?.getReceipt?.()?.singleOwnerVegetationQualification;
+              const tiles=globalThis.__GEN3452_DIGEST_TILES;
+              if(!tiles||!owner)throw Error('GEN3452_DIAGNOSTIC_TILES_MISSING');
+              const encode=new TextEncoder(),hex=b=>Array.from(new Uint8Array(b),v=>v.toString(16).padStart(2,'0')).join('');
+              const manifestRaw=new Uint8Array(await (await fetch('/showroom/globe/h-earth/render/assets/precomputed-grass.v1.json')).arrayBuffer());
+              const manifestHash=hex(await crypto.subtle.digest('SHA-256',manifestRaw));
+              if(manifestHash!=='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf')throw Error('P3_MANIFEST_SHA_DRIFT');
+              const manifest=JSON.parse(new TextDecoder().decode(manifestRaw));
+              const compressed=new Uint8Array(await (await fetch('/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz')).arrayBuffer());
+              if(hex(await crypto.subtle.digest('SHA-256',compressed))!==manifest.compressedSha256)throw Error('P3_SOURCE_COMPRESSED_DRIFT');
+              const raw=new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+              if(hex(await crypto.subtle.digest('SHA-256',raw))!==manifest.rawSha256)throw Error('P3_SOURCE_RAW_DRIFT');
+              const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);
+              let roots=0,bytes=0,sourceTiles=0,sourceIds=0,bankIds=0,runtimeIds=0;
+              const tileHashes=[];
+              for(const t of tiles){
+               if(t.first!==roots||t.packed.byteLength!==t.count*16)throw Error('GEN3452_TILE_BYTES_OR_FIRST_DRIFT:'+t.id);
+               let ids;
+               if(t.first<manifest.rootCount){
+                const original=manifest.tiles[sourceTiles++];
+                if(!original||original.id!==t.id||original.count!==t.count||t.first+t.count>manifest.rootCount)throw Error('GEN3452_SOURCE_TILE_DRIFT');
+                ids=new Array(t.count);
+                for(let k=0;k<t.count;k++){
+                 const pos=(t.first+k)*52;
+                 const fx=Math.fround(view.getFloat64(pos,true)),fy=Math.fround(view.getFloat64(pos+8,true)),fz=Math.fround(view.getFloat64(pos+16,true)),fa=Math.fround(view.getFloat64(pos+24,true));
+                 if(t.packed[k*4]!==fx||t.packed[k*4+1]!==fy||t.packed[k*4+2]!==fz||t.packed[k*4+3]!==fa)throw Error('GEN3452_ORIGINAL_PACKED_DRIFT');
+                 ids[k]=String(fx)+':'+String(fy)+':'+String(fz)+':'+view.getUint32(pos+40,true);
+                }
+                sourceIds+=t.count;
+               }else if(t.id.startsWith('oasis:')){
+                ids=Array.from({length:t.count},(_,k)=>'PACKED_ONLY_OASIS_BANK_ORDINAL:'+t.id+':'+k);bankIds+=t.count;
+               }else{
+                if(!Array.isArray(t.rootIds)||t.rootIds.length!==t.count)throw Error('GEN3452_RUNTIME_ROOT_IDS_MISSING');
+                ids=t.rootIds;runtimeIds+=t.count;
+               }
+               const header=encode.encode(JSON.stringify([t.id,t.first,t.count,ids]));
+               const record=new Uint8Array(header.byteLength+t.packed.byteLength);
+               record.set(header);record.set(new Uint8Array(t.packed.buffer,t.packed.byteOffset,t.packed.byteLength),header.length);
+               tileHashes.push(hex(await crypto.subtle.digest('SHA-256',record)));
+               roots+=t.count;bytes+=t.packed.byteLength;
+              }
+              if(sourceTiles!==manifest.tiles.length||sourceIds!==manifest.rootCount||sourceIds+bankIds+runtimeIds!==roots)throw Error('GEN3452_ROOT_ACCOUNTING_DRIFT');
+              const digest=hex(await crypto.subtle.digest('SHA-256',encode.encode('H_EARTH_P3_ORDERED_TILES_WITH_PROVENANCE_V2\n'+tileHashes.join('\n'))));
+              return {phase:qualification?.result??null,roots:owner.installedRootCount,bytes:owner.gpuUploadedBytes,wide:owner.wideGrassTrial?.addedRoots??null,frozen:owner.frozenEcologicalMeadow?.addedRoots??null,frozenShortfall:owner.frozenEcologicalMeadow?.pointwiseShortfallRoots??null,ownerPreparationMs:owner.preparationMs,firstFrameMs:gpu?.timing?.firstFrameMilliseconds??null,populatedMs:gpu?.timing?.populatedMilliseconds??null,framePresentations:gpu?.counters?.gpuFramebufferPresentationCount,worldRebuilds:gpu?.counters?.worldRebuildCount,rootDigest:digest,hashTileCount:tiles.length,hashRootCount:roots,hashPackedBytes:bytes,assetTiming:globalThis.__GEN3452_ASSET_TIMING??null};
+             });
+             observation.screenshotSha256=sha(await page.screenshot({type:'png'}));
+             observation.pageErrors=pageErrors;observation.requestErrors=requestErrors;
+             assert.equal(observation.capture.phase,'CAPTURED_STABLE_VIEW');
+             assert.equal(observation.capture.roots,3805291);
+             assert.equal(observation.capture.bytes,60884656);
+             assert.equal(observation.capture.wide,496748);
+             assert.equal(observation.capture.frozen,343076);
+             assert.equal(observation.capture.frozenShortfall,0);
+             assert.equal(observation.capture.rootDigest,'f9d6b6b2cbd5b0ed302c5853642cb30477101a33b379a53c1995aac791c0ac3e');
+             assert.equal(observation.capture.hashTileCount,14079);
+             assert.equal(observation.capture.hashRootCount,3805291);
+             assert.equal(observation.capture.hashPackedBytes,60884656);
+             assert(observation.capture.framePresentations>0);
+             assert(Number.isFinite(observation.capture.ownerPreparationMs));
+             assert(Number.isFinite(observation.capture.populatedMs));
+             assert.equal(pageErrors.length,0);
+             assert.equal(requestErrors.length,0);
+             assert.equal(Boolean(observation.capture.assetTiming),mode==='candidate');
+             observation.result='PASS_EXACT_ROOT_IDENTITY_AND_BROWSER';
+             await context.close();
+            }catch(e){observation.result='FAIL_CLOSED';observation.errors.push(e.stack??String(e));process.exitCode=1}
+            finally{if(browser)await browser.close();results.push(observation);await fs.writeFile(dir+mode+'-'+observation.iteration+'.json',JSON.stringify(observation,null,2)+'\n')}
+            if(observation.result!=='PASS_EXACT_ROOT_IDENTITY_AND_BROWSER')break;
+           }
+          }catch(e){results.push({result:'FAIL_CLOSED',error:e.stack??String(e)});process.exitCode=1}
+          finally{
+           await fs.writeFile('showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',originalSource);
+           const baseline=results.filter(x=>x.mode==='baseline'&&x.result==='PASS_EXACT_ROOT_IDENTITY_AND_BROWSER').map(x=>x.capture.populatedMs);
+           const candidate=results.filter(x=>x.mode==='candidate'&&x.result==='PASS_EXACT_ROOT_IDENTITY_AND_BROWSER').map(x=>x.capture.populatedMs);
+           const median=a=>a.length?([...a].sort((x,y)=>x-y)[Math.floor(a.length/2)]):null;
+           const b=median(baseline),c=median(candidate),gainMs=b!==null&&c!==null?b-c:null;
+           const result={schema:'H_EARTH_P3_GEN3452_EPHEMERAL_PAIRED_BROWSER_QUALIFICATION_v1',exactWorld:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',assetSha256:'c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0',sourceSubstitutionDisclosed:true,productMutation:false,releaseAuthorized:false,baselineCount:baseline.length,candidateCount:candidate.length,baselineMedianPopulatedMs:b,candidateMedianPopulatedMs:c,netMedianGainMs:gainMs,provisionalTargetMet:gainMs!==null&&gainMs>=10000,allRootDigestsMatch:results.filter(x=>x.capture).every(x=>x.capture.rootDigest==='f9d6b6b2cbd5b0ed302c5853642cb30477101a33b379a53c1995aac791c0ac3e'),result:results.length===6&&results.every(x=>x.result==='PASS_EXACT_ROOT_IDENTITY_AND_BROWSER')?'COMPLETE_EPHEMERAL_BENCHMARK_ONLY':'FAIL_CLOSED_OR_INCOMPLETE',observations:results.map(x=>({mode:x.mode,iteration:x.iteration,result:x.result,populatedMs:x.capture?.populatedMs,ownerPreparationMs:x.capture?.ownerPreparationMs,firstFrameMs:x.capture?.firstFrameMs,screenshotSha256:x.screenshotSha256,errors:x.errors}))};
+           await fs.writeFile(dir+'comparison.json',JSON.stringify(result,null,2)+'\n');
+           if(result.result!=='COMPLETE_EPHEMERAL_BENCHMARK_ONLY')process.exitCode=1;
+          }
+          P3_PAIRED
+          node --check .p3-gen3452-paired.mjs
+          timeout 2200s node .p3-gen3452-paired.mjs
+          git restore -- "$owner"
+          test "$(git hash-object "$owner")" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+      - name: Preserve authentic paired browser receipts and failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3452-paired-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3452-paired/
+          if-no-files-found: warn
+          retention-days: 30
+
+  # Gen3453 persisted eight-part candidate, not the ephemeral Gen3452 shim.
+  p3-gen3453-persisted-paired:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3452-exact-supplemental-acceleration-20261120' && github.event.pull_request.head.sha == '64b70d24f193d36c9cd22697db1a35ea567da8a3' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify all eight source-bound Git blobs and reconstructed gzip digest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 767f2b93ce1a78a3e7de7d85d13d007776e450aa
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = 0ad6c67b03ecbcadc1745a3ae54b00e613cd8399
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          grep -F 'vegetation-single-owner.prototype.v1.js?rev=sha-767f2b93ce1a' showroom/globe/h-earth/index.html
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-00.gz)" = a012e77bb00ed808b1c0a60e7155219bd861ac0f
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-01.gz)" = a8f1f4106ed7178ceabb773d6c2edbbf6d92c408
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-02.gz)" = c137f4426739b2ef2c6786093eab9b393e6a2d3e
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-03.gz)" = fdd8a83de10a7454a3ee196cff56c27f7c9fb9e8
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-04.gz)" = 3311eb312d7dab1304269c03b7fe8ed11f7cf83f
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-05.gz)" = 314a62ed9d649dbcfc2866da905187786617264e
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-06.gz)" = 9a9bcce5a1875e90b2ae14c96cfff8b36b7a490d
+          test "$(git hash-object showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-07.gz)" = fd1d7b96d8977d81b59b08848af905d8de5ec719
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3453-persisted"
+          cat showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-00.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-01.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-02.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-03.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-04.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-05.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-06.gz showroom/globe/h-earth/render/assets/p3-wide-frozen-supplement.v1.part-07.gz >"$RUNNER_TEMP/h-earth-gen3453-persisted/reconstructed.bin.gz"
+          echo 'c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0  '"$RUNNER_TEMP/h-earth-gen3453-persisted/reconstructed.bin.gz" | sha256sum -c -
+          test "$(stat -c%s "$RUNNER_TEMP/h-earth-gen3453-persisted/reconstructed.bin.gz")" = 15632912
+          node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+      - name: Install existing native Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Compare accepted baseline with exact persisted candidate over six real Chromium executions
+        shell: bash
+        env:
+          EXACT_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          git worktree add --detach "$RUNNER_TEMP/h-earth-gen3453-baseline" 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          python3 -m http.server 4173 --directory "$RUNNER_TEMP/h-earth-gen3453-baseline" >"$RUNNER_TEMP/h-earth-gen3453-persisted/baseline-http.log" 2>&1 &
+          baseline_pid=$!
+          python3 -m http.server 4174 --directory . >"$RUNNER_TEMP/h-earth-gen3453-persisted/candidate-http.log" 2>&1 &
+          candidate_pid=$!
+          trap 'kill "$baseline_pid" "$candidate_pid" 2>/dev/null || true; git worktree remove --force "$RUNNER_TEMP/h-earth-gen3453-baseline" || true' EXIT
+          for n in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null && curl -fsS http://127.0.0.1:4174/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.p3-gen3453-persisted-paired.mjs <<'P3_GEN3453'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          import {chromium} from 'playwright';
+          
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const dir=process.env.RUNNER_TEMP+'/h-earth-gen3453-persisted/';
+          const expectedCandidate=process.env.EXACT_CANDIDATE_HEAD;
+          const route='/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1';
+          const modes=['baseline','candidate','baseline','candidate','baseline','candidate'];
+          const observations=[];
+          const median=nums=>nums.length?([...nums].sort((a,b)=>a-b)[Math.floor(nums.length/2)]):null;
+          for(let i=0;i<modes.length;i++){
+            const mode=modes[i],iteration=Math.floor(i/2)+1;
+            const origin=mode==='baseline'?'http://127.0.0.1:4173':'http://127.0.0.1:4174';
+            const observation={mode,iteration,result:'NOT_EXECUTED',exactSourceHead:mode==='candidate'?expectedCandidate:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',sourceSubstituted:false,errors:[]};
+            let browser;
+            try{
+              browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+              const context=await browser.newContext({viewport:{width:1280,height:800}});
+              const page=await context.newPage(),pageErrors=[],requestErrors=[],partResponses=[];
+              page.on('pageerror',e=>pageErrors.push(e.message));
+              page.on('requestfailed',r=>requestErrors.push(r.url()+':'+r.failure()));
+              page.on('response',r=>{if(r.url().includes('/p3-wide-frozen-supplement.v1.part-'))partResponses.push({url:r.url(),status:r.status()});});
+              await page.goto(origin+route,{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForFunction(()=>['CAPTURED_STABLE_VIEW','FAILED'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification?.result),null,{timeout:250000,polling:500});
+              observation.capture=await page.evaluate(()=>{
+                const route=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                const gpu=route?.getLiveGpuReceipt?.();
+                const owner=gpu?.resources?.singleOwnerVegetation;
+                const qualification=route?.getReceipt?.()?.singleOwnerVegetationQualification;
+                return {phase:qualification?.result??null,roots:owner?.installedRootCount??null,bytes:owner?.gpuUploadedBytes??null,wide:owner?.wideGrassTrial?.addedRoots??null,frozen:owner?.frozenEcologicalMeadow?.addedRoots??null,frozenShortfall:owner?.frozenEcologicalMeadow?.pointwiseShortfallRoots??null,ownerPreparationMs:owner?.preparationMs??null,firstFrameMs:gpu?.timing?.firstFrameMilliseconds??null,populatedMs:gpu?.timing?.populatedMilliseconds??null,framePresentations:gpu?.counters?.gpuFramebufferPresentationCount??null,worldRebuilds:gpu?.counters?.worldRebuildCount??null};
+              });
+              const screenshot=await page.screenshot({type:'png',path:dir+mode+'-'+iteration+'.png'});
+              observation.screenshotSha256=sha(screenshot);
+              observation.partResponses=partResponses;
+              observation.pageErrors=pageErrors;
+              observation.requestErrors=requestErrors;
+              assert.equal(observation.capture.phase,'CAPTURED_STABLE_VIEW');
+              assert.equal(observation.capture.roots,3805291);
+              assert.equal(observation.capture.bytes,60884656);
+              assert.equal(observation.capture.wide,496748);
+              assert.equal(observation.capture.frozen,343076);
+              assert.equal(observation.capture.frozenShortfall,0);
+              assert(observation.capture.framePresentations>0);
+              assert.equal(observation.capture.worldRebuilds,0);
+              assert(Number.isFinite(observation.capture.ownerPreparationMs));
+              assert(Number.isFinite(observation.capture.populatedMs));
+              assert.equal(pageErrors.length,0);
+              assert.equal(requestErrors.length,0);
+              if(mode==='candidate'){
+                assert.equal(partResponses.length,8);
+                for(const response of partResponses)assert.equal(response.status,200);
+              }else assert.equal(partResponses.length,0);
+              observation.result='PASS_NATIVE_PERSISTED_SOURCE';
+              await context.close();
+            }catch(e){observation.result='FAIL_CLOSED';observation.errors.push(e.stack??String(e));process.exitCode=1}
+            finally{if(browser)await browser.close();observations.push(observation);await fs.writeFile(dir+mode+'-'+iteration+'.json',JSON.stringify(observation,null,2)+'\n')}
+            if(observation.result!=='PASS_NATIVE_PERSISTED_SOURCE')break;
+          }
+          const baseline=observations.filter(x=>x.mode==='baseline'&&x.result==='PASS_NATIVE_PERSISTED_SOURCE');
+          const candidate=observations.filter(x=>x.mode==='candidate'&&x.result==='PASS_NATIVE_PERSISTED_SOURCE');
+          const b=median(baseline.map(x=>x.capture.populatedMs)),c=median(candidate.map(x=>x.capture.populatedMs));
+          const bf=median(baseline.map(x=>x.capture.firstFrameMs)),cf=median(candidate.map(x=>x.capture.firstFrameMs));
+          const result={schema:'H_EARTH_P3_GEN3453_EXACT_PERSISTED_EIGHT_PART_BROWSER_QUALIFICATION_v1',baselineHead:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',candidateHead:expectedCandidate,sourceSubstituted:false,originalGzipSha256:'c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0',originalOrderedRootSha256Reference:'f9d6b6b2cbd5b0ed302c5853642cb30477101a33b379a53c1995aac791c0ac3e',orderedRootDigestDirectlyRecomputedInThisRun:false,baselineCount:baseline.length,candidateCount:candidate.length,baselineMedianPopulatedMs:b,candidateMedianPopulatedMs:c,netMedianGainMs:b!==null&&c!==null?b-c:null,baselineFirstFrameMedianMs:bf,candidateFirstFrameMedianMs:cf,firstFrameRegressionMs:bf!==null&&cf!==null?cf-bf:null,fullNativePass:observations.length===6&&observations.every(x=>x.result==='PASS_NATIVE_PERSISTED_SOURCE'),noSourceOrTreeMutation:true,phoneQualified:false,visualKeep:false,releaseAuthorized:false,observations:observations.map(x=>({mode:x.mode,iteration:x.iteration,result:x.result,capture:x.capture,partCount:x.partResponses?.length,screenshotSha256:x.screenshotSha256,errors:x.errors}))};
+          result.provisionalTargetMet=result.fullNativePass&&result.netMedianGainMs>=10000&&result.firstFrameRegressionMs<=2000;
+          result.result=result.provisionalTargetMet?'PASS_PERSISTED_EIGHT_PART_HOSTED_CHROMIUM_ONLY':'FAIL_CLOSED_OR_TARGET_NOT_MET';
+          await fs.writeFile(dir+'comparison.json',JSON.stringify(result,null,2)+'\n');
+          console.log(JSON.stringify({result:result.result,baselineMedianPopulatedMs:b,candidateMedianPopulatedMs:c,netMedianGainMs:result.netMedianGainMs,firstFrameRegressionMs:result.firstFrameRegressionMs,completedRuns:observations.length},null,2));
+          if(!result.provisionalTargetMet)process.exitCode=1;
+          P3_GEN3453
+          node --check .p3-gen3453-persisted-paired.mjs
+          timeout 2200s node .p3-gen3453-persisted-paired.mjs
+      - name: Preserve actual Chromium receipts and baseline-versus-candidate captured frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3453-persisted-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3453-persisted/
+          if-no-files-found: warn
+          retention-days: 30
+
+  # Gen3453 follow-on evidence: existing first-party public Enter and strict replay.
+  # This reuses the neutral runner; it does not modify product or create a release.
+  p3-gen3453-current-world-traversal:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3452-exact-supplemental-acceleration-20261120' && github.event.pull_request.head.sha != '64b70d24f193d36c9cd22697db1a35ea567da8a3' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact immutable Gen3453 product
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Enforce unmodified grass, tree, geography and public route identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 767f2b93ce1a78a3e7de7d85d13d007776e450aa
+          test "$(git hash-object showroom/globe/h-earth/index.html)" = 0ad6c67b03ecbcadc1745a3ae54b00e613cd8399
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3453-traverse"
+      - name: Install existing native Chromium version
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Exercise public Enter and sixteen actual replay wheel movements
+        shell: bash
+        env:
+          EXACT_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4174 --directory . > "$RUNNER_TEMP/h-earth-gen3453-traverse/http.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4174/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.p3-gen3453-current-world-traverse.mjs <<'GEN3453_TRAVERSE'
+          import fs from 'node:fs/promises';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          import {chromium} from 'playwright';
+          const dir=process.env.RUNNER_TEMP+'/h-earth-gen3453-traverse/';
+          const head=process.env.EXACT_CANDIDATE_HEAD;
+          const base='http://127.0.0.1:4174';
+          const receipt={schema:'H_EARTH_P3_GEN3453_CURRENT_WORLD_ENTER_AND_TRAVERSE_v1',
+            exactCandidateHead:head,sourceSubstituted:false,publicEnter:null,strictReplay:null,
+            realHostedChromium:true,physicalAndroid:false,ownerVisualKeep:false,
+            fullWorldOrderedRootDigestDirectlyRecomputed:false,worldReleaseAuthorized:false,
+            result:'NOT_EXECUTED',errors:[]};
+          const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const watch=page=>{
+            const logs={page:[],network:[],http:[],parts:[]};
+            page.on('pageerror',e=>logs.page.push(e.message));
+            page.on('requestfailed',r=>logs.network.push({url:r.url(),error:r.failure()}));
+            page.on('response',r=>{
+              if(r.status()>=400)logs.http.push({url:r.url(),status:r.status()});
+              if(r.url().includes('/p3-wide-frozen-supplement.v1.part-'))
+                logs.parts.push({name:r.url().split('/').pop(),status:r.status()});
+            });
+            return logs;
+          };
+          const requireEight=logs=>{
+            assert.equal(logs.parts.length,8,'EIGHT_PART_FETCH_COUNT');
+            assert.equal(new Set(logs.parts.map(x=>x.name)).size,8,'EIGHT_PART_DUPLICATE');
+            assert(logs.parts.every(x=>x.status===200),'EIGHT_PART_HTTP_NOT_200');
+            assert.equal(logs.page.length,0,'PAGE_ERRORS');
+            assert.equal(logs.network.length,0,'FAILED_REQUESTS');
+            assert.equal(logs.http.length,0,'HTTP_ERRORS');
+          };
+          const snapshot=page=>page.evaluate(()=>{
+            const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+            const gpu=api?.getLiveGpuReceipt?.();
+            const root=document.querySelector('#h-earth-functional-landscape-route');
+            const loader=window.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+            return {rootReady:root?.dataset.run8eReady,routeError:root?.dataset.run8eError,
+              loaderMode:loader?.mode,enterDisabled:document.querySelector('#h-earth-loading-screen [data-enter]')?.disabled,
+              nav:api?.getIntakeReceipt?.()?.currentNavigationState,
+              framePresentations:gpu?.counters?.gpuFramebufferPresentationCount,
+              worldRebuilds:gpu?.counters?.worldRebuildCount,
+              owner:gpu?.resources?.singleOwnerVegetation?
+                {roots:gpu.resources.singleOwnerVegetation.installedRootCount,bytes:gpu.resources.singleOwnerVegetation.gpuUploadedBytes,
+                 wide:gpu.resources.singleOwnerVegetation.wideGrassTrial?.addedRoots,
+                 frozen:gpu.resources.singleOwnerVegetation.frozenEcologicalMeadow?.addedRoots}:null,
+              backgroundPhase:gpu?.vegetationBackground?.phase};});
+          const screen=async(page,name)=>{
+            const data=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:dir+name+'.png',timeout:90000});
+            return {file:name+'.png',sha256:hash(data)};
+          };
+          const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage',
+            '--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+          try{
+            const ctx=await browser.newContext({viewport:{width:1280,height:800}});
+            const page=await ctx.newPage(),logs=watch(page);
+            await page.goto(base+'/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForFunction(()=>{
+              const l=window.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+              const g=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+              return l?.mode==='test'&&g?.counters?.gpuFramebufferPresentationCount>0;
+            },null,{timeout:420000,polling:250});
+            const before=await snapshot(page),beforeFrame=await screen(page,'public-initial');
+            assert.equal(before.rootReady,'false','PREMATURE_PUBLIC_READY');
+            assert(before.framePresentations>0&&before.nav?.position,'FIRST_FRAME_OR_CAMERA_MISSING');
+            const bounds=await page.locator('#h-earth-functional-landscape-canvas').boundingBox();
+            assert(bounds,'CANVAS_UNAVAILABLE');
+            await page.mouse.move(bounds.x+bounds.width*.5,bounds.y+bounds.height*.5);
+            await page.mouse.down();
+            await page.mouse.move(bounds.x+bounds.width*.65,bounds.y+bounds.height*.54,{steps:12});
+            await page.mouse.up();
+            await page.waitForFunction(()=>window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='ready',
+              null,{timeout:120000,polling:200});
+            const movedBeforeEnter=await snapshot(page),changedFrame=await screen(page,'public-camera-changed');
+            assert.notDeepEqual(movedBeforeEnter.nav,before.nav,'CAMERA_GESTURE_NOT_APPLIED');
+            assert.equal(movedBeforeEnter.enterDisabled,false,'ENTER_NOT_ENABLED');
+            await page.locator('#h-earth-loading-screen [data-enter]').click();
+            await page.waitForFunction(()=>window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered',
+              null,{timeout:30000,polling:200});
+            await page.waitForFunction(()=>{
+              const phase=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.vegetationBackground?.phase;
+              return phase==='OWNER_PREPARED'||phase==='FAILED';
+            },null,{timeout:600000,polling:500});
+            const populated=await snapshot(page),populatedFrame=await screen(page,'public-entered-populated');
+            assert.equal(populated.backgroundPhase,'OWNER_PREPARED','PUBLIC_VEGETATION_NOT_PREPARED');
+            assert.equal(populated.owner?.roots,3805291,'ROOT_COUNT_DRIFT');
+            assert.equal(populated.owner?.bytes,60884656,'PACKED_BYTES_DRIFT');
+            assert.equal(populated.owner?.wide,496748,'WIDE_ROOT_DRIFT');
+            assert.equal(populated.owner?.frozen,343076,'FROZEN_ROOT_DRIFT');
+            assert.equal(populated.worldRebuilds,0,'WORLD_REBUILT');
+            await page.mouse.move(bounds.x+bounds.width*.5,bounds.y+bounds.height*.5);
+            await page.mouse.wheel(0,-280);
+            await page.waitForTimeout(1700);
+            const afterWheel=await snapshot(page),afterWheelFrame=await screen(page,'public-after-travel');
+            const p1=populated.nav?.position,p2=afterWheel.nav?.position;
+            assert(p1&&p2&&Math.hypot(p1.x-p2.x,p1.z-p2.z)>.1,'ENTERED_CAMERA_DID_NOT_TRAVEL');
+            assert.equal(afterWheel.worldRebuilds,0,'TRAVEL_REBUILT_WORLD');
+            requireEight(logs);
+            receipt.publicEnter={result:'PASS_PUBLIC_ENTER_AND_TRAVEL',before,beforeFrame,
+              movedBeforeEnter,changedFrame,populated,populatedFrame,afterWheel,afterWheelFrame,logs};
+            await page.close();
+            const replayPage=await ctx.newPage(),replayLogs=watch(replayPage);
+            await replayPage.goto(base+'/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees',
+              {waitUntil:'domcontentloaded',timeout:120000});
+            await replayPage.waitForFunction(()=>{
+              const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification;
+              return r?.result==='CAPTURED_POPULATED_CONTINUITY'||document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true';
+            },null,{timeout:600000,polling:400});
+            const replay=await replayPage.evaluate(()=>{
+              const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification;
+              const gpu=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+              return {result:r?.result,requestedStepsPerDirection:r?.requestedStepsPerDirection,
+                returnDistanceMeters:r?.returnDistanceMeters,installedControlIdentityStable:r?.installedControlIdentityStable,
+                coarseCoverageSubmittedThroughout:r?.coarseCoverageSubmittedThroughout,
+                presentationScope:r?.presentationScope,observations:r?.observations?.map(x=>({
+                  label:x.label,position:x.position,navigationSequence:x.navigationSequence,
+                  roots:x.vegetation?.installedRootCount,bytes:x.vegetation?.gpuUploadedBytes,
+                  perFrameUploadBytes:x.vegetation?.perFrameUploadBytes})),
+                ownerRoots:gpu?.resources?.singleOwnerVegetation?.installedRootCount,
+                ownerBytes:gpu?.resources?.singleOwnerVegetation?.gpuUploadedBytes,
+                framePresentations:gpu?.counters?.gpuFramebufferPresentationCount,
+                worldRebuilds:gpu?.counters?.worldRebuildCount};
+            });
+            const replayFrame=await screen(replayPage,'strict-forward-and-return');
+            assert.equal(replay.result,'CAPTURED_POPULATED_CONTINUITY','REPLAY_NOT_CAPTURED');
+            assert.equal(replay.requestedStepsPerDirection,8,'REPLAY_STEP_COUNT_CHANGED');
+            assert.equal(replay.observations?.length,18,'REPLAY_OBSERVATIONS_MISSING');
+            assert(replay.returnDistanceMeters<.01,'REPLAY_RETURN_DRIFT');
+            assert.equal(replay.installedControlIdentityStable,true,'REPLAY_CONTROL_ID_DRIFT');
+            assert.equal(replay.coarseCoverageSubmittedThroughout,true,'REPLAY_COARSE_COVERAGE_LOST');
+            assert.equal(replay.presentationScope,'EVERY_RECORDED_WALK_STEP','REPLAY_PRESENTATION_NOT_PER_STEP');
+            assert.equal(replay.ownerRoots,3805291,'REPLAY_ROOT_DRIFT');
+            assert.equal(replay.ownerBytes,60884656,'REPLAY_PACKED_BYTES_DRIFT');
+            assert.equal(replay.worldRebuilds,0,'REPLAY_WORLD_REBUILT');
+            assert(replay.framePresentations>=18,'REPLAY_GPU_PRESENTATIONS_MISSING');
+            requireEight(replayLogs);
+            receipt.strictReplay={...replay,replayFrame,logs:replayLogs};
+            await replayPage.close();await ctx.close();
+            receipt.result='PASS_EXACT_SOURCE_PUBLIC_ENTER_AND_STRICT_TRAVERSAL_HOSTED_CHROMIUM';
+          }catch(e){
+            receipt.result='FAIL_CLOSED';receipt.errors.push(e?.stack??String(e));
+            process.exitCode=1;
+          }finally{
+            await fs.writeFile(dir+'receipt.json',JSON.stringify(receipt,null,2)+'\n');
+            await browser.close();
+          }
+          GEN3453_TRAVERSE
+          node --check .p3-gen3453-current-world-traverse.mjs
+          timeout 2400s node .p3-gen3453-current-world-traverse.mjs
+      - name: Preserve exact-source native camera, traversal and image receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3453-traversal-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3453-traverse/
+          if-no-files-found: warn
+          retention-days: 30

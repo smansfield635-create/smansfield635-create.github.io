@@ -46,6 +46,41 @@
       "actualRouterRejection": "FAIL_CLOSED_WHEN_OBSERVED",
       "remoteRouterTransportUnavailable": "NONPROPAGATING_FOR_ADMITTED_SOURCE_CONSTRUCTION_ONLY",
       "additionalMutationMergeActivationDeploymentOrPublicationAuthorityCreated": false
+    },
+    "implementationOrderIsHistoricalSequenceNotFreshRoomTodo": true,
+    "currentContinuationCheckpoint": {
+      "status": "HELD_DRAFT_NOT_MERGED_NOT_PUBLISHED",
+      "productProjectId": "NINE_SUMMITS_GENEROSITY_HARVEST",
+      "candidateOperationId": "DGB_GENEROSITY_HARVEST_NATIVE_TWO_FILE_CONSUMER_20261120_001",
+      "candidateAuthorityGeneration": 3442,
+      "candidatePullRequest": 7550,
+      "candidateBranch": "refs/heads/harvest-gen3442-native-consumer-20261120",
+      "candidateHead": "12e04206407aae29334b33bccd6c86a38679a9fa",
+      "completedCheckpoints": [
+        "NATIVE_HARVEST_CANDIDATE_PRESERVED_IN_DRAFT_PR_7550",
+        "EXISTING_SIX_CASE_BROWSER_QUALIFIER_ADOPTED_VIA_MERGED_PR_7551",
+        "BOUND_CURRENT_CONTINUATION_INDEX_ISSUE_7163"
+      ],
+      "existingQualifierPullRequest": 7551,
+      "existingQualifierBoundCandidate": "8dfd8622684e09bb6435e20d67f95c7e40231138",
+      "firstIncompleteCheckpoint": "SEPARATE_ADMISSION_TO_REBIND_EXISTING_BROWSER_QUALIFIER_EXACT_HEAD_THEN_EXECUTE_REAL_SIX_CASE_WEBGL1_WEBGL2_DESKTOP_TABLET_PHONE_AND_RETAIN_RECEIPTS",
+      "diagnosticHold": "ACTIVE_NO_HARVEST_PRODUCT_ENGINEERING_OR_QUALIFICATION",
+      "downstreamStillHeld": [
+        "AUTHENTIC_POSTBUILD_TWO_PATH_ROUTER_PASS",
+        "PRIVATE_ORIGINAL_RABBIT_SOURCE_VISUAL_REVIEW",
+        "OWNER_ARTISTIC_C1_KEEP",
+        "SEPARATE_REVIEW_AND_RELEASE_AUTHORITY"
+      ],
+      "directEvidence": [
+        "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163",
+        "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7054407857",
+        "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7550",
+        "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7551"
+      ],
+      "formalResumeObjectStatus": "NOT_ASSERTED_USE_VALID_CONTROL_PLANE_RESUME_OBJECT_V1_IF_PRESENT",
+      "revalidateExactCandidateHeadAtUse": true,
+      "readHistoryByDefault": false,
+      "authorityEffect": "NONE_ADMINISTRATIVE_CHECKPOINT_ONLY"
     }
   },
   "localExecution": {

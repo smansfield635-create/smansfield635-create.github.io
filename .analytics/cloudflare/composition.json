@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-21T19:24:37Z",
+  "generatedAt": "2026-11-21T20:25:09Z",
   "window": {
-    "start": "2026-10-22T19:24:37Z",
-    "end": "2026-11-21T19:24:37Z"
+    "start": "2026-10-22T20:25:09Z",
+    "end": "2026-11-21T20:25:09Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 219
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },

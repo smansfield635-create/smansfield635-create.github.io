@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T19:24:37Z",
+  "generatedAt": "2026-11-21T20:25:09Z",
   "window": {
-    "start": "2026-08-23T19:24:37Z",
-    "end": "2026-11-21T19:24:37Z"
+    "start": "2026-08-23T20:25:09Z",
+    "end": "2026-11-21T20:25:09Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2982,
+    "pageLoads": 2972,
     "visits": 751,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2982,
+        "pageLoads": 2972,
         "visits": 751
       }
     },
@@ -33,10 +33,6 @@
       "/showroom/globe/audralia/": {
         "pageLoads": 110,
         "visits": 10
-      },
-      "/showroom/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -50,16 +46,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -169,6 +165,10 @@
       "/showroom/globe/h-earth/": {
         "pageLoads": 51,
         "visits": 10
+      },
+      "/showroom/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/index.html": {
         "pageLoads": 30,
@@ -281,7 +281,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2231,
+        "pageLoads": 2221,
         "visits": 0
       },
       "(none)": {

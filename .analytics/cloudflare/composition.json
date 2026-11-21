@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-21T20:25:09Z",
+  "generatedAt": "2026-11-21T21:25:15Z",
   "window": {
-    "start": "2026-10-22T20:25:09Z",
-    "end": "2026-11-21T20:25:09Z"
+    "start": "2026-10-22T21:25:15Z",
+    "end": "2026-11-21T21:25:15Z"
   },
   "dimensions": {
     "requestPath": [
@@ -83,12 +83,12 @@
         "visits": 0
       },
       {
-        "value": "/products/archcoin/payable/overview/",
+        "value": "/products/archcoin/allocation/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/products/archcoin/allocation/",
+        "value": "/products/archcoin/payable/overview/",
         "pageLoads": 10,
         "visits": 10
       },

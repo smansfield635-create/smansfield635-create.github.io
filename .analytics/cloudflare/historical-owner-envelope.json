@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T14:24:26Z",
+  "generatedAt": "2026-11-21T15:24:10Z",
   "window": {
-    "start": "2026-08-23T14:24:26Z",
-    "end": "2026-11-21T14:24:26Z"
+    "start": "2026-08-23T15:24:10Z",
+    "end": "2026-11-21T15:24:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3002,
-    "visits": 751,
+    "pageLoads": 2902,
+    "visits": 721,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3002,
-        "visits": 751
+        "pageLoads": 2902,
+        "visits": 721
       }
     },
     "byPath": {
@@ -51,7 +51,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 61,
+        "pageLoads": 71,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -103,8 +103,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 481,
-        "visits": 361
+        "pageLoads": 461,
+        "visits": 331
       },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
@@ -135,12 +135,12 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 80,
+        "visits": 40
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -154,16 +154,16 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -231,20 +231,16 @@
         "visits": 10
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 50,
+        "pageLoads": 30,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
+      "/products/archcoin/payable/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 210,
+        "visits": 60
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -281,7 +277,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2251,
+        "pageLoads": 2181,
         "visits": 0
       },
       "(none)": {
@@ -289,8 +285,8 @@
         "visits": 411
       },
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 310,
+        "visits": 310
       }
     }
   }

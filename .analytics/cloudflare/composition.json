@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-21T14:24:26Z",
+  "generatedAt": "2026-11-21T15:24:10Z",
   "window": {
-    "start": "2026-10-22T14:24:26Z",
-    "end": "2026-11-21T14:24:26Z"
+    "start": "2026-10-22T15:24:10Z",
+    "end": "2026-11-21T15:24:10Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 604,
-        "visits": 604
+        "pageLoads": 624,
+        "visits": 624
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -106,8 +106,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1176,
-        "visits": 1176
+        "pageLoads": 1186,
+        "visits": 1186
       },
       {
         "value": "diamondgatebridge.com",
@@ -275,8 +275,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1268,
-        "visits": 1205
+        "pageLoads": 1278,
+        "visits": 1215
       },
       {
         "value": "cache",
@@ -287,8 +287,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1288,
-        "visits": 1205
+        "pageLoads": 1308,
+        "visits": 1215
       }
     ],
     "siteTag": [

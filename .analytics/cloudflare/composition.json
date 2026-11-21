@@ -1,26 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-21T16:24:39Z",
+  "generatedAt": "2026-11-21T17:23:56Z",
   "window": {
-    "start": "2026-10-22T16:24:39Z",
-    "end": "2026-11-21T16:24:39Z"
+    "start": "2026-10-22T17:23:56Z",
+    "end": "2026-11-21T17:23:56Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 604,
-        "visits": 604
+        "pageLoads": 603,
+        "visits": 603
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 290,
+        "pageLoads": 280,
         "visits": 218
       },
       {
+        "value": "/products/education/personal-training/",
+        "pageLoads": 80,
+        "visits": 80
+      },
+      {
         "value": "/products/education/personal-training/course.html",
-        "pageLoads": 100,
-        "visits": 100
+        "pageLoads": 80,
+        "visits": 80
       },
       {
         "value": "/",
@@ -33,9 +38,9 @@
         "visits": 50
       },
       {
-        "value": "/products/education/personal-training/",
-        "pageLoads": 50,
-        "visits": 50
+        "value": "/products/education/",
+        "pageLoads": 20,
+        "visits": 20
       },
       {
         "value": "/release-proof/",
@@ -54,11 +59,6 @@
       },
       {
         "value": "/preflight/app/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/products/education/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -106,8 +106,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1206,
-        "visits": 1206
+        "pageLoads": 1175,
+        "visits": 1175
       },
       {
         "value": "diamondgatebridge.com",
@@ -133,13 +133,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1237,
-        "visits": 1164
+        "pageLoads": 1216,
+        "visits": 1133
       },
       {
         "value": "CN",
-        "pageLoads": 30,
-        "visits": 30
+        "pageLoads": 40,
+        "visits": 40
       },
       {
         "value": "CA",
@@ -155,13 +155,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1187,
-        "visits": 1115
+        "pageLoads": 1146,
+        "visits": 1074
       },
       {
         "value": "mobile",
-        "pageLoads": 159,
-        "visits": 149
+        "pageLoads": 139,
+        "visits": 129
       },
       {
         "value": "tablet",
@@ -172,8 +172,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 755,
-        "visits": 755
+        "pageLoads": 754,
+        "visits": 754
       },
       {
         "value": "Chrome",
@@ -219,8 +219,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 807,
-        "visits": 807
+        "pageLoads": 806,
+        "visits": 806
       },
       {
         "value": "Windows",
@@ -251,8 +251,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 756,
-        "visits": 755
+        "pageLoads": 755,
+        "visits": 754
       },
       {
         "value": "0",
@@ -263,8 +263,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1227,
-        "visits": 1205
+        "pageLoads": 1226,
+        "visits": 1204
       },
       {
         "value": "routing-apis",
@@ -275,8 +275,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1268,
-        "visits": 1205
+        "pageLoads": 1267,
+        "visits": 1204
       },
       {
         "value": "cache",
@@ -287,15 +287,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1288,
-        "visits": 1205
+        "pageLoads": 1287,
+        "visits": 1204
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1288,
-        "visits": 1205
+        "pageLoads": 1287,
+        "visits": 1204
       }
     ]
   }

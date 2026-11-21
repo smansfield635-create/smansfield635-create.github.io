@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-21T16:24:39Z",
+  "generatedAt": "2026-11-21T17:23:56Z",
   "window30d": {
-    "start": "2026-10-22T16:24:39Z",
-    "end": "2026-11-21T16:24:39Z"
+    "start": "2026-10-22T17:23:56Z",
+    "end": "2026-11-21T17:23:56Z"
   },
   "daily": [
     {
       "date": "2026-10-23",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-24",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-25",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 36
+      "pageLoads": 35
     },
     {
       "date": "2026-11-14",
@@ -128,15 +128,15 @@
     }
   ],
   "summary": {
-    "pageLoads": 1288,
-    "botPageLoads": 756,
+    "pageLoads": 1287,
+    "botPageLoads": 755,
     "nonBotPageLoads": 532
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1206,
-      "visits": 1206
+      "pageLoads": 1175,
+      "visits": 1175
     },
     {
       "host": "diamondgatebridge.com",
@@ -162,18 +162,23 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 604,
-      "visits": 604
+      "pageLoads": 603,
+      "visits": 603
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 290,
+      "pageLoads": 280,
       "visits": 218
     },
     {
+      "path": "/products/education/personal-training/",
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
       "path": "/products/education/personal-training/course.html",
-      "pageLoads": 100,
-      "visits": 100
+      "pageLoads": 80,
+      "visits": 80
     },
     {
       "path": "/",
@@ -186,17 +191,12 @@
       "visits": 50
     },
     {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 50,
-      "visits": 50
+      "path": "/products/education/",
+      "pageLoads": 20,
+      "visits": 20
     },
     {
       "path": "/release-proof/",
-      "pageLoads": 10,
-      "visits": 10
-    },
-    {
-      "path": "/showroom/globe/audralia/diagnostic/",
       "pageLoads": 10,
       "visits": 10
     }

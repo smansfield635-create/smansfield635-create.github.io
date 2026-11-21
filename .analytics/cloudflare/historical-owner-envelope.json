@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T16:24:39Z",
+  "generatedAt": "2026-11-21T17:23:56Z",
   "window": {
-    "start": "2026-08-23T16:24:39Z",
-    "end": "2026-11-21T16:24:39Z"
+    "start": "2026-08-23T17:23:56Z",
+    "end": "2026-11-21T17:23:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3042,
-    "visits": 771,
+    "pageLoads": 2982,
+    "visits": 751,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3042,
-        "visits": 771
+        "pageLoads": 2982,
+        "visits": 751
       }
     },
     "byPath": {
@@ -47,7 +47,7 @@
         "visits": 10
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -90,36 +90,32 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/governance/": {
+        "pageLoads": 20,
+        "visits": 10
+      },
       "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/": {
-        "pageLoads": 491,
-        "visits": 351
-      },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 20,
-        "visits": 10
+        "pageLoads": 481,
+        "visits": 361
       },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
       },
-      "/laws/research/methods-and-models/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/laws/research/findings-and-boundaries/": {
-        "pageLoads": 10,
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/research/methods-and-models/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -134,25 +130,29 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
+      },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
       },
       "/about/": {
         "pageLoads": 40,
@@ -161,10 +161,6 @@
       "/door/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 20,
-        "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
@@ -231,16 +227,12 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 10
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
         "visits": 0
-      },
-      "/products/education/": {
-        "pageLoads": 220,
-        "visits": 70
       },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
@@ -250,25 +242,29 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 70,
-        "visits": 0
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 30
       },
-      "/products/archcoin/": {
+      "/meet-sean-mansfield/": {
         "pageLoads": 10,
-        "visits": 10
+        "visits": 0
       },
       "/home/": {
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 10,
+        "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 170,
-        "visits": 140
+        "pageLoads": 150,
+        "visits": 120
+      },
+      "/analytics/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
@@ -285,20 +281,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2271,
+        "pageLoads": 2231,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 421,
-        "visits": 421
+        "pageLoads": 411,
+        "visits": 411
       },
       "www.google.com": {
         "pageLoads": 340,
         "visits": 340
-      },
-      "com.google.android.googlequicksearchbox": {
-        "pageLoads": 10,
-        "visits": 10
       }
     }
   }

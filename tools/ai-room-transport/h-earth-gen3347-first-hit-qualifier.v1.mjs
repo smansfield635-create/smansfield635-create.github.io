@@ -68,9 +68,9 @@ export function retargetHistoricalOverlay(overlay,renderer){
  * soil/rock/material weights as normalized 8-bit GPU scalar readbacks.
  * No physical Android photo-pixel parity or release authority follows. */
 export function extendStageOverlay(source){
- let s=one(source,'firstHitMode>7','firstHitMode>11');
+ let s=one(source,'firstHitMode>7','firstHitMode>16');
  s=one(s,'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;',
-   'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;\\n  float hEarthProbeSlope=0.0,hEarthProbeRock=0.0,hEarthProbeSoilWeight=0.0,hEarthProbeSoilAuthority=0.0,hEarthProbeIdentity=0.0,hEarthProbePigment=0.0,hEarthProbeHabitat=0.0,hEarthProbeRetention=0.0;');
+   'hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;\\n  float hEarthProbeSlope=0.0,hEarthProbeRock=0.0,hEarthProbeSoilWeight=0.0,hEarthProbeSoilAuthority=0.0,hEarthProbeIdentity=0.0,hEarthProbePigment=0.0,hEarthProbeHabitat=0.0,hEarthProbeRetention=0.0;\\n  vec3 hEarthRGBPreSoil=vec3(0.0),hEarthRGBPostSoil=vec3(0.0),hEarthRGBPostIdentity=vec3(0.0),hEarthRGBPostPigment=vec3(0.0),hEarthRGBPostHabitat=vec3(0.0);');
  const extra=[
   "  s=probeOnce(s,'    float shelteredSoil=clamp(',",
   "    '    hEarthProbeSlope=slope;hEarthProbeRock=rockExposure;\\n    float shelteredSoil=clamp(');",
@@ -85,8 +85,24 @@ export function extendStageOverlay(source){
   "  s=probeOnce(s,'    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
   "    '     hEarthProbeHabitat=habitatColorCoverage;hEarthProbeRetention=acceptedColorRetention;\\n    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);');"
  ].join('\n');
+
+ // Gen3383: source-only RGB8 palette snapshots before lighting. The original
+ // 11 numeric modes, first-hit provenance, camera and product source are fixed.
+ const rgbExtra=[
+  "  s=probeOnce(s,'      float worldSoilWeight=worldSoilCoverage;',",
+  "    '      hEarthRGBPreSoil=palette;\\n      float worldSoilWeight=worldSoilCoverage;');",
+  "  s=probeOnce(s,'        palette=mix(palette,worldSoilFinal,worldSoilWeight);',",
+  "    '        palette=mix(palette,worldSoilFinal,worldSoilWeight);\\n        hEarthRGBPostSoil=palette;');",
+  "  s=probeOnce(s,'      palette=mix(palette,identityBase,identityWeight);',",
+  "    '      palette=mix(palette,identityBase,identityWeight);\\n      hEarthRGBPostIdentity=palette;');",
+  "  s=probeOnce(s,'      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);',",
+  "    '      palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);\\n      hEarthRGBPostPigment=palette;');",
+  "  s=probeOnce(s,'    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);',",
+  "    '    base=mix(base,habitatSoil,habitatColorCoverage*.68*acceptedColorRetention);\\n    hEarthRGBPostHabitat=base;');"
+ ].join('\n');
  const marker="  s=probeOnce(s,'  outColor=vec4(lit,outputAlpha);',";
  s=one(s,marker,extra+'\n'+marker);
+ s=one(s,marker,rgbExtra+'\n'+marker);
  const tail='    discard;\n  }\n  outColor=vec4(lit,outputAlpha);';
  const added=[
   "    if(uMaterialProbeMode==8){outColor=vec4(250.0,floor(clamp(hEarthProbeSlope,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRock,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}",
@@ -95,6 +111,15 @@ export function extendStageOverlay(source){
   "    if(uMaterialProbeMode==11){outColor=vec4(253.0,floor(clamp(hEarthProbeHabitat,0.0,1.0)*255.0+0.5),floor(clamp(hEarthProbeRetention,0.0,1.0)*255.0+0.5),255.0)/255.0;return;}"
  ].join('\n');
  s=one(s,tail,added+'\n'+tail);
+
+ const rgbReturns=[
+  "    if(uMaterialProbeMode==12){outColor=vec4(clamp(hEarthRGBPreSoil,vec3(0.0),vec3(1.0)),1.0);return;}",
+  "    if(uMaterialProbeMode==13){outColor=vec4(clamp(hEarthRGBPostSoil,vec3(0.0),vec3(1.0)),1.0);return;}",
+  "    if(uMaterialProbeMode==14){outColor=vec4(clamp(hEarthRGBPostIdentity,vec3(0.0),vec3(1.0)),1.0);return;}",
+  "    if(uMaterialProbeMode==15){outColor=vec4(clamp(hEarthRGBPostPigment,vec3(0.0),vec3(1.0)),1.0);return;}",
+  "    if(uMaterialProbeMode==16){outColor=vec4(clamp(hEarthRGBPostHabitat,vec3(0.0),vec3(1.0)),1.0);return;}"
+ ].join('\n');
+ s=one(s,tail,rgbReturns+'\n'+tail);
  return s;
 }
 export function injectHideGrass(source){
@@ -114,12 +139,14 @@ export function verifyReceiptRows(rows){
   const sample=rows[i].samples[j];
   insist(sample.modeEvidence?.length===7&&sample.modeEvidence.every((v,k)=>v.mode===k+1),'GEN3347_SEVEN_MODE_EVIDENCE_MISSING');
   insist(sample.materialModes?.length===4&&sample.materialModes.every((v,k)=>v.mode===k+8),'GEN3375_FOUR_SCALAR_MODES_REQUIRED');
+  insist(sample.paletteModes?.length===5&&sample.paletteModes.every((v,k)=>v.mode===k+12),'GEN3383_FIVE_RGB_PALETTE_MODES_REQUIRED');
   if(i===0&&j===3){
-   insist(sample.compound?.status==='PIXEL_FIRST_HIT_UNRESOLVED'&&sample.materialModes.every(v=>v.status==='TRANSLUCENT_NOT_TERRAIN'),'GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED');
+   insist(sample.compound?.status==='PIXEL_FIRST_HIT_UNRESOLVED'&&sample.materialModes.every(v=>v.status==='TRANSLUCENT_NOT_TERRAIN')&&sample.paletteModes.every(v=>v.status==='TRANSLUCENT_NOT_TERRAIN'),'GEN3375_TRANSLUCENT_SAMPLE_MISATTRIBUTED');
    continue;
   }
   insist(sample.compound?.status==='SOURCE_BOUND_MATCHED_PIXEL_MODE_SET_NOT_ANDROID_FIRST_HIT'&&sample.compound.role===1&&sample.compound.primitiveIndex===0&&sample.compound.surfaceClass===4,'GEN3375_CLASS4_TERRAIN_FIRST_HIT_MISMATCH');
   insist(sample.materialModes.every(v=>v.status==='SOURCE_BOUND_GPU_SCALAR'&&v.values.length===2&&v.values.every(n=>Number.isFinite(n)&&n>=0&&n<=1)),'GEN3375_MATERIAL_SCALAR_READBACK_INVALID');
+  insist(sample.paletteModes.every(v=>v.status==='SOURCE_BOUND_PRELIGHT_RGB8'&&v.values.length===3&&v.values.every(n=>Number.isFinite(n)&&n>=0&&n<=1)),'GEN3383_RGB_PALETTE_READBACK_INVALID');
   if(i===0)insist(Math.abs(sample.compound.x-positions[j][0])<1&&Math.abs(sample.compound.z-positions[j][1])<1,'GEN3375_ORIGINAL_REGION_WORLD_HIT_DRIFT');
  }
  return true;
@@ -380,13 +407,13 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
    validatePoseReport(normal,pose.owner);
    const png=pngCheck(normal.data),filename='gen3347-'+pose.id+'-normal.png';
    fs.writeFileSync(path.join(output,filename),png);
-   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],materialModes:[],compound:null}))};
+   const row={id:pose.id,sourceHead:FIXED.productHead,normalPng:filename,normalSha256:sha256(png),camera:normal.camera,samples:pose.samples.map(p=>({id:p.id,pixelBottom:toGlPixel(p),modeEvidence:[],materialModes:[],paletteModes:[],compound:null}))};
    row.grassNormalColorABA=await captureGrassNormalColorABA(page,state,row.samples.map(s=>({id:s.id,pixelBottom:s.pixelBottom})));
    validatePoseReport({camera:row.grassNormalColorABA.camera,viewport:row.grassNormalColorABA.viewport},pose.owner);
    receipt.grassVisibleHiddenComparisonObserved=true;
    receipt.poses.push(row);fs.writeFileSync(path.join(output,'qualification-payload.json'),JSON.stringify(receipt,null,2)+'\n');
    let previousFrame=row.grassNormalColorABA.frameSequence.at(-1);
-   for(let mode=1;mode<=11;mode++){
+   for(let mode=1;mode<=16;mode++){
     const raw=await page.evaluate(({state,mode,pixels})=>{
      globalThis.__gen3347HideGrass=true;globalThis.__hEarthFirstHitMaterialMode=mode;
      globalThis.__HEarthAuditPresent(state);
@@ -408,13 +435,22 @@ async function capture(browser,base,renderer,route,probe,output,receipt){
      if(mode<=7){
       const decoded=probe.decodeModePixel(mode,new Uint8Array(raw.values[i]),capture);
       rec.modeEvidence.push(decoded);
-     }else{
+     }else if(mode<=11){
       const rgba=raw.values[i];
       if(rgba[0]===249&&rgba[3]===255){
        rec.materialModes.push({mode,status:'TRANSLUCENT_NOT_TERRAIN',rgba,capture});
       }else{
        insist(rgba[0]===mode+242&&rgba[3]===255,'GEN3375_SCALAR_SENTINEL_OR_ALPHA_MISMATCH');
        rec.materialModes.push({mode,status:'SOURCE_BOUND_GPU_SCALAR',values:[rgba[1]/255,rgba[2]/255],rgba,capture});
+      }
+     }else{
+      const rgba=raw.values[i];
+      insist(Array.isArray(rgba)&&rgba.length===4&&rgba.every(n=>Number.isInteger(n)&&n>=0&&n<=255),'GEN3383_RGBA8_INVALID');
+      if(rgba[0]===249&&rgba[1]===0&&rgba[2]===0&&rgba[3]===255){
+       rec.paletteModes.push({mode,status:'TRANSLUCENT_NOT_TERRAIN',rgba,capture});
+      }else{
+       insist(rgba[3]===255,'GEN3383_RGB_PALETTE_ALPHA_MISMATCH');
+       rec.paletteModes.push({mode,status:'SOURCE_BOUND_PRELIGHT_RGB8',values:rgba.slice(0,3).map(v=>v/255),rgba,capture});
       }
      }
     }

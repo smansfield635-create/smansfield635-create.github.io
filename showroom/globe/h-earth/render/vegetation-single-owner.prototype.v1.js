@@ -640,6 +640,12 @@ void main(){
  // Accepted woodland and cavern controls lie outside this adjustment.
  float beachwardContinuity=smoothstep(70.,165.,aRoot.x)*smoothstep(-300.,-225.,aRoot.z);
  float width=mix(.010,.016,h)*scale*mix(1.18,1.42,tuftVariation)*mix(1.,1.70,beachwardContinuity)*mix(1.36,1.58,tuftVariation)*mix(1.,2.25,float(uRiparian));
+ // P4-only bounded irregular silhouettes. No P3 root, draw, or shading change.
+ float bankTuft=0.;
+ if(uRiparian==1){
+   bankTuft=fract(sin(dot(aRoot.xz,vec2(17.143,59.811)))*24593.137);
+   width*=mix(1.15,1.40,bankTuft);
+ }
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));
@@ -651,14 +657,22 @@ void main(){
  float foothillDry=max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz));
  float meadowGrowth=meadowGrowthCoherence(aRoot.xz,foothillDry);
  float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale*mix(meadowGrowth,1.,entrance)*mix(1.,1.85,float(uRiparian));
+ if(uRiparian==1)height*=mix(.91,1.17,bankTuft);
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.81));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
+ // Roots and ground contact remain fixed: only the added P4 blade tips lean.
+ if(uRiparian==1)p+=vec3(cos(angle+2.2*bankTuft),0.,sin(angle+2.2*bankTuft))*level*level*height*mix(.06,.14,bankTuft);
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
  // Reuse the exact same dry signal and organic field in the occupied ground.
  vec3 palette=landscapeCoverPalette(aRoot.xz,foothillDry);
  palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
   // P4-only green bank blades. When uRiparian=0 the P3 palette is unchanged.
   palette=mix(palette,vec3(.14,.32,.11),float(uRiparian)*(.52+.12*h));
+ // Per-root green/olive mixing prevents a uniform neon shoreline stripe.
+ if(uRiparian==1){
+   vec3 bankTone=mix(vec3(.19,.27,.095),vec3(.105,.355,.125),bankTuft);
+   palette=mix(palette,bankTone,.29);
+ }
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);
 }`;
 const FS=`#version 300 es

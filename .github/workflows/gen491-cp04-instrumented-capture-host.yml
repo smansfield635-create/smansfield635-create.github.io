@@ -1,0 +1,264 @@
+name: Gen491 CP-04 Instrumented Capture Host
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gen491-cp04-instrumented-capture-host.yml'
+
+permissions:
+  contents: read
+
+env:
+  PUBLIC_SOURCE_HEAD: 521c4b146337e16c784b9f3f0a6bb94045b756b5
+  OPERATION_ID: CHAPTER_02_CURRENT_H_EARTH_EXPERIENCE_CAPTURE_20260912_001
+  GENERATION: '491'
+  PROFILE_ID: H_EARTH_CHAPTER02_GEN491_ONLY
+  FPS: '30'
+  WIDTH: '1920'
+  HEIGHT: '1080'
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact frozen Gen491 H-Earth source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PUBLIC_SOURCE_HEAD }}
+          fetch-depth: 1
+          persist-credentials: false
+          path: source
+
+      - name: Verify exact source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C source rev-parse HEAD)" = "$PUBLIC_SOURCE_HEAD"
+          test "$(git -C source hash-object showroom/globe/h-earth/index.html)" = 'f4fa5df980c639184352d978909532dc8f1bcbd8'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install existing Playwright browser runtime and verify encoder
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.54.1
+          python -m pip install --disable-pip-version-check playwright==1.54.0
+          npx playwright install --with-deps chromium
+          command -v ffmpeg
+          command -v ffprobe
+          CHROMIUM_PATH="$(node -e "const {chromium}=require('playwright');process.stdout.write(chromium.executablePath())")"
+          test -x "$CHROMIUM_PATH"
+          printf 'CHROMIUM_PATH=%s\n' "$CHROMIUM_PATH" >> "$GITHUB_ENV"
+
+      - name: Start exact frozen source server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/source" > "$RUNNER_TEMP/gen491-server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/gen491-server.pid"
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/gen491-server.log"
+          exit 1
+
+      - name: Run existing CP3D renderer-survival instrumentation on exact Gen491 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/cp3d"
+          cd source
+          CP3D_ORIGIN=http://127.0.0.1:4173 \
+          CP3D_EVIDENCE_DIR="$RUNNER_TEMP/cp3d" \
+          node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
+          test -f "$RUNNER_TEMP/cp3d/cp3d-gen329-renderer-survival.receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/cp3d/cp3d-gen329-renderer-survival.receipt.json','utf8'));
+          if(r.result!=='PASS_CLOSED' && r.status!=='CP3D_GEN329_BROWSER_RENDERER_SURVIVAL_PASS') throw new Error('CP3D_INSTRUMENTATION_NONPASS');
+          if(r.runtimeExclusivity?.activeWebGL2ContextCount!==1) throw new Error('CP3D_WEBGL2_CONTEXT_COUNT_NOT_ONE');
+          if(r.renderer?.initialized!==true || r.renderer?.firstFramePresented!==true) throw new Error('CP3D_RENDERER_NOT_PRESENTING');
+          NODE
+
+      - name: Execute frozen Gen491 choreography inside an instrumented H-Earth browser session
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/gen491-output"
+          FRAMES="$RUNNER_TEMP/gen491-frames"
+          CHECKPOINTS="$OUT/checkpoints"
+          mkdir -p "$OUT" "$FRAMES" "$CHECKPOINTS"
+          export OUT FRAMES CHECKPOINTS
+          cat > "$RUNNER_TEMP/gen491_capture.py" <<'PY'
+          import hashlib,json,os,time
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+
+          FPS=30
+          W=1920
+          H=1080
+          URL='http://127.0.0.1:4173/showroom/globe/h-earth/'
+          frames=Path(os.environ['FRAMES'])
+          out=Path(os.environ['OUT'])
+          checkpoints=Path(os.environ['CHECKPOINTS'])
+          chromium=os.environ['CHROMIUM_PATH']
+          actions=[
+            {'type':'WAIT_CAPTURE','durationMs':1500},
+            {'type':'MOUSE_DRAG_CAPTURE','fromX':1200,'fromY':540,'toX':900,'toY':500,'durationMs':1500},
+            {'type':'WAIT_CAPTURE','durationMs':1200},
+            {'type':'KEY_HOLD_CAPTURE','key':'w','durationMs':6000},
+            {'type':'MOUSE_DRAG_CAPTURE','fromX':1100,'fromY':560,'toX':850,'toY':430,'durationMs':1800},
+            {'type':'KEY_HOLD_CAPTURE','key':'w','durationMs':6500},
+            {'type':'WAIT_CAPTURE','durationMs':1200},
+            {'type':'KEY_HOLD_CAPTURE','key':'s','durationMs':6500},
+            {'type':'MOUSE_DRAG_CAPTURE','fromX':850,'fromY':430,'toX':1200,'toY':540,'durationMs':1800},
+            {'type':'WAIT_CAPTURE','durationMs':1500},
+          ]
+
+          def runtime_snapshot(page):
+              return page.evaluate('''() => {
+                const route=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                const startup=globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null;
+                const snap=route?.getSnapshot?.() ?? null;
+                return {
+                  startup,
+                  routeReady: route?.ready === true,
+                  eligible: snap?.eligible ?? null,
+                  status: snap?.status ?? null,
+                  runtimeExclusivity: snap?.runtimeExclusivity ?? null,
+                  renderer: {
+                    initialized: snap?.liveGpu?.resources?.initialized ?? null,
+                    presentations: Number(snap?.liveGpu?.counters?.gpuFramebufferPresentationCount ?? 0),
+                    packageUploadedOnce: snap?.liveGpu?.correspondence?.packageUploadedOnce ?? null,
+                    resourceIdentityStable: snap?.liveGpu?.correspondence?.resourceIdentityStable ?? null
+                  },
+                  routeDataset: (() => { const r=document.getElementById('h-earth-functional-landscape-route'); return r ? {...r.dataset} : null; })()
+                };
+              }''')
+
+          frame=0
+          def shot(page):
+              global frame
+              page.screenshot(path=str(frames/f'frame-{frame:06d}.png'), animations='allow')
+              frame += 1
+
+          def capture_for(page,ms):
+              count=max(1,round(ms*FPS/1000))
+              interval=1000.0/FPS
+              for _ in range(count):
+                  started=time.monotonic()
+                  shot(page)
+                  left=interval-(time.monotonic()-started)*1000
+                  if left>0: page.wait_for_timeout(left)
+
+          def checkpoint(page,index,label):
+              snap=runtime_snapshot(page)
+              (checkpoints/f'{index:02d}-{label}.json').write_text(json.dumps(snap,indent=2)+'\n')
+              page.screenshot(path=str(checkpoints/f'{index:02d}-{label}.png'), animations='allow')
+              if not snap.get('routeReady'): raise RuntimeError(f'ROUTE_NOT_READY_AT_CHECKPOINT:{index}:{label}')
+              if snap.get('runtimeExclusivity',{}).get('activeWebGL2ContextCount') != 1: raise RuntimeError(f'WEBGL2_CONTEXT_COUNT_INVALID:{index}:{label}')
+              if snap.get('renderer',{}).get('initialized') is not True: raise RuntimeError(f'RENDERER_NOT_INITIALIZED:{index}:{label}')
+              if snap.get('renderer',{}).get('presentations',0) < 1: raise RuntimeError(f'NO_FRAMEBUFFER_PRESENTATION:{index}:{label}')
+              return snap
+
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,executable_path=chromium,args=['--no-sandbox','--disable-dev-shm-usage','--enable-webgl','--ignore-gpu-blocklist','--use-gl=swiftshader','--enable-unsafe-swiftshader'])
+              page=browser.new_page(viewport={'width':W,'height':H})
+              console=[]; errors=[]
+              page.on('console',lambda m: console.append({'type':m.type,'text':m.text}))
+              page.on('pageerror',lambda e: errors.append({'message':str(e)}))
+              page.goto(URL,wait_until='domcontentloaded',timeout=60000)
+              page.wait_for_function('''() => globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready === true || !!globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.firstFailureStage''',timeout=90000)
+              before=checkpoint(page,0,'instrumented-ready')
+              if not before['routeReady']:
+                  raise RuntimeError('H_EARTH_STARTUP_FAILED:'+json.dumps(before.get('startup')))
+              page.wait_for_timeout(1200)
+              checkpoint(page,1,'settled-before-capture')
+              for i,a in enumerate(actions,1):
+                  t=a['type']
+                  if t=='WAIT_CAPTURE':
+                      capture_for(page,a['durationMs'])
+                  elif t=='KEY_HOLD_CAPTURE':
+                      page.keyboard.down(a['key']); capture_for(page,a['durationMs']); page.keyboard.up(a['key'])
+                  elif t=='MOUSE_DRAG_CAPTURE':
+                      page.mouse.move(a['fromX'],a['fromY']); page.mouse.down()
+                      steps=max(2,round(a['durationMs']*FPS/1000))
+                      for j in range(1,steps+1):
+                          q=j/steps
+                          page.mouse.move(a['fromX']+(a['toX']-a['fromX'])*q,a['fromY']+(a['toY']-a['fromY'])*q)
+                          shot(page); page.wait_for_timeout(1000/FPS)
+                      page.mouse.up()
+                  checkpoint(page,i+1,f'after-action-{i:02d}')
+              after=runtime_snapshot(page)
+              (out/'instrumentation-session.json').write_text(json.dumps({'schema':'CH02_GEN491_INSTRUMENTED_CAPTURE_SESSION_v1','result':'PASS','sourceHead':os.environ['PUBLIC_SOURCE_HEAD'],'operationId':os.environ['OPERATION_ID'],'generation':491,'profileId':os.environ['PROFILE_ID'],'frameCount':frame,'before':before,'after':after,'console':console,'pageErrors':errors,'actions':actions},indent=2)+'\n')
+              browser.close()
+
+          if frame != 885:
+              raise RuntimeError(f'FRAME_COUNT_NOT_885:{frame}')
+          print(json.dumps({'frameCount':frame}))
+          PY
+          python "$RUNNER_TEMP/gen491_capture.py"
+
+      - name: Encode, probe, hash, and build CP-04 manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/gen491-output"
+          FRAMES="$RUNNER_TEMP/gen491-frames"
+          MP4="$OUT/chapter02-current-h-earth-source-reel.mp4"
+          ffmpeg -y -v error -framerate 30 -i "$FRAMES/frame-%06d.png" -c:v libx264 -pix_fmt yuv420p -movflags +faststart -r 30 "$MP4"
+          ffmpeg -v error -i "$MP4" -f null -
+          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height,r_frame_rate,nb_frames -show_entries format=duration,format_name -of json "$MP4" > "$OUT/ffprobe.json"
+          sha256sum "$MP4" > "$OUT/sha256.txt"
+          export OUT FRAMES MP4
+          python3 - <<'PY'
+          import glob,hashlib,json,os
+          from pathlib import Path
+          out=Path(os.environ['OUT']); frames=Path(os.environ['FRAMES']); mp4=Path(os.environ['MP4'])
+          probe=json.loads((out/'ffprobe.json').read_text()); s=probe['streams'][0]; f=probe['format']
+          raw=mp4.read_bytes(); sha=hashlib.sha256(raw).hexdigest()
+          if sha != (out/'sha256.txt').read_text().split()[0]: raise SystemExit('SHA256_RECHECK_FAILED')
+          if s['codec_name']!='h264' or int(s['width'])!=1920 or int(s['height'])!=1080 or s['r_frame_rate']!='30/1' or int(s['nb_frames'])!=885: raise SystemExit('FFPROBE_IDENTITY_MISMATCH')
+          records=[]; lines=[]
+          for i,p in enumerate(sorted(frames.glob('frame-*.png'))):
+              h=hashlib.sha256(p.read_bytes()).hexdigest(); t=round(i*1000/30)
+              records.append({'index':i,'timeMs':t,'sha256':h}); lines.append(f'{i},{t},{h}\n')
+          sequence=hashlib.sha256(''.join(lines).encode()).hexdigest()
+          frame_manifest={'schema':'CH02_HEARTH_SOURCE_REEL_FRAME_MANIFEST_v1','result':'PASS','sourceHead':os.environ['PUBLIC_SOURCE_HEAD'],'fps':30,'frameCount':len(records),'sequenceSha256':sequence,'frames':records}
+          (out/'chapter02-current-h-earth-source-reel.frame-manifest.json').write_text(json.dumps(frame_manifest,indent=2)+'\n')
+          manifest={
+            'schema':'CH02_HEARTH_SOURCE_REEL_MANIFEST_v1','result':'MATERIALIZED_UNQUALIFIED','status':'CH02_HEARTH_SOURCE_REEL_MATERIALIZED_UNQUALIFIED',
+            'operationId':os.environ['OPERATION_ID'],'generation':491,'profileId':os.environ['PROFILE_ID'],
+            'sourceRepository':'smansfield635-create/smansfield635-create.github.io','sourceHead':os.environ['PUBLIC_SOURCE_HEAD'],
+            'captureContractId':'ISSUE_598_CP_01',
+            'captureContract':'PLANETARY_GLOBE_TO_AUDRALIA_APPROACH_TO_H_EARTH_ENTRY_TO_COASTLINE_TO_BEACH_TERRAIN_TO_MOUNTAIN_TOPOGRAPHY_TO_CONTINUOUS_FORWARD_TRAVERSE_TO_DELIBERATE_WITHDRAWAL_TO_PLANETARY_GLOBE',
+            'resolution':{'width':int(s['width']),'height':int(s['height'])},'fps':30,'duration':float(f['duration']),'frameCount':int(s['nb_frames']),
+            'codec':s['codec_name'],'container':'mp4','formatName':f['format_name'],'sha256':sha,'byteLength':len(raw),
+            'frameSequenceSha256':sequence,'instrumentation':'EXISTING_H_EARTH_CP3D_PLUS_SAME_SESSION_RUNTIME_ASSERTIONS','visualQualificationPerformed':False,
+            'productMutationPerformed':False,'repositoryMutationPerformed':False
+          }
+          (out/'chapter02-current-h-earth-source-reel.manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          receipt={'schema':'CH02_GEN491_CP04_INSTRUMENTED_CAPTURE_EXECUTION_RECEIPT_v1','result':'PASS_CLOSED','sourceHead':manifest['sourceHead'],'mp4Sha256':sha,'frameCount':885,'duration':manifest['duration'],'resolution':manifest['resolution'],'fps':30,'codec':'h264','container':'mp4','fullDecodeErrors':0,'cp3dInstrumentationPassed':True,'sameSessionInstrumentationPassed':True,'materializationState':'CH02_HEARTH_SOURCE_REEL_MATERIALIZED_UNQUALIFIED','repositoryMutationPerformed':False}
+          (out/'cp04-execution.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+
+      - name: Upload exact CP-04 materialization package
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen491-cp04-instrumented-capture-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/gen491-output/**
+            ${{ runner.temp }}/cp3d/**
+            ${{ runner.temp }}/gen491-server.log
+          if-no-files-found: error
+          retention-days: 90

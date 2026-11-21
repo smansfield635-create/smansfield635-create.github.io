@@ -1349,20 +1349,16 @@ void main(){
                                     min(vWorldPosition.z-uMeadowGroundBounds.y,uMeadowGroundBounds.w-vWorldPosition.z));
       float outerFeatherMeters=5.0+3.0*noise2(vWorldPosition.xz*0.13+vec2(3.7,7.3));
       float meadowOuterWeight=smoothstep(0.0,outerFeatherMeters,max(0.0,meadowOuterDistance));
-      // Gen3259: keep the full original habitat signal, but strongly reduce
-      // only the additional meadow occupancy color that created the broad
-      // artificial green/ochre field in the Gen3253 TINT-ON comparison.
-      // The frozen R8/NEAREST zero cells remain a hard exclusion: when
-      // meadowOccupancy is zero, the meadow excess below is exactly zero.
-      float gen3259OriginalHabitat=habitatColorCoverage;
-      float gen3259MeadowExcess=max(0.0,meadowOccupancy*meadowOuterWeight-gen3259OriginalHabitat);
-      // Fade the reduced addition into unchanged surrounding terrain over
-      // a broad world-space margin; do not interpolate excluded R8 cells.
-      float gen3259RegionalFade=smoothstep(0.0,14.0,max(0.0,meadowOuterDistance));
-      float gen3259SoilStrength=mix(0.10,0.16,
+      // Gen3273: harmonize under-color where installed, eligible grass exists.
+      // The reference tree meadows are outside this positive-X map; original
+      // habitat, bare earth, protected zero cells and all lighting stay intact.
+      // Reuse the same habitatSoil palette already shared with the reference
+      // meadows. The established-root weight bridges old rectangular materials.
+      float establishedMeadow=clamp(meadowOccupancy*meadowOuterWeight,0.0,1.0);
+      float meadowFamilyCoverage=mix(0.71,0.78,
         noise2(vWorldPosition.xz*0.052+vec2(31.0,17.0)));
-      habitatColorCoverage=gen3259OriginalHabitat
-        +gen3259MeadowExcess*gen3259SoilStrength*gen3259RegionalFade;
+      float meadowUndercolorWeight=0.88*smoothstep(0.0,0.90,establishedMeadow);
+      habitatColorCoverage=mix(habitatColorCoverage,meadowFamilyCoverage,meadowUndercolorWeight);
     }
     // Gen3345: retain accepted grove/cavern soil when vegetation becomes ready.
     // Beyond those meadows, keep the approved photographic ground dominant.
@@ -2132,27 +2128,19 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const meadowMap=JSON.parse(await new Response(new Blob([meadowGzip]).stream().pipeThrough(new DecompressionStream('gzip'))).text());
       if(meadowMap.cells?.length!==76874)throw Error('MEADOW_OCCUPANCY_CELL_COUNT_DRIFT');
       const meadowWidth=238,meadowHeight=323,meadowPixels=new Uint8Array(meadowWidth*meadowHeight);
-      const originalPanels=[[-213,-298,-69,-154],[-298,-570,88,-154],[-448,-283,448,-93]];
-      // Keep original habitat atlas untouched. Only admit source-eligible meadow
-      // occupancy into a narrow, smoothly tapered overlap inside old rectangles.
-      // This removes the binary material handoff without tinting protected soil.
-      const panelOverlapMeters=9;
+      // Gen3273: material follows grass already present in the frozen map,
+      // not historical rectangular habitat panels. No new roots or atlas.
+      // Protected/empty cells remain R8 zero and use NEAREST sampling.
       const smoothUnit=v=>{const t=Math.max(0,Math.min(1,v));return t*t*(3-2*t);};
-      let eligibleMeadowCells=0,protectedMeadowCells=0,overlapMeadowCells=0;
+      let eligibleMeadowCells=0,protectedMeadowCells=0;
       for(const cell of meadowMap.cells){
         const occupied=cell.sourceRoots+cell.additionalRoots;
         if(!cell.admitted||!cell.soilEligible||!['ESTABLISHED_MEADOW_INTERIOR','NATURAL_MEADOW_TRANSITION'].includes(cell.class)||occupied<6){
           protectedMeadowCells++;continue;
         }
         if(!Number.isInteger(cell.x)||!Number.isInteger(cell.z)||cell.x<16||cell.x>=254||cell.z< -559||cell.z>=-236)throw Error('MEADOW_OCCUPANCY_CELL_OUT_OF_BOUNDS');
-        const x=cell.x+.5,z=cell.z+.5;
-        const containingPanels=originalPanels.filter(panel=>x>panel[0]&&x<panel[2]&&z>panel[1]&&z<panel[3]);
-        const nearestInsideEdge=containingPanels.length?Math.min(...containingPanels.map(panel=>Math.min(x-panel[0],panel[2]-x,z-panel[1],panel[3]-z))):0;
-        const seamWeight=containingPanels.length?1-smoothUnit((nearestInsideEdge-1.5)/(panelOverlapMeters-1.5)):1;
-        if(seamWeight<=0){protectedMeadowCells++;continue;}
-        const q=Math.max(0,Math.min(1,(occupied-6)/20)),factor=q*q*(3-2*q);
-        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor*seamWeight);
-        if(containingPanels.length)overlapMeadowCells++;
+        const factor=smoothUnit((occupied-6)/20);
+        meadowPixels[(cell.z+559)*meadowWidth+(cell.x-16)]=Math.round(255*factor);
         eligibleMeadowCells++;
       }
       if(eligibleMeadowCells<1||eligibleMeadowCells+protectedMeadowCells!==76874)throw Error('MEADOW_OCCUPANCY_ELIGIBILITY_DRIFT');

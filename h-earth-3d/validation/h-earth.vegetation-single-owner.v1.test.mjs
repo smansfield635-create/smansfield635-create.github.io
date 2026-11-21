@@ -9,6 +9,7 @@ import {spawnSync} from 'node:child_process';
 import {
   planImmutableTiles, detailWeight, selectFineTiles, createSingleOwnerVegetation,
 } from '../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+import {planP4RiparianInfill,OASIS_BANK_ALLOCATION} from '../../showroom/globe/h-earth/render/oasis-bank-field.v1.js';
 
 function root(x,z,seed=.25){return {x,y:2,z,angle:.5,seed,triangleId:12,slope:.1};}
 function presentation(){return {tiles:[
@@ -337,4 +338,37 @@ test('global and fine grass colors do not inherit tile-level palette or brightne
  assert.ok(global.length>0);assert.doesNotMatch(global,/aParameters\.[yz]|aColor/);
  assert.match(source,/vec2 colorField=coverPaletteField\(root\.xz\)/,'fine grass samples the same world color field');
  assert.match(source,/mat2\(\.8,\.6,-\.6,\.8\)\*root/,'color lattice rotates away from tile axes');
+});
+
+test('P4 bank additions are grounded, budgeted and deterministic without touching existing roots',()=>{
+ const groups=new Map();
+ for(let i=0;i<1571;i++){
+  const x=Math.fround(-10+(i%40)*.33),z=Math.fround(-182+Math.floor(i/40)*.33);
+  const minX=Math.floor(x/4)*4,minZ=Math.floor(z/4)*4,key=minX+':'+minZ;
+  if(!groups.has(key))groups.set(key,{id:'oasis:'+key,minX,minZ,values:[]});
+  groups.get(key).values.push(x,2,z,.3);
+ }
+ const base=[...groups.values()].map(({values,...t})=>({...t,count:values.length/4,packed:Float32Array.from(values)}));
+ assert.equal(base.reduce((n,t)=>n+t.count,0),1571);
+ const before=base.map(t=>Array.from(t.packed));
+ const options={bankTiles:base,installedTiles:base,maximumAddedRoots:120,
+  admitGround:(x,z)=>({y:2,slope:.12,waterClearance:.24})};
+ const a=planP4RiparianInfill(options),b=planP4RiparianInfill(options);
+ assert.ok(a.receipt.addedRoots>0&&a.receipt.addedRoots<=120);
+ assert.ok(a.receipt.totalBankRoots<=OASIS_BANK_ALLOCATION.maximumRoots);
+ assert.equal(a.receipt.addedGpuBytes,a.receipt.addedRoots*16);
+ assert.deepEqual(a.tiles.map(t=>Array.from(t.packed)),b.tiles.map(t=>Array.from(t.packed)));
+ assert.deepEqual(base.map(t=>Array.from(t.packed)),before);
+ assert.equal(new Set(a.tiles.flatMap(t=>t.rootIds)).size,a.receipt.addedRoots);
+ assert.deepEqual(a.tiles.map(t=>t.first),a.tiles.map((_,i)=>a.tiles.slice(0,i).reduce((n,t)=>n+t.count,0)));
+ for(const tile of a.tiles){assert.equal(tile.packed.length,tile.count*4);assert.ok(tile.packed.every(Number.isFinite));}
+});
+test('P4 bank rejects all submerged or unadmitted sites without claiming visual improvement',()=>{
+ const roots=Array.from({length:1571},(_,i)=>[Math.fround(-10+(i%35)*.11),2,Math.fround(-183+Math.floor(i/35)*.12),.2]).flat();
+ const bank=[{id:'bank',minX:-12,minZ:-184,count:1571,packed:Float32Array.from(roots)}];
+ for(const admitGround of [()=>null,()=>({y:2,slope:.1,waterClearance:-.01}),()=>({y:2,slope:.7,waterClearance:.3})]){
+  const result=planP4RiparianInfill({bankTiles:bank,installedTiles:bank,admitGround,maximumAddedRoots:64});
+  assert.equal(result.receipt.addedRoots,0);
+  assert.equal(result.tiles.length,0);
+ }
 });

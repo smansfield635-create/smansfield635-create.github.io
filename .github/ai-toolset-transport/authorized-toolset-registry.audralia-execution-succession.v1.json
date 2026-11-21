@@ -2185,6 +2185,160 @@
       "continuationRule": "REQUIRES_INDEPENDENT_GEN3450_SOURCE_REVIEW_AND_SEPARATE_TOOLSET_ADOPTION_BEFORE_ACTIVE_EXECUTION; RETURN_RESULT_TO_HELD_PR7550",
       "terminationRule": "READONLY_EXACT_HEAD_HARVEST_WEBGL12_PUBLIC_SOURCE_QUALIFICATION_ONLY_NO_PRIVATE_RABBIT_NO_HARVEST_MERGE_DEPLOYMENT_RELEASE_ARTISTIC_ACCEPTANCE",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "GENEROSITY_HARVEST_GEN3456_EXACT_WEBGL12_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "GENEROSITY_HARVEST_GEN3450_CURRENT_CANDIDATE_REBIND_SUCCESSOR_20261120_001",
+      "operationClass": "GENEROSITY_HARVEST_GEN3456_FIXED_PUBLIC_HTTP_NODE22_WEBGL12_READONLY_QUALIFICATION",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "GENEROSITY_HARVEST_GEN3456_EXACT_WEBGL12_QUALIFIER_V1",
+      "exactToolingHead": "bec0edf5739d1fb46fe8885d85162242e3ee120f",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          },
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "HARVEST_EXACT_HEAD_QUALIFICATION_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "12e04206407aae29334b33bccd6c86a38679a9fa"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "HARVEST_EXACT_HEAD_BROWSER_QUALIFICATION_RECEIPT_v1",
+        "required": [
+          "schema",
+          "operationId",
+          "executionHolder",
+          "candidateHead",
+          "governingHead",
+          "status",
+          "cases",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "workflowMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed",
+          "originalPrivateAssetInCI",
+          "rabbitArtAccepted",
+          "artisticC1Accepted",
+          "physicalDeviceAccepted",
+          "historicalGen3310QualifierPreserved",
+          "historicalGen3430QualifierPreserved",
+          "qualificationCeiling"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "nine-summits/",
+        "assets/engine/",
+        "graphics-engine/",
+        "characters/",
+        "showroom/",
+        "h-earth-3d/",
+        "products/",
+        "AI_ENTRYPOINT.json",
+        "AGENTS.md",
+        ".github/workflows/",
+        "OWNER_PRIVATE_A4_OR_APPROVED_ART",
+        "tools/ai-room-transport/dgb-sculpt-gen3273-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-gen3296-browser.v1.mjs",
+        "tools/ai-room-transport/dgb-graphics-c2b-reviewed-webgl12.v1.mjs"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "WORKFLOW_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WEBGL_ENGINE_MUTATION",
+        "RABBIT_SOURCE_MUTATION",
+        "PRIVATE_A4_ART_UPLOAD",
+        "ORIGINAL_IMAGE_SUBSTITUTION",
+        "GEN3310_HISTORICAL_TEST_REGRESSION",
+        "GEN3430_HISTORICAL_TEST_REGRESSION",
+        "OWNER_ARTISTIC_KEEP_IN_CI"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_REAL_EXACT_HARVEST_PUBLIC_HTTP_WEBGL1_WEBGL2_SIX_VIEWPORT_SCREENSHOTS_ONLY_NO_PRIVATE_A4_OR_ARTISTIC_KEEP",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "STOP_RETURN_EXACT_FIRST_NATIVE_BROWSER_OR_SOURCE_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "STOP_RETURN_EXECUTION_SURFACE_BOUNDARY",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "REQUIRES_GEN3456_WEST_FUNCTIONAL_SOURCE_REVIEW_AND_NATIVE_NODE22_QUALIFICATION_AND_SEPARATE_TOOLSET_ADOPTION_BEFORE_ACTIVE_EXECUTION; RETURN_RESULT_TO_HELD_PR7550",
+      "terminationRule": "READONLY_EXACT_HEAD_HARVEST_WEBGL12_PUBLIC_SOURCE_QUALIFICATION_ONLY_NO_PRIVATE_RABBIT_NO_HARVEST_MERGE_DEPLOYMENT_RELEASE_ARTISTIC_ACCEPTANCE",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

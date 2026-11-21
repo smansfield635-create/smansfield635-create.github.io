@@ -2522,23 +2522,37 @@ jobs:
             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
             return ws.some(w=>(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.counters?.gpuFramebufferPresentationCount??0)>0);
            },null,{timeout:180000,polling:500});
-           // Replay autonomously prepares its grass after the first painted terrain frame.
-           await page.waitForFunction(()=>{
-            const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
-            return ws.some(w=>['OWNER_PREPARED','FAILED'].includes(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.vegetationBackground?.phase));
-           },null,{timeout:780000,polling:500});
+           // Diagnostic replay owns a separate terminal receipt; its public
+           // background-loading phase intentionally stays NOT_STARTED.
+           // Do not wait for OWNER_PREPARED in diagnostic-replay mode.
+           try{
+            await page.waitForFunction(()=>{
+             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+             return ws.some(w=>['CAPTURED_STABLE_VIEW','CAPTURED_POPULATED_CONTINUITY','FAILED'].includes(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification?.result));
+            },null,{timeout:240000,polling:500});
+           }catch(e){
+            v.timeoutSnapshot=await page.evaluate(()=>{
+             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+             const w=ws.find(w=>w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt);
+             const route=w?.H_EARTH_RUN8E_PUBLIC_ROUTE,live=route?.getLiveGpuReceipt?.()??null;
+             return {qualification:route?.getReceipt?.()?.singleOwnerVegetationQualification??null,backgroundPhase:live?.vegetationBackground?.phase??null,originalOwnerInstalledRootCount:live?.resources?.singleOwnerVegetation?.installedRootCount??null,framePresentations:live?.counters?.gpuFramebufferPresentationCount??null,documentStatus:w?.document?.getElementById('prototype-status')?.textContent??null};
+            }).catch(err=>({captureError:String(err)}));
+            throw e;
+           }
            v.capture=await page.evaluate(async instrumented=>{
             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
             const w=ws.find(w=>w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt),g=w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
-            const bg=g?.vegetationBackground,o=bg?.ownerReceipt;
+            const qualification=w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification??null;
+           const o=g?.resources?.singleOwnerVegetation??null;
             const d=ws.find(w=>w.__H_EARTH_P3_DIAG)?.__H_EARTH_P3_DIAG??null;
             const hash=instrumented&&d?.captureOrderedDigest?await d.captureOrderedDigest():null;
-            return {phase:bg?.phase??null,framePresentations:g?.counters?.gpuFramebufferPresentationCount??null,worldRebuilds:g?.counters?.worldRebuildCount??null,
+            return {phase:qualification?.result??null,qualificationSchema:qualification?.schema??null,framePresentations:g?.counters?.gpuFramebufferPresentationCount??null,worldRebuilds:g?.counters?.worldRebuildCount??null,
              owner:{rootCount:o?.installedRootCount??null,bytes:o?.gpuUploadedBytes??null,wide:o?.wideGrassTrial?.addedRoots??null,frozen:o?.frozenEcologicalMeadow?.addedRoots??null,frozenShortfall:o?.frozenEcologicalMeadow?.pointwiseShortfallRoots??null,preparationMs:o?.preparationMs??null},
              instrumented:Boolean(d),timing:d?.metrics??null,orderedDigest:hash};
            },instrumented);
            v.pageErrors=pageErrors;v.consoleErrors=consoleErrors;v.requestErrors=requestErrors;
-           assert.equal(v.capture.phase,'OWNER_PREPARED','VEGETATION_NOT_READY');
+           assert.equal(v.capture.phase,'CAPTURED_STABLE_VIEW','DIAGNOSTIC_REPLAY_NOT_COMPLETE');
+           assert(v.capture.framePresentations>0,'NO_REAL_FRAME_PRESENTED');
            assert.equal(v.capture.owner.rootCount,3805291,'ROOT_COUNT_DRIFT');
            assert.equal(v.capture.owner.bytes,60884656,'PACKED_BYTES_DRIFT');
            assert.equal(v.capture.owner.wide,496748,'WIDE_ROOT_COUNT_DRIFT');

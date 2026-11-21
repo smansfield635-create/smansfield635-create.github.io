@@ -16003,6 +16003,50 @@
       "scopeHash": "68e01500d6651bb1dbcc777d203efc3c0c80a9c702e646c8f78ae742679ffcfa",
       "state": "ADMITTED_LOCKED"
     },
+    "68f4aef88d2d167b5bfc6cf0b90f6785f982ade3a57be12b8afb9c3dd7b6c0cf": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "09664b55f495236b7dbb674fe78d1dba03120ed4",
+          "lockGeneration": 3467,
+          "lockScope": "H_EARTH:GEN3466:P4_BANK_SILHOUETTE_QUALIFIER_TOOLING_ADOPTION:20261121",
+          "operationId": "H_EARTH_GEN3466_BANK_SILHOUETTE_QUALIFIER_TOOLING_ADOPTION_20261121_001",
+          "procedureLocatorDigest": "17500f18468ac410cfe5da648844d6d433e03161fe13de5c980f421021f36686",
+          "requestDigest": "8fa834941356c747ece919be31a5cf3b3fe0380cefcb3f607c62cebf97cecd98",
+          "scopeHash": "68f4aef88d2d167b5bfc6cf0b90f6785f982ade3a57be12b8afb9c3dd7b6c0cf"
+        },
+        "bindingDigest": "9044c538fe9fa843fa8c612b0d4d6e63511321186c61d7a06823a1fdae8c70bb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "aa2bc84a593012b00a7495c214e085ea1073cc36d0e990d59d1f32f09dccf292",
+          "commentId": 7071163006,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44963917738,
+          "workflowSha": "09664b55f495236b7dbb674fe78d1dba03120ed4"
+        },
+        "lineageAnchorCommitSha": "a8cf3e73ac8c67ce8176221a8f581409347ff766",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "09664b55f495236b7dbb674fe78d1dba03120ed4",
+      "lockGeneration": 3467,
+      "lockScope": "H_EARTH:GEN3466:P4_BANK_SILHOUETTE_QUALIFIER_TOOLING_ADOPTION:20261121",
+      "operationId": "H_EARTH_GEN3466_BANK_SILHOUETTE_QUALIFIER_TOOLING_ADOPTION_20261121_001",
+      "procedureLocatorDigest": "17500f18468ac410cfe5da648844d6d433e03161fe13de5c980f421021f36686",
+      "released": false,
+      "requestDigest": "8fa834941356c747ece919be31a5cf3b3fe0380cefcb3f607c62cebf97cecd98",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "68f4aef88d2d167b5bfc6cf0b90f6785f982ade3a57be12b8afb9c3dd7b6c0cf",
+      "state": "ADMITTED_LOCKED"
+    },
     "68f8bd53a5e2887ce30f0e59983668c6d44e89715fa9e3801e7217800a01c9e7": {
       "governingHead": "065ed8a3d4e8204197c21410294941409d5a13c3",
       "lockGeneration": 1446,
@@ -40278,7 +40322,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3466,
+  "lockGeneration": 3467,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

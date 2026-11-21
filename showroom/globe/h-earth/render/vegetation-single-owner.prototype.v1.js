@@ -788,12 +788,23 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  if(trusted&&entranceGrass){
   const {visibleSurface,geology}=entranceGrass;
   p4Bank=planP4RiparianInfill({bankTiles,installedTiles:tiles,admitGround:(x,z)=>{
+   // The shared global admission deliberately excludes the entire oasis
+   // without the original wet-bank-specific reservation callback. Every P4
+   // proposal is anchored near an already admitted P3 connected-bank root;
+   // check actual dry rendered contact, not the unrelated generic oasis ban.
    const hit=visibleSurface.sample(x,z);
-   if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)||hit.slope>.45||
-      !visibleSurface.admitGround(x,z,hit))return null;
-   const local=unprojectPlanetVertex(x,hit.y,z),water=geology.sampleWaterAt(local.x,local.z);
-   if(!water||!Number.isFinite(water.y))return null;
-   return {y:hit.y,slope:hit.slope,waterClearance:local.y-water.y};
+   if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)||hit.slope>.55)return null;
+   const beach=visibleSurface.beach.sample({x,z,support:hit});
+   if(beach?.valid!==true||!Number.isFinite(beach.rawSandCoverage)||
+      beach.rawSandCoverage<0||beach.rawSandCoverage>.12)return null;
+   const renderedWater=visibleSurface.water.sample(x,z);
+   if(renderedWater&&(!Number.isFinite(renderedWater.y)||hit.y<=renderedWater.y+.035))return null;
+   // Original P3 bank admission excludes *future* water footprints; it never
+   // requires a water hit at a dry grass-root location.
+   if(geology.sampleWaterAt(x,z)||geology.isPlannedWaterFootprint?.(x,z))return null;
+   const local=unprojectPlanetVertex(x,hit.y,z);
+   if(!Number.isFinite(local.y))return null;
+   return {y:hit.y,slope:hit.slope,bankDryContact:true};
   }});
   assertOasisBankBudget(rootCount-oasisRoots,oasisRoots+p4Bank.receipt.addedRoots,allocation);
  }

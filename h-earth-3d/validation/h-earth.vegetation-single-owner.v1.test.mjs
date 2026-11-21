@@ -322,6 +322,21 @@ test('actual single-owner palette shaders compile and link with software GLES',a
  }finally{await rm(directory,{recursive:true,force:true});}
 });
 
+test('P4 shoreline silhouette and tone changes remain isolated to the additional bank draw',()=>{
+  const source=readFileSync(new URL('../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',import.meta.url),'utf8');
+  const shader=source.slice(source.indexOf('const VS=`'),source.indexOf('const FS=`'));
+  assert.match(shader,/float bankTuft=0\.;/);
+  assert.match(shader,/if\(uRiparian==1\)\{[\s\S]*?width\*=mix\(1\.15,1\.40,bankTuft\);/);
+  assert.match(shader,/if\(uRiparian==1\)height\*=mix\(\.91,1\.17,bankTuft\);/);
+  assert.match(shader,/if\(uRiparian==1\)p\+=vec3\(cos\(angle\+2\.2\*bankTuft\)/);
+  assert.match(shader,/if\(uRiparian==1\)\{[\s\S]*?palette=mix\(palette,bankTone,\.29\);/);
+  const draw=source.slice(source.indexOf('function draw(packet)'));
+  assert.match(draw,/gl\.uniform1i\(u\.uRiparian,0\);/,'original P3 pass remains separated');
+  assert.match(draw,/gl\.uniform1i\(u\.uRiparian,1\);/,'only P4 pass enables bank silhouette');
+  assert.match(draw,/perFrameUploadBytes:0/,'no new upload on frame');
+  assert.match(source,/__gen3452LoadSupplement/,'source-bound P3 supplement preserved');
+});
+
 test('terrain material cannot use the authored tree rectangle as soil authority',()=>{
  const source=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
  assert.doesNotMatch(source,/clearingSoilInterior|worldSoilReferenceLink|referenceWeight/);

@@ -665,6 +665,59 @@ uniform vec3 uSunDirection;uniform vec3 uSunColor;uniform vec3 uHaze;
 uniform float uSunIntensity;uniform float uFogStart;uniform float uFogFalloff;uniform float uMaxFog;
 out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
+async function __gen3452LoadSupplement({originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRemaining}){
+ const url=new URL('./assets/p3-wide-frozen-supplement.v1.bin.gz',import.meta.url);
+ let response;try{response=await fetch(url)}catch{return null}
+ if(response.status===404)return null;
+ if(!response.ok)throw Error('P3_SUPPLEMENT_UNAVAILABLE:'+response.status);
+ const compressed=new Uint8Array(await response.arrayBuffer());
+ if(compressed.byteLength!==15632912)throw Error('P3_SUPPLEMENT_COMPRESSED_LENGTH_DRIFT');
+ const sha=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
+ if(await sha(compressed)!=='c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0')throw Error('P3_SUPPLEMENT_COMPRESSED_SHA_DRIFT');
+ const raw=new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+ if(raw.byteLength!==17354591||await sha(raw)!=='8dd0d4c931d5981e93ad9ca3abc1f9a82368b4153d73eb42e6766fd4b2afc2b3')throw Error('P3_SUPPLEMENT_RAW_SHA_OR_BYTES_DRIFT');
+ const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);
+ const headerBytes=view.getUint32(0,true);
+ const h=JSON.parse(new TextDecoder().decode(raw.subarray(4,4+headerBytes)));
+ if(h.schema!=='H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1'||
+    h.immutableOwnerGitBlob!=='655802ac5965e2b6166eca7f604c724da2ef3b0d'||
+    h.expectedFinalRootCount!==3805291||h.expectedFinalPackedBytes!==60884656||
+    h.recordStrideBytes!==20||h.expectedSupplementRootCount!==839824||
+    h.wideRootCount!==496748||h.frozenRootCount!==343076||
+    h.originalRootCount!==originalRootCount||h.oasisRoots!==oasisRoots||
+    h.baseRootCount!==baseRootCount||h.cavernAdded!==cavernAdded||h.seamRoots!==seamRoots||
+    496748>Math.min(500000,wideRemaining)||h.frozenReceipt?.pointwiseShortfallRoots!==0)
+  throw Error('P3_SUPPLEMENT_HEADER_OR_DYNAMIC_PREFIX_MISMATCH');
+ const byKind={wide:[],frozen:[]};
+ let pos=4+headerBytes,first=baseRootCount+cavernAdded+seamRoots,widen=0,frozen=0;
+ const tileNames=new Set();
+ for(const t of h.tiles){
+  if(!t||!['wide','frozen'].includes(t.kind)||typeof t.id!=='string'||tileNames.has(t.id)||
+     !Number.isInteger(t.count)||t.count<1||t.count>1600||
+     !Number.isFinite(t.minX)||!Number.isFinite(t.minZ)||t.first!==first||pos+t.count*20>raw.byteLength)
+   throw Error('P3_SUPPLEMENT_TILE_INVALID');
+  tileNames.add(t.id);
+  if(t.kind==='wide'&&frozen>0)throw Error('P3_SUPPLEMENT_ORDER_DRIFT');
+  if(!t.id.startsWith(t.kind==='wide'?'WIDE_GRASS_TRIAL:':'FROZEN_ECOLOGICAL_MEADOW:'))
+   throw Error('P3_SUPPLEMENT_TILE_IDENTITY_DRIFT');
+  const packed=new Float32Array(t.count*4),rootIds=new Array(t.count);
+  for(let j=0;j<t.count;j++,pos+=20){
+   const k=j*4;
+   for(let a=0;a<4;a++)packed[k+a]=view.getFloat32(pos+4*a,true);
+   const seed=view.getUint32(pos+16,true);
+   const id=[packed[k],packed[k+1],packed[k+2],seed].join(':');
+   if(packed[k]<t.minX||packed[k]>=t.minX+4||packed[k+2]<t.minZ||packed[k+2]>=t.minZ+4)throw Error('P3_SUPPLEMENT_POSITION_TILE_DRIFT');
+   rootIds[j]=id;
+  }
+  byKind[t.kind].push(Object.freeze({id:t.id,minX:t.minX,minZ:t.minZ,first:t.first,count:t.count,packed,rootIds:Object.freeze(rootIds)}));
+  if(t.kind==='wide')widen+=t.count;else frozen+=t.count;
+  first+=t.count;
+ }
+ if(pos!==raw.byteLength||first!==3805291||widen!==496748||frozen!==343076)throw Error('P3_SUPPLEMENT_POPULATION_DRIFT');
+
+ return {wideExtra:Object.freeze(byKind.wide),meadowExtra:Object.freeze(byKind.frozen),wideReceipt:h.wideReceipt,frozenReceipt:h.frozenReceipt};
+}
+
 export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={},entranceGrass=null}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
  const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);
@@ -681,16 +734,28 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   const seamExtra=seam.tiles.length?planImmutableTiles(seam).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded})):[];
   const seamRoots=seamExtra.reduce((n,t)=>n+t.count,0);
   const wideRemaining=Math.max(0,allocation.maximumRoots-(baseRootCount-oasisRoots)-cavernAdded-seamRoots);
-  const wide=await buildWideExistingGrassTrial({existingTiles:[...baseTiles,...extra,...seamExtra],
+  let wide,wideExtra,meadow,meadowExtra,wideRoots;
+  // Gen3452: exact SHA-pinned precomputed output is optional until binary Git
+  // custody is admitted and completed. Missing asset preserves the original
+  // generator and placement exactly; malformed present assets fail closed.
+  const supplement=await __gen3452LoadSupplement({originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRemaining});
+  if(supplement){
+   wideExtra=supplement.wideExtra;meadowExtra=supplement.meadowExtra;
+   wide={receipt:supplement.wideReceipt};meadow={receipt:supplement.frozenReceipt};
+   frozenMeadowReceipt=meadow.receipt;
+   wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);
+  }else{
+  wide=await buildWideExistingGrassTrial({existingTiles:[...baseTiles,...extra,...seamExtra],
    visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,
    maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});
-  const wideExtra=wide.tiles.length?planImmutableTiles(wide).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots})):[];
-  const meadow=await buildFrozenEcologicalMeadow({existingTiles:[...baseTiles,...extra,...seamExtra,...wideExtra],
+  wideExtra=wide.tiles.length?planImmutableTiles(wide).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots})):[];
+  meadow=await buildFrozenEcologicalMeadow({existingTiles:[...baseTiles,...extra,...seamExtra,...wideExtra],
    visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,yieldControl,onProgress});
   frozenMeadowReceipt=meadow.receipt;
   if(meadow.receipt.pointwiseShortfallRoots!==0)throw Error('FROZEN_MEADOW_CONTACT_SHORTFALL:'+meadow.receipt.pointwiseShortfallRoots+':'+meadow.receipt.pointwiseShortfallCells);
-  const wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);
-  const meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));
+  wideRoots=wideExtra.reduce((n,t)=>n+t.count,0);
+  meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));
+  }
   tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra,...meadowExtra]);
   entranceReceipt=addition.receipt;woodlandSeamReceipt=seam.receipt;wideGrassTrialReceipt=wide.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);

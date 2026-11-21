@@ -33,3 +33,28 @@ test('active gate no longer hard-codes the obsolete video identity',()=>{
   'EVIDENCE_DIGEST_MISMATCH:', 'HISTORICAL_ANCHOR_STILL_ACTIVE'])
   assert.ok(source.includes(s),'missing fail-closed guard '+s);
 });
+
+test('current-world receipt binds frozen product rather than self-referential review commit',()=>{
+ const source=fs.readFileSync(gate,'utf8');
+ assert.ok(source.includes('r.candidateHead!==r.productSourceHead'),'frozen product head binding missing');
+ assert.equal(source.includes('r.candidateHead!==head'),false,'impossible embedded review-head binding restored');
+ assert.ok(source.includes("PRODUCT_SOURCE_HEAD_NOT_ANCESTOR"),'descendant review branch verification missing');
+ assert.ok(source.includes('blob(receipt.productSourceHead,f.path)!==f.gitBlob'),'reviewed product file identity not protected');
+ assert.ok(source.includes("INDEPENDENT_REVIEW_MISSING"),'mandatory independent review erased');
+ assert.ok(source.includes("OWNER_KEEP_DISPOSITION_NOT_PROVEN"),'mandatory authenticated owner KEEP erased');
+});
+
+test('Gen3453 runtime exception is exact-identity constrained and adversarially exercised',()=>{
+ const source=fs.readFileSync(gate,'utf8');
+ for(const value of [
+  "GEN3453_PRODUCT_HEAD='4fe58d4ae1566a99ca87dc385cfea053bac7efa6'",
+  'GEN3453_TRAVERSAL_RUN=44855110841',
+  'GEN3453_TRAVERSAL_ARTIFACT=14687009434',
+  "GEN3453_TRAVERSAL_SHA256='321c8ef2c6419105c40ef09cf8511d4cbbd6ae09f5f9de690816bc983eae962c'",
+  'run?.head_sha===sourceHead',
+  'artifact?.workflow_run?.head_sha===sourceHead',
+  'artifact?.digest===',
+  'GEN3453_EXACT_ARTIFACT_CUSTODY'
+ ])assert.ok(source.includes(value),'missing source-bound custody constraint '+value);
+ assert.equal(source.includes('artifact?.name===sourceHead'),false,'unbounded artifact name');
+});

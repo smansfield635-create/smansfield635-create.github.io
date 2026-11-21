@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-21T15:24:10Z",
+  "generatedAt": "2026-11-21T16:24:39Z",
   "window30d": {
-    "start": "2026-10-22T15:24:10Z",
-    "end": "2026-11-21T15:24:10Z"
+    "start": "2026-10-22T16:24:39Z",
+    "end": "2026-11-21T16:24:39Z"
   },
   "daily": [
     {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-24",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-25",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 37
+      "pageLoads": 36
     },
     {
       "date": "2026-11-14",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-21",
-      "pageLoads": 39
+      "pageLoads": 40
     }
   ],
   "summary": {
@@ -135,8 +135,8 @@
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1186,
-      "visits": 1186
+      "pageLoads": 1206,
+      "visits": 1206
     },
     {
       "host": "diamondgatebridge.com",
@@ -162,23 +162,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 624,
-      "visits": 624
+      "pageLoads": 604,
+      "visits": 604
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 280,
+      "pageLoads": 290,
       "visits": 218
     },
     {
       "path": "/products/education/personal-training/course.html",
-      "pageLoads": 80,
-      "visits": 80
-    },
-    {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 80,
-      "visits": 80
+      "pageLoads": 100,
+      "visits": 100
     },
     {
       "path": "/",
@@ -191,12 +186,17 @@
       "visits": 50
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 20,
-      "visits": 20
+      "path": "/products/education/personal-training/",
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/release-proof/",
+      "pageLoads": 10,
+      "visits": 10
+    },
+    {
+      "path": "/showroom/globe/audralia/diagnostic/",
       "pageLoads": 10,
       "visits": 10
     }

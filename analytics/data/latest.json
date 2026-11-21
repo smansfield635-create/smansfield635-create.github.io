@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-21T21:25:15Z",
+  "generatedAt": "2026-11-21T22:24:48Z",
   "window30d": {
-    "start": "2026-10-22T21:25:15Z",
-    "end": "2026-11-21T21:25:15Z"
+    "start": "2026-10-22T22:24:48Z",
+    "end": "2026-11-21T22:24:48Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 31
+      "pageLoads": 30
     },
     {
       "date": "2026-11-14",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-11-21",
-      "pageLoads": 45
+      "pageLoads": 46
     }
   ],
   "summary": {
-    "pageLoads": 1288,
+    "pageLoads": 1268,
     "botPageLoads": 755,
-    "nonBotPageLoads": 533
+    "nonBotPageLoads": 513
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1176,
-      "visits": 1176
+      "pageLoads": 1166,
+      "visits": 1166
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 83,
+      "pageLoads": 73,
       "visits": 0
     },
     {
@@ -167,7 +167,7 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 281,
+      "pageLoads": 271,
       "visits": 219
     },
     {
@@ -196,7 +196,7 @@
       "visits": 20
     },
     {
-      "path": "/release-proof/",
+      "path": "/showroom/globe/audralia/diagnostic/",
       "pageLoads": 10,
       "visits": 10
     }

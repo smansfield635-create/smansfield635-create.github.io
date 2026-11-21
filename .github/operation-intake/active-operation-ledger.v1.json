@@ -7161,6 +7161,50 @@
       "scopeHash": "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095",
       "state": "ADMITTED_LOCKED"
     },
+    "32b2612d54700626e7927b2962487e139ddb10473a9cd88eacd21c4201af4d24": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "01058292a6c15e1138c50344e4ede7fb3939658f",
+          "lockGeneration": 3460,
+          "lockScope": "H_EARTH:P4:CONNECTED_WATER_BANK_GRASS_ONE_REPAIR:20261120",
+          "operationId": "H_EARTH_P4_CONNECTED_WATER_BANK_GRASS_ENRICHMENT_20261120_001",
+          "procedureLocatorDigest": "f84bca926359c0eaa29ac3aaa50ffb09c97333b9e0f10c90ef06c004c2fa1dd5",
+          "requestDigest": "d9cdf80c935d140c8ac6d85538b7c4a96460c034e98758923e105c26b2f2b9de",
+          "scopeHash": "32b2612d54700626e7927b2962487e139ddb10473a9cd88eacd21c4201af4d24"
+        },
+        "bindingDigest": "8fd2ceb45e7a6df665353fdc28a9fd0ca33e9db6b12ea174126a2d8046a4a273",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5e41bb6b18cf9c9d960af8e2fd9e71e0e862abda859e02fdfc3f50dda3914cdd",
+          "commentId": 7057774482,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44869948498,
+          "workflowSha": "01058292a6c15e1138c50344e4ede7fb3939658f"
+        },
+        "lineageAnchorCommitSha": "46e0ab7a0d3f550ad57da6162df5910db33d9dda",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "01058292a6c15e1138c50344e4ede7fb3939658f",
+      "lockGeneration": 3460,
+      "lockScope": "H_EARTH:P4:CONNECTED_WATER_BANK_GRASS_ONE_REPAIR:20261120",
+      "operationId": "H_EARTH_P4_CONNECTED_WATER_BANK_GRASS_ENRICHMENT_20261120_001",
+      "procedureLocatorDigest": "f84bca926359c0eaa29ac3aaa50ffb09c97333b9e0f10c90ef06c004c2fa1dd5",
+      "released": false,
+      "requestDigest": "d9cdf80c935d140c8ac6d85538b7c4a96460c034e98758923e105c26b2f2b9de",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "32b2612d54700626e7927b2962487e139ddb10473a9cd88eacd21c4201af4d24",
+      "state": "ADMITTED_LOCKED"
+    },
     "32bc9eb354d1b501bedba3197eb60adaf96658dea623410be696da0db1f40559": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -39970,7 +40014,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3459,
+  "lockGeneration": 3460,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

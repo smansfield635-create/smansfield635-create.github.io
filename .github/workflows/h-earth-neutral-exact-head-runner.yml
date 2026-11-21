@@ -2434,3 +2434,171 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3333-native
           if-no-files-found: error
           retention-days: 30
+
+  # Gen3452 admitted source-bound proof: original product is NEVER committed/mutated.
+  p3-gen3452-exact-supplement-proof:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3452-exact-supplemental-acceleration-20261120' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted world for temporary read-only supplement capture
+        uses: actions/checkout@v4
+        with:
+          ref: 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify original owner, trees, geometry and loader
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 97d8f2c705c6e2fe3cf3a53d300c049bf855148a
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git hash-object showroom/globe/h-earth/render/precomputed-grass.v1.js)" = 02f2fe39ef6c1f8e1ba1a51398ca9fa0512e19f4
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          mkdir -p "$RUNNER_TEMP/h-earth-gen3452-exact-supplement"
+      - name: Use the existing native Chromium dependency
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Observe original wide and frozen tile output; emit bound supplement artifact only
+        shell: bash
+        run: |
+          set -euo pipefail
+          owner=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          python3 -m http.server 4173 --directory . >"$RUNNER_TEMP/h-earth-gen3452-exact-supplement/http.log" 2>&1 &
+          server_pid=$!
+          trap 'git restore -- "$owner" || true; kill "$server_pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.gen3452-shim.cjs <<'GEN3452_SHIM'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const path='showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+          const original=fs.readFileSync(path,'utf8');
+          const anchor='  const meadowExtra=planImmutableTiles(meadow).map(t=>Object.freeze({...t,first:t.first+baseRootCount+cavernAdded+seamRoots+wideRoots}));';
+          assert.equal(original.split(anchor).length,2,'GEN3452_SOURCE_ANCHOR_NOT_UNIQUE');
+          const replacement=anchor+"\n  globalThis.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT={wideExtra,meadowExtra,wideReceipt:wide.receipt,frozenReceipt:meadow.receipt,originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRoots,candidateSchema:'GEN3452_TEMPORARY_ONLY_NOT_PRODUCT_SOURCE'};";
+          fs.writeFileSync(path,original.replace(anchor,replacement));
+          console.log('GEN3452_EPHEMERAL_OUTPUT_CAPTURE_ONLY');
+          GEN3452_SHIM
+          node .gen3452-shim.cjs
+          node --check "$owner"
+          test "$(git hash-object "$owner")" != 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          git hash-object "$owner" >"$RUNNER_TEMP/h-earth-gen3452-exact-supplement/temporary-shim-blob.txt"
+          cat >.gen3452-capture.mjs <<'GEN3452_CAPTURE'
+          import {chromium} from 'playwright';
+          import fs from 'node:fs/promises';
+          import zlib from 'node:zlib';
+          import crypto from 'node:crypto';
+          import assert from 'node:assert/strict';
+          const dest=process.env.RUNNER_TEMP+'/h-earth-gen3452-exact-supplement/';
+          const report={schema:'H_EARTH_GEN3452_UNMODIFIED_GENERATION_SUPPLEMENT_PROOF_v1',productMutation:false,sourceSubstitution:true,qualifiedProduct:false,publicationAuthorized:false,sourceHead:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',ownerOriginalGitBlob:'655802ac5965e2b6166eca7f604c724da2ef3b0d',result:'NOT_EXECUTED',errors:[]};
+          let browser=null;
+          try{
+           browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+           report.browserVersion=browser.version();
+           const context=await browser.newContext({viewport:{width:1280,height:800},acceptDownloads:true});
+           const page=await context.newPage(),errors=[],requests=[];
+           page.on('pageerror',e=>errors.push(e.message));
+           page.on('requestfailed',r=>requests.push({url:r.url(),failure:r.failure()}));
+           await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1',{waitUntil:'domcontentloaded',timeout:120000});
+           await page.waitForFunction(()=>{
+            const w=window;
+            return (w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.counters?.gpuFramebufferPresentationCount??0)>0;
+           },null,{timeout:180000,polling:500});
+           await page.waitForFunction(()=>Boolean(window.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT),null,{timeout:240000,polling:500});
+           const downloadPromise=page.waitForEvent('download',{timeout:160000});
+           report.capture=await page.evaluate(async()=>{
+            const snapshot=globalThis.__H_EARTH_P3_GEN3452_SOURCE_SNAPSHOT;
+            if(!snapshot)throw Error('GEN3452_SNAPSHOT_MISSING');
+            const wide=snapshot.wideExtra, frozen=snapshot.meadowExtra;
+            const sum=t=>t.reduce((a,x)=>a+x.count,0);
+            const wideRoots=sum(wide),frozenRoots=sum(frozen),total=wideRoots+frozenRoots;
+            if(wideRoots!==496748||frozenRoots!==343076||total!==839824)throw Error('GEN3452_SUPPLEMENT_COUNTS_DRIFT');
+            if(snapshot.baseRootCount+snapshot.cavernAdded+snapshot.seamRoots+total!==3805291)throw Error('GEN3452_TOTAL_ROOTS_DRIFT');
+            if(snapshot.frozenReceipt?.pointwiseShortfallRoots!==0)throw Error('GEN3452_FROZEN_SHORTFALL');
+            const selected=[...wide.map(t=>({kind:'wide',tile:t})),...frozen.map(t=>({kind:'frozen',tile:t}))];
+            let offset=snapshot.baseRootCount+snapshot.cavernAdded+snapshot.seamRoots;
+            const tiles=selected.map(({kind,tile})=>{
+             const {id,minX,minZ,count,first,packed,rootIds}=tile;
+             if(!Array.isArray(rootIds)||rootIds.length!==count||packed.byteLength!==count*16||first!==offset)throw Error('GEN3452_TILE_OR_OFFSET_DRIFT:'+id);
+             offset+=count;
+             return {kind,id,minX,minZ,first,count};
+            });
+            if(offset!==3805291)throw Error('GEN3452_FINAL_OFFSET_DRIFT');
+            const header={schema:'H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1',
+             admittedHead:'97d8f2c705c6e2fe3cf3a53d300c049bf855148a',
+             immutableOwnerGitBlob:'655802ac5965e2b6166eca7f604c724da2ef3b0d',
+             expectedFinalRootCount:3805291,expectedFinalPackedBytes:60884656,
+             expectedSupplementRootCount:total,wideRootCount:wideRoots,frozenRootCount:frozenRoots,
+             originalRootCount:snapshot.originalRootCount,oasisRoots:snapshot.oasisRoots,baseRootCount:snapshot.baseRootCount,
+             cavernAdded:snapshot.cavernAdded,seamRoots:snapshot.seamRoots,recordStrideBytes:20,tiles,
+             wideReceipt:snapshot.wideReceipt,frozenReceipt:snapshot.frozenReceipt,
+             seedIdentity:'ROOT_ID_SUFFIX_UINT32_RECONSTRUCTED_FROM_NATIVE_FLOAT32_X_Y_Z',
+             binaryOrdering:'TILES_IN_NATIVE_WIDE_THEN_FROZEN_ORDER_EACH_NATIVE_ROOT_ORDER',
+             preservation:'UNMODIFIED_PRODUCTION_SOURCE_ONLY_TEMPORARY_OBSERVATION_SHIM'};
+            const text=new TextEncoder().encode(JSON.stringify(header));
+            if(text.byteLength>2500000)throw Error('GEN3452_HEADER_TOO_LARGE');
+            const raw=new Uint8Array(4+text.byteLength+total*20),dv=new DataView(raw.buffer);
+            dv.setUint32(0,text.byteLength,true);raw.set(text,4);
+            let pos=4+text.byteLength;
+            for(const {tile} of selected){
+             for(let k=0;k<tile.count;k++){
+              const id=tile.rootIds[k],seed=Number(id.slice(id.lastIndexOf(':')+1));
+              if(!Number.isSafeInteger(seed)||seed<0||seed>4294967295)throw Error('GEN3452_BAD_SEED:'+tile.id+':'+k);
+              for(let j=0;j<4;j++)dv.setFloat32(pos+4*j,tile.packed[k*4+j],true);
+              dv.setUint32(pos+16,seed,true);pos+=20;
+             }
+            }
+            if(pos!==raw.byteLength)throw Error('GEN3452_RECORD_BYTE_DRIFT');
+            const gz=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'))).blob();
+            const url=URL.createObjectURL(gz),a=document.createElement('a');a.href=url;a.download='p3-wide-frozen-supplement.v1.bin.gz';a.style.display='none';document.body.appendChild(a);a.click();
+            return {total,wideRoots,frozenRoots,tileCount:tiles.length,rawBytes:raw.byteLength,compressedBytes:gz.size,headerBytes:text.byteLength,sourceSubstituted:true,generatedFromLiveAcceptedWorld:true};
+           });
+           const download=await downloadPromise;
+           await download.saveAs(dest+'p3-wide-frozen-supplement.v1.bin.gz');
+           report.downloadName=download.suggestedFilename();
+           const compressed=await fs.readFile(dest+'p3-wide-frozen-supplement.v1.bin.gz');
+           const raw=zlib.gunzipSync(compressed);
+           const headerLength=raw.readUInt32LE(0),header=JSON.parse(raw.subarray(4,4+headerLength).toString('utf8'));
+           assert.equal(header.schema,'H_EARTH_P3_GEN3452_EXACT_WIDE_FROZEN_PAYLOAD_v1');
+           assert.equal(header.expectedSupplementRootCount,839824);
+           assert.equal(raw.byteLength,4+headerLength+header.expectedSupplementRootCount*20);
+           assert.equal(header.tiles.reduce((n,t)=>n+t.count,0),839824);
+           assert.equal(header.frozenReceipt.pointwiseShortfallRoots,0);
+           assert.equal(compressed.byteLength,report.capture.compressedBytes);
+           assert.equal(raw.byteLength,report.capture.rawBytes);
+           report.sha256={compressed:crypto.createHash('sha256').update(compressed).digest('hex'),raw:crypto.createHash('sha256').update(raw).digest('hex')};
+           report.tileCount=header.tiles.length;
+           report.wide=header.wideRootCount;report.frozen=header.frozenRootCount;
+           report.pageErrors=errors;report.failedRequests=requests;
+           assert.equal(errors.length,0,'CHROMIUM_PAGE_ERROR');
+           assert.equal(requests.length,0,'CHROMIUM_NETWORK_ERROR');
+           report.result='PASS_PRECOMPUTED_SUPPLEMENT_PROOF_NOT_PRODUCT_CANDIDATE';
+           await context.close();
+          }catch(e){report.result='FAIL_CLOSED';report.errors.push(e.stack??String(e));process.exitCode=1}
+          finally{await fs.writeFile(dest+'capture-receipt.json',JSON.stringify(report,null,2)+'\n');if(browser)await browser.close()}
+          
+          GEN3452_CAPTURE
+          node --check .gen3452-capture.mjs
+          timeout 650s node .gen3452-capture.mjs
+          git restore -- "$owner"
+          test "$(git hash-object "$owner")" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git status --porcelain -- showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = ""
+      - name: Preserve exact-source temporary-shim disclosure, binary payload and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3452-precompute-proof-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-gen3452-exact-supplement/
+          if-no-files-found: warn
+          retention-days: 30
+

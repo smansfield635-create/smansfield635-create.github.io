@@ -90,8 +90,7 @@ export function planP4RiparianInfill({bankTiles,installedTiles,admitGround,maxim
   trials++;
   const support=admitGround(x,z);
   if(!support||!Number.isFinite(support.y)||!Number.isFinite(support.slope)||
-     support.slope>.45||!Number.isFinite(support.waterClearance)||
-     support.waterClearance<.035||support.waterClearance>1.10){rejectedSupport++;continue;}
+     support.slope>.55||support.bankDryContact!==true){rejectedSupport++;continue;}
   if(!proposed.has(physicalId))proposed.set(physicalId,{id:'P4_BANK:'+physicalId,
    minX:Math.floor(x/4)*4,minZ:Math.floor(z/4)*4,values:[],rootIds:[]});
   const tile=proposed.get(physicalId),angle=Math.fround(hash(i,pass,2)*Math.PI*2);

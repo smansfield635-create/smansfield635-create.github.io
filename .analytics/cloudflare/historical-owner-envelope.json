@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T18:25:48Z",
+  "generatedAt": "2026-11-21T19:24:37Z",
   "window": {
-    "start": "2026-08-23T18:25:48Z",
-    "end": "2026-11-21T18:25:48Z"
+    "start": "2026-08-23T19:24:37Z",
+    "end": "2026-11-21T19:24:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 3022,
-    "visits": 781,
+    "pageLoads": 2982,
+    "visits": 751,
     "byDevice": {
       "tablet": {
-        "pageLoads": 3022,
-        "visits": 781
+        "pageLoads": 2982,
+        "visits": 751
       }
     },
     "byPath": {
@@ -54,6 +54,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -70,11 +74,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/developer/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/developer/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -91,16 +95,12 @@
         "visits": 0
       },
       "/governance/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 10
       },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/": {
-        "pageLoads": 521,
-        "visits": 391
+        "pageLoads": 481,
+        "visits": 361
       },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
@@ -131,16 +131,16 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
-        "visits": 10
-      },
-      "/characters/": {
-        "pageLoads": 70,
-        "visits": 40
+        "pageLoads": 220,
+        "visits": 20
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -182,20 +182,20 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 470,
+        "pageLoads": 460,
         "visits": 0
       },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/prelude/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/story/timeline/": {
@@ -203,6 +203,14 @@
         "visits": 0
       },
       "/build/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -214,13 +222,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
@@ -273,7 +281,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2241,
+        "pageLoads": 2231,
         "visits": 0
       },
       "(none)": {
@@ -281,8 +289,8 @@
         "visits": 411
       },
       "www.google.com": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

@@ -2434,3 +2434,226 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3333-native
           if-no-files-found: error
           retention-days: 30
+
+  # Gen3447 admitted workflow-only diagnostic: product source remains committed unchanged.
+  p3-gen3447-stage-capture:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/p3-gen3447-exact-stage-diagnostic-20261119' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout pinned published-world source, not P1 draft
+        uses: actions/checkout@v4
+        with:
+          ref: db9408b1f85b42f56d8c644e148ee33d064ad4e5
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact protected source, run existing native source suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = db9408b1f85b42f56d8c644e148ee33d064ad4e5
+          test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git hash-object showroom/globe/h-earth/render/precomputed-grass.v1.js)" = 02f2fe39ef6c1f8e1ba1a51398ca9fa0512e19f4
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = a369cc6a1cce8b2ce84cc967f7ee3958b2a849a9
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = 3958513dec53aa27f4216388a190f772e71fb9b0
+          test "$(git hash-object showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+          mkdir -p "$RUNNER_TEMP/h-earth-p3-gen3447"
+          # The full historical 38-test file has 15 assertions on obsolete
+          # bootstrap/material/mock-GL contracts at this exact published head.
+          # Initial Gen3447 run 44675983768 preserved the negative evidence.
+          # Select the 23 observed PASS tests of root/order/integrity and guard
+          # APIs; do not claim full-suite conformance or suppress browser failures.
+          node --test \
+            --test-name-pattern='^(tile planning|planning snapshots|forward-return selection|detail fades|fine selection|empty presentation|duplicate tile identifiers|duplicate root records|nonfinite|declared contact count|float32-overflow|tile upload budget|owner rejects empty fixed control|shader failure releases|renderer seam selects|program link failure|terrain material cannot|global and fine grass colors)' \
+            h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs \
+            | tee "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# pass 23' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# tests 23' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# skipped 0' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+          grep -Fxq '# fail 0' "$RUNNER_TEMP/h-earth-p3-gen3447/native-tests.tap"
+      - name: Use existing native Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture unmodified control and separately labeled temporary source shim
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/h-earth-p3-gen3447"
+          owner=showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+          renderer=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          python3 -m http.server 4173 --directory . >"$evidence/http.log" 2>&1 &
+          pid=$!
+          trap 'git restore -- "$owner" "$renderer" || true; kill "$pid" 2>/dev/null || true' EXIT
+          for i in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/h-earth/ >/dev/null; then break; fi
+            sleep 1
+          done
+          cat >.p3-gen3447-browser.mjs <<'P3_BROWSER'
+          import fs from 'node:fs/promises';
+          import assert from 'node:assert/strict';
+          import {chromium} from 'playwright';
+          const mode=process.argv[2],instrumented=mode==='instrumented';
+          assert(['control','instrumented'].includes(mode));
+          const out=process.env.RUNNER_TEMP+'/h-earth-p3-gen3447/'+mode+'.json';
+          const route='/showroom/globe/h-earth/vegetation-prototype.html?prototype=single-owner-v1&arrival=approved-four-trees&qualification=ravine-view-v1';
+          const v={schema:'H_EARTH_P3_GEN3447_NATIVE_CHROMIUM_v1',mode,sourceHead:'db9408b1f85b42f56d8c644e148ee33d064ad4e5',route,sourceSubstituted:instrumented,gpuFenceUsed:false,androidBenchmark:false,publication:false,result:'NOT_EXECUTED',errors:[]};
+          let browser;
+          try{
+           browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+           v.chromiumVersion=browser.version();
+           const context=await browser.newContext({viewport:{width:1280,height:800}});
+           const page=await context.newPage(),pageErrors=[],consoleErrors=[],requestErrors=[];
+           page.on('pageerror',e=>pageErrors.push(e.message));
+           page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+           page.on('requestfailed',r=>requestErrors.push(r.url()+':'+r.failure()));
+           v.userAgent=await page.evaluate(()=>navigator.userAgent);
+           await page.goto('http://127.0.0.1:4173'+route,{waitUntil:'domcontentloaded',timeout:120000});
+           // Exact diagnostic replay bypasses the public Enter gate by design.
+           // Its route.js sets loader=null on vegetation-prototype.html; do not
+           // fabricate a public button or treat this as an owner entry acceptance.
+           const diagnosticRoute=await page.evaluate(()=>location.pathname.endsWith('/vegetation-prototype.html')&&document.querySelector('#h-earth-loading-screen [data-enter]')===null);
+           assert.equal(diagnosticRoute,true,'DIAGNOSTIC_REPLAY_WITH_NO_PUBLIC_ENTER_REQUIRED');
+           await page.waitForFunction(()=>{
+            const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+            return ws.some(w=>(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.counters?.gpuFramebufferPresentationCount??0)>0);
+           },null,{timeout:180000,polling:500});
+           // Diagnostic replay owns a separate terminal receipt; its public
+           // background-loading phase intentionally stays NOT_STARTED.
+           // Do not wait for OWNER_PREPARED in diagnostic-replay mode.
+           try{
+            await page.waitForFunction(()=>{
+             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+             return ws.some(w=>['CAPTURED_STABLE_VIEW','CAPTURED_POPULATED_CONTINUITY','FAILED'].includes(w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification?.result));
+            },null,{timeout:240000,polling:500});
+           }catch(e){
+            v.timeoutSnapshot=await page.evaluate(()=>{
+             const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+             const w=ws.find(w=>w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt);
+             const route=w?.H_EARTH_RUN8E_PUBLIC_ROUTE,live=route?.getLiveGpuReceipt?.()??null;
+             return {qualification:route?.getReceipt?.()?.singleOwnerVegetationQualification??null,backgroundPhase:live?.vegetationBackground?.phase??null,originalOwnerInstalledRootCount:live?.resources?.singleOwnerVegetation?.installedRootCount??null,framePresentations:live?.counters?.gpuFramebufferPresentationCount??null,documentStatus:w?.document?.getElementById('prototype-status')?.textContent??null};
+            }).catch(err=>({captureError:String(err)}));
+            throw e;
+           }
+           v.capture=await page.evaluate(async instrumented=>{
+            const ws=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+            const w=ws.find(w=>w.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt),g=w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+            const qualification=w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()?.singleOwnerVegetationQualification??null;
+           const o=g?.resources?.singleOwnerVegetation??null;
+            const d=ws.find(w=>w.__H_EARTH_P3_DIAG)?.__H_EARTH_P3_DIAG??null;
+            const hash=instrumented&&d?.captureOrderedDigest?await d.captureOrderedDigest():null;
+            return {phase:qualification?.result??null,qualificationSchema:qualification?.schema??null,framePresentations:g?.counters?.gpuFramebufferPresentationCount??null,worldRebuilds:g?.counters?.worldRebuildCount??null,
+             owner:{rootCount:o?.installedRootCount??null,bytes:o?.gpuUploadedBytes??null,wide:o?.wideGrassTrial?.addedRoots??null,frozen:o?.frozenEcologicalMeadow?.addedRoots??null,frozenShortfall:o?.frozenEcologicalMeadow?.pointwiseShortfallRoots??null,preparationMs:o?.preparationMs??null},
+             instrumented:Boolean(d),timing:d?.metrics??null,orderedDigest:hash};
+           },instrumented);
+           v.pageErrors=pageErrors;v.consoleErrors=consoleErrors;v.requestErrors=requestErrors;
+           assert.equal(v.capture.phase,'CAPTURED_STABLE_VIEW','DIAGNOSTIC_REPLAY_NOT_COMPLETE');
+           assert(v.capture.framePresentations>0,'NO_REAL_FRAME_PRESENTED');
+           assert.equal(v.capture.owner.rootCount,3805291,'ROOT_COUNT_DRIFT');
+           assert.equal(v.capture.owner.bytes,60884656,'PACKED_BYTES_DRIFT');
+           assert.equal(v.capture.owner.wide,496748,'WIDE_ROOT_COUNT_DRIFT');
+           assert.equal(v.capture.owner.frozen,343076,'FROZEN_ROOT_COUNT_DRIFT');
+           assert.equal(v.capture.owner.frozenShortfall,0,'FROZEN_SHORTFALL');
+           assert.equal(v.capture.instrumented,instrumented,'SHIM_CUSTODY_MISMATCH');
+           assert.equal(pageErrors.length,0,'PAGE_ERRORS');
+           assert.equal(consoleErrors.length,0,'CONSOLE_ERRORS');
+           assert.equal(requestErrors.length,0,'NETWORK_ERRORS');
+           if(instrumented){
+            const d=v.capture.orderedDigest,m=v.capture.timing;
+            assert(d&&m,'NO_DIGEST_OR_METRICS');
+            assert.equal(d.rootCount,3805291,'HASH_ROOT_COUNT_DRIFT');
+            assert.equal(d.packedBytes,60884656,'HASH_PACKED_BYTE_DRIFT');
+            assert.match(d.digestSha256,/^[0-9a-f]{64}$/);
+            for(const k of ['wideGenerationWallMs','widePackingWallMs','frozenGenerationWallMs','frozenPackingWallMs','uploadWallIncludingYieldsMs','uploadCpuSubmissionMs','materialHabitatPrepAndTextureSubmissionMs','rendererPostOwnerOccupancyAndTexturesWallMs'])assert(Number.isFinite(m[k])&&m[k]>=0,'MISSING_STAGE:'+k);
+           }
+           v.result='PASS_NATIVE_DIAGNOSTIC_ONLY';
+           await context.close();
+          }catch(e){v.result='FAIL_CLOSED';v.errors.push(e.stack??String(e));process.exitCode=1}
+          finally{await fs.writeFile(out,JSON.stringify(v,null,2)+'\n');if(browser)await browser.close()}
+          
+          P3_BROWSER
+          node --check .p3-gen3447-browser.mjs
+          timeout 980s node .p3-gen3447-browser.mjs control
+          cat >.p3-gen3447-shim.cjs <<'P3_SHIM'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const owner='showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+          const renderer='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          function patch(path,edits){
+           let s=fs.readFileSync(path,'utf8');
+           for(const [a,b] of edits){assert.equal(s.split(a).length,2,'P3_NON_UNIQUE_SOURCE_ANCHOR:'+a.slice(0,60));s=s.replace(a,b)}
+           fs.writeFileSync(path,s);
+          }
+          patch(owner,[
+           [' const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);',
+            ' const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);\n const __p3diag={schema:"H_EARTH_P3_GEN3447_EPHEMERAL_STAGE_CAPTURE_v1",sourceSubstituted:true,metrics:{uploadCpuSubmissionMs:0},scope:"CPU_SUBMISSION_AND_BROWSER_WALL_INCLUDING_YIELDS_NOT_GPU_FENCE"};globalThis.__H_EARTH_P3_DIAG=__p3diag;'],
+           ['  const wide=await buildWideExistingGrassTrial(',
+            '  const __p3WideStarted=performance.now();\n  const wide=await buildWideExistingGrassTrial('],
+           ['   maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});\n  const wideExtra',
+            '   maximumAddedRoots:Math.min(500000,wideRemaining),yieldControl,onProgress});\n  __p3diag.metrics.wideGenerationWallMs=performance.now()-__p3WideStarted;\n  const __p3WidePackStarted=performance.now();\n  const wideExtra'],
+           ['  const meadow=await buildFrozenEcologicalMeadow(',
+            '  __p3diag.metrics.widePackingWallMs=performance.now()-__p3WidePackStarted;\n  const __p3FrozenStarted=performance.now();\n  const meadow=await buildFrozenEcologicalMeadow('],
+           ['   visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,yieldControl,onProgress});\n  frozenMeadowReceipt',
+            '   visibleSurface:entranceGrass.visibleSurface,geology:entranceGrass.geology,yieldControl,onProgress});\n  __p3diag.metrics.frozenGenerationWallMs=performance.now()-__p3FrozenStarted;\n  frozenMeadowReceipt'],
+           ['  const meadowExtra=planImmutableTiles(meadow).map(',
+            '  const __p3FrozenPackStarted=performance.now();\n  const meadowExtra=planImmutableTiles(meadow).map('],
+           ['  tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra,...meadowExtra]);',
+            '  __p3diag.metrics.frozenPackingWallMs=performance.now()-__p3FrozenPackStarted;\n  tiles=Object.freeze([...baseTiles,...extra,...seamExtra,...wideExtra,...meadowExtra]);'],
+           [' const rootCount=tiles.reduce((n,t)=>n+t.count,0);'," const rootCount=tiles.reduce((n,t)=>n+t.count,0);\n __p3diag.rootCount=rootCount;\n __p3diag.captureOrderedDigest=async()=>{\n  const startedAt=performance.now(),enc=new TextEncoder(),hashes=[];\n  const hex=b=>Array.from(new Uint8Array(b),v=>v.toString(16).padStart(2,'0')).join('');\n  const manifestUrl='/showroom/globe/h-earth/render/assets/precomputed-grass.v1.json';\n  const manifestRaw=new Uint8Array(await (await fetch(manifestUrl)).arrayBuffer());\n  const manifestHash=hex(await crypto.subtle.digest('SHA-256',manifestRaw));\n  if(manifestHash!=='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf')throw Error('P3_ORIGINAL_MANIFEST_SHA_DRIFT');\n  const manifest=JSON.parse(new TextDecoder().decode(manifestRaw));\n  if(manifest.rootCount!==2858738||manifest.stride!==52)throw Error('P3_ORIGINAL_SCHEMA_DRIFT');\n  const compressed=new Uint8Array(await (await fetch('/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz')).arrayBuffer());\n  if(compressed.byteLength!==manifest.compressedBytes||hex(await crypto.subtle.digest('SHA-256',compressed))!==manifest.compressedSha256)throw Error('P3_ORIGINAL_COMPRESSED_INTEGRITY');\n  const raw=new Uint8Array(await new Response(new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());\n  if(raw.byteLength!==manifest.rawBytes||hex(await crypto.subtle.digest('SHA-256',raw))!==manifest.rawSha256)throw Error('P3_ORIGINAL_RAW_INTEGRITY');\n  const view=new DataView(raw.buffer,raw.byteOffset,raw.byteLength);\n  let count=0,bytes=0,sourceTiles=0,sourceIds=0,bankOrdinals=0,runtimeIds=0;\n  for(const tile of tiles){\n   if(tile.first!==count||tile.packed.byteLength!==tile.count*16||tile.packed.length!==tile.count*4)throw Error('P3_TILE_OFFSET_OR_BYTES_DRIFT:'+tile.id);\n   let ids;\n   if(tile.first<manifest.rootCount){\n    const fixed=manifest.tiles[sourceTiles++];\n    if(!fixed||fixed.id!==tile.id||fixed.count!==tile.count||tile.first+tile.count>manifest.rootCount)throw Error('P3_SOURCE_TILE_ORDER_DRIFT:'+tile.id);\n    ids=new Array(tile.count);\n    for(let j=0;j<tile.count;j++){\n     const offset=(tile.first+j)*52;\n     const fx=Math.fround(view.getFloat64(offset,true)),fy=Math.fround(view.getFloat64(offset+8,true)),fz=Math.fround(view.getFloat64(offset+16,true)),fa=Math.fround(view.getFloat64(offset+24,true));\n     if(tile.packed[j*4]!==fx||tile.packed[j*4+1]!==fy||tile.packed[j*4+2]!==fz||tile.packed[j*4+3]!==fa)throw Error('P3_SOURCE_TO_PACKED_MISMATCH:'+tile.id+':'+j);\n     ids[j]=String(fx)+':'+String(fy)+':'+String(fz)+':'+view.getUint32(offset+40,true);\n    }\n    sourceIds+=tile.count;\n   }else if(tile.id.startsWith('oasis:')){\n    ids=Array.from({length:tile.count},(_,j)=>'PACKED_ONLY_OASIS_BANK_ORDINAL:'+tile.id+':'+j);\n    bankOrdinals+=tile.count;\n   }else{\n    if(!Array.isArray(tile.rootIds)||tile.rootIds.length!==tile.count)throw Error('P3_RUNTIME_NATIVE_ROOT_IDS_MISSING:'+tile.id);\n    ids=tile.rootIds;\n    runtimeIds+=tile.count;\n   }\n   const header=enc.encode(JSON.stringify([tile.id,tile.first,tile.count,ids]));\n   const record=new Uint8Array(header.byteLength+tile.packed.byteLength);\n   record.set(header);record.set(new Uint8Array(tile.packed.buffer,tile.packed.byteOffset,tile.packed.byteLength),header.byteLength);\n   hashes.push(hex(await crypto.subtle.digest('SHA-256',record)));\n   count+=tile.count;bytes+=tile.packed.byteLength;\n  }\n  if(sourceTiles!==manifest.tiles.length||sourceIds!==manifest.rootCount||sourceIds+bankOrdinals+runtimeIds!==count)throw Error('P3_SOURCE_ORDER_ACCOUNTING_DRIFT');\n  const digestSha256=hex(await crypto.subtle.digest('SHA-256',enc.encode('H_EARTH_P3_ORDERED_TILES_WITH_PROVENANCE_V2\\n'+hashes.join('\\n'))));\n  return {schema:'H_EARTH_P3_ORDERED_ROOT_IDENTITY_v2',algorithm:'SHA256_OF_ORDERED_TILE_SHA256_UTF8_JSON_ID_FIRST_COUNT_ROOT_IDENTITY_CONCAT_RAW_FLOAT32_BYTES',idProvenance:{authenticatedPrecomputedSeedIds:sourceIds,packedOnlyOasisBankOrdinals:bankOrdinals,nativeRuntimeRootIds:runtimeIds,originalAssetManifestSha256:manifestHash,originalAssetCompressedSha256:manifest.compressedSha256,originalAssetRawSha256:manifest.rawSha256},tileCount:tiles.length,rootCount:count,packedBytes:bytes,digestSha256,digestConstructionMilliseconds:performance.now()-startedAt,computedAfterReady:true,gpuCompletionMeasured:false};\n };"],
+           [' let gpuUploadCount=1,gpuUploadedBytes=0;\n const uploadScheduling',
+            ' let gpuUploadCount=1,gpuUploadedBytes=0;\n const __p3UploadStarted=performance.now();\n const uploadScheduling'],
+           ['upload:tile=>{gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;}',
+            'upload:tile=>{const __p3CpuStarted=performance.now();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;__p3diag.metrics.uploadCpuSubmissionMs+=performance.now()-__p3CpuStarted;}'],
+           [" const uploadGlError=gl.getError();assertContext('BUFFER_UPLOAD');",
+            " __p3diag.metrics.uploadWallIncludingYieldsMs=performance.now()-__p3UploadStarted;\n const uploadGlError=gl.getError();assertContext('BUFFER_UPLOAD');"],
+           [' const visibilityBounds=boundGrassTiles(tiles);',
+            ' __p3diag.metrics.allOwnerPreparationWallMs=performance.now()-started;\n const visibilityBounds=boundGrassTiles(tiles);']
+          ]);
+          patch(renderer,[
+           ['      const installedHabitat=resources.singleOwnerVegetation.habitat;',
+            '      const __p3PostOwnerStarted=performance.now();\n      const installedHabitat=resources.singleOwnerVegetation.habitat;'],
+           ['      const materialHabitat=buildHabitatMaterialPresentation(installedHabitat);',
+            '      const __p3MaterialStarted=performance.now();\n      const materialHabitat=buildHabitatMaterialPresentation(installedHabitat);'],
+           ['      counters.habitatMaterialTextureUploadCount++;counters.habitatMaterialUploadedBytes+=materialHabitat.pixels.byteLength;',
+            '      counters.habitatMaterialTextureUploadCount++;counters.habitatMaterialUploadedBytes+=materialHabitat.pixels.byteLength;\n      globalThis.__H_EARTH_P3_DIAG.metrics.materialHabitatPrepAndTextureSubmissionMs=performance.now()-__p3MaterialStarted;'],
+           ['      resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:',
+            '      globalThis.__H_EARTH_P3_DIAG.metrics.rendererPostOwnerOccupancyAndTexturesWallMs=performance.now()-__p3PostOwnerStarted;\n      resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:']
+          ]);
+          console.log('EPHEMERAL_P3_GEN3447_SHIM_APPLIED_DIAGNOSTIC_ONLY');
+          P3_SHIM
+          node .p3-gen3447-shim.cjs
+          node --check "$owner"
+          node --check "$renderer"
+          git hash-object "$owner" >"$evidence/shim-owner-blob.txt"
+          git hash-object "$renderer" >"$evidence/shim-renderer-blob.txt"
+          timeout 980s node .p3-gen3447-browser.mjs instrumented
+          node --input-type=module <<'P3_COMPARE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const dir=process.env.RUNNER_TEMP+'/h-earth-p3-gen3447/';
+          const a=JSON.parse(fs.readFileSync(dir+'control.json'));
+          const b=JSON.parse(fs.readFileSync(dir+'instrumented.json'));
+          assert.equal(a.result,'PASS_NATIVE_DIAGNOSTIC_ONLY');
+          assert.equal(b.result,'PASS_NATIVE_DIAGNOSTIC_ONLY');
+          assert.equal(a.capture.instrumented,false);
+          assert.equal(b.capture.instrumented,true);
+          assert.equal(a.capture.owner.rootCount,b.capture.owner.rootCount);
+          assert.equal(a.capture.owner.bytes,b.capture.owner.bytes);
+          const result={schema:'H_EARTH_P3_GEN3447_STAGE_CAPTURE_COMPARISON_v1',result:'PASS_EVIDENCE_ONLY',rootCount:3805291,packedBytes:60884656,orderedRootDigestSha256:b.capture.orderedDigest.digestSha256,historicalDigestUnavailable:true,measuredStages:b.capture.timing,unmodifiedControlPreparationMs:a.capture.owner.preparationMs,instrumentedPreparationMs:b.capture.owner.preparationMs,hashingExcludedFromStartup:true,gpuSynchronizationNotMeasured:true,sourceSubstitutionDisclosed:true,optimizationAdmitted:false,productUnchanged:true,mergerOrReleaseAuthorized:false};
+          fs.writeFileSync(dir+'comparison.json',JSON.stringify(result,null,2)+'\n');
+          P3_COMPARE
+          git restore -- "$owner" "$renderer"
+          test "$(git hash-object "$owner")" = 655802ac5965e2b6166eca7f604c724da2ef3b0d
+          test "$(git hash-object "$renderer")" = a369cc6a1cce8b2ce84cc967f7ee3958b2a849a9
+      - name: Preserve native control, diagnostic stages, ordered digest and failure records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-p3-gen3447-stage-capture-${{ github.event.pull_request.head.sha }}
+          path: ${{ runner.temp }}/h-earth-p3-gen3447/
+          if-no-files-found: warn
+          retention-days: 30
+

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-21T22:24:48Z",
+  "generatedAt": "2026-11-21T23:24:22Z",
   "window30d": {
-    "start": "2026-10-22T22:24:48Z",
-    "end": "2026-11-21T22:24:48Z"
+    "start": "2026-10-22T23:24:22Z",
+    "end": "2026-11-21T23:24:22Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 30
+      "pageLoads": 25
     },
     {
       "date": "2026-11-14",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-21",
-      "pageLoads": 46
+      "pageLoads": 47
     }
   ],
   "summary": {
-    "pageLoads": 1268,
-    "botPageLoads": 755,
-    "nonBotPageLoads": 513
+    "pageLoads": 1264,
+    "botPageLoads": 754,
+    "nonBotPageLoads": 510
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1166,
-      "visits": 1166
+      "pageLoads": 1162,
+      "visits": 1162
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,8 +167,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 271,
-      "visits": 219
+      "pageLoads": 267,
+      "visits": 215
     },
     {
       "path": "/products/education/personal-training/course.html",

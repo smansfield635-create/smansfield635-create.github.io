@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-p4-gen3460-gen2-visual-exact-20261121",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7572,
+  "requestBranch": "ai-dispatch-request-p4-gen3460-gen2-visual-20261121",
+  "requestCommit": "53fcae7c04cc7521d04377f4c33b4b161062da67",
+  "requestCommitParent": "4a19302150ceea97d4170d067db420eb104bd250",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "4a19302150ceea97d4170d067db420eb104bd250",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "f030a06268c2a98253b24ea4657edd2e7b437764"
+  },
+  "bridgeRunId": "44874348114",
+  "dispatchedRunId": 44874364915,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44874364915",
+  "dispatchedRunHeadSha": "4a19302150ceea97d4170d067db420eb104bd250",
+  "dispatchedAt": "2026-11-21T06:11:29.794Z",
+  "resolvedAt": "2026-11-21T06:11:33.703Z"
+}

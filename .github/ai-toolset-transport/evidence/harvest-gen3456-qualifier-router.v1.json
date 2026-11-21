@@ -1,0 +1,21 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "disposition": "PASS",
+  "governingHead": "01058292a6c15e1138c50344e4ede7fb3939658f",
+  "routes": [
+    {
+      "path": "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "disposition": "PASS"
+    }
+  ],
+  "sourceProof": {
+    "kind": "MINIMAL_PROJECTION_FROM_CANONICAL_ROUTER_REGISTRY",
+    "registrationPath": ".github/ai-router/router.v1.json",
+    "registrationProjectKey": "routerInfrastructure",
+    "registrationProjectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+    "registeredExactPath": "tools/ai-room-transport/dgb-graphics-gen3310-served-webgl12.v1.mjs",
+    "noMutationAuthorityCreated": true
+  }
+}

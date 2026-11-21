@@ -666,11 +666,23 @@ uniform float uSunIntensity;uniform float uFogStart;uniform float uFogFalloff;un
 out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
 async function __gen3452LoadSupplement({originalRootCount,oasisRoots,baseRootCount,cavernAdded,seamRoots,wideRemaining}){
- const url=new URL('./assets/p3-wide-frozen-supplement.v1.bin.gz',import.meta.url);
- let response;try{response=await fetch(url)}catch{return null}
- if(response.status===404)return null;
- if(!response.ok)throw Error('P3_SUPPLEMENT_UNAVAILABLE:'+response.status);
- const compressed=new Uint8Array(await response.arrayBuffer());
+ // Gen3453: eight immutable Git parts, from the exact Gen3452 15,632,912-byte gzip.
+ // No new generation, root reordering, tree modification or external asset host.
+ const urls=Array.from({length:8},(_,i)=>new URL('./assets/p3-wide-frozen-supplement.v1.part-'+String(i).padStart(2,'0')+'.gz',import.meta.url));
+ const responses=await Promise.all(urls.map(url=>fetch(url)));
+ if(responses.every(response=>response.status===404))return null;
+ if(responses.some(response=>response.status===404))throw Error('P3_SUPPLEMENT_PARTIAL_ASSET_MISSING');
+ if(responses.some(response=>!response.ok))throw Error('P3_SUPPLEMENT_PART_UNAVAILABLE');
+ const pieces=await Promise.all(responses.map(response=>response.arrayBuffer()));
+ if(pieces.length!==8||pieces.some(piece=>piece.byteLength!==1954114))
+  throw Error('P3_SUPPLEMENT_PART_LENGTH_DRIFT');
+ const compressed=new Uint8Array(15632912);
+ let compressedOffset=0;
+ for(const piece of pieces){
+  compressed.set(new Uint8Array(piece),compressedOffset);
+  compressedOffset+=piece.byteLength;
+ }
+ if(compressedOffset!==15632912)throw Error('P3_SUPPLEMENT_REASSEMBLY_LENGTH_DRIFT');
  if(compressed.byteLength!==15632912)throw Error('P3_SUPPLEMENT_COMPRESSED_LENGTH_DRIFT');
  const sha=async b=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',b)),v=>v.toString(16).padStart(2,'0')).join('');
  if(await sha(compressed)!=='c4dd249916dce0ec2944101fc47dfeb16bdb690ce1b6094522930ba75b18f7f0')throw Error('P3_SUPPLEMENT_COMPRESSED_SHA_DRIFT');

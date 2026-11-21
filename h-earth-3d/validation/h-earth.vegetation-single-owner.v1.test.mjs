@@ -8,8 +8,8 @@ import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {
   planImmutableTiles, detailWeight, selectFineTiles, createSingleOwnerVegetation,
-} from '../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
-import {planP4RiparianInfill,OASIS_BANK_ALLOCATION} from '../../showroom/globe/h-earth/render/oasis-bank-field.v1.js';
+} from '../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js?rev=sha-a63e1c7fd673';
+import {planP4RiparianInfill,OASIS_BANK_ALLOCATION} from '../../showroom/globe/h-earth/render/oasis-bank-field.v1.js?rev=sha-c536286fde3e';
 
 function root(x,z,seed=.25){return {x,y:2,z,angle:.5,seed,triangleId:12,slope:.1};}
 function presentation(){return {tiles:[

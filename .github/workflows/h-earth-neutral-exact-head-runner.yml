@@ -628,6 +628,29 @@ jobs:
                 ownerVisualAcceptance:false,releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3462_P4_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .sourceTestsPassed==3 and .candidateHead=="f030a06268c2a98253b24ea4657edd2e7b437764" and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'a7415307dbc6bfdae907359241b3e669b8245246' ]; then
+              # Gen3464 corrected P4 candidate only. Unknown-head historical guard below remains unchanged.
+              node --check showroom/globe/h-earth/render/oasis-bank-field.v1.js
+              node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+              test "$(git hash-object showroom/globe/h-earth/render/oasis-bank-field.v1.js)" = 'c138e04bf0a52117e8d061812359deab825dad50'
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = 'd85539cbcfd374c91804725a3948b07dbe734d24'
+              test "$(git hash-object showroom/globe/h-earth/index.html)" = '3f32cfe9b572ac57a16feb991b07dd39339913b3'
+              test "$(git hash-object h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs)" = '462741f6ad7769d9b143cb6b77ec7b192868c61e'
+              node --test --test-reporter=tap --test-name-pattern='^(tile planning retains all root identities in finite immutable upload buffers|forward-return selection uses same immutable tiles and exact root identities|fine selection uses nearest tile boundary rather than tile center)$' h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs > /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              grep -Fqx -- '# pass 3' /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p4-source-targeted.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN3464_P4_CORRECTED_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_BOUND_BROWSER_STILL_REQUIRED",
+                candidateHead:$target,productPr:7568,
+                originalP3Roots:3805291,maximumAdditionalBankRoots:2525,
+                bankGitBlob:"c138e04bf0a52117e8d061812359deab825dad50",
+                ownerGitBlob:"d85539cbcfd374c91804725a3948b07dbe734d24",
+                pageGitBlob:"3f32cfe9b572ac57a16feb991b07dd39339913b3",
+                sourceTestsPassed:3,actualBrowserExecution:false,
+                ownerVisualAcceptance:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3464_P4_CORRECTED_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .sourceTestsPassed==3 and .candidateHead=="a7415307dbc6bfdae907359241b3e669b8245246" and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -930,7 +953,7 @@ jobs:
           let residencySamples=[];
           let vegetationExercise=null;
           let continuityCapture=null;
-          const p4ExactHead=targetSha==='f030a06268c2a98253b24ea4657edd2e7b437764'&&requestedPath==='/showroom/globe/h-earth/'&&query==='arrival=approved-four-trees';
+          const p4ExactHead=(targetSha==='f030a06268c2a98253b24ea4657edd2e7b437764'||targetSha==='a7415307dbc6bfdae907359241b3e669b8245246')&&requestedPath==='/showroom/globe/h-earth/'&&query==='arrival=approved-four-trees';
           const activeExactCandidate=(targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='')||p4ExactHead;
           let activeExperienceEvidence=null;
           try {

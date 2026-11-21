@@ -5,6 +5,8 @@ on:
       target_sha:
         required: true
         type: string
+  pull_request:
+    types: [opened, synchronize, reopened]
 permissions:
   contents: read
 jobs:
@@ -37,5 +39,41 @@ jobs:
         with:
           name: h-earth-gen2-visual-${{ inputs.target_sha }}
           path: /tmp/gen2-evidence
+          if-no-files-found: error
+          retention-days: 30
+
+  gen3226-wide-grass-comparison:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen3226-wide-grass-comparison-20261111'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Fetch immutable inspection candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            tools
+            .github/workflows
+      - name: Verify exact admitted inspection commit
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install established first-party Chromium
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+      - name: Exact published versus Gen3225 first-party WebGL and GPU comparison
+        run: |
+          node --check tools/h-earth-gen2-visual-qualify.mjs
+          node tools/h-earth-gen2-visual-qualify.mjs --gen3226-wide-grass-comparison
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-gen3226-published-vs-widegrass-actual-webgl
+          path: /tmp/gen2-evidence/gen3226
           if-no-files-found: error
           retention-days: 30

@@ -930,7 +930,8 @@ jobs:
           let residencySamples=[];
           let vegetationExercise=null;
           let continuityCapture=null;
-          const activeExactCandidate=targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='';
+          const p4ExactHead=targetSha==='f030a06268c2a98253b24ea4657edd2e7b437764'&&requestedPath==='/showroom/globe/h-earth/'&&query==='arrival=approved-four-trees';
+          const activeExactCandidate=(targetSha==='0f00a42cf605979e4f6d21c415823b02d82ecdd9'&&requestedPath==='/showroom/globe/h-earth/'&&query==='')||p4ExactHead;
           let activeExperienceEvidence=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});

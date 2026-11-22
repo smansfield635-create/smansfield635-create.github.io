@@ -30478,6 +30478,50 @@
       "scopeHash": "bc653c63f856b1b417bab7a5869976dac2eaac0a22e9f4ddbf893c3555a571f9",
       "state": "ADMITTED_LOCKED"
     },
+    "bc719dac2d3ebacf3380f3f5ad8d70befd99aa6b68a417c8fc3944ba89527599": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b",
+          "lockGeneration": 3483,
+          "lockScope": "H_EARTH:P8:DRY_SAND_RIPARIAN_SEDGE_SOURCE:20261122",
+          "operationId": "H_EARTH_P8_DRY_SAND_RIPARIAN_SEDGE_PHYSICAL_INFILL_20261122_001",
+          "procedureLocatorDigest": "ec41ab73f05faa7ea2fc3eb7cefd7e89f3a3e163b395d56b1c19d56c2c165911",
+          "requestDigest": "f1b3a167f4769af84aab5862192eda09f695d09693129fbcfd96715fe24d7fd3",
+          "scopeHash": "bc719dac2d3ebacf3380f3f5ad8d70befd99aa6b68a417c8fc3944ba89527599"
+        },
+        "bindingDigest": "c41515c6c1a0e052624874fafb6fefbd67e481329999d2f8f47ba1bb933582b4",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d341bf82055c52985f9f2861e023b9aeda06ee654fd62d06b35ad3d0f80ba2c3",
+          "commentId": 7075312158,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44993618058,
+          "workflowSha": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b"
+        },
+        "lineageAnchorCommitSha": "83be5d7517009a0418436183fae1646527438e1f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b",
+      "lockGeneration": 3483,
+      "lockScope": "H_EARTH:P8:DRY_SAND_RIPARIAN_SEDGE_SOURCE:20261122",
+      "operationId": "H_EARTH_P8_DRY_SAND_RIPARIAN_SEDGE_PHYSICAL_INFILL_20261122_001",
+      "procedureLocatorDigest": "ec41ab73f05faa7ea2fc3eb7cefd7e89f3a3e163b395d56b1c19d56c2c165911",
+      "released": false,
+      "requestDigest": "f1b3a167f4769af84aab5862192eda09f695d09693129fbcfd96715fe24d7fd3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bc719dac2d3ebacf3380f3f5ad8d70befd99aa6b68a417c8fc3944ba89527599",
+      "state": "ADMITTED_LOCKED"
+    },
     "bc8e70b349c50c6b5dcefbeda1e926bea8ec02bafb40bc4814f16bb68d0e3df3": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -40982,7 +41026,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3482,
+  "lockGeneration": 3483,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -71,7 +71,7 @@ export async function planP6DryEcotone({
    }
    // Nonrectilinear cover: deterministic open earth breaks and soft foothill fringe.
    const soilPatch=0.62*hash(cx,cz,16)+0.38*hash(Math.floor(cx/7),Math.floor(cz/7),17);
-   const outer=Math.max(0,cx-54,-28-cx,cz+211,-119-cz);
+   const outer=Math.max(0,cx-54,-28-cx,cz+119,-211-cz);
    const feather=Math.max(0,1-outer/22);
    if(soilPatch<.17||hash(cx,cz,18)>feather){rejected.patch++;continue;}
    const quota=existing>=8?1:existing>=3?2:3+(hash(cx,cz,19)>.62?1:0);

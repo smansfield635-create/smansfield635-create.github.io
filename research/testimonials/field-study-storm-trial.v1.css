@@ -1,31 +1,13 @@
-/* Research Field Study — reversible atmospheric background trial.
-   Provenance: Frontier Water separated rain layers; no DOM, script or GPU dependency.
-   Rollback: remove the stylesheet link. The original inline dark background remains intact. */
-body{
-  --study-rain-a:rgba(232,238,245,.072);
-  --study-rain-b:rgba(213,225,232,.052);
-  --study-rain-c:rgba(240,243,248,.046);
-  background-color:#17181e;
-  background-image:
-    linear-gradient(113deg,transparent 0 8%,var(--study-rain-a) 8.22% 8.46%,transparent 8.7% 29%,var(--study-rain-b) 29.22% 29.51%,transparent 29.78% 52%,var(--study-rain-c) 52.18% 52.4%,transparent 52.69% 78%,var(--study-rain-b) 78.21% 78.41%,transparent 78.68%),
-    radial-gradient(ellipse at 17% 12%,rgba(179,185,194,.26),transparent 40%),
-    radial-gradient(ellipse at 87% 39%,rgba(136,147,160,.20),transparent 44%),
-    radial-gradient(ellipse at 29% 72%,rgba(89,96,110,.17),transparent 49%),
-    radial-gradient(ellipse at 81% 85%,rgba(117,53,78,.13),transparent 52%),
-    linear-gradient(180deg,#24252b 0%,#1b1c23 24%,#13151c 57%,#0c0d12 100%);
-  background-size:220px 330px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%;
-  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
-  animation:studySlowRainFall 22s linear infinite;
+/* Field Study storm-cloud trial v2 — original atmospheric texture.
+   Replaces the rejected striped rain CSS with irregular soft cloud banks.
+   Static, low-cost 600x1140 WebP texture generated from multi-scale cloud noise.
+   No line patterns, no animation, no script, no new scroll container.
+   Rollback: remove the stylesheet link in index.html to reveal the unchanged original dark background. */
+body {
+  background-color: #171a20;
+  background-image: url("data:image/webp;base64,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"), linear-gradient(180deg,#242832,#11141b);
+  background-size: 100% 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
+  animation: none;
 }
-@keyframes studySlowRainFall{
-  from{background-position:0 -330px,center,center,center,center,center}
-  to{background-position:-94px 330px,center,center,center,center,center}
-}
-@media(max-width:760px){
-  body{
-    --study-rain-a:rgba(229,236,243,.044);
-    --study-rain-b:rgba(216,226,236,.030);
-    --study-rain-c:rgba(242,246,248,.026);
-  }
-}
-@media(prefers-reduced-motion:reduce){body{animation:none!important}}

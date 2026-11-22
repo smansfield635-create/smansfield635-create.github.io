@@ -1,6 +1,6 @@
 import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles,planP4RiparianInfill} from './oasis-bank-field.v1.js';
-import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js';
+import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js?rev=sha-e919eeec9d4c';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
@@ -839,8 +839,8 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
     if(geology.sampleWaterAt(x,z)||geology.isPlannedWaterFootprint?.(x,z))return null;
     const local=unprojectPlanetVertex(x,hit.y,z);
     if(!Number.isFinite(local.y))return null;
-    const p4BankArea=x>-18&&x<34&&z>-204&&z<-131;
-    if(!p4BankArea&&!visibleSurface.admitGround(x,z,hit))return null;
+    const p6VerifiedBankCorridor=x>-42&&x<34&&z>-211&&z<-119;
+    if(!p6VerifiedBankCorridor&&!visibleSurface.admitGround(x,z,hit))return null;
     return {y:hit.y,slope:hit.slope,dryContact:true};
    }});
   if(p6Ecotone.receipt.addedRoots>P6_ECOTONE_ALLOCATION.maximumRoots||

@@ -1,0 +1,31 @@
+/* Research Field Study — reversible atmospheric background trial.
+   Provenance: Frontier Water separated rain layers; no DOM, script or GPU dependency.
+   Rollback: remove the stylesheet link. The original inline dark background remains intact. */
+body{
+  --study-rain-a:rgba(232,238,245,.072);
+  --study-rain-b:rgba(213,225,232,.052);
+  --study-rain-c:rgba(240,243,248,.046);
+  background-color:#17181e;
+  background-image:
+    linear-gradient(113deg,transparent 0 8%,var(--study-rain-a) 8.22% 8.46%,transparent 8.7% 29%,var(--study-rain-b) 29.22% 29.51%,transparent 29.78% 52%,var(--study-rain-c) 52.18% 52.4%,transparent 52.69% 78%,var(--study-rain-b) 78.21% 78.41%,transparent 78.68%),
+    radial-gradient(ellipse at 17% 12%,rgba(179,185,194,.26),transparent 40%),
+    radial-gradient(ellipse at 87% 39%,rgba(136,147,160,.20),transparent 44%),
+    radial-gradient(ellipse at 29% 72%,rgba(89,96,110,.17),transparent 49%),
+    radial-gradient(ellipse at 81% 85%,rgba(117,53,78,.13),transparent 52%),
+    linear-gradient(180deg,#24252b 0%,#1b1c23 24%,#13151c 57%,#0c0d12 100%);
+  background-size:220px 330px,100% 100%,100% 100%,100% 100%,100% 100%,100% 100%;
+  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat,no-repeat;
+  animation:studySlowRainFall 22s linear infinite;
+}
+@keyframes studySlowRainFall{
+  from{background-position:0 -330px,center,center,center,center,center}
+  to{background-position:-94px 330px,center,center,center,center,center}
+}
+@media(max-width:760px){
+  body{
+    --study-rain-a:rgba(229,236,243,.044);
+    --study-rain-b:rgba(216,226,236,.030);
+    --study-rain-c:rgba(242,246,248,.026);
+  }
+}
+@media(prefers-reduced-motion:reduce){body{animation:none!important}}

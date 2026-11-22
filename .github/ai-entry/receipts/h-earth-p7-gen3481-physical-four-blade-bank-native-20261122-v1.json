@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-p7-gen3481-physical-four-blade-bank-native-20261122-v1",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7601,
+  "requestBranch": "ai-dispatch-request-h-earth-p7-gen3481-tuft-native-20261122",
+  "requestCommit": "f9b65cef48d45c5b276968d317edc63308de17ef",
+  "requestCommitParent": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b76a2664e5cb908cee2e17c2586c6e2f886027ee",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees&qualification=bank-view-v1",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html"
+  },
+  "bridgeRunId": "44992627158",
+  "dispatchedRunId": 44992640507,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44992640507",
+  "dispatchedRunHeadSha": "bc84f7ce3ac79e136b50dbb0ebbafa890b43e79b",
+  "dispatchedAt": "2026-11-22T06:11:50.005Z",
+  "resolvedAt": "2026-11-22T06:11:56.592Z"
+}

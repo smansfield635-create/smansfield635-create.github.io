@@ -13,14 +13,19 @@
         "review:false,guide:true",
         "id:100,name:\"Susan Finehout\"",
         "Browse 100 numbered entries",
-        "<strong>100</strong><span>residential sales in the original study</span>"
+        "<strong>100</strong><span>residential sales in the original study</span>",
+        "id=\"chapter-questions\"",
+        "id=\"chapter-details\"",
+        "id=\"chapter-records\"",
+        "name=\"study-chapter\""
       ],
       "excludes": [
         "The 87 field notes",
         "surviving notes to explore",
         "What my first 100 sales taught me",
         "Entries 14–100 survive; entries 1–13 are unavailable.",
-        "<strong>100</strong><span>organized study entries to explore</span>"
+        "<strong>100</strong><span>organized study entries to explore</span>",
+        "class=\"study-chapter\" id=\"chapter-details\" open"
       ]
     },
     {
@@ -51,24 +56,24 @@
     "failOnPageErrors": true,
     "interactions": [
       {
-        "name": "Field-study index opens",
+        "name": "Open questions chapter",
         "action": {
           "type": "click",
-          "selector": "#full-notes > summary"
+          "selector": "#chapter-questions > summary"
         },
         "assertions": [
           {
             "type": "exists",
-            "selector": "#full-notes[open]"
+            "selector": "#chapter-questions[open]"
           },
           {
             "type": "exists",
-            "selector": "#field-list .record-group"
+            "selector": "#concerns .topic-grid"
           }
         ]
       },
       {
-        "name": "Debris filter shows original customer notes",
+        "name": "Question filter responds",
         "action": {
           "type": "click",
           "selector": "[data-topic=\"clog\"]"
@@ -83,6 +88,78 @@
           {
             "type": "exists",
             "selector": "#topic-results:not([hidden])"
+          }
+        ]
+      },
+      {
+        "name": "Open details chapter closes questions",
+        "action": {
+          "type": "click",
+          "selector": "#chapter-details > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#chapter-details[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "#chapter-questions:not([open])"
+          },
+          {
+            "type": "exists",
+            "selector": "#promises .group > details"
+          }
+        ]
+      },
+      {
+        "name": "Nested warranty dropdown works",
+        "action": {
+          "type": "click",
+          "selector": "#promises .group > details > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#promises .group > details[open]"
+          }
+        ]
+      },
+      {
+        "name": "Open field notes chapter closes details",
+        "action": {
+          "type": "click",
+          "selector": "#chapter-records > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#chapter-records[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "#chapter-details:not([open])"
+          },
+          {
+            "type": "exists",
+            "selector": "#full-notes"
+          }
+        ]
+      },
+      {
+        "name": "Open 100-entry original index",
+        "action": {
+          "type": "click",
+          "selector": "#full-notes > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#full-notes[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "#field-list .record-group"
           }
         ]
       }

@@ -1,0 +1,87 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "research-customer-reading",
+  "description": "Paired industry and homeowner field study; exact-head page proof with preserved original records.",
+  "checks": [
+    {
+      "path": "/research/testimonials/index.html",
+      "includes": [
+        "100 field-study entries",
+        "id=\"study-source-note\"",
+        "id=\"field-list\"",
+        "id=\"topic-results\"",
+        "review:false,guide:true",
+        "id:100,name:\"Susan Finehout\""
+      ],
+      "excludes": [
+        "The 87 field notes",
+        "surviving notes to explore",
+        "What my first 100 sales taught me"
+      ]
+    },
+    {
+      "path": "/research/industry-context/index.html",
+      "includes": [
+        "100 browsable entries",
+        "Question to consider:",
+        "id=\"companies\"",
+        "/research/testimonials/"
+      ],
+      "excludes": [
+        "For the homeowner:",
+        "For the customer:",
+        "What my first 100 sales taught me"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/research/testimonials/",
+    "timeoutMs": 15000,
+    "readySelector": "#full-notes",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/research/testimonials/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Field-study index opens",
+        "action": {
+          "type": "click",
+          "selector": "#full-notes > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#full-notes[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "#field-list .record-group"
+          }
+        ]
+      },
+      {
+        "name": "Debris filter shows original customer notes",
+        "action": {
+          "type": "click",
+          "selector": "[data-topic=\"clog\"]"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "[data-topic=\"clog\"]",
+            "name": "aria-pressed",
+            "value": "true"
+          },
+          {
+            "type": "exists",
+            "selector": "#topic-results:not([hidden])"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "homeowner-case-100-20261122-b2ed8cef",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7632,
+  "requestBranch": "ai-dispatch-request-homeowner-case-100-20261122",
+  "requestCommit": "12a361d856991bc8c4181f7ad65fc4affc8045a1",
+  "requestCommitParent": "b2ed8cef4ebcd9f5d7000f1aa13b9fd578c77708",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "b2ed8cef4ebcd9f5d7000f1aa13b9fd578c77708",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b2ed8cef4ebcd9f5d7000f1aa13b9fd578c77708",
+    "surface_id": "research-industry-rain"
+  },
+  "bridgeRunId": "45079057098",
+  "dispatchedRunId": 45079068817,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/45079068817",
+  "dispatchedRunHeadSha": "b2ed8cef4ebcd9f5d7000f1aa13b9fd578c77708",
+  "dispatchedAt": "2026-11-22T22:40:51.708Z",
+  "resolvedAt": "2026-11-22T22:40:57.890Z"
+}

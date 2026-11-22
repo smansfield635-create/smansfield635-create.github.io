@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T18:26:27Z",
+  "generatedAt": "2026-11-22T19:24:53Z",
   "window": {
-    "start": "2026-08-24T18:26:27Z",
-    "end": "2026-11-22T18:26:27Z"
+    "start": "2026-08-24T19:24:53Z",
+    "end": "2026-11-22T19:24:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2880,
+    "pageLoads": 2870,
     "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2880,
+        "pageLoads": 2870,
         "visits": 730
       }
     },
@@ -46,15 +46,15 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/instruments/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/developer/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/gauges/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -73,10 +73,6 @@
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/": {
         "pageLoads": 480,
@@ -114,13 +110,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -206,13 +202,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
@@ -269,7 +265,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2150,
+        "pageLoads": 2140,
         "visits": 0
       },
       "(none)": {

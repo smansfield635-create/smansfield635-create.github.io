@@ -1,6 +1,7 @@
 import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles,planP4RiparianInfill} from './oasis-bank-field.v1.js';
 import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js?rev=sha-109db7bc3ba4';
+import {P8_SEDGE_ALLOCATION,P8_SEDGE_MATERIAL,planP8NativeDrySandSedges} from './p8-dry-sand-shoreline-sedge.v1.js?rev=sha-a118a8675207';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
@@ -618,6 +619,7 @@ uniform float uRadius;
 uniform int uFine;
 uniform int uRiparian;
 uniform int uP7Tuft;
+uniform int uP8Sedge;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
 ${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
@@ -632,8 +634,11 @@ void main(){
  // Gen3481 P7: four physical tapered blades per admitted P6 dry root only.
  float p7Blade=float(gl_VertexID/6);
  float p7Jitter=fract(sin(dot(aRoot.xz,vec2(37.127,63.941))+p7Blade*2.447)*19057.124);
+ float p8Blade=float(gl_VertexID/6);
+ float p8Jitter=fract(sin(dot(aRoot.xz,vec2(31.129,67.521))+p8Blade*2.21)*19123.14);
  float angle=aRoot.w+float(uFine)*(1.5707963+.24*(tuftVariation-.5))
-  +float(uP7Tuft)*(p7Blade*1.5707963+(p7Jitter-.5)*.58);
+  +float(uP7Tuft)*(p7Blade*1.5707963+(p7Jitter-.5)*.58)
+  +float(uP8Sedge)*(p8Blade*1.5707963+(p8Jitter-.5)*.67);
  vec3 across=normalize(vec3(cos(angle),0.,sin(angle)));across=normalize(across-up*dot(up,across));
  int k=gl_VertexID%6;
  float side=(k==0||k==3||k==5)?-1.:1.;
@@ -654,6 +659,8 @@ void main(){
  }
  // P7 modifies actual P6 blade width only; the native soil and P3/P4 remain unchanged.
  width*=mix(1.,mix(1.75,2.40,p7Jitter),float(uP7Tuft));
+ // P8 physical independent sedge blade width; no earlier geometry lane changes.
+ width=mix(width,mix(.085,.17,p8Jitter)*scale*(.84+.27*tuftVariation),float(uP8Sedge));
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));
@@ -667,9 +674,12 @@ void main(){
  float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale*mix(meadowGrowth,1.,entrance)*mix(1.,1.85,float(uRiparian));
  if(uRiparian==1)height*=mix(.91,1.17,bankTuft);
  height*=mix(1.,mix(1.60,2.20,p7Jitter),float(uP7Tuft));
+ height=mix(height,mix(.34,.78,p8Jitter)*scale,float(uP8Sedge));
  float tipTaper=mix(.81,.985,float(uP7Tuft));
+ tipTaper=mix(tipTaper,.975,float(uP8Sedge));
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*tipTaper));
  if(uP7Tuft==1)p+=vec3(sin(angle+.42),0.,-cos(angle+.42))*level*level*height*mix(.07,.19,p7Jitter);
+ if(uP8Sedge==1)p+=vec3(sin(angle+.31),0.,-cos(angle+.31))*level*level*height*mix(.04,.14,p8Jitter);
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  // Roots and ground contact remain fixed: only the added P4 blade tips lean.
  if(uRiparian==1)p+=vec3(cos(angle+2.2*bankTuft),0.,sin(angle+2.2*bankTuft))*level*level*height*mix(.06,.14,bankTuft);
@@ -684,6 +694,8 @@ void main(){
    vec3 bankTone=mix(vec3(.19,.27,.095),vec3(.105,.355,.125),bankTuft);
    palette=mix(palette,bankTone,.29);
  }
+ // Rooted sedge coloration is limited to P8 geometry; it does not recolor the sand terrain.
+ palette=mix(palette,mix(vec3(.18,.26,.085),vec3(.29,.33,.13),p8Jitter),float(uP8Sedge)*.92);
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);
 }`;
 const FS=`#version 300 es
@@ -894,11 +906,63 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
      p6Ecotone.receipt.addedGpuBytes>P6_ECOTONE_ALLOCATION.maximumPackedBytes)
    throw Error('P6_ECOTONE_BUDGET_EXCEEDED');
  }
+ // P8 Gen3483: independent native exposed dry-sand sedges. Preserve the P6 predicates byte-for-byte.
+ const p8Stages=['terrainSupport','terrainSlope','beachUnavailable','notDrySand','exposedContact','renderedWater','geologyWater','plannedWater','unprojection','accepted'];
+ const p8StageCounts=Object.fromEntries(p8Stages.map(key=>[key,0]));
+ const p8StageGrid=new Map();let p8StageTrials=0;
+ function p8MarkStage(stage,x,z){
+  if(!Object.hasOwn(p8StageCounts,stage))throw Error('P8_STAGE_UNKNOWN');
+  p8StageCounts[stage]++;p8StageTrials++;
+  const bx=Math.floor(x/8)*8,bz=Math.floor(z/8)*8,key=bx+':'+bz;
+  let bin=p8StageGrid.get(key);
+  if(!bin){bin={x:bx,z:bz,trials:0,counts:{}};p8StageGrid.set(key,bin);}
+  bin.trials++;bin.counts[stage]=(bin.counts[stage]??0)+1;
+  return null;
+ }
+ function p8FirstFailureReceipt(){
+  const accounted=Object.values(p8StageCounts).reduce((n,v)=>n+v,0);
+  if(accounted!==p8StageTrials)throw Error('P8_STAGE_ACCOUNTING_DRIFT');
+  return {schema:'H_EARTH_P8_NATIVE_EXPOSED_SAND_FIRST_FAILURE_v1',
+   trialCount:p8StageTrials,stageCounts:{...p8StageCounts},accountedTrials:accounted,
+   bins:[...p8StageGrid.values()].sort((a,b)=>a.z-b.z||a.x-b.x).map(b=>({x:b.x,z:b.z,trials:b.trials,counts:{...b.counts}})),
+   binWidthMeters:8,firstFailureOnly:true,originalP6AdmissionUnchanged:true,
+   exposedDrySandOnly:true,visualGainNotInferred:true};
+ }
+ let p8Sedge={tiles:[],receipt:{schema:'H_EARTH_P8_NATIVE_EXPOSED_DRY_SAND_SEDGE_v1',addedRoots:0,addedGpuBytes:0}};
+ if(trusted&&entranceGrass){
+  const {visibleSurface,geology}=entranceGrass;
+  p8Sedge=await planP8NativeDrySandSedges({installedTiles:tiles,p4BankTiles:p4Bank.tiles,
+   p6DryTiles:p6Ecotone.tiles,yieldControl,admitDrySandContact:(x,z)=>{
+    const hit=visibleSurface.sample(x,z);
+    if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope))return p8MarkStage('terrainSupport',x,z);
+    if(hit.slope>P8_SEDGE_MATERIAL.slopeMax)return p8MarkStage('terrainSlope',x,z);
+    const beach=visibleSurface.beach.sample({x,z,support:hit});
+    if(beach?.valid!==true||!Number.isFinite(beach.rawSandCoverage)||
+       !Number.isFinite(beach.interpolatedExposedContactDistance))return p8MarkStage('beachUnavailable',x,z);
+    if(!(beach.rawSandCoverage>P8_SEDGE_MATERIAL.sandMinExclusive&&
+         beach.rawSandCoverage<=P8_SEDGE_MATERIAL.sandMaxInclusive))return p8MarkStage('notDrySand',x,z);
+    if(beach.interpolatedExposedContactDistance<P8_SEDGE_MATERIAL.minimumExposedContact)
+     return p8MarkStage('exposedContact',x,z);
+    const water=visibleSurface.water.sample(x,z);
+    if(water&&(!Number.isFinite(water.y)||
+       hit.y<=water.y+P8_SEDGE_MATERIAL.minimumWaterClearance))return p8MarkStage('renderedWater',x,z);
+    if(geology.sampleWaterAt(x,z))return p8MarkStage('geologyWater',x,z);
+    if(geology.isPlannedWaterFootprint?.(x,z))return p8MarkStage('plannedWater',x,z);
+    const local=unprojectPlanetVertex(x,hit.y,z);
+    if(!Number.isFinite(local.y))return p8MarkStage('unprojection',x,z);
+    p8MarkStage('accepted',x,z);
+    return {y:hit.y,slope:hit.slope,sandDryContact:true};
+   }});
+  if(p8StageTrials!==p8Sedge.receipt.contactTrials||p8StageCounts.accepted!==p8Sedge.receipt.addedRoots||
+     p8StageTrials-p8StageCounts.accepted!==p8Sedge.receipt.rejected.contact)throw Error('P8_FIRST_FAILURE_INVARIANT');
+  if(p8Sedge.receipt.addedRoots>P8_SEDGE_ALLOCATION.maximumRoots||
+     p8Sedge.receipt.addedGpuBytes>P8_SEDGE_ALLOCATION.maximumPackedBytes)throw Error('P8_SEDGE_BUDGET_EXCEEDED');
+ }
  const controlRoots=trusted?.controlRoots??[];if(!trusted)for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
  if(!controlRoots.length)throw Error('EMPTY_FIXED_CONTROL');
- const ownedShaders=[];let program=null,vao=null,buffer=null,p4Vao=null,p4Buffer=null,p6Vao=null,p6Buffer=null;
- let p4GpuBytes=0,p4GpuUploadedBytes=0,p4GpuUploadCount=0,p6GpuBytes=0,p6GpuUploadedBytes=0,p6GpuUploadCount=0;
- function cleanup(){if(p6Buffer)gl.deleteBuffer(p6Buffer);if(p6Vao)gl.deleteVertexArray(p6Vao);if(p4Buffer)gl.deleteBuffer(p4Buffer);if(p4Vao)gl.deleteVertexArray(p4Vao);if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}
+ const ownedShaders=[];let program=null,vao=null,buffer=null,p4Vao=null,p4Buffer=null,p6Vao=null,p6Buffer=null,p8Vao=null,p8Buffer=null;
+ let p4GpuBytes=0,p4GpuUploadedBytes=0,p4GpuUploadCount=0,p6GpuBytes=0,p6GpuUploadedBytes=0,p6GpuUploadCount=0,p8GpuBytes=0,p8GpuUploadedBytes=0,p8GpuUploadCount=0;
+ function cleanup(){if(p8Buffer)gl.deleteBuffer(p8Buffer);if(p8Vao)gl.deleteVertexArray(p8Vao);if(p6Buffer)gl.deleteBuffer(p6Buffer);if(p6Vao)gl.deleteVertexArray(p6Vao);if(p4Buffer)gl.deleteBuffer(p4Buffer);if(p4Vao)gl.deleteVertexArray(p4Vao);if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}
  try{
 
  function graphicsError(code,stage,log){const lost=gl.isContextLost?.()===true;return Error(`${lost?'OWNER_CONTEXT_LOST':code}:${stage}:${String(log??'').trim()||'NO_DRIVER_LOG'}`);}
@@ -960,14 +1024,27 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    throw graphicsError('P6_DRY_GPU_UPLOAD','P6_BUFFER',p6GpuUploadedBytes);
   gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  }
- const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uRiparian','uP7Tuft','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
+ // P8: own immutable dry-sand 16-byte/root GPU allocation, no P3/P4/P6 root replay.
+ const p8Added=p8Sedge.receipt.addedRoots||0;
+ if(p8Added){
+  p8Vao=gl.createVertexArray();p8Buffer=gl.createBuffer();
+  if(!p8Vao||!p8Buffer)throw graphicsError('P8_SAND_GPU_ALLOCATION','P8_BUFFER','EMPTY_RESOURCE');
+  gl.bindVertexArray(p8Vao);gl.bindBuffer(gl.ARRAY_BUFFER,p8Buffer);
+  gl.bufferData(gl.ARRAY_BUFFER,p8Added*16,gl.STATIC_DRAW);
+  p8GpuBytes=gl.getBufferParameter(gl.ARRAY_BUFFER,gl.BUFFER_SIZE);
+  if(p8GpuBytes!==p8Added*16||gl.getError()!==gl.NO_ERROR)throw graphicsError('P8_SAND_GPU_SIZE','P8_BUFFER',p8GpuBytes);
+  for(const tile of p8Sedge.tiles){gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);p8GpuUploadCount++;p8GpuUploadedBytes+=tile.packed.byteLength;}
+  if(p8GpuUploadedBytes!==p8GpuBytes||gl.getError()!==gl.NO_ERROR)throw graphicsError('P8_SAND_GPU_UPLOAD','P8_BUFFER',p8GpuUploadedBytes);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
+ }
+ const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uRiparian','uP7Tuft','uP8Sedge','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
  const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
  gl.useProgram(program);const e=environment;gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform3fv(u.uSunColor,rgb(e.sunColor));gl.uniform3fv(u.uHaze,rgb(e.groundHazeColor));gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform1f(u.uFogStart,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaxFog,e.maximumFogFactor);
- const visibilityBounds=boundGrassTiles(tiles),p4VisibilityBounds=p4Added?boundGrassTiles(p4Bank.tiles):[],p6VisibilityBounds=p6Added?boundGrassTiles(p6Ecotone.tiles):[];
+ const visibilityBounds=boundGrassTiles(tiles),p4VisibilityBounds=p4Added?boundGrassTiles(p4Bank.tiles):[],p6VisibilityBounds=p6Added?boundGrassTiles(p6Ecotone.tiles):[],p8VisibilityBounds=p8Added?boundGrassTiles(p8Sedge.tiles):[];
  let disposed=false,lastDraw={visibleCoarseRoots:0,selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
  function draw(packet){
   if(disposed)throw Error('OWNER_DISPOSED');const cpuStarted=performance.now();const camera=packet.camera.position,frustum=grassFrustumPlanes(packet.camera.viewProjectionMatrix),visible=selectVisibleGrassTiles(visibilityBounds,frustum.planes),fine=selectFineTiles(visible,camera);
-  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uP7Tuft,0);
+  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uP7Tuft,0);gl.uniform1i(u.uP8Sedge,0);
   let visibleCoarseRoots=0,selectedFineRoots=0,drawCallCount=0;
   for(const range of mergeGrassRanges(visible)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;visibleCoarseRoots+=range.count;}
   gl.uniform1i(u.uFine,1);
@@ -1004,14 +1081,31 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    }
    gl.uniform1i(u.uFine,0);gl.uniform1i(u.uP7Tuft,0);
   }
+  let p8VisibleCoarseRoots=0,p8SelectedFineRoots=0;
+  if(p8Added){
+   const p8Visible=selectVisibleGrassTiles(p8VisibilityBounds,frustum.planes),p8Fine=selectFineTiles(p8Visible,camera);
+   gl.useProgram(program);gl.bindVertexArray(p8Vao);gl.bindBuffer(gl.ARRAY_BUFFER,p8Buffer);
+   gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uP7Tuft,0);gl.uniform1i(u.uP8Sedge,1);gl.uniform1i(u.uFine,0);
+   for(const range of mergeGrassRanges(p8Visible)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,24,range.count);drawCallCount++;p8VisibleCoarseRoots+=range.count;
+   }
+   gl.uniform1i(u.uFine,1);
+   for(const range of mergeGrassRanges(p8Fine)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,24,range.count);drawCallCount++;p8SelectedFineRoots+=range.count;
+   }
+   gl.uniform1i(u.uFine,0);gl.uniform1i(u.uP8Sedge,0);
+  }
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,
-   riparianCoarseRoots,riparianFineRoots,p6VisibleCoarseRoots,p6SelectedFineRoots,drawCallCount,
+   riparianCoarseRoots,riparianFineRoots,p6VisibleCoarseRoots,p6SelectedFineRoots,p8VisibleCoarseRoots,p8SelectedFineRoots,drawCallCount,
+   p8SedgeBladesPerRoot:4,p8SedgeSubmittedTriangles:(p8VisibleCoarseRoots+p8SelectedFineRoots)*8,
    p7TuftBladesPerRoot:4,p7TuftSubmittedTriangles:(p6VisibleCoarseRoots+p6SelectedFineRoots)*8,
-   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots)*2+(p6VisibleCoarseRoots+p6SelectedFineRoots)*8,
+   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots)*2+(p6VisibleCoarseRoots+p6SelectedFineRoots)*8+(p8VisibleCoarseRoots+p8SelectedFineRoots)*8,
    perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};
   return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p7DryTuftGeometry:{bladeCount:4,trianglesPerRoot:8,sourceRootsUnchanged:true,admissionPredicatesUnchanged:true,packedRootBytesUnchanged:true},p6FirstFailure:p6FirstFailureReceipt(),p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots+P8_SEDGE_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p7DryTuftGeometry:{bladeCount:4,trianglesPerRoot:8,sourceRootsUnchanged:true,admissionPredicatesUnchanged:true,packedRootBytesUnchanged:true},p6FirstFailure:p6FirstFailureReceipt(),p8DrySandSedge:p8Sedge.receipt,p8FirstFailure:p8FirstFailureReceipt(),p8SedgeGpuBytes:p8GpuBytes,p8SedgeUploadedBytes:p8GpuUploadedBytes,p8SedgeUploadCount:p8GpuUploadCount,p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added+p8Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes+p8GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes+p8GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes+P8_SEDGE_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

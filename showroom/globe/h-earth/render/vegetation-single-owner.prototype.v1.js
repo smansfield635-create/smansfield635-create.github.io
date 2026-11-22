@@ -1,5 +1,6 @@
 import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles,planP4RiparianInfill} from './oasis-bank-field.v1.js';
+import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js?rev=sha-e919eeec9d4c';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
@@ -822,11 +823,35 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   }});
   assertOasisBankBudget(rootCount-oasisRoots,oasisRoots+p4Bank.receipt.addedRoots,allocation);
  }
+ // P6: separate admitted dry-contact roots. P3/P4 records remain immutable.
+ let p6Ecotone={tiles:[],receipt:{schema:'H_EARTH_P6_AUTHENTIC_DRY_CONTACT_V1',addedRoots:0,addedGpuBytes:0}};
+ if(trusted&&entranceGrass){
+  const {visibleSurface,geology}=entranceGrass;
+  p6Ecotone=await planP6DryEcotone({installedTiles:tiles,p4BankTiles:p4Bank.tiles,yieldControl,
+   admitDryContact:(x,z)=>{
+    const hit=visibleSurface.sample(x,z);
+    if(!hit||!Number.isFinite(hit.y)||!Number.isFinite(hit.slope)||hit.slope>.75)return null;
+    const beach=visibleSurface.beach.sample({x,z,support:hit});
+    if(beach?.valid!==true||!Number.isFinite(beach.rawSandCoverage)||
+       beach.rawSandCoverage<0||beach.rawSandCoverage>.12)return null;
+    const water=visibleSurface.water.sample(x,z);
+    if(water&&(!Number.isFinite(water.y)||hit.y<=water.y+.035))return null;
+    if(geology.sampleWaterAt(x,z)||geology.isPlannedWaterFootprint?.(x,z))return null;
+    const local=unprojectPlanetVertex(x,hit.y,z);
+    if(!Number.isFinite(local.y))return null;
+    const p6VerifiedBankCorridor=x>-42&&x<34&&z>-211&&z<-119;
+    if(!p6VerifiedBankCorridor&&!visibleSurface.admitGround(x,z,hit))return null;
+    return {y:hit.y,slope:hit.slope,dryContact:true};
+   }});
+  if(p6Ecotone.receipt.addedRoots>P6_ECOTONE_ALLOCATION.maximumRoots||
+     p6Ecotone.receipt.addedGpuBytes>P6_ECOTONE_ALLOCATION.maximumPackedBytes)
+   throw Error('P6_ECOTONE_BUDGET_EXCEEDED');
+ }
  const controlRoots=trusted?.controlRoots??[];if(!trusted)for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
  if(!controlRoots.length)throw Error('EMPTY_FIXED_CONTROL');
- const ownedShaders=[];let program=null,vao=null,buffer=null,p4Vao=null,p4Buffer=null;
- let p4GpuBytes=0,p4GpuUploadedBytes=0,p4GpuUploadCount=0;
- function cleanup(){if(p4Buffer)gl.deleteBuffer(p4Buffer);if(p4Vao)gl.deleteVertexArray(p4Vao);if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}
+ const ownedShaders=[];let program=null,vao=null,buffer=null,p4Vao=null,p4Buffer=null,p6Vao=null,p6Buffer=null;
+ let p4GpuBytes=0,p4GpuUploadedBytes=0,p4GpuUploadCount=0,p6GpuBytes=0,p6GpuUploadedBytes=0,p6GpuUploadCount=0;
+ function cleanup(){if(p6Buffer)gl.deleteBuffer(p6Buffer);if(p6Vao)gl.deleteVertexArray(p6Vao);if(p4Buffer)gl.deleteBuffer(p4Buffer);if(p4Vao)gl.deleteVertexArray(p4Vao);if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}
  try{
 
  function graphicsError(code,stage,log){const lost=gl.isContextLost?.()===true;return Error(`${lost?'OWNER_CONTEXT_LOST':code}:${stage}:${String(log??'').trim()||'NO_DRIVER_LOG'}`);}
@@ -870,10 +895,28 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   if(p4GpuUploadedBytes!==p4GpuBytes||gl.getError()!==gl.NO_ERROR)throw graphicsError('P4_BANK_GPU_UPLOAD','BANK_BUFFER',p4GpuUploadedBytes);
   gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  }
+ // P6 uses a dedicated immutable 16-byte/root buffer; no P3/P4 buffer replay.
+ const p6Added=p6Ecotone.receipt.addedRoots||0;
+ if(p6Added){
+  p6Vao=gl.createVertexArray();p6Buffer=gl.createBuffer();
+  if(!p6Vao||!p6Buffer)throw graphicsError('P6_DRY_GPU_ALLOCATION','P6_BUFFER','EMPTY_RESOURCE');
+  gl.bindVertexArray(p6Vao);gl.bindBuffer(gl.ARRAY_BUFFER,p6Buffer);
+  gl.bufferData(gl.ARRAY_BUFFER,p6Added*16,gl.STATIC_DRAW);
+  p6GpuBytes=gl.getBufferParameter(gl.ARRAY_BUFFER,gl.BUFFER_SIZE);
+  if(p6GpuBytes!==p6Added*16||gl.getError()!==gl.NO_ERROR)
+   throw graphicsError('P6_DRY_GPU_SIZE','P6_BUFFER',p6GpuBytes);
+  for(const tile of p6Ecotone.tiles){
+   gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);
+   p6GpuUploadCount++;p6GpuUploadedBytes+=tile.packed.byteLength;
+  }
+  if(p6GpuUploadedBytes!==p6GpuBytes||gl.getError()!==gl.NO_ERROR)
+   throw graphicsError('P6_DRY_GPU_UPLOAD','P6_BUFFER',p6GpuUploadedBytes);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
+ }
  const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uRiparian','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
  const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
  gl.useProgram(program);const e=environment;gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform3fv(u.uSunColor,rgb(e.sunColor));gl.uniform3fv(u.uHaze,rgb(e.groundHazeColor));gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform1f(u.uFogStart,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaxFog,e.maximumFogFactor);
- const visibilityBounds=boundGrassTiles(tiles),p4VisibilityBounds=p4Added?boundGrassTiles(p4Bank.tiles):[];
+ const visibilityBounds=boundGrassTiles(tiles),p4VisibilityBounds=p4Added?boundGrassTiles(p4Bank.tiles):[],p6VisibilityBounds=p6Added?boundGrassTiles(p6Ecotone.tiles):[];
  let disposed=false,lastDraw={visibleCoarseRoots:0,selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
  function draw(packet){
   if(disposed)throw Error('OWNER_DISPOSED');const cpuStarted=performance.now();const camera=packet.camera.position,frustum=grassFrustumPlanes(packet.camera.viewProjectionMatrix),visible=selectVisibleGrassTiles(visibilityBounds,frustum.planes),fine=selectFineTiles(visible,camera);
@@ -898,13 +941,29 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    }
    gl.uniform1i(u.uRiparian,0);
   }
+  let p6VisibleCoarseRoots=0,p6SelectedFineRoots=0;
+  if(p6Added){
+   const p6Visible=selectVisibleGrassTiles(p6VisibilityBounds,frustum.planes),p6Fine=selectFineTiles(p6Visible,camera);
+   gl.useProgram(program);gl.bindVertexArray(p6Vao);gl.bindBuffer(gl.ARRAY_BUFFER,p6Buffer);
+   gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uFine,0);
+   for(const range of mergeGrassRanges(p6Visible)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;p6VisibleCoarseRoots+=range.count;
+   }
+   gl.uniform1i(u.uFine,1);
+   for(const range of mergeGrassRanges(p6Fine)){
+    gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
+    gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;p6SelectedFineRoots+=range.count;
+   }
+   gl.uniform1i(u.uFine,0);
+  }
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,
-   riparianCoarseRoots,riparianFineRoots,drawCallCount,
-   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots)*2,
+   riparianCoarseRoots,riparianFineRoots,p6VisibleCoarseRoots,p6SelectedFineRoots,drawCallCount,
+   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots+p6VisibleCoarseRoots+p6SelectedFineRoots)*2,
    perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};
   return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0),buffers:1+Number(p4Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,totalRenderedRootCount:rootCount+p4Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

@@ -1,14 +1,14 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-22T03:27:38Z",
+  "generatedAt": "2026-11-22T04:26:10Z",
   "window30d": {
-    "start": "2026-10-23T03:27:38Z",
-    "end": "2026-11-22T03:27:38Z"
+    "start": "2026-10-23T04:26:10Z",
+    "end": "2026-11-22T04:26:10Z"
   },
   "daily": [
     {
       "date": "2026-10-24",
-      "pageLoads": 90
+      "pageLoads": 80
     },
     {
       "date": "2026-10-25",
@@ -16,11 +16,11 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 60
+      "pageLoads": 0
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-10-28",
@@ -32,11 +32,11 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 40
+      "pageLoads": 70
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 10
+      "pageLoads": 20
     },
     {
       "date": "2026-11-01",
@@ -76,11 +76,11 @@
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-11-11",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-11-12",
@@ -88,11 +88,11 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 30
+      "pageLoads": 50
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 71
+      "pageLoads": 60
     },
     {
       "date": "2026-11-15",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-22",
-      "pageLoads": 4
+      "pageLoads": 5
     }
   ],
   "summary": {
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 593,
-      "visits": 593
+      "pageLoads": 602,
+      "visits": 602
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 295,
-      "visits": 229
+      "pageLoads": 285,
+      "visits": 219
     },
     {
       "path": "/products/education/personal-training/course.html",

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T03:27:38Z",
+  "generatedAt": "2026-11-22T04:26:10Z",
   "window": {
-    "start": "2026-08-24T03:27:38Z",
-    "end": "2026-11-22T03:27:38Z"
+    "start": "2026-08-24T04:26:10Z",
+    "end": "2026-11-22T04:26:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2932,
+    "pageLoads": 2912,
     "visits": 731,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2932,
+        "pageLoads": 2912,
         "visits": 731
       }
     },
@@ -30,16 +30,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/audralia/": {
-        "pageLoads": 100,
+        "pageLoads": 90,
         "visits": 10
       },
       "/evidence/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/audralia/disposition/": {
@@ -130,6 +130,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -144,10 +148,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -182,16 +182,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
+        "visits": 0
+      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/showroom/story/timeline/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
@@ -273,7 +273,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2201,
+        "pageLoads": 2181,
         "visits": 0
       },
       "(none)": {

@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-22T03:27:38Z",
+  "generatedAt": "2026-11-22T04:26:10Z",
   "window": {
-    "start": "2026-10-23T03:27:38Z",
-    "end": "2026-11-22T03:27:38Z"
+    "start": "2026-10-23T04:26:10Z",
+    "end": "2026-11-22T04:26:10Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 593,
-        "visits": 593
+        "pageLoads": 602,
+        "visits": 602
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 295,
-        "visits": 229
+        "pageLoads": 285,
+        "visits": 219
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -133,8 +133,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1212,
-        "visits": 1125
+        "pageLoads": 1242,
+        "visits": 1145
       },
       {
         "value": "CN",
@@ -280,8 +280,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1263,
-        "visits": 1196
+        "pageLoads": 1313,
+        "visits": 1236
       },
       {
         "value": "cache",

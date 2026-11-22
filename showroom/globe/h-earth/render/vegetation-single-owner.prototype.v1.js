@@ -13,6 +13,21 @@ import {boundGrassTiles,grassFrustumPlanes,selectVisibleGrassTiles,mergeGrassRan
 import {GRASS_CONTINUITY_ALLOCATION as allocation,GRASS_CONTINUITY_CONNECTOR} from './grass-continuity-supplement.v1.js';
 import {habitatHash} from './woodland-habitat-field.v1.js';
 import {uploadInSlices} from './performance-scheduling.v1.js';
+/** P10 Gen3487: exact semantic partition of P9's previously combined sand-or-shore gate.
+ * Blocked is byte-equivalent to the original OR predicate, including bad sand.
+ * This has no planting, material or GPU authority.
+ */
+export function classifyP9NativeSubstrateGate(beach){
+ const invalidSand=beach.rawSandCoverage<0;
+ const renderedSand=beach.rawSandCoverage>P9_UPLAND_MATERIAL.sandCoverageMax;
+ const shoreProximity=beach.interpolatedExposedContactDistance<=2.0;
+ return Object.freeze({
+  blocked:invalidSand||renderedSand||shoreProximity,
+  stage:invalidSand?'sandInvalid':renderedSand?'renderedSandCoverage':shoreProximity?'shoreProximity':null,
+  invalidSand,renderedSand,shoreProximity,
+  overlap:renderedSand&&shoreProximity
+ });
+}
 /** Only authenticated original prefixes influence the unchanged runtime planting recipe.
  * Offline continuity additions remain installed but must not suppress saved runtime planting. */
 export function runtimePlantingBaselineTiles(tiles){
@@ -975,7 +990,73 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
      p8Sedge.receipt.addedGpuBytes>P8_SEDGE_ALLOCATION.maximumPackedBytes)throw Error('P8_SEDGE_BUDGET_EXCEEDED');
  }
  // Gen3485 P9: independent native upland material ground mats, no P8 shoreline admission change.
- const p9Stages=['terrainSupport','terrainSlope','beachUnavailable','sandOrShore','renderedWater','geologyWater','plannedWater','groundAdmission','unprojection','materialInvalid','materialClass','soilDepth','rockExposure','accepted'];
+ // P10 bounded observational ledger: one source-ordered first-failure population, not more roots.
+ const p10Audit={schema:'H_EARTH_P10_NATIVE_SUBSTRATE_AUDIT_v1',originalCombinedReference:61703,
+  rejectedSandOrShore:0,renderedSandAlsoNearShore:0,sampled:0,sampledPotentialDrySand:0,
+  sampledWaterInsufficient:0,sampledGeologyWater:0,sampledPlannedWater:0,
+  materialSampleModulus:16,exactMaterialClassRejections:{},materialSampleCounts:{},sampledPotentialClasses:{},
+  sampledByFailure:{},sampledByEightMeterBin:new Map(),rootAllocationUnchanged:true,
+  originalSandShoreOrPredicateUnchanged:true};
+ function p10MaterialSample(x,z,hit,classification,visibleSurface,geology){
+  p10Audit.rejectedSandOrShore++;
+  if(classification.overlap)p10Audit.renderedSandAlsoNearShore++;
+  const qx=Math.floor(x*4),qz=Math.floor(z*4);
+  const hash=(Math.imul(qx,73856093)^Math.imul(qz,19349663))>>>0;
+  if(((hash^(hash>>>16))>>>0)%p10Audit.materialSampleModulus!==0)return;
+  p10Audit.sampled++;
+  const local=unprojectPlanetVertex(x,hit.y,z);
+  const mat=Number.isFinite(local.x)&&Number.isFinite(local.z)?
+   sampleHEarthRun8CSuccessorSurfaceMaterial(local.x,local.z):null;
+  const cl=mat?.valid===true?mat.surfaceClass:'INVALID';
+  const st=classification.stage;
+  p10Audit.materialSampleCounts[cl]=(p10Audit.materialSampleCounts[cl]??0)+1;
+  const byFailure=p10Audit.sampledByFailure[st]??(p10Audit.sampledByFailure[st]={});
+  byFailure[cl]=(byFailure[cl]??0)+1;
+  const bx=Math.floor(x/8)*8,bz=Math.floor(z/8)*8,key=bx+':'+bz;
+  let bin=p10Audit.sampledByEightMeterBin.get(key);
+  if(!bin){bin={x:bx,z:bz,sampled:0,materials:{},stages:{},waterInsufficient:0,drySandPotential:0};
+   p10Audit.sampledByEightMeterBin.set(key,bin);}
+  bin.sampled++;bin.materials[cl]=(bin.materials[cl]??0)+1;bin.stages[st]=(bin.stages[st]??0)+1;
+  const water=visibleSurface.water.sample(x,z);
+  const insufficient=Boolean(water&&(!Number.isFinite(water.y)||hit.y<=water.y+P9_UPLAND_MATERIAL.minimumWaterClearance));
+  if(insufficient){p10Audit.sampledWaterInsufficient++;bin.waterInsufficient++;}
+  const geologyWater=Boolean(geology.sampleWaterAt(x,z));
+  const plannedWater=Boolean(geology.isPlannedWaterFootprint?.(x,z));
+  if(geologyWater)p10Audit.sampledGeologyWater++;
+  if(plannedWater)p10Audit.sampledPlannedWater++;
+  // This is substrate potential, NEVER a P9/P8 planting admission or full-population estimate.
+  if(cl==='DRY_SAND'&&!insufficient&&!geologyWater&&!plannedWater&&Number.isFinite(mat.soilDepth)){
+   p10Audit.sampledPotentialDrySand++;bin.drySandPotential++;
+   p10Audit.sampledPotentialClasses[cl]=(p10Audit.sampledPotentialClasses[cl]??0)+1;
+  }
+ }
+ function p10SubstrateReceipt(){
+  const separated=p9StageCounts.sandInvalid+p9StageCounts.renderedSandCoverage+p9StageCounts.shoreProximity;
+  if(p10Audit.rejectedSandOrShore!==separated||
+     p10Audit.sampled!==Object.values(p10Audit.materialSampleCounts).reduce((a,b)=>a+b,0)||
+     p10Audit.sampled>p10Audit.rejectedSandOrShore||
+     p10Audit.renderedSandAlsoNearShore>p9StageCounts.renderedSandCoverage)
+   throw Error('P10_SUBSTRATE_CUSTODY_INVARIANT');
+  return {schema:p10Audit.schema,originalCombinedReference:p10Audit.originalCombinedReference,
+   separatedTotal:separated,exactDisjointStages:{
+    sandInvalid:p9StageCounts.sandInvalid,renderedSandCoverage:p9StageCounts.renderedSandCoverage,
+    shoreProximity:p9StageCounts.shoreProximity},
+   renderedSandAlsoNearShore:p10Audit.renderedSandAlsoNearShore,
+   sampled:p10Audit.sampled,materialSampleModulus:p10Audit.materialSampleModulus,
+   sampleSelection:'FIXED_DETERMINISTIC_QUANTIZED_WORLD_XZ_HASH_MOD_16_NOT_EXHAUSTIVE',
+   sampledMaterialClassCounts:{...p10Audit.materialSampleCounts},
+   sampledByFirstFailure:JSON.parse(JSON.stringify(p10Audit.sampledByFailure)),
+   sampledPotentialDrySandNotPlantingEntitlement:p10Audit.sampledPotentialDrySand,
+   sampledWaterInsufficient:p10Audit.sampledWaterInsufficient,
+   sampledGeologyWater:p10Audit.sampledGeologyWater,
+   sampledPlannedWater:p10Audit.sampledPlannedWater,
+   exactMaterialClassRejections:{...p10Audit.exactMaterialClassRejections},
+   sampledEightMeterBins:[...p10Audit.sampledByEightMeterBin.values()]
+    .sort((a,b)=>a.z-b.z||a.x-b.x).map(b=>({...b,materials:{...b.materials},stages:{...b.stages}})),
+   originalSandShoreOrPredicateUnchanged:true,rootAllocationUnchanged:true,
+   sourceP9PlantingDecisionUnchanged:true,physicalVisualGainNotInferred:true};
+ }
+ const p9Stages=['terrainSupport','terrainSlope','beachUnavailable','sandInvalid','renderedSandCoverage','shoreProximity','renderedWater','geologyWater','plannedWater','groundAdmission','unprojection','materialInvalid','materialClass','soilDepth','rockExposure','accepted'];
  const p9StageCounts=Object.fromEntries(p9Stages.map(stage=>[stage,0]));
  const p9StageGrid=new Map();let p9StageTrials=0;
  function p9MarkStage(stage,x,z){
@@ -1007,8 +1088,11 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
     const beach=visibleSurface.beach.sample({x,z,support:hit});
     if(beach?.valid!==true||!Number.isFinite(beach.rawSandCoverage)||
        !Number.isFinite(beach.interpolatedExposedContactDistance))return p9MarkStage('beachUnavailable',x,z);
-    if(beach.rawSandCoverage<0||beach.rawSandCoverage>P9_UPLAND_MATERIAL.sandCoverageMax||
-       beach.interpolatedExposedContactDistance<=2.0)return p9MarkStage('sandOrShore',x,z);
+    const p10Gate=classifyP9NativeSubstrateGate(beach);
+    if(p10Gate.blocked){
+     p10MaterialSample(x,z,hit,p10Gate,visibleSurface,geology);
+     return p9MarkStage(p10Gate.stage,x,z);
+    }
     const water=visibleSurface.water.sample(x,z);
     if(water&&(!Number.isFinite(water.y)||
        hit.y<=water.y+P9_UPLAND_MATERIAL.minimumWaterClearance))return p9MarkStage('renderedWater',x,z);
@@ -1019,7 +1103,10 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
     if(!Number.isFinite(local.x)||!Number.isFinite(local.y)||!Number.isFinite(local.z))return p9MarkStage('unprojection',x,z);
     const mat=sampleHEarthRun8CSuccessorSurfaceMaterial(local.x,local.z);
     if(mat?.valid!==true)return p9MarkStage('materialInvalid',x,z);
-    if(!P9_UPLAND_MATERIAL.allowedClasses.includes(mat.surfaceClass))return p9MarkStage('materialClass',x,z);
+    if(!P9_UPLAND_MATERIAL.allowedClasses.includes(mat.surfaceClass)){
+     p10Audit.exactMaterialClassRejections[mat.surfaceClass]=(p10Audit.exactMaterialClassRejections[mat.surfaceClass]??0)+1;
+     return p9MarkStage('materialClass',x,z);
+    }
     if(!Number.isFinite(mat.soilDepth)||mat.soilDepth<(mat.surfaceClass==='STONE_AND_SPARSE_SOIL'?
         P9_UPLAND_MATERIAL.stoneSoilMinDepth:P9_UPLAND_MATERIAL.coastalSoilMinDepth))return p9MarkStage('soilDepth',x,z);
     if(!Number.isFinite(mat.rockExposure)||mat.rockExposure>P9_UPLAND_MATERIAL.rockExposureMax)return p9MarkStage('rockExposure',x,z);
@@ -1208,7 +1295,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};
   return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0)+Number(p9Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0)+Number(p9Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots+P8_SEDGE_ALLOCATION.maximumRoots+P9_UPLAND_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p7DryTuftGeometry:{bladeCount:4,trianglesPerRoot:8,sourceRootsUnchanged:true,admissionPredicatesUnchanged:true,packedRootBytesUnchanged:true},p6FirstFailure:p6FirstFailureReceipt(),p8DrySandSedge:p8Sedge.receipt,p8FirstFailure:p8FirstFailureReceipt(),p9UplandMats:p9Upland.receipt,p9FirstFailure:p9FirstFailureReceipt(),p9UplandGpuBytes:p9GpuBytes,p9UplandUploadedBytes:p9GpuUploadedBytes,p9UplandUploadCount:p9GpuUploadCount,p8SedgeGpuBytes:p8GpuBytes,p8SedgeUploadedBytes:p8GpuUploadedBytes,p8SedgeUploadCount:p8GpuUploadCount,p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added+p8Added+p9Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes+p8GpuBytes+p9GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes+p8GpuBytes+p9GpuBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes+P8_SEDGE_ALLOCATION.maximumPackedBytes+P9_UPLAND_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0)+Number(p9Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0)+Number(p8Added>0)+Number(p9Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots+P8_SEDGE_ALLOCATION.maximumRoots+P9_UPLAND_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p7DryTuftGeometry:{bladeCount:4,trianglesPerRoot:8,sourceRootsUnchanged:true,admissionPredicatesUnchanged:true,packedRootBytesUnchanged:true},p6FirstFailure:p6FirstFailureReceipt(),p8DrySandSedge:p8Sedge.receipt,p8FirstFailure:p8FirstFailureReceipt(),p9UplandMats:p9Upland.receipt,p9FirstFailure:p9FirstFailureReceipt(),p10SubstrateAudit:p10SubstrateReceipt(),p9UplandGpuBytes:p9GpuBytes,p9UplandUploadedBytes:p9GpuUploadedBytes,p9UplandUploadCount:p9GpuUploadCount,p8SedgeGpuBytes:p8GpuBytes,p8SedgeUploadedBytes:p8GpuUploadedBytes,p8SedgeUploadCount:p8GpuUploadCount,p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added+p8Added+p9Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes+p8GpuBytes+p9GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes+p8GpuBytes+p9GpuBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes+P8_SEDGE_ALLOCATION.maximumPackedBytes+P9_UPLAND_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

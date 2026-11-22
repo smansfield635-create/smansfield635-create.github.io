@@ -97,7 +97,7 @@ test('P9 binds exact material source and native water, sand and soil-depth predi
  assert.ok(owner.includes('p9-native-upland-soil-rock-mats.v1.js?rev=sha-ad025cfb98fb'));
  assert.ok(owner.includes('p8-dry-sand-shoreline-sedge.v1.js?rev=sha-a118a8675207'));
  assert.ok(owner.includes('hillside-bank-ecotone-roots.p6.v1.js?rev=sha-109db7bc3ba4'));
- assert.ok(page.includes('vegetation-single-owner.prototype.v1.js?rev=sha-63dbdcdd9460'));
+ assert.ok(page.includes('vegetation-single-owner.prototype.v1.js?rev=sha-704ceef5dcc7'));
  for(const s of ['sampleHEarthRun8CSuccessorSurfaceMaterial(local.x,local.z)',
   'P9_UPLAND_MATERIAL.allowedClasses.includes(mat.surfaceClass)',
   'P9_UPLAND_MATERIAL.stoneSoilMinDepth',

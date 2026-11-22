@@ -11240,6 +11240,50 @@
       "scopeHash": "49784da7dbcc05734c55b2c1005f30db5ae77541b087181e461d62f739df8387",
       "state": "ADMITTED_LOCKED"
     },
+    "497dd0b49c0c230f70e6b7851d20880e3363862724e193c00a8d67ebd5429f8f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ceca3054cb9c95e1915b03225f35d4b1e4d41aa4",
+          "lockGeneration": 3479,
+          "lockScope": "H_EARTH:P6:WESTWARD_DRY_CONTACT_PHYSICAL_COVERAGE_REPAIR:20261121",
+          "operationId": "H_EARTH_P6_WESTWARD_DRY_CONTACT_PHYSICAL_COVERAGE_REPAIR_20261121_001",
+          "procedureLocatorDigest": "7fcb3b8d1d751047694173a22d04a8ed4ac864d7efb2268b8b9659cc485bc9c7",
+          "requestDigest": "117fbe2abe1c366f338af098ca7eaaaf425bee46e3206ee9ac8f1c1ed4dc75d4",
+          "scopeHash": "497dd0b49c0c230f70e6b7851d20880e3363862724e193c00a8d67ebd5429f8f"
+        },
+        "bindingDigest": "1600ea73ae7f6dfd30d5f2ae7a2c6622f18297959f7eaf6ea6c7116b37fcc883",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cd4fe52433f8e58c27be65bb028f2cb9cd54dd9d2981d6b68a2dfb1350754681",
+          "commentId": 7074918172,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44990685415,
+          "workflowSha": "ceca3054cb9c95e1915b03225f35d4b1e4d41aa4"
+        },
+        "lineageAnchorCommitSha": "b739ef1d9d39944bb2935daad6e58a31287c24d8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ceca3054cb9c95e1915b03225f35d4b1e4d41aa4",
+      "lockGeneration": 3479,
+      "lockScope": "H_EARTH:P6:WESTWARD_DRY_CONTACT_PHYSICAL_COVERAGE_REPAIR:20261121",
+      "operationId": "H_EARTH_P6_WESTWARD_DRY_CONTACT_PHYSICAL_COVERAGE_REPAIR_20261121_001",
+      "procedureLocatorDigest": "7fcb3b8d1d751047694173a22d04a8ed4ac864d7efb2268b8b9659cc485bc9c7",
+      "released": false,
+      "requestDigest": "117fbe2abe1c366f338af098ca7eaaaf425bee46e3206ee9ac8f1c1ed4dc75d4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "497dd0b49c0c230f70e6b7851d20880e3363862724e193c00a8d67ebd5429f8f",
+      "state": "ADMITTED_LOCKED"
+    },
     "49a18f707c47a023c2c9f762c7b89ada890fb8b7673ea46aa9dda5d54f1db0b8": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -40806,7 +40850,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3478,
+  "lockGeneration": 3479,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

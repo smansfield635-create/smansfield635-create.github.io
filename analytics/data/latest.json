@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-22T05:25:31Z",
+  "generatedAt": "2026-11-22T06:32:42Z",
   "window30d": {
-    "start": "2026-10-23T05:25:31Z",
-    "end": "2026-11-22T05:25:31Z"
+    "start": "2026-10-23T06:32:42Z",
+    "end": "2026-11-22T06:32:42Z"
   },
   "daily": [
     {
@@ -64,11 +64,11 @@
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 50
+      "pageLoads": 60
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 90
+      "pageLoads": 50
     },
     {
       "date": "2026-11-09",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 68
+      "pageLoads": 67
     },
     {
       "date": "2026-11-15",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-22",
-      "pageLoads": 6
+      "pageLoads": 7
     }
   ],
   "summary": {
-    "pageLoads": 1302,
-    "botPageLoads": 753,
-    "nonBotPageLoads": 549
+    "pageLoads": 1272,
+    "botPageLoads": 733,
+    "nonBotPageLoads": 539
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1177,
-      "visits": 1177
+      "pageLoads": 1147,
+      "visits": 1147
     },
     {
       "host": "diamondgatebridge.com",
@@ -154,11 +154,6 @@
       "visits": 12
     },
     {
-      "host": "www.google.com",
-      "pageLoads": 10,
-      "visits": 10
-    },
-    {
       "host": "m.facebook.com",
       "pageLoads": 1,
       "visits": 1
@@ -167,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 603,
-      "visits": 603
+      "pageLoads": 593,
+      "visits": 593
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 314,
-      "visits": 238
+      "pageLoads": 284,
+      "visits": 218
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -187,8 +182,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 55,
-      "visits": 45
+      "pageLoads": 65,
+      "visits": 55
     },
     {
       "path": "/nine-summits/universe/",
@@ -196,12 +191,12 @@
       "visits": 50
     },
     {
-      "path": "/showroom/globe/audralia/diagnostic/",
-      "pageLoads": 10,
-      "visits": 10
+      "path": "/products/education/",
+      "pageLoads": 20,
+      "visits": 20
     },
     {
-      "path": "/showroom/globe/",
+      "path": "/showroom/globe/audralia/diagnostic/",
       "pageLoads": 10,
       "visits": 10
     }

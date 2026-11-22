@@ -407,9 +407,25 @@ jobs:
                 rm -f "$brain_tmp"
                 echo 'BRAIN_GEN1_HRA_PUBLIC_ASSET_IDENTITY_VERIFIED'
               fi
-              node tools/publication-live-verify.mjs static "$PAGE_URL" "$MANIFEST"
+              # Fail closed for durable mismatches, but tolerate brief 503
+              # responses while GitHub Pages and the custom domain converge.
+              verify_static_with_retry() {
+                local manifest="$1" verify_attempt
+                for verify_attempt in $(seq 1 8); do
+                  if node tools/publication-live-verify.mjs static "$PAGE_URL" "$manifest"; then
+                    echo "PUBLIC_STATIC_VERIFIED manifest=$manifest attempt=$verify_attempt"
+                    return 0
+                  fi
+                  if [ "$verify_attempt" -eq 8 ]; then
+                    echo "PUBLIC_STATIC_VERIFICATION_RETRY_EXHAUSTED manifest=$manifest" >&2
+                    return 1
+                  fi
+                  sleep 10
+                done
+              }
+              verify_static_with_retry "$MANIFEST"
               if [ "$SURFACE_ID" != "audralia" ]; then
-                node tools/publication-live-verify.mjs static "$PAGE_URL" "$AUDRALIA_MANIFEST"
+                verify_static_with_retry "$AUDRALIA_MANIFEST"
               fi
               echo "PROTECTED_STATIC_SURFACE_CONTINUITY_VERIFIED=$TARGET_SHA"
               exit 0

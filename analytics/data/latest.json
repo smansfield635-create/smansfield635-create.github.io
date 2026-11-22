@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-22T16:24:08Z",
+  "generatedAt": "2026-11-22T17:23:50Z",
   "window30d": {
-    "start": "2026-10-23T16:24:08Z",
-    "end": "2026-11-22T16:24:08Z"
+    "start": "2026-10-23T17:23:50Z",
+    "end": "2026-11-22T17:23:50Z"
   },
   "daily": [
     {
@@ -52,19 +52,19 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 70
+      "pageLoads": 100
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 170
+      "pageLoads": 140
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-08",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 67
+      "pageLoads": 65
     },
     {
       "date": "2026-11-15",
@@ -128,25 +128,25 @@
     }
   ],
   "summary": {
-    "pageLoads": 1271,
-    "botPageLoads": 732,
-    "nonBotPageLoads": 539
+    "pageLoads": 1339,
+    "botPageLoads": 831,
+    "nonBotPageLoads": 508
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1146,
-      "visits": 1146
+      "pageLoads": 1234,
+      "visits": 1234
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 87,
+      "pageLoads": 77,
       "visits": 0
     },
     {
       "host": "bing.com",
-      "pageLoads": 25,
-      "visits": 25
+      "pageLoads": 15,
+      "visits": 15
     },
     {
       "host": "www.facebook.com",
@@ -162,18 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 602,
-      "visits": 602
+      "pageLoads": 611,
+      "visits": 611
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 274,
-      "visits": 208
-    },
-    {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 80,
-      "visits": 80
+      "pageLoads": 283,
+      "visits": 217
     },
     {
       "path": "/products/education/personal-training/",
@@ -181,19 +176,24 @@
       "visits": 80
     },
     {
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
       "path": "/",
-      "pageLoads": 65,
-      "visits": 55
+      "pageLoads": 55,
+      "visits": 45
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 50,
-      "visits": 50
+      "pageLoads": 40,
+      "visits": 40
     },
     {
       "path": "/products/education/",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "path": "/showroom/globe/audralia/diagnostic/",

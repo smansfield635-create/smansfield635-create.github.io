@@ -1187,6 +1187,21 @@ void main(){
       // Preserve actual beach and mountain materials and the donor grove.
       groundcoverPigmentWeight*=1.0-ordinaryLandDonorMaterial;
       palette=mix(palette,groundcoverTone,groundcoverPigmentWeight);
+      // P5 Gen3468: meso-scale tonal variation follows existing landform,
+      // slope, rock exposure and eligible soil; no planted vegetation changes.
+      float p5HillsideMeso=clamp(
+        macroField*0.43+mesoField*0.37+triCoarse*0.20,0.0,1.0);
+      float p5HillsideSupport=
+        (1.0-smoothstep(0.16,0.53,slope))*
+        (1.0-smoothstep(0.16,0.60,rockExposure));
+      float p5HillsideMaterialWeight=
+        materialHillsideWeight*smoothstep(7.0,30.0,vWorldPosition.y)*
+        p5HillsideSupport*groundcoverProtection;
+      float p5HillsideTonalResponse=mix(
+        0.78,1.13,smoothstep(0.24,0.78,p5HillsideMeso));
+      palette*=mix(1.0,p5HillsideTonalResponse,
+        p5HillsideMaterialWeight*0.72);
+      // P5_HILLSIDE_ECOTONE_END
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
@@ -1261,6 +1276,27 @@ void main(){
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade
+    // P5 Gen3468: dry soil blends continuously toward existing water contact.
+    // Beach, rock and protected woodland material remain authoritative.
+    if(!geologicalEarthRock){
+      float p5DryBankContact=
+        smoothstep(0.25,1.25,inlandMeters)*
+        (1.0-smoothstep(6.0,18.0,inlandMeters));
+      float p5GroundSupport=
+        (1.0-sandCoverage)*
+        (1.0-smoothstep(0.19,0.52,slope))*
+        (1.0-smoothstep(0.24,0.62,rockExposure));
+      float p5GroveKeep=1.0-smoothstep(
+        22.0,42.0,distance(world,vec2(-139.40268,-210.74617)));
+      float p5SiltVariation=noise2(world*0.115+vec2(-11.0,23.0));
+      vec3 p5BankSilt=mix(
+        vec3(0.188,0.146,0.100),vec3(0.312,0.256,0.177),
+        p5SiltVariation);
+      float p5BankBlend=p5DryBankContact*p5GroundSupport*
+        (1.0-p5GroveKeep)*(0.25+0.15*grain);
+      palette=mix(palette,p5BankSilt,p5BankBlend);
+    }
+    // P5_WATER_CONTACT_ECOTONE_END
     // A floor follows accepted tree footprints, not a filled cluster ellipse.
     // B/C retain their existing treatment. This is static material/contact
     // reinforcement on the actual terrain, never a cast shadow or new surface.

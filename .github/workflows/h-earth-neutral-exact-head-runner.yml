@@ -883,6 +883,44 @@ jobs:
                 actualBrowserExecution:false,ownerVisualAcceptance:false,releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_P7_GEN3481_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .candidateHead=="b76a2664e5cb908cee2e17c2586c6e2f886027ee" and .p7TargetedTestsPassed==7 and .p4ProtectedTestsPassed==3 and .actualBrowserExecution==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'd608e78911ff99ab0716eb1e9baaa7e785af13bc' ]; then
+              # Gen3483: separate true dry-sand P8 rooted sedge, original ecological gates immutable.
+              node --version
+              node --check showroom/globe/h-earth/render/p8-dry-sand-shoreline-sedge.v1.js
+              node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+              node --check h-earth-3d/validation/h-earth.p8-dry-sand-shoreline-sedge.v1.test.mjs
+              test "$(git hash-object showroom/globe/h-earth/render/p8-dry-sand-shoreline-sedge.v1.js)" = 'a118a86752077c64922b1187c3ad4dd6f819d136'
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = '9d27c336fb62922b6f7dfcd4851067cb1d844ed1'
+              test "$(git hash-object showroom/globe/h-earth/index.html)" = '5ae0b3f362ea4edf591b9fca81a2bf852d56c3cd'
+              test "$(git hash-object h-earth-3d/validation/h-earth.p8-dry-sand-shoreline-sedge.v1.test.mjs)" = 'd4d7724f1568d1ee0786d3ba83e4f27362d3d5fc'
+              test "$(git hash-object showroom/globe/h-earth/render/hillside-bank-ecotone-roots.p6.v1.js)" = '109db7bc3ba410609702a6b76647b1484980dfe6'
+              test "$(git hash-object showroom/globe/h-earth/render/oasis-bank-field.v1.js)" = 'c138e04bf0a52117e8d061812359deab825dad50'
+              test "$(git hash-object h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs)" = '462741f6ad7769d9b143cb6b77ec7b192868c61e'
+              node --test --test-reporter=tap h-earth-3d/validation/h-earth.p8-dry-sand-shoreline-sedge.v1.test.mjs > /tmp/h-earth-exact-evidence/p8-gen3483-sedge-targeted.tap
+              grep -Fqx -- '# pass 8' /tmp/h-earth-exact-evidence/p8-gen3483-sedge-targeted.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p8-gen3483-sedge-targeted.tap
+              node --test --test-reporter=tap --test-name-pattern='^(tile planning retains all root identities in finite immutable upload buffers|forward-return selection uses same immutable tiles and exact root identities|fine selection uses nearest tile boundary rather than tile center)$' h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs > /tmp/h-earth-exact-evidence/p8-gen3483-sedge-protected.tap
+              grep -Fqx -- '# pass 3' /tmp/h-earth-exact-evidence/p8-gen3483-sedge-protected.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p8-gen3483-sedge-protected.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_P8_GEN3483_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_BOUND_BROWSER_STILL_REQUIRED",candidateHead:$target,
+                productPr:7602,parentProductPr:7599,
+                plannerGitBlob:"a118a86752077c64922b1187c3ad4dd6f819d136",
+                ownerGitBlob:"9d27c336fb62922b6f7dfcd4851067cb1d844ed1",
+                pageGitBlob:"5ae0b3f362ea4edf591b9fca81a2bf852d56c3cd",
+                testGitBlob:"d4d7724f1568d1ee0786d3ba83e4f27362d3d5fc",
+                preservedP6PlannerGitBlob:"109db7bc3ba410609702a6b76647b1484980dfe6",
+                originalP3Roots:3805291,originalP4AddedRoots:2525,
+                originalP6AddedRoots:19729,
+                p8RootsMaximum:80000,p8PackedBytesMaximum:1280000,
+                p8SedgeBladesPerRoot:4,p8SedgeTrianglesPerRoot:8,
+                p8TargetedTestsPassed:8,p4ProtectedTestsPassed:3,
+                sandMinExclusive:.12,minimumWaterClearance:.15,
+                p6AdmissionUnchanged:true,rootPopulationsProtected:true,
+                actualBrowserExecution:false,ownerVisualAcceptance:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_P8_GEN3483_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .candidateHead=="d608e78911ff99ab0716eb1e9baaa7e785af13bc" and .p8TargetedTestsPassed==8 and .p4ProtectedTestsPassed==3 and .actualBrowserExecution==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null

@@ -189,7 +189,7 @@ body>.topbar,body>main,body>footer{position:relative;z-index:1}
 <details class="study-chapter" id="chapter-questions" name="study-chapter">
 <summary><span><strong>Explore the questions</strong><small>Choose an issue to explore relevant field notes</small></span></summary>
 <div class="study-chapter-body">
-<section class="section" id="concerns" aria-labelledby="topics-title"><p class="eyebrow">Explore the questions</p><h2 id="topics-title">What issue are you dealing with?</h2><p class="section-intro">Tap a concern to see which field notes mention similar issues. Open a name for the short recorded note, or tap the concern again to close the results.</p><div class="topic-grid" id="topics"><button class="topic" type="button" data-topic="clog" aria-pressed="false"><strong>Debris &amp; clogging</strong><small>Leaves, overflowing gutters and older screens</small></button><button class="topic" type="button" data-topic="attach" aria-pressed="false"><strong>Attachment &amp; damage</strong><small>Loose gutters, fascia and possible water damage</small></button><button class="topic" type="button" data-topic="fit" aria-pressed="false"><strong>Fit &amp; corners</strong><small>Custom angles, caps and the finishing details</small></button><button class="topic" type="button" data-topic="finish" aria-pressed="false"><strong>Finish &amp; appearance</strong><small>Colors and how the improvement suits the house</small></button></div><details class="quiet-details" id="topic-explanation"><summary><span><strong>How often did these subjects appear?</strong><small>A closer look at the recorded notes</small></span></summary><div class="chapter-body"><div id="topic-counts" class="count-grid"></div><p class="plain-note">These topic counts cover the displayed case entries, including the illustrative scenarios. They are word matches, not measured historical reasons for purchasing.</p></div></details><div class="matches" id="topic-results" hidden><h3 id="topic-results-title"></h3><p id="topic-results-note"></p><div class="entries" id="topic-results-list"></div><button class="more-button" type="button" id="more-topic-results" hidden aria-expanded="false"></button></div></section>
+<section class="section" id="concerns" aria-labelledby="topics-title"><p class="eyebrow">Explore the questions</p><h2 id="topics-title">What issue are you dealing with?</h2><p class="section-intro">Tap a concern to see which case entries mention similar issues. Open a name for its short note, or tap the concern again to close the results.</p><div class="topic-grid" id="topics"><button class="topic" type="button" data-topic="clog" aria-pressed="false"><strong>Debris &amp; clogging</strong><small>Leaves, overflowing gutters and older screens</small></button><button class="topic" type="button" data-topic="attach" aria-pressed="false"><strong>Attachment &amp; damage</strong><small>Loose gutters, fascia and possible water damage</small></button><button class="topic" type="button" data-topic="fit" aria-pressed="false"><strong>Fit &amp; corners</strong><small>Custom angles, caps and the finishing details</small></button><button class="topic" type="button" data-topic="finish" aria-pressed="false"><strong>Finish &amp; appearance</strong><small>Colors and how the improvement suits the house</small></button></div><details class="quiet-details" id="topic-explanation"><summary><span><strong>Which subjects appear in these entries?</strong><small>A closer look at the case topics</small></span></summary><div class="chapter-body"><div id="topic-counts" class="count-grid"></div><p class="plain-note">These topic counts cover the displayed case entries, including the illustrative scenarios. They are word matches, not measured historical reasons for purchasing.</p></div></details><div class="matches" id="topic-results" hidden><h3 id="topic-results-title"></h3><p id="topic-results-note"></p><div class="entries" id="topic-results-list"></div><button class="more-button" type="button" id="more-topic-results" hidden aria-expanded="false"></button></div></section>
 </div>
 </details>
 <details class="study-chapter" id="chapter-details" name="study-chapter">
@@ -358,7 +358,7 @@ var totals={};
 Object.keys(topics).forEach(function(key){totals[key]=DATA.filter(function(x){return !x.guide&&topics[key].test.test(x.note);}).length;});
 var counts=document.getElementById("topic-counts");
 Object.keys(countLabels).forEach(function(key){
- var p=document.createElement("p");p.textContent=totals[key]+" notes mention "+countLabels[key].toLowerCase();counts.appendChild(p);
+ var p=document.createElement("p");p.textContent=totals[key]+" entries mention "+countLabels[key].toLowerCase();counts.appendChild(p);
 });
 var warrantyCounts=document.getElementById("warranty-topic-counts");
 [["Paint finish and appearance","finish"],["Secure attachment","attach"],["Clogs and debris","clog"],["Corners and caps","fit"]].forEach(function(pair){
@@ -371,7 +371,7 @@ var active="",activeMatches=[],showAll=false;
 function paintResults(){
  fill("topic-results-list",showAll?activeMatches:activeMatches.slice(0,5),"note");
  more.hidden=activeMatches.length<=5;
- more.textContent=showAll?"Show fewer customer notes":"Show "+(activeMatches.length-5)+" more matching notes";
+ more.textContent=showAll?"Show fewer entries":"Show "+(activeMatches.length-5)+" more matching entries";
  more.setAttribute("aria-expanded",String(showAll));
 }
 more.addEventListener("click",function(){showAll=!showAll;paintResults();});
@@ -381,7 +381,7 @@ buttons.forEach(function(button){
   buttons.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.topic===active));});
   if(!active){results.hidden=true;return;}
   var info=topics[active];activeMatches=DATA.filter(function(x){return !x.guide&&info.test.test(x.note);});showAll=false;
-  document.getElementById("topic-results-title").textContent=info.name+" · "+activeMatches.length+" matching notes";
+  document.getElementById("topic-results-title").textContent=info.name+" · "+activeMatches.length+" matching entries";
   document.getElementById("topic-results-note").textContent="These are word matches across preserved field notes and illustrative scenarios, not measured reasons for purchasing. Select a name to read the entry.";
   paintResults();results.hidden=false;
   results.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});

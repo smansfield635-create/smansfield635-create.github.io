@@ -1,477 +1,68 @@
 <!doctype html>
-<!-- TNT — /research/testimonials/index.html
-     100-CUSTOMER FIELD CASE STUDY · LEAFGUARD (RESEARCH)
-     ENGLISH ONLY · DENSE · EVERYTHING IS AN ANCHOR TO THE STUDY
-     CORE IDEA:
-       - The Case Study is primary.
-       - Every section beneath is supporting evidence (anchors) backing the study.
-     STRUCTURE (SINGLE-OPEN TOP LEVEL + SUB-BUBBLES):
-       0) Case Study (ONLY place with 2 lenses: Narrative / Engineering)
-       1) Anchors: Reference Index (dense directory)
-       2) Anchors: Review-Present Subset (named)
-       3) Anchors: Claim Alignment (buckets + counts + example anchors)
-       4) Anchors: Warranty Correlation (4 buckets + counts + example anchors)
-       5) Disclaimer (tight)
-     RULES:
-       - No URLs
-       - No star icons
-       - No ranking language
-       - No phone numbers displayed (contact maintained on file)
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - Essential page canvas, reading layout and mobile navigation are self-contained
--->
-
 <html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#090609"/>
-<title>100-Customer Field Study · The People Behind the Sale</title>
-<meta name="description" content="What my first 100 field sales taught me about listening to homeowners, understanding real concerns, and earning trust. Read the story and the surviving customer notes."/>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
-
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
-
-:root{
-  --dockH:112px;
-
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --ink:rgba(255,255,255,.94);
-  --mut:rgba(255,255,255,.82);
-  --mut2:rgba(255,255,255,.70);
-
-  --shadowA:0 28px 100px rgba(0,0,0,.65);
-  --shadowB:0 18px 60px rgba(0,0,0,.55);
-
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-  --goldSoft:rgba(201,162,74,.18);
-}
-
-/* Top */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;white-space:nowrap;
-  pointer-events:auto;
-}
-
-/* Button */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowB);
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-
-/* Page */
-.page{
-  width:min(980px,94vw);
-  margin:0 auto;
-  padding:110px 0 calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:10;
-}
-
-/* Header */
-.header{
-  border:1px solid var(--stroke);
-  border-radius:26px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    radial-gradient(circle at 26% 22%, rgba(201,162,74,.12), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
-  box-shadow:var(--shadowA);
-  position:relative;
-  overflow:hidden;
-}
-.header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:26px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.22;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-}
-.k{margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
-.h1{margin:0;font-weight:980;font-size:28px;letter-spacing:.35px;color:var(--ink);position:relative}
-.p0{margin:12px 0 0;line-height:1.75;color:var(--mut);font-size:15.25px;position:relative}
-.note0{margin-top:10px;color:var(--mut2);font-size:13.25px;line-height:1.55;position:relative}
-
-/* Accordion (single-open) */
-.stack{display:flex;flex-direction:column;gap:12px}
-.card{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
-  overflow:hidden;
-  position:relative;
-}
-.card::after{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
-}
-.head{
-  padding:16px 16px;
-  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-}
-.ti{margin:0;font-weight:980;letter-spacing:.2px;font-size:16.5px;color:var(--ink)}
-.si{margin-top:8px;font-size:13.25px;line-height:1.45;color:rgba(255,255,255,.84);opacity:.92}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--mut);
-  font-weight:980;
-  flex:0 0 auto;
-  margin-top:2px;
-}
-.body{
-  display:none;
-  padding:16px 16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-  position:relative;
-}
-.card.open .body{display:block}
-
-/* Sub-bubbles */
-.subBubbles{display:flex;flex-direction:column;gap:10px}
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  padding:14px 14px 12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
-}
-.bubble::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
-}
-.bubble h4{
-  margin:0 0 8px;
-  font-weight:980;
-  letter-spacing:.15px;
-  font-size:15px;
-  color:var(--ink);
-}
-.bubble p{
-  margin:0;
-  color:rgba(255,255,255,.80);
-  line-height:1.7;
-  display:none;
-  font-size:14.5px;
-}
-.bubble.open p{display:block}
-
-/* Dense list */
-.list{
-  margin-top:12px;
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:12px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:14px;
-  background:rgba(0,0,0,.12);
-  padding:10px 10px;
-}
-.rmeta{
-  font-weight:950;
-  letter-spacing:.15px;
-  font-size:13.25px;
-  color:rgba(255,255,255,.90);
-}
-.rmeta span{opacity:.75;font-weight:900}
-.rtxt{
-  margin-top:6px;
-  font-size:13.5px;
-  line-height:1.55;
-  color:rgba(255,255,255,.82);
-}
-.badge{
-  display:inline-flex;
-  padding:4px 9px;
-  border-radius:999px;
-  border:1px solid rgba(201,162,74,.20);
-  background:rgba(0,0,0,.14);
-  color:rgba(255,255,255,.82);
-  font-size:11px;
-  letter-spacing:.2px;
-  margin-left:8px;
-}
-
-/* Case study lens toggle (ONLY inside case study bubble) */
-.lensRow{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.pill{
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  font-weight:950;
-  letter-spacing:.2px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.pill.active{
-  border-color:rgba(201,162,74,.30);
-  box-shadow:0 0 18px rgba(201,162,74,.12);
-}
-
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  padding:12px;border-radius:22px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  z-index:220;
-}
-.dock .btn{width:100%;text-align:center;border-radius:999px;padding:10px}
-@media (max-width:520px){
-  :root{--dockH:132px}
-  .dock{grid-template-columns:repeat(3,1fr)}
-  .h1{font-size:26px}
-}
-/* Readability-first crimson edition: page canvas and navigation never cover evidence. */
-html{background:#090609!important;color-scheme:dark;overflow-x:clip;scroll-behavior:smooth}
-body{min-height:100dvh;background:radial-gradient(ellipse at 12% 2%,rgba(112,14,34,.23),transparent 36rem),radial-gradient(ellipse at 86% 35%,rgba(72,9,32,.13),transparent 30rem),linear-gradient(180deg,#10090d 0%,#080609 58%,#080608 100%)!important;color:#f7f1ee;overflow-x:clip}
-body::before,body::after{display:none!important}
-*,*::before,*::after{box-sizing:border-box}
-a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px solid #ffbdc2;outline-offset:4px}
-.skip{position:absolute;top:-80px;left:12px;z-index:1000;background:#f7e6e4;color:#1b080e;padding:10px 16px;border-radius:8px}
-.skip:focus{top:10px}
-.top{position:relative;inset:auto;z-index:15;pointer-events:auto;width:min(1040px,100%);margin:0 auto;padding:22px max(18px,3vw) 8px;flex-wrap:wrap}
-.top .left,.top .right{flex-wrap:wrap}
-.top .btn{min-height:42px;border-radius:999px;padding:9px 16px;font-size:12px;letter-spacing:.09em;background:rgba(30,12,19,.78);border-color:rgba(229,141,160,.28);box-shadow:none}
-.top .btn::after{display:none}
-.top .right .btn{min-width:48px;justify-content:center}
-.page{width:min(960px,calc(100% - 36px));padding:18px 0 20px;gap:20px}
-.header{border-radius:28px;padding:clamp(26px,5vw,56px);background:radial-gradient(ellipse at 0% 5%,rgba(181,40,72,.31),transparent 54%),radial-gradient(ellipse at 85% 100%,rgba(93,17,50,.24),transparent 55%),linear-gradient(145deg,#260f19,#140b12 68%,#10090e);border:1px solid rgba(240,159,179,.23);box-shadow:0 20px 70px rgba(0,0,0,.33)}
-.header::before{opacity:.06}
-.k{font-size:11px;color:#f3afba;letter-spacing:.20em}
-.h1{font-size:clamp(2.1rem,6vw,4.3rem);line-height:1.03;letter-spacing:-.055em;font-weight:830;max-width:14ch}
-.p0{font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.68;color:#e6d4d8;max-width:65ch;margin-top:20px}
-.note0{font-size:.82rem;line-height:1.6;color:#c8acb3;margin-top:16px;max-width:70ch}
-.metrics{display:flex;flex-wrap:wrap;gap:16px 30px;padding:22px 0 0;margin-top:24px;border-top:1px solid rgba(242,179,191,.18)}
-.metrics div{display:flex;align-items:baseline;gap:9px}
-.metrics strong{font-size:clamp(1.9rem,4vw,2.5rem);line-height:1;color:#ffd5db;letter-spacing:-.05em}
-.metrics span{font-size:.77rem;color:#ddbdc5}
-.study-summary{padding:8px clamp(5px,2vw,16px) 2px}
-.study-summary h2{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.19;letter-spacing:-.035em;margin:0 0 12px;color:#fff0f0}
-.study-summary p{max-width:73ch;color:#d4bfc4;line-height:1.75;margin:0}
-.study-themes{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 0}
-.study-themes span{border:1px solid rgba(235,154,173,.24);background:rgba(70,18,33,.34);color:#f0cad2;border-radius:999px;padding:9px 13px;font-size:.78rem}
-.stack{gap:14px}
-.card{border-radius:22px;border-color:rgba(229,147,166,.18);background:linear-gradient(145deg,rgba(39,17,27,.97),rgba(19,11,17,.97));box-shadow:0 16px 42px rgba(0,0,0,.24)}
-.head{padding:19px clamp(16px,3vw,26px);align-items:center}
-.ti{font-size:clamp(1.05rem,2.2vw,1.35rem);letter-spacing:-.016em}
-.si{color:#ceb6be}
-.body{background:rgba(9,6,10,.72);padding:clamp(14px,2.7vw,24px)}
-.bubble{background:rgba(47,18,31,.38);border-color:rgba(223,150,166,.16);padding:clamp(15px,2.7vw,20px)}
-.bubble p{color:#e0cad0}
-.pill{color:#f5dfe5;min-height:44px}
-.pill.active{background:rgba(150,34,62,.35);border-color:#a94b69;box-shadow:none}
-.rmeta{color:#f7e5e9}
-.rtxt{color:#d9c4cb}
-.row{background:rgba(18,9,15,.7);overflow-wrap:anywhere}
-.badge{background:rgba(79,24,42,.45);border-color:rgba(226,152,168,.2)}
-.dock{position:relative;left:auto;bottom:auto;transform:none;width:min(960px,calc(100% - 36px));margin:24px auto 42px;padding:18px 0 0;border-radius:0;border:0;border-top:1px solid rgba(226,152,168,.18);background:transparent;box-shadow:none;z-index:1;grid-template-columns:repeat(4,minmax(0,1fr))}
-.dock .btn{border-radius:12px;box-shadow:none;background:rgba(43,20,30,.5);font-size:12px;min-width:0;overflow-wrap:anywhere}
-@media(max-width:640px){.top{padding:18px 18px 6px}.top .left{gap:8px}.top .btn{font-size:11px;padding:9px 12px}.page{padding-top:10px}.header{border-radius:22px}.dock{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.head{align-items:center}.badge{margin:4px 5px 0 0}.metrics{gap:14px}.metrics div{width:100%}.h1{font-size:clamp(2rem,10vw,3.2rem)}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-
-/* People-first story: always readable, without an engineering lens or extra opening step. */
-.field-story{max-width:860px;margin:2px auto 22px;padding:clamp(26px,4.8vw,56px);border:1px solid rgba(229,147,166,.2);border-radius:25px;background:radial-gradient(ellipse at 10% 0%,rgba(104,28,51,.18),transparent 54%),rgba(17,9,15,.84)}
-.story-kicker{font-size:.72rem;font-weight:800;letter-spacing:.19em;color:#e89cae;text-transform:uppercase;margin:0 0 15px}
-.field-story h2{font-size:clamp(2rem,5vw,3.6rem);line-height:1.09;letter-spacing:-.046em;max-width:17ch;color:#fff2f1;margin:0 0 22px}
-.field-story p{max-width:67ch;font-size:clamp(1.02rem,1.6vw,1.13rem);line-height:1.82;color:#e2cdd2;margin:0 0 21px}
-.field-story .story-lede{font-size:clamp(1.13rem,2vw,1.42rem);color:#f7dce2;line-height:1.65;margin-bottom:30px}
-.story-quote{font-family:Georgia,serif;font-size:clamp(1.4rem,3.4vw,2.15rem);line-height:1.44;letter-spacing:-.02em;color:#ffe0e5;border-left:3px solid #d75a7c;padding:6px 0 7px clamp(17px,3vw,30px);margin:34px 0 36px;max-width:27ch}
-.field-story .story-footnote{font-size:.85rem;line-height:1.65;color:#bda4ad;padding-top:19px;border-top:1px solid rgba(223,153,171,.19);margin-top:24px}
-.people-intro{max-width:860px;margin:10px auto 0;padding:0 clamp(4px,2vw,15px)}
-.people-intro h2{font-size:clamp(1.6rem,3vw,2.3rem);line-height:1.2;color:#fff1f2;margin:0 0 8px}
-.people-intro p:not(.story-kicker){color:#d4bdc4;line-height:1.7;margin:0 0 8px;max-width:60ch}
-.entry .text{color:#ebd2d7;line-height:1.7}
-@media(max-width:640px){.field-story{padding:25px 20px;border-radius:22px}.story-quote{margin:25px 0 30px}.field-story h2{font-size:clamp(2rem,8vw,2.8rem)}}
-</style>
-</head>
-
-<body>
-<a class="skip" href="#stack">Skip to the field study</a>
-
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnResearch" href="/research/">RESEARCH</a>
-    <a class="btn" id="btnIndustry" href="/research/industry-context/">INDUSTRY CONTEXT</a>
-  </div>
-  <div class="right" aria-label="Controls">
-    <span class="btn" style="pointer-events:none;opacity:.9">EN</span>
-  </div>
-</div>
-
-<div class="page">
-
-  <section class="header" aria-label="Field study introduction">
-    <p class="k">FROM THE FIELD · LESSONS FROM REAL HOMEOWNERS</p>
-    <h1 class="h1">What 100 sales taught me about listening.</h1>
-    <p class="p0">Every homeowner had a different story. The more I listened, the clearer one lesson became: the most important part of a sale often happens before anyone talks about the product.</p>
-    <div class="metrics" aria-label="Study record coverage">
-      <div><strong>100</strong><span>sales I studied</span></div>
-      <div><strong>87</strong><span>customer notes still available</span></div>
-    </div>
-    <p class="note0">I studied my first 100 sales. Of those original records, notes 14–100 survive here. The first 13 notes are missing, and I have not tried to recreate them.</p>
-  </section>
-  <article class="field-story" aria-labelledby="story-title">
-    <p class="story-kicker">THE STORY BEHIND THE STUDY</p>
-    <h2 id="story-title">Nobody wakes up excited about gutters.</h2>
-    <p class="story-lede">They wake up thinking about the house they have worked to build, the repairs they would rather avoid, and the small problems that somehow keep coming back.</p>
-    <p>That is what I began to recognize during my first 100 sales in the field. From one home to the next, the circumstances changed. Some homeowners were frustrated with leaves and clogs. Others were dealing with failing screens, damaged wood, or the worry that water might reach the foundation. Some had questions about how a new system would fit their house or look when the work was finished.</p>
-    <p>On paper, these might look like different product questions. Across the kitchen table, they were something more personal. What will happen the next time it rains? Am I going to have to deal with this again? Is this the right decision for my home?</p>
-    <p>Those questions changed how I thought about my work. I wasn't there just to describe gutters or recite features. I had to understand what the homeowner was actually trying to solve, explain the choices clearly, and give them room to make a decision they could feel good about.</p>
-    <blockquote class="story-quote">The lesson wasn't that every homeowner wanted the same thing. It was that every homeowner wanted to be understood.</blockquote>
-    <p>I started documenting my sales because I wanted to see what I could learn from them. When I looked across the experiences, certain concerns surfaced again and again: recurring debris, trouble with attachments, difficult corners, and questions about long-term appearance and protection. But the larger lesson was about listening. A useful recommendation begins with the problem that matters to the person in front of you.</p>
-    <p>This page is a window into that learning process. First comes the story. Below it are the customers and notes that helped shape it, followed by a closer look at the concerns that appeared in the surviving records.</p>
-    <div class="story-footnote"><strong>A note about the records:</strong> This was my own review of my first 100 sales, not a controlled study or a claim that one concern caused a purchase. The public index preserves 87 numbered entries, from 14 through 100. Where details are missing, they remain missing.</div>
-  </article>
-  <div class="people-intro">
-    <p class="story-kicker">THE PEOPLE BEHIND THE LESSONS</p>
-    <h2>Every entry represents a real conversation.</h2>
-    <p>Explore customers who also left reviews, browse the surviving field notes, or see the questions that came up most often.</p>
-  </div>
-  
-  <div class="stack" id="stack"></div>
-
-</div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html">INDEX</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-</nav>
-
-<script>
-(function(){
-  "use strict";
-
-  // Canon state carry (gd_* only)
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  function q(){
-    return "?lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time)+"&depth="+encodeURIComponent(depth);
-  }
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-  wire("btnResearch","/research/");
-  wire("btnIndustry","/research/industry-context/");
-  wire("dockIndex","/index.html");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-
-  // DATASET (loaded: 14–100 from your notebook extraction)
-  // Contact is ON FILE; phone digits are not published on this page.
-  var DATA = [
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c080b"><meta name="description" content="What I learned from my first 100 field sales, with 87 surviving customer notes and an interactive look at homeowner concerns."><title>100-Customer Field Study · Listening and Trust</title><style>
+:root{color-scheme:dark;--bg:#0c080b;--ink:#fff0ef;--muted:#d8bdc6;--dim:#b99da8;--line:rgba(233,149,168,.20);--crimson:#a94363;--card:#1e1019;--max:1080px}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at 10% 2%,rgba(128,22,51,.25),transparent 38rem),radial-gradient(ellipse at 88% 34%,rgba(85,13,38,.16),transparent 36rem),linear-gradient(180deg,#130b10,#0a070b 58%,#090609);color:var(--ink);font:16px/1.7 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:inherit}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ffd1da;outline-offset:3px}
+.skip{position:absolute;top:-100px;left:15px;padding:10px 15px;background:#fff1f0;color:#290d18;border-radius:9px;z-index:10}.skip:focus{top:10px}
+.shell{width:min(var(--max),calc(100% - 36px));margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 0 14px;flex-wrap:wrap}
+.brand{font-size:.72rem;line-height:1.4;text-transform:uppercase;letter-spacing:.16em;font-weight:850;color:#e9b4c0}
+.nav{display:flex;flex-wrap:wrap;gap:8px}
+.nav a,.action{display:inline-flex;min-height:44px;align-items:center;justify-content:center;text-decoration:none;border-radius:999px;padding:10px 16px;border:1px solid rgba(238,153,174,.29);background:rgba(47,19,31,.55);color:#f2dce1;font-size:.78rem;font-weight:800;letter-spacing:.025em}
+.nav a[aria-current=page]{background:rgba(140,34,65,.44);color:#fff5f6;border-color:rgba(247,171,191,.55)}
+.nav a:hover,.action:hover{background:rgba(136,37,64,.48)}
+main{padding:20px 0 45px}
+.hero{padding:clamp(28px,5.8vw,68px);border:1px solid var(--line);border-radius:28px;background:radial-gradient(ellipse at 5% 0,rgba(164,38,73,.28),transparent 55%),linear-gradient(135deg,#2a101d,#160c13 70%,#110a0e);box-shadow:0 20px 60px rgba(0,0,0,.27)}
+.eyebrow{margin:0 0 14px;text-transform:uppercase;letter-spacing:.19em;font-size:.70rem;color:#f0afbd;font-weight:850}
+h1{font-size:clamp(2.25rem,6.5vw,5rem);line-height:1.02;letter-spacing:-.055em;margin:0 0 22px;max-width:18ch;font-weight:850}
+.lead{font-size:clamp(1.07rem,2vw,1.35rem);line-height:1.65;color:#efd8dc;max-width:64ch;margin:0}
+.hero-note{font-size:.84rem;color:#c6a7b2;max-width:74ch;line-height:1.7;margin:18px 0 0}
+.stats{display:flex;flex-wrap:wrap;gap:16px 34px;margin-top:26px;padding-top:24px;border-top:1px solid rgba(243,160,185,.19)}
+.stats div{display:flex;align-items:baseline;gap:10px}.stats strong{font-size:2.5rem;line-height:1;color:#ffdae3;letter-spacing:-.045em}.stats span{font-size:.83rem;color:#dfbfc8}
+.section{margin:50px 0 0}.section .eyebrow{margin-bottom:10px}
+.section h2{font-size:clamp(1.75rem,3.8vw,2.8rem);letter-spacing:-.035em;line-height:1.13;margin:0 0 14px;color:#fff2f3}
+.section-intro{font-size:1rem;max-width:72ch;color:var(--muted);margin:0 0 23px}
+.prose{max-width:820px;margin:0 auto}.prose p{color:#e2cbd1;font-size:clamp(1.04rem,1.65vw,1.16rem);line-height:1.86;margin:0 0 24px}
+.prose .first{font-size:clamp(1.16rem,2.4vw,1.45rem);color:#f4dfe4;line-height:1.68}
+.prose blockquote{margin:30px 0 35px;padding:8px 0 9px 23px;border-left:3px solid #e36986;color:#ffdee7;font:normal clamp(1.45rem,3.1vw,2.15rem)/1.48 Georgia,serif;max-width:34ch}
+.plain-note{font-size:.84rem;line-height:1.7;color:#c4a7b0;border-top:1px solid var(--line);padding-top:18px}
+.topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.topic{font-family:inherit;text-align:left;cursor:pointer;min-height:112px;padding:20px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#341721,#20111a);color:var(--ink);display:flex;flex-direction:column;gap:6px}
+.topic:hover,.topic[aria-pressed=true]{background:linear-gradient(135deg,#602035,#2d1421);border-color:#ed9aae}
+.topic strong{font-size:1.06rem;line-height:1.25}.topic small{font-size:.79rem;line-height:1.5;color:#dcc0c7}
+.topic:focus-visible{outline:2px solid #ffcfdb;outline-offset:3px}
+.matches{margin-top:18px;border:1px solid rgba(238,151,174,.25);border-radius:20px;padding:clamp(18px,3vw,30px);background:rgba(22,11,18,.9)}
+.matches[hidden]{display:none!important}
+.matches h3{margin:0 0 6px;font-size:1.36rem}.matches p{color:#cbb0b9;margin:0 0 15px;font-size:.88rem}
+.entries{display:grid;gap:10px}.entries details,.group details,.fineprint details{background:rgba(27,13,22,.73);border:1px solid rgba(237,163,181,.18);border-radius:15px;overflow:hidden}
+.entries summary,.group summary,.fineprint summary{cursor:pointer;list-style:none;padding:17px 20px;min-height:52px;display:flex;justify-content:space-between;align-items:center;gap:15px;color:#fff0f1;font-weight:750}
+.entries summary::-webkit-details-marker,.group summary::-webkit-details-marker,.fineprint summary::-webkit-details-marker{display:none}
+.entries summary::after,.group summary::after,.fineprint summary::after{content:"+";color:#f0b1c1;font-size:1.35rem;font-weight:400}
+.entries details[open]>summary::after,.group details[open]>summary::after,.fineprint details[open]>summary::after{content:"−"}
+.entries details>p{margin:0;padding:0 20px 20px;color:#e6ced6;line-height:1.7;overflow-wrap:anywhere}
+.group{display:grid;gap:12px}.group>details{background:linear-gradient(125deg,rgba(48,22,34,.89),rgba(20,11,17,.9));border-radius:20px}
+.group summary{align-items:flex-start;padding:22px 25px}
+.group summary span{display:block}.group summary strong{display:block;font-size:1.35rem;line-height:1.2;letter-spacing:-.018em}.group summary small{display:block;font-size:.9rem;font-weight:400;max-width:66ch;color:#cdb0ba;margin-top:8px;line-height:1.55}
+.group .details-body{padding:0 25px 26px}.group .details-body>p{color:#e0c9d0;line-height:1.76}
+.company{padding:18px 0;border-top:1px solid rgba(233,157,180,.17)}.company h3{margin:0 0 5px;color:#ffe5e9;font-size:1.12rem}.company p{margin:0 0 8px;color:#e2c8d1;line-height:1.7}.company .consumer{font-size:.88rem;color:#f1b6c5}
+.fineprint{margin-top:30px}.fineprint details>p{margin:0;padding:0 20px 22px;color:#cdb3bc;font-size:.88rem;line-height:1.7}
+.bridge{margin-top:50px;padding:clamp(24px,4vw,42px);background:radial-gradient(ellipse at 0 0,rgba(159,41,75,.19),transparent 55%),rgba(29,12,23,.86);border:1px solid var(--line);border-radius:23px}
+.bridge h2{margin:0 0 8px;font-size:clamp(1.45rem,3vw,2.2rem);line-height:1.18}.bridge p{max-width:65ch;color:#d9bec6;margin:0 0 22px}
+.action{background:rgba(155,41,75,.43);border-color:rgba(255,169,191,.45)}
+.footer{border-top:1px solid var(--line);padding:21px 0 36px;color:#ad929d;font-size:.8rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:15px}
+.footer a{color:#e4b3c0}
+@media(max-width:640px){.shell{width:calc(100% - 28px)}.topbar{padding:16px 0 10px}.brand{width:100%}main{padding-top:10px}.hero{padding:29px 22px;border-radius:23px}.stats{gap:12px}.stats div{width:100%}.topic-grid{grid-template-columns:1fr}.topic{min-height:90px}.section{margin-top:38px}.group summary{padding:20px}.group .details-body{padding:0 20px 20px}.prose{padding:0 5px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}</style></head>
+<body><a class="skip" href="#main">Skip to content</a><header class="topbar shell"><span class="brand">Home Improvement · Independent Consumer Reading</span><nav class="nav" aria-label="Two-page navigation"><a href="/research/industry-context/">Industry Context</a><a href="/research/testimonials/" aria-current="page">100-Customer Study</a></nav></header><main id="main" class="shell">
+<section class="hero" aria-labelledby="title"><p class="eyebrow">First-person field research · Homeowners</p><h1 id="title">What 100 sales taught me about listening.</h1><p class="lead">Every homeowner had a different story. The more I listened, the clearer one lesson became: the most important part of a sale often happens before anyone talks about the product.</p><div class="stats"><div><strong>100</strong><span>sales I studied</span></div><div><strong>87</strong><span>customer notes still available</span></div></div><p class="hero-note">I studied my first 100 sales in the field. Notes numbered 14–100 are preserved here; the first 13 are missing and have not been reconstructed.</p></section>
+<section class="section prose" aria-labelledby="story-title"><p class="eyebrow">The story behind the study</p><h2 id="story-title">Nobody wakes up excited about gutters.</h2><p class="first">They wake up thinking about the house they have worked to build, the repairs they would rather avoid, and the small problems that somehow keep coming back.</p><p>That is what I began to recognize during my first 100 sales in the field. From one home to the next, the circumstances changed. Some homeowners were frustrated with leaves and clogs. Others were dealing with failing screens, damaged wood, or the worry that water might reach the foundation. Some had questions about how a new system would fit their house or look when the work was finished.</p><p>On paper, these might look like different product questions. Across the kitchen table, they were something more personal. What will happen the next time it rains? Am I going to have to deal with this again? Is this the right decision for my home?</p><p>Those questions changed how I thought about my work. I wasn't there just to describe gutters or recite features. I had to understand what the homeowner was actually trying to solve, explain the choices clearly, and give them room to make a decision they could feel good about.</p><blockquote>The lesson wasn't that every homeowner wanted the same thing. It was that every homeowner wanted to be understood.</blockquote><p>I began documenting my sales to better understand my own performance and the concerns I encountered. Looking across the surviving notes, certain subjects kept surfacing: recurring debris, damage and attachments, difficult corners, and the appearance of a finished home.</p><p>This page shares those observations, then gives you a way to meet the people behind them. You can follow a particular concern or browse the customer notes in their original numbered order.</p><div class="plain-note">These records are brief field notes, not full interviews or verbatim customer testimonials. The words in them describe what I recorded, not a controlled test of why a person decided to buy.</div></section>
+<section class="section" id="concerns" aria-labelledby="topics-title"><p class="eyebrow">Explore the questions</p><h2 id="topics-title">What did homeowners worry about?</h2><p class="section-intro">Choose a concern to see the customer notes that mention it. A single homeowner can appear under more than one topic. Tap a selected topic again to close its results.</p><div class="topic-grid" id="topics"><button class="topic" type="button" data-topic="clog" aria-pressed="false"><strong>Debris &amp; clogging</strong><small>Leaves, overflowing gutters and older screens</small></button><button class="topic" type="button" data-topic="attach" aria-pressed="false"><strong>Attachment &amp; damage</strong><small>Loose gutters, fascia and possible water damage</small></button><button class="topic" type="button" data-topic="fit" aria-pressed="false"><strong>Fit &amp; corners</strong><small>Custom angles, caps and the finishing details</small></button><button class="topic" type="button" data-topic="finish" aria-pressed="false"><strong>Finish &amp; appearance</strong><small>Colors and how the improvement suits the house</small></button></div><div class="matches" id="topic-results" hidden><h3 id="topic-results-title"></h3><p id="topic-results-note"></p><div class="entries" id="topic-results-list"></div></div></section>
+<section class="section" id="customers" aria-labelledby="customer-title"><p class="eyebrow">The people behind the lessons</p><h2 id="customer-title">The customers and their stories.</h2><p class="section-intro">You can browse the records directly without choosing a topic. These sections remain separate so the original notes are not confused with customers who also left public feedback.</p><div class="group"><details id="public-reviews"><summary><span><strong>Customers who shared reviews</strong><small>The subset marked as having public reviews, with my short summaries and the recorded notes</small></span></summary><div class="details-body"><div class="entries" id="review-list"></div></div></details><details id="full-notes"><summary><span><strong>The 87 field notes</strong><small>All surviving entries, numbered 14–100, in their recorded order</small></span></summary><div class="details-body"><div class="entries" id="field-list"></div></div></details></div></section>
+<section class="section" id="promises" aria-labelledby="promises-title"><p class="eyebrow">Beyond the product</p><h2 id="promises-title">What does a lasting promise mean?</h2><p class="section-intro">Some conversations raised concerns about clogs, attachments, paint finish, or the small details that make an installation look complete. These concerns also appear in the warranty language associated with the product I was selling. A promise is only useful when a homeowner understands what the written terms actually cover.</p><div class="group"><details><summary><span><strong>Read the warranty topics</strong><small>Four topics referenced in the original study</small></span></summary><div class="details-body"><div class="company"><h3>Paint finish</h3><p>How a finished gutter will look over time.</p></div><div class="company"><h3>Secure attachment</h3><p>Whether the system remains attached where it belongs.</p></div><div class="company"><h3>Keeping debris out</h3><p>The worry of returning clogs and maintenance.</p></div><div class="company"><h3>Ends, corners and caps</h3><p>Protection for details that help complete an installation.</p></div><p class="plain-note">The original records reference a lifetime paint-finish warranty, lifetime no-pullaway/no-detachment warranty, lifetime no-clog warranty, and a two-year end-to-end cap-production warranty. These are historical topic labels, not an interpretation of coverage or a statement about current terms. Consult the actual written warranty.</p></div></details></div></section>
+<section class="bridge"><p class="eyebrow">See the bigger picture</p><h2>Where does LeafGuard fit into home-improvement innovation?</h2><p>This study describes one seller's first-hand experience. The companion page explores the companies and products that helped change how homeowners approach comfort, protection and maintenance.</p><a class="action" href="/research/industry-context/">Explore the Industry Context</a></section></main><footer class="footer shell"><span>Independent consumer education and first-person field research</span><nav aria-label="Page links"><a href="/research/industry-context/">Industry Context</a> · <a href="/research/testimonials/">100-Customer Study</a></nav></footer><script>var DATA = [
     {id:14,name:"Diana Vandergriff",city:"Chico",note:"60 acres; rural estate",review:false},
     {id:15,name:"Arnold Lawson",city:"Allen",note:"First-time buyers; asked about property insurance",review:false},
     {id:16,name:"Joy Flanagan",city:"Alba",note:"Stated LeafGuard felt like the only solution",review:false},
@@ -562,11 +153,7 @@ a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px s
     {id:99,name:"Dan Byler",city:"Azle",note:"Color scheme preference",review:false},
     {id:100,name:"Susan Finehout",city:"McKinney",note:"Lifetime framing; design preference",review:false}
   ];
-
-  var REVIEWS = DATA.filter(function(x){ return !!x.review; });
-  var REFERENCES = DATA.slice();
-
-  function reviewSummary(x){
+function reviewSummary(x){
     if(x.name==="JoAnn Villanueva") return "Informative consultation; protection framing.";
     if(x.name==="Luke Hayes") return "First-time homeowner; clarity + follow-through.";
     if(x.name==="David & Tiffany Spencer") return "Thorough presentation; custom corners; planning discipline.";
@@ -576,281 +163,37 @@ a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px s
     if(x.name==="Noah McIntyre") return "High-detail education; affordability planning.";
     return "Public review present; summary on file.";
   }
-
-  var CLAIM_BUCKETS = [
-    {key:"CLOG", title:"Leaves, debris and clogs", desc:"Blocked gutters, trapped leaves, and frustration with old screens or filters."},
-    {key:"ATTACH", title:"Damage and loose gutters", desc:"Fascia boards, gutters pulling away, wood rot, and concern about protecting the foundation."},
-    {key:"FINISH", title:"How the home would look", desc:"Colors, finishes and the confidence that an improvement would suit the house."},
-    {key:"CAPS", title:"Getting the details right", desc:"Corners, unusual angles and the small finishing details homeowners notice."}
-  ];
-
-  var WARRANTY_BUCKETS = [
-    {key:"W_FINISH", title:"Lifetime Paint Finish Warranty"},
-    {key:"W_ATTACH", title:"Lifetime No-Pullaway / No-Detachment Warranty"},
-    {key:"W_CLOG", title:"Lifetime No-Clog Warranty"},
-    {key:"W_CAPS", title:"Two-Year End-to-End Cap Production Warranty"}
-  ];
-
-  function classifyClaims(note){
-    var t=(note||"").toLowerCase();
-    var out=[];
-    if(/clog|debris|leaf|tree|screen|filter/.test(t)) out.push("CLOG");
-    if(/fascia|pull|detach|foundation|damage|rot/.test(t)) out.push("ATTACH");
-    if(/color|scheme|finish|chocolate|ivory|brown|red|green/.test(t)) out.push("FINISH");
-    if(/corner|custom|angle|end cap|cap/.test(t)) out.push("CAPS");
-    return out;
-  }
-  function classifyWarranties(note){
-    var c=classifyClaims(note);
-    var out=[];
-    if(c.indexOf("FINISH")>=0) out.push("W_FINISH");
-    if(c.indexOf("ATTACH")>=0) out.push("W_ATTACH");
-    if(c.indexOf("CLOG")>=0) out.push("W_CLOG");
-    if(c.indexOf("CAPS")>=0) out.push("W_CAPS");
-    return out;
-  }
-
-  function closeAllCards(){
-    document.querySelectorAll(".card").forEach(function(c){
-      c.classList.remove("open");
-      var ch=c.querySelector(".chev");
-      if(ch) ch.textContent="▸";
-    });
-  }
-
-  function makeRow(meta, txt, badges){
-    var r=document.createElement("div");
-    r.className="row";
-    var m=document.createElement("div");
-    m.className="rmeta";
-    m.textContent=meta;
-    (badges||[]).forEach(function(b){
-      var s=document.createElement("span");
-      s.className="badge";
-      s.textContent=b;
-      m.appendChild(s);
-    });
-    var t=document.createElement("div");
-    t.className="rtxt";
-    t.textContent=txt;
-    r.appendChild(m);
-    r.appendChild(t);
-    return r;
-  }
-
-  function makeBubble(title, desc, builder){
-    var b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    var h=document.createElement("h4");
-    h.textContent=title;
-
-    var p=document.createElement("p");
-    p.textContent=desc;
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    var node=builder?builder():null;
-    if(node) b.appendChild(node);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-
-    return b;
-  }
-
-  function makeCard(title, subtitle, bubbles, openDefault){
-    var card=document.createElement("div");
-    card.className="card";
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var left=document.createElement("div");
-    left.style.minWidth="0";
-
-    var ti=document.createElement("div");
-    ti.className="ti";
-    ti.textContent=title;
-
-    var si=document.createElement("div");
-    si.className="si";
-    si.textContent=subtitle;
-
-    left.appendChild(ti);
-    left.appendChild(si);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var wrap=document.createElement("div");
-    wrap.className="subBubbles";
-    bubbles.forEach(function(b){ wrap.appendChild(b); });
-    body.appendChild(wrap);
-
-    function toggle(){
-      var isOpen=card.classList.contains("open");
-      if(isOpen){
-        card.classList.remove("open");
-        chev.textContent="▸";
-        return;
-      }
-      closeAllCards();
-      card.classList.add("open");
-      chev.textContent="▾";
-      body.querySelectorAll(".bubble").forEach(function(bb){ bb.classList.remove("open"); });
-    }
-
-    head.addEventListener("click", toggle, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); toggle(); }
-    });
-
-    card.appendChild(head);
-    card.appendChild(body);
-
-    if(openDefault){
-      card.classList.add("open");
-      chev.textContent="▾";
-    }
-    return card;
-  }
-
-  // ===== Build the page cards =====
-  var stack=document.getElementById("stack");
-
-  // 1) Anchor: Reviews subset
-  var card1 = makeCard(
-    "Customers who shared reviews",
-    "A few of the homeowners who also shared public feedback about their experience.",
-    [
-      makeBubble("Read their stories", "These notes accompany the customers who also left public reviews.", function(){
-        var list=document.createElement("div");
-        list.className="list";
-        REVIEWS.forEach(function(x){
-          list.appendChild(makeRow(
-            "#" + x.id + " · " + x.name + " — " + x.city,
-            reviewSummary(x) + " · " + x.note,
-            ["REVIEW SHARED"]
-          ));
-        });
-        return list;
-      })
-    ],
-    false
-  );
-
-  // 2) Anchor: Full reference index (dense)
-  var card2 = makeCard(
-    "The 87 field notes",
-    "The surviving notes from my first 100 sales, presented in the order I recorded them.",
-    [
-      makeBubble("Browse the customer notes", "These are brief notes, not transcripts of the conversations.", function(){
-        var list=document.createElement("div");
-        list.className="list";
-        REFERENCES.forEach(function(x){
-          list.appendChild(makeRow(
-            "#" + x.id + " · " + x.name + " — " + x.city,
-            x.note,
-            ["FIELD NOTE"]
-          ));
-        });
-        return list;
-      })
-    ],
-    false
-  );
-
-  // 3) Anchor: Claim alignment
-  var card3 = makeCard(
-    "What homeowners kept asking about",
-    "Four recurring concerns that appeared in the notes, from repeated clogs to the details of a finished home.",
-    [
-      makeBubble("Four familiar concerns", "Each one was a reason to ask better questions and listen more carefully.", function(){
-        var list=document.createElement("div");
-        list.className="list";
-        CLAIM_BUCKETS.forEach(function(c){
-          list.appendChild(makeRow(c.title, c.desc, ["COMMON CONCERN"]));
-        });
-        return list;
-      }),
-      makeBubble("How often these topics appear", "These are simple word matches in the 87 surviving notes. A note can mention more than one topic.", function(){
-        var by={CLOG:0,ATTACH:0,FINISH:0,CAPS:0};
-        REFERENCES.forEach(function(x){ classifyClaims(x.note).forEach(function(k){ by[k]=(by[k]||0)+1; }); });
-        var list=document.createElement("div");
-        list.className="list";
-        list.appendChild(makeRow("Leaves and clogs", String(by.CLOG) + " notes mention related words", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Damage and attachments", String(by.ATTACH) + " notes mention related words", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Appearance and color", String(by.FINISH) + " notes mention related words", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Fit, corners and caps", String(by.CAPS) + " notes mention related words", ["FROM THE NOTES"]));
-        return list;
-      })
-    ],
-    false
-  );
-
-  // 4) Anchor: Warranty correlation
-  var card4 = makeCard(
-    "Why lasting protection mattered",
-    "A homeowner needs to know what a promise actually means, not just how reassuring it sounds.",
-    [
-      makeBubble("The promises homeowners asked about", "These are the warranty titles discussed in the original records. Actual coverage depends on the written contract.", function(){
-        var list=document.createElement("div");
-        list.className="list";
-        WARRANTY_BUCKETS.forEach(function(w){
-          list.appendChild(makeRow(w.title, "One of the protections that could matter in a homeowner conversation.", ["WARRANTY TOPIC"]));
-        });
-        return list;
-      }),
-      makeBubble("Where these concerns appeared", "These numbers count related words in the notes; they do not show warranty selections or prove coverage.", function(){
-        var by={W_FINISH:0,W_ATTACH:0,W_CLOG:0,W_CAPS:0};
-        REFERENCES.forEach(function(x){ classifyWarranties(x.note).forEach(function(k){ by[k]=(by[k]||0)+1; }); });
-        var list=document.createElement("div");
-        list.className="list";
-        list.appendChild(makeRow("Paint finish and appearance", String(by.W_FINISH) + " notes mention related concerns", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Staying securely attached", String(by.W_ATTACH) + " notes mention related concerns", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Avoiding recurring clogs", String(by.W_CLOG) + " notes mention related concerns", ["FROM THE NOTES"]));
-        list.appendChild(makeRow("Corners and finishing details", String(by.W_CAPS) + " notes mention related concerns", ["FROM THE NOTES"]));
-        return list;
-      }),
-      makeBubble("A word about warranties", "The actual written warranty controls. These notes are about customer concerns, not decisions about what a warranty covers.", null)
-    ],
-    false
-  );
-
-  // 5) Disclaimer
-  var card5 = makeCard(
-    "About this study",
-    "What I kept, what is missing, and how to read these notes.",
-    [
-      makeBubble("A note from the author", "I studied my first 100 field sales. Only records 14–100 remain here. Notes are my own short recollections, not full transcripts. The topic counts are descriptive, not proof of why someone purchased. Customer contact details are not published.", null)
-    ],
-    false
-  );
-
-  stack.appendChild(card1);
-  stack.appendChild(card2);
-  stack.appendChild(card3);
-  stack.appendChild(card4);
-  stack.appendChild(card5);
-
-})();
-</script>
-
-</body>
-</html>
+(function(){
+"use strict";
+var topics={
+clog:{name:"Debris & clogging",test:/clog|debris|leaf|tree|screen|filter/i},
+attach:{name:"Attachment & damage",test:/fascia|pull|detach|foundation|damage|rot/i},
+fit:{name:"Fit & corners",test:/corner|custom|angle|end cap|cap/i},
+finish:{name:"Finish & appearance",test:/color|scheme|finish|chocolate|ivory|brown|red|green/i}
+};
+function customerRow(x,mode){
+ var d=document.createElement("details");var summary=document.createElement("summary");
+ summary.textContent="#"+x.id+" · "+x.name+" — "+x.city;
+ var p=document.createElement("p");
+ p.textContent=(mode==="review"?reviewSummary(x)+" · ":"")+x.note;
+ d.append(summary,p);return d;
+}
+function fill(target,records,mode){var fragment=document.createDocumentFragment();records.forEach(function(x){fragment.appendChild(customerRow(x,mode));});document.getElementById(target).replaceChildren(fragment);}
+fill("review-list",DATA.filter(function(x){return x.review;}),"review");
+fill("field-list",DATA,"note");
+var results=document.getElementById("topic-results");
+var buttons=Array.prototype.slice.call(document.querySelectorAll("[data-topic]"));
+var active="";
+buttons.forEach(function(button){
+ button.addEventListener("click",function(){
+  var next=button.dataset.topic; active=(active===next)?"":next;
+  buttons.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.topic===active));});
+  if(!active){results.hidden=true;return;}
+  var info=topics[active],matches=DATA.filter(function(x){return info.test.test(x.note);});
+  document.getElementById("topic-results-title").textContent=info.name+" · "+matches.length+" matching notes";
+  document.getElementById("topic-results-note").textContent="These are matching words in the surviving notes, not confirmed reasons for purchasing. Select a name to read its note.";
+  fill("topic-results-list",matches,"note");results.hidden=false;
+  results.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"nearest"});
+ });
+});
+})();</script></body></html>

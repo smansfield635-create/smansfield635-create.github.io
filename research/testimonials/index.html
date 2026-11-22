@@ -21,13 +21,14 @@
        - NO new gd_* keys
        - No modals/overlays; no inline onclick; addEventListener only
        - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (NO overrides)
+       - Essential page canvas, reading layout and mobile navigation are self-contained
 -->
 
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#090609"/>
 <title>100-Customer Field Case Study · Research</title>
 
 <link rel="stylesheet" href="/assets/ui.css"/>
@@ -312,10 +313,58 @@ body::before,body::after{pointer-events:none!important}
   .dock{grid-template-columns:repeat(3,1fr)}
   .h1{font-size:26px}
 }
+/* Readability-first crimson edition: page canvas and navigation never cover evidence. */
+html{background:#090609!important;color-scheme:dark;overflow-x:clip;scroll-behavior:smooth}
+body{min-height:100dvh;background:radial-gradient(ellipse at 12% 2%,rgba(112,14,34,.23),transparent 36rem),radial-gradient(ellipse at 86% 35%,rgba(72,9,32,.13),transparent 30rem),linear-gradient(180deg,#10090d 0%,#080609 58%,#080608 100%)!important;color:#f7f1ee;overflow-x:clip}
+body::before,body::after{display:none!important}
+*,*::before,*::after{box-sizing:border-box}
+a:focus-visible,button:focus-visible,[role="button"]:focus-visible{outline:2px solid #ffbdc2;outline-offset:4px}
+.skip{position:absolute;top:-80px;left:12px;z-index:1000;background:#f7e6e4;color:#1b080e;padding:10px 16px;border-radius:8px}
+.skip:focus{top:10px}
+.top{position:relative;inset:auto;z-index:15;pointer-events:auto;width:min(1040px,100%);margin:0 auto;padding:22px max(18px,3vw) 8px;flex-wrap:wrap}
+.top .left,.top .right{flex-wrap:wrap}
+.top .btn{min-height:42px;border-radius:999px;padding:9px 16px;font-size:12px;letter-spacing:.09em;background:rgba(30,12,19,.78);border-color:rgba(229,141,160,.28);box-shadow:none}
+.top .btn::after{display:none}
+.top .right .btn{min-width:48px;justify-content:center}
+.page{width:min(960px,calc(100% - 36px));padding:18px 0 20px;gap:20px}
+.header{border-radius:28px;padding:clamp(26px,5vw,56px);background:radial-gradient(ellipse at 0% 5%,rgba(181,40,72,.31),transparent 54%),radial-gradient(ellipse at 85% 100%,rgba(93,17,50,.24),transparent 55%),linear-gradient(145deg,#260f19,#140b12 68%,#10090e);border:1px solid rgba(240,159,179,.23);box-shadow:0 20px 70px rgba(0,0,0,.33)}
+.header::before{opacity:.06}
+.k{font-size:11px;color:#f3afba;letter-spacing:.20em}
+.h1{font-size:clamp(2.1rem,6vw,4.3rem);line-height:1.03;letter-spacing:-.055em;font-weight:830;max-width:14ch}
+.p0{font-size:clamp(1.02rem,2vw,1.22rem);line-height:1.68;color:#e6d4d8;max-width:65ch;margin-top:20px}
+.note0{font-size:.82rem;line-height:1.6;color:#c8acb3;margin-top:16px;max-width:70ch}
+.metrics{display:flex;flex-wrap:wrap;gap:16px 30px;padding:22px 0 0;margin-top:24px;border-top:1px solid rgba(242,179,191,.18)}
+.metrics div{display:flex;align-items:baseline;gap:9px}
+.metrics strong{font-size:clamp(1.9rem,4vw,2.5rem);line-height:1;color:#ffd5db;letter-spacing:-.05em}
+.metrics span{font-size:.77rem;color:#ddbdc5}
+.study-summary{padding:8px clamp(5px,2vw,16px) 2px}
+.study-summary h2{font-size:clamp(1.5rem,3vw,2.2rem);line-height:1.19;letter-spacing:-.035em;margin:0 0 12px;color:#fff0f0}
+.study-summary p{max-width:73ch;color:#d4bfc4;line-height:1.75;margin:0}
+.study-themes{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 0}
+.study-themes span{border:1px solid rgba(235,154,173,.24);background:rgba(70,18,33,.34);color:#f0cad2;border-radius:999px;padding:9px 13px;font-size:.78rem}
+.stack{gap:14px}
+.card{border-radius:22px;border-color:rgba(229,147,166,.18);background:linear-gradient(145deg,rgba(39,17,27,.97),rgba(19,11,17,.97));box-shadow:0 16px 42px rgba(0,0,0,.24)}
+.head{padding:19px clamp(16px,3vw,26px);align-items:center}
+.ti{font-size:clamp(1.05rem,2.2vw,1.35rem);letter-spacing:-.016em}
+.si{color:#ceb6be}
+.body{background:rgba(9,6,10,.72);padding:clamp(14px,2.7vw,24px)}
+.bubble{background:rgba(47,18,31,.38);border-color:rgba(223,150,166,.16);padding:clamp(15px,2.7vw,20px)}
+.bubble p{color:#e0cad0}
+.pill{color:#f5dfe5;min-height:44px}
+.pill.active{background:rgba(150,34,62,.35);border-color:#a94b69;box-shadow:none}
+.rmeta{color:#f7e5e9}
+.rtxt{color:#d9c4cb}
+.row{background:rgba(18,9,15,.7);overflow-wrap:anywhere}
+.badge{background:rgba(79,24,42,.45);border-color:rgba(226,152,168,.2)}
+.dock{position:relative;left:auto;bottom:auto;transform:none;width:min(960px,calc(100% - 36px));margin:24px auto 42px;padding:18px 0 0;border-radius:0;border:0;border-top:1px solid rgba(226,152,168,.18);background:transparent;box-shadow:none;z-index:1;grid-template-columns:repeat(4,minmax(0,1fr))}
+.dock .btn{border-radius:12px;box-shadow:none;background:rgba(43,20,30,.5);font-size:12px;min-width:0;overflow-wrap:anywhere}
+@media(max-width:640px){.top{padding:18px 18px 6px}.top .left{gap:8px}.top .btn{font-size:11px;padding:9px 12px}.page{padding-top:10px}.header{border-radius:22px}.dock{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.head{align-items:center}.badge{margin:4px 5px 0 0}.metrics{gap:14px}.metrics div{width:100%}.h1{font-size:clamp(2rem,10vw,3.2rem)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 
 <body>
+<a class="skip" href="#stack">Skip to the field study</a>
 
 <div class="top" aria-label="Top controls">
   <div class="left">
@@ -329,15 +378,20 @@ body::before,body::after{pointer-events:none!important}
 
 <div class="page">
 
-  <section class="header" aria-label="Header">
-    <p class="k">RESEARCH · FIELD VALIDATION</p>
-    <h1 class="h1">100-Customer Field Case Study</h1>
-    <p class="p0">
-      Case study is the highlight. Every section beneath is an anchor backing the study: references, review-present subset, claim alignment, and warranty correlation.
-    </p>
-    <div class="note0">
-      English only · No URLs · No star icons · No rankings · Contact details maintained on file
+  <section class="header" aria-label="Field study introduction">
+    <p class="k">INDEPENDENT FIELD RESEARCH · RAINWATER MANAGEMENT</p>
+    <h1 class="h1">100-Customer Field Study</h1>
+    <p class="p0">What I learned from my first 100 field sales: the problems homeowners described, the decisions they faced, and the importance of earning confidence through a clear, informed consultation.</p>
+    <div class="metrics" aria-label="Study record coverage">
+      <div><strong>100</strong><span>field sales studied</span></div>
+      <div><strong>87</strong><span>indexed notes preserved</span></div>
     </div>
+    <p class="note0">This surviving public index includes entries 14–100. Entries 1–13 are not reconstructed. The notes describe observed concerns and themes; they do not establish that any individual factor caused a sale.</p>
+  </section>
+  <section class="study-summary" aria-label="Study orientation">
+    <h2>Listen first. Understand the real problem.</h2>
+    <p>Across these homeowner conversations, recurring concerns involved clogged gutters, attachment and fascia damage, difficult corners, and long-term appearance. The case study below presents the narrative first; its technical interpretation, customer references, and claim/warranty mappings remain available for deeper inspection.</p>
+    <div class="study-themes" aria-label="Observed concern categories"><span>Debris &amp; clogging</span><span>Attachment &amp; damage</span><span>Fit &amp; corners</span><span>Finish &amp; appearance</span></div>
   </section>
 
   <div class="stack" id="stack"></div>
@@ -846,6 +900,8 @@ body::before,body::after{pointer-events:none!important}
   );
 
   stack.appendChild(card0);
+  var primaryCaseStudy = card0.querySelector(".bubble");
+  if(primaryCaseStudy) primaryCaseStudy.classList.add("open");
   stack.appendChild(card1);
   stack.appendChild(card2);
   stack.appendChild(card3);

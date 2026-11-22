@@ -617,6 +617,7 @@ uniform vec3 uCamera;
 uniform float uRadius;
 uniform int uFine;
 uniform int uRiparian;
+uniform int uP7Tuft;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
 ${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
@@ -628,7 +629,11 @@ void main(){
  vec3 up=normalize(vec3(aRoot.x,aRoot.y+uRadius,aRoot.z));
  // Fixed per-root tuft irregularity: no new roots, camera-dependent sway, or extra draw.
  float tuftVariation=fract(sin(dot(aRoot.xz,vec2(29.321,51.773)))*19735.283);
- float angle=aRoot.w+float(uFine)*(1.5707963+.24*(tuftVariation-.5));
+ // Gen3481 P7: four physical tapered blades per admitted P6 dry root only.
+ float p7Blade=float(gl_VertexID/6);
+ float p7Jitter=fract(sin(dot(aRoot.xz,vec2(37.127,63.941))+p7Blade*2.447)*19057.124);
+ float angle=aRoot.w+float(uFine)*(1.5707963+.24*(tuftVariation-.5))
+  +float(uP7Tuft)*(p7Blade*1.5707963+(p7Jitter-.5)*.58);
  vec3 across=normalize(vec3(cos(angle),0.,sin(angle)));across=normalize(across-up*dot(up,across));
  int k=gl_VertexID%6;
  float side=(k==0||k==3||k==5)?-1.:1.;
@@ -647,6 +652,8 @@ void main(){
    bankTuft=fract(sin(dot(aRoot.xz,vec2(17.143,59.811)))*24593.137);
    width*=mix(1.15,1.40,bankTuft);
  }
+ // P7 modifies actual P6 blade width only; the native soil and P3/P4 remain unchanged.
+ width*=mix(1.,mix(1.75,2.40,p7Jitter),float(uP7Tuft));
  // Local entrance growth affects existing and supplemental roots alike.
  float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float entrance=max(core,entranceBlend(aRoot.xz));
@@ -659,7 +666,10 @@ void main(){
  float meadowGrowth=meadowGrowthCoherence(aRoot.xz,foothillDry);
  float height=mix(mix(.20,.33,h),entranceHeight,entrance)*scale*mix(meadowGrowth,1.,entrance)*mix(1.,1.85,float(uRiparian));
  if(uRiparian==1)height*=mix(.91,1.17,bankTuft);
- vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.81));
+ height*=mix(1.,mix(1.60,2.20,p7Jitter),float(uP7Tuft));
+ float tipTaper=mix(.81,.985,float(uP7Tuft));
+ vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*tipTaper));
+ if(uP7Tuft==1)p+=vec3(sin(angle+.42),0.,-cos(angle+.42))*level*level*height*mix(.07,.19,p7Jitter);
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  // Roots and ground contact remain fixed: only the added P4 blade tips lean.
  if(uRiparian==1)p+=vec3(cos(angle+2.2*bankTuft),0.,sin(angle+2.2*bankTuft))*level*level*height*mix(.06,.14,bankTuft);
@@ -950,14 +960,14 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
    throw graphicsError('P6_DRY_GPU_UPLOAD','P6_BUFFER',p6GpuUploadedBytes);
   gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  }
- const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uRiparian','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
+ const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uRiparian','uP7Tuft','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
  const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
  gl.useProgram(program);const e=environment;gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform3fv(u.uSunColor,rgb(e.sunColor));gl.uniform3fv(u.uHaze,rgb(e.groundHazeColor));gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform1f(u.uFogStart,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaxFog,e.maximumFogFactor);
  const visibilityBounds=boundGrassTiles(tiles),p4VisibilityBounds=p4Added?boundGrassTiles(p4Bank.tiles):[],p6VisibilityBounds=p6Added?boundGrassTiles(p6Ecotone.tiles):[];
  let disposed=false,lastDraw={visibleCoarseRoots:0,selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
  function draw(packet){
   if(disposed)throw Error('OWNER_DISPOSED');const cpuStarted=performance.now();const camera=packet.camera.position,frustum=grassFrustumPlanes(packet.camera.viewProjectionMatrix),visible=selectVisibleGrassTiles(visibilityBounds,frustum.planes),fine=selectFineTiles(visible,camera);
-  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);gl.uniform1i(u.uRiparian,0);
+  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uP7Tuft,0);
   let visibleCoarseRoots=0,selectedFineRoots=0,drawCallCount=0;
   for(const range of mergeGrassRanges(visible)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;visibleCoarseRoots+=range.count;}
   gl.uniform1i(u.uFine,1);
@@ -982,25 +992,26 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   if(p6Added){
    const p6Visible=selectVisibleGrassTiles(p6VisibilityBounds,frustum.planes),p6Fine=selectFineTiles(p6Visible,camera);
    gl.useProgram(program);gl.bindVertexArray(p6Vao);gl.bindBuffer(gl.ARRAY_BUFFER,p6Buffer);
-   gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uFine,0);
+   gl.uniform1i(u.uRiparian,0);gl.uniform1i(u.uP7Tuft,1);gl.uniform1i(u.uFine,0);
    for(const range of mergeGrassRanges(p6Visible)){
     gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
-    gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;p6VisibleCoarseRoots+=range.count;
+    gl.drawArraysInstanced(gl.TRIANGLES,0,24,range.count);drawCallCount++;p6VisibleCoarseRoots+=range.count;
    }
    gl.uniform1i(u.uFine,1);
    for(const range of mergeGrassRanges(p6Fine)){
     gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);
-    gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;p6SelectedFineRoots+=range.count;
+    gl.drawArraysInstanced(gl.TRIANGLES,0,24,range.count);drawCallCount++;p6SelectedFineRoots+=range.count;
    }
-   gl.uniform1i(u.uFine,0);
+   gl.uniform1i(u.uFine,0);gl.uniform1i(u.uP7Tuft,0);
   }
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,
    riparianCoarseRoots,riparianFineRoots,p6VisibleCoarseRoots,p6SelectedFineRoots,drawCallCount,
-   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots+p6VisibleCoarseRoots+p6SelectedFineRoots)*2,
+   p7TuftBladesPerRoot:4,p7TuftSubmittedTriangles:(p6VisibleCoarseRoots+p6SelectedFineRoots)*8,
+   submittedTriangles:(visibleCoarseRoots+selectedFineRoots+riparianCoarseRoots+riparianFineRoots)*2+(p6VisibleCoarseRoots+p6SelectedFineRoots)*8,
    perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};
   return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p6FirstFailure:p6FirstFailureReceipt(),p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,woodlandSeamBridge:woodlandSeamReceipt,wideGrassTrial:wideGrassTrialReceipt,frozenEcologicalMeadow:frozenMeadowReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1+Number(p4Added>0)+Number(p6Added>0),buffers:1+Number(p4Added>0)+Number(p6Added>0),textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots+P6_ECOTONE_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,p4Riparian:p4Bank.receipt,p4RiparianGpuBytes:p4GpuBytes,p4RiparianUploadedBytes:p4GpuUploadedBytes,p4RiparianUploadCount:p4GpuUploadCount,p6Ecotone:p6Ecotone.receipt,p7DryTuftGeometry:{bladeCount:4,trianglesPerRoot:8,sourceRootsUnchanged:true,admissionPredicatesUnchanged:true,packedRootBytesUnchanged:true},p6FirstFailure:p6FirstFailureReceipt(),p6EcotoneGpuBytes:p6GpuBytes,p6EcotoneUploadedBytes:p6GpuUploadedBytes,p6EcotoneUploadCount:p6GpuUploadCount,totalRenderedRootCount:rootCount+p4Added+p6Added,totalAllocatedGpuBytes:gpuObservedBufferBytes+p4GpuBytes+p6GpuBytes,totalUploadedGpuBytes:gpuUploadedBytes+p4GpuUploadedBytes+p6GpuUploadedBytes,maximumWoodlandRoots:allocation.maximumWoodlandRoots,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes+P6_ECOTONE_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T20:24:20Z",
+  "generatedAt": "2026-11-22T21:24:41Z",
   "window": {
-    "start": "2026-08-24T20:24:20Z",
-    "end": "2026-11-22T20:24:20Z"
+    "start": "2026-08-24T21:24:41Z",
+    "end": "2026-11-22T21:24:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -110,13 +110,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -162,8 +162,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/prelude/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -172,14 +180,6 @@
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 460,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/build/": {

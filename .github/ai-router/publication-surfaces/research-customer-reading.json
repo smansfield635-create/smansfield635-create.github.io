@@ -12,13 +12,15 @@
         "id=\"topic-results\"",
         "review:false,guide:true",
         "id:100,name:\"Susan Finehout\"",
-        "Browse 100 numbered entries"
+        "Browse 100 numbered entries",
+        "<strong>100</strong><span>residential sales in the original study</span>"
       ],
       "excludes": [
         "The 87 field notes",
         "surviving notes to explore",
         "What my first 100 sales taught me",
-        "Entries 14–100 survive; entries 1–13 are unavailable."
+        "Entries 14–100 survive; entries 1–13 are unavailable.",
+        "<strong>100</strong><span>organized study entries to explore</span>"
       ]
     },
     {

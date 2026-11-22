@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-21T23:24:22Z",
+  "generatedAt": "2026-11-22T00:46:30Z",
   "window": {
-    "start": "2026-08-23T23:24:22Z",
-    "end": "2026-11-21T23:24:22Z"
+    "start": "2026-08-24T00:46:30Z",
+    "end": "2026-11-22T00:46:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,20 +26,24 @@
       }
     },
     "byPath": {
-      "/evidence/": {
-        "pageLoads": 40,
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 110,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
+      "/evidence/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -68,10 +72,6 @@
       },
       "/laws/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -134,16 +134,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -174,19 +174,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },

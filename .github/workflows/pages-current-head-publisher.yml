@@ -35,6 +35,9 @@ on:
       - 'governance-bridge/collaboration/index.html'
       - 'governance-bridge/fort-worth-job-fair/index.html'
       - '.github/ai-router/publication-surfaces/governance-bridge.json'
+      - 'research/industry-context/index.html'
+      - 'research/testimonials/index.html'
+      - '.github/ai-router/publication-surfaces/research-customer-reading.json'
       - 'research/one-call-lab/index.html'
       - '.github/ai-router/publication-surfaces/one-call-lab.json'
   workflow_dispatch:
@@ -71,6 +74,8 @@ jobs:
             changed="$(gh api "/repos/$REPO/commits/$EVENT_SHA" --jq '.files[].filename')"
             if printf '%s\n' "$changed" | grep -Eq '^(release-proof/|\.github/ai-router/publication-surfaces/release-proof\.json$)'; then
               SURFACE_ID="release-proof"
+            elif printf '%s\n' "$changed" | grep -Fqx 'research/testimonials/index.html' || printf '%s\n' "$changed" | grep -Fqx 'research/industry-context/index.html' || printf '%s\n' "$changed" | grep -Fqx '.github/ai-router/publication-surfaces/research-customer-reading.json'; then
+              SURFACE_ID="research-customer-reading"
             elif printf '%s\n' "$changed" | grep -Fqx 'research/one-call-lab/index.html' || printf '%s\n' "$changed" | grep -Fqx '.github/ai-router/publication-surfaces/one-call-lab.json'; then
               SURFACE_ID="one-call-lab"
             else

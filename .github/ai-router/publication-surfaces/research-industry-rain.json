@@ -1,0 +1,122 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "research-industry-rain",
+  "description": "Industry Context exact-source native E1/E2 spatial rain reuse, independent live WebGL frame qualification and nested company-reader interactions.",
+  "checks": [
+    {
+      "path": "/research/industry-context/index.html",
+      "includes": [
+        "id=\"industry-rain-canvas\"",
+        "createSpatialRainRenderer",
+        "data-native-rain",
+        "NATIVE_RAIN_FRAMEBUFFER_INVALID",
+        "Math.max(0,(now-startedAt)/1000)",
+        "id=\"companies\"",
+        "100 browsable entries",
+        "Question to consider:",
+        "/research/testimonials/"
+      ],
+      "excludes": [
+        "For the homeowner:",
+        "For the customer:",
+        "What my first 100 sales taught me",
+        "field-study-storm-trial.v1.css"
+      ]
+    },
+    {
+      "path": "/research/testimonials/index.html",
+      "includes": [
+        "id=\"field-rain-canvas\"",
+        "Browse 100 numbered entries",
+        "id=\"chapter-questions\"",
+        "id=\"chapter-details\"",
+        "id=\"chapter-records\""
+      ],
+      "excludes": [
+        "field-study-storm-trial.v1.css"
+      ]
+    },
+    {
+      "path": "/graphics-engine/rain-lab/render.v1.mjs",
+      "includes": [
+        "createNativeWebGLDevice",
+        "createNativeFramePipeline",
+        "buildRainMesh",
+        "RAIN_FRAGMENT"
+      ],
+      "excludes": [
+        "mockWebGL"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/research/industry-context/",
+    "timeoutMs": 15000,
+    "readySelector": "#companies",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/research/industry-context/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Industry category expands with native rain active",
+        "action": {
+          "type": "click",
+          "selector": "#companies .group > details[name=\"industry-area\"] > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#companies .group > details[name=\"industry-area\"][open]"
+          },
+          {
+            "type": "exists",
+            "selector": "html[data-native-rain=\"pass\"]"
+          },
+          {
+            "type": "exists",
+            "selector": "#industry-rain-canvas"
+          }
+        ],
+        "timeoutMs": 15000
+      },
+      {
+        "name": "Nested company reader expands",
+        "action": {
+          "type": "click",
+          "selector": "#companies .group > details[name=\"industry-area\"][open] details.company-reader > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#companies .group > details[name=\"industry-area\"][open] details.company-reader[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "html[data-native-rain=\"pass\"]"
+          }
+        ]
+      },
+      {
+        "name": "Second industry category opens",
+        "action": {
+          "type": "click",
+          "selector": "#companies .group > details[name=\"industry-area\"]:nth-of-type(2) > summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#companies .group > details[name=\"industry-area\"]:nth-of-type(2)[open]"
+          },
+          {
+            "type": "exists",
+            "selector": "html[data-native-rain=\"pass\"]"
+          }
+        ]
+      }
+    ]
+  }
+}

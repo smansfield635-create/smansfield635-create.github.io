@@ -846,6 +846,50 @@
       "scopeHash": "0501ae249d87ccf7e89e5afa5b15554a071e9fc1083ab13db3f081a07a5079cf",
       "state": "ADMITTED_LOCKED"
     },
+    "0514ce0948628c45ea30d6ec752de75a15c102f63be6d146f17df91796ccc612": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1d863c3727c8c85487a2aac635493ffe6882c002",
+          "lockGeneration": 3468,
+          "lockScope": "H_EARTH:P5:HILLSIDE_RIPARIAN_TERRAIN_MATERIAL_ONLY:20261121",
+          "operationId": "H_EARTH_P5_HILLSIDE_RIPARIAN_TERRAIN_MATERIAL_COHERENCE_20261121_001",
+          "procedureLocatorDigest": "644470a2715c64f5090e2defc24ac9ea32732c6ca3f376fcf54061bd8fca5491",
+          "requestDigest": "b6ea8f57a74c9f547b94fd026dc82b064f3a9d6a710cc9d309d0af417197dfde",
+          "scopeHash": "0514ce0948628c45ea30d6ec752de75a15c102f63be6d146f17df91796ccc612"
+        },
+        "bindingDigest": "3bd8758ee0455d37bf81db9a9406d7c0303e49b28bbe6092ded573ab24227e88",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "aa46cfd33ef076622c4341e1432ebdc966d496bcc38b1277603663123466f285",
+          "commentId": 7071939679,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44969534005,
+          "workflowSha": "1d863c3727c8c85487a2aac635493ffe6882c002"
+        },
+        "lineageAnchorCommitSha": "0163863bbe00b8ea858f50d156ccce654f87e3ea",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1d863c3727c8c85487a2aac635493ffe6882c002",
+      "lockGeneration": 3468,
+      "lockScope": "H_EARTH:P5:HILLSIDE_RIPARIAN_TERRAIN_MATERIAL_ONLY:20261121",
+      "operationId": "H_EARTH_P5_HILLSIDE_RIPARIAN_TERRAIN_MATERIAL_COHERENCE_20261121_001",
+      "procedureLocatorDigest": "644470a2715c64f5090e2defc24ac9ea32732c6ca3f376fcf54061bd8fca5491",
+      "released": false,
+      "requestDigest": "b6ea8f57a74c9f547b94fd026dc82b064f3a9d6a710cc9d309d0af417197dfde",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0514ce0948628c45ea30d6ec752de75a15c102f63be6d146f17df91796ccc612",
+      "state": "ADMITTED_LOCKED"
+    },
     "052b3898e337b00b8567b59cf46a29f9d28494e0b06f47030386b9775bc2cd77": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -40322,7 +40366,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3467,
+  "lockGeneration": 3468,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

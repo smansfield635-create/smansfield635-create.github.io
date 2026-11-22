@@ -11,9 +11,9 @@ const RAIN_FRAGMENT="\nprecision highp float;\nVARY_IN vec2 vCorner; VARY_IN flo
 function shaderSources(backend){
  const is2=backend==='WEBGL2';
  const bgVertex=is2?BG_VERTEX_2:BG_VERTEX_1;
- const bgFragment=(is2?'#version 300 es\nin vec2 vUV;out vec4 fragmentColor;\n#define OUTCOLOR fragmentColor\n':'varying vec2 vUV;\n#define OUTCOLOR gl_FragColor\n')+BG_BODY;
+ const bgFragment=(is2?'#version 300 es\nprecision highp float;\nin vec2 vUV;out vec4 fragmentColor;\n#define OUTCOLOR fragmentColor\n':'precision highp float;\nvarying vec2 vUV;\n#define OUTCOLOR gl_FragColor\n')+BG_BODY;
  const rainVertex=(is2?'#version 300 es\n#define ATTR in\n#define VARY_OUT out\n':'#define ATTR attribute\n#define VARY_OUT varying\n')+RAIN_VERTEX;
- const rainFragment=(is2?'#version 300 es\n#define VARY_IN in\nout vec4 fragmentColor;\n#define OUTCOLOR fragmentColor\n':'#define VARY_IN varying\n#define OUTCOLOR gl_FragColor\n')+RAIN_FRAGMENT;
+ const rainFragment=(is2?'#version 300 es\nprecision highp float;\n#define VARY_IN in\nout vec4 fragmentColor;\n#define OUTCOLOR fragmentColor\n':'precision highp float;\n#define VARY_IN varying\n#define OUTCOLOR gl_FragColor\n')+RAIN_FRAGMENT;
  return {bgVertex,bgFragment,rainVertex,rainFragment};
 }
 

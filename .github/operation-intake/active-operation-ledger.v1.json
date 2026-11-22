@@ -34498,6 +34498,50 @@
       "scopeHash": "d4e382130aa1e21a827ed0cd0abc67f8446720775fda82a13e9f17954e3980f5",
       "state": "ADMITTED_LOCKED"
     },
+    "d50df78e490b397e53a18276b982f54442ed91f26adc9386a45399bc68db5776": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7a488c942fed155504217dc17766a5c59de0319c",
+          "lockGeneration": 3487,
+          "lockScope": "H_EARTH:P10:SAND_SHORE_MATERIAL_DIAGNOSTIC:20261122",
+          "operationId": "H_EARTH_P10_P9_SAND_SHORE_NATIVE_SUBSTRATE_DIAGNOSTIC_20261122_001",
+          "procedureLocatorDigest": "d6c8230332b866a02bcc095ff03794e808768cc2ccb53b9896fa04d57e3a5d8d",
+          "requestDigest": "45074651dac0ac55513b57bbe84b58d4864c431b3197f5b4082ef2e95c1557b7",
+          "scopeHash": "d50df78e490b397e53a18276b982f54442ed91f26adc9386a45399bc68db5776"
+        },
+        "bindingDigest": "508f1c03e241ae124d9e5964483d65cf0048c517165957fa880ec7c87983d986",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fab5a6530036817c9342b01910550fc7f4d32b532fefbc7a3273f760c97ca489",
+          "commentId": 7075819344,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44997517610,
+          "workflowSha": "7a488c942fed155504217dc17766a5c59de0319c"
+        },
+        "lineageAnchorCommitSha": "da3d3e049a20f8b58df0adca8799fdd02c8b22ce",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7a488c942fed155504217dc17766a5c59de0319c",
+      "lockGeneration": 3487,
+      "lockScope": "H_EARTH:P10:SAND_SHORE_MATERIAL_DIAGNOSTIC:20261122",
+      "operationId": "H_EARTH_P10_P9_SAND_SHORE_NATIVE_SUBSTRATE_DIAGNOSTIC_20261122_001",
+      "procedureLocatorDigest": "d6c8230332b866a02bcc095ff03794e808768cc2ccb53b9896fa04d57e3a5d8d",
+      "released": false,
+      "requestDigest": "45074651dac0ac55513b57bbe84b58d4864c431b3197f5b4082ef2e95c1557b7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d50df78e490b397e53a18276b982f54442ed91f26adc9386a45399bc68db5776",
+      "state": "ADMITTED_LOCKED"
+    },
     "d5137d5dcbdc2e8b9d4561390cce6ce5e82c8fed75c86233c32f5d0fdcbb0d81": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -41158,7 +41202,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3486,
+  "lockGeneration": 3487,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

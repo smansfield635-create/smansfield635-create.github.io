@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T22:24:11Z",
+  "generatedAt": "2026-11-22T23:24:18Z",
   "window": {
-    "start": "2026-08-24T22:24:11Z",
-    "end": "2026-11-22T22:24:11Z"
+    "start": "2026-08-24T23:24:18Z",
+    "end": "2026-11-22T23:24:18Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2830,
-    "visits": 740,
+    "pageLoads": 2860,
+    "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2830,
-        "visits": 740
+        "pageLoads": 2860,
+        "visits": 730
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 100,
+        "pageLoads": 90,
         "visits": 10
       },
       "/laws/categories/structure/interfaces.html": {
@@ -51,7 +51,7 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/audralia/diagnostic/": {
@@ -67,11 +67,11 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 490,
-        "visits": 370
+        "pageLoads": 480,
+        "visits": 360
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/governance/": {
@@ -82,8 +82,8 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/laws/research/findings-and-boundaries/": {
-        "pageLoads": 10,
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
@@ -106,19 +106,19 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 210,
-        "visits": 20
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -138,6 +138,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
         "visits": 0
@@ -145,10 +149,6 @@
       "/showroom/globe/h-earth/": {
         "pageLoads": 50,
         "visits": 10
-      },
-      "/showroom/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/index.html": {
         "pageLoads": 30,
@@ -183,6 +183,14 @@
         "visits": 0
       },
       "/build/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -257,7 +265,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2090,
+        "pageLoads": 2130,
         "visits": 0
       },
       "(none)": {
@@ -265,8 +273,8 @@
         "visits": 390
       },
       "www.google.com": {
-        "pageLoads": 350,
-        "visits": 350
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

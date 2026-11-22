@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T04:26:10Z",
+  "generatedAt": "2026-11-22T05:25:31Z",
   "window": {
-    "start": "2026-08-24T04:26:10Z",
-    "end": "2026-11-22T04:26:10Z"
+    "start": "2026-08-24T05:25:31Z",
+    "end": "2026-11-22T05:25:31Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,11 +18,11 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 2912,
-    "visits": 731,
+    "visits": 721,
     "byDevice": {
       "tablet": {
         "pageLoads": 2912,
-        "visits": 731
+        "visits": 721
       }
     },
     "byPath": {
@@ -35,19 +35,15 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 90,
+        "pageLoads": 100,
         "visits": 10
-      },
-      "/evidence/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/gauges/": {
@@ -83,7 +79,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 481,
+        "pageLoads": 471,
         "visits": 361
       },
       "/governance/": {
@@ -94,8 +90,8 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
+      "/laws/research/findings-and-boundaries/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
@@ -115,7 +111,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 40,
         "visits": 0
       },
       "/characters/": {
@@ -131,7 +127,7 @@
         "visits": 20
       },
       "/door/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -139,11 +135,11 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
+        "pageLoads": 50,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/wave/": {
@@ -170,6 +166,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
@@ -183,7 +183,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
+        "pageLoads": 470,
         "visits": 0
       },
       "/showroom/story/invitation/": {
@@ -191,10 +191,6 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/build/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -206,13 +202,9 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
+      "/campaigns/wave/mr-lee/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -224,6 +216,14 @@
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 30,
+        "visits": 20
+      },
+      "/evidence/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -273,12 +273,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2181,
+        "pageLoads": 2191,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 391,
-        "visits": 391
+        "pageLoads": 381,
+        "visits": 381
       },
       "www.google.com": {
         "pageLoads": 340,

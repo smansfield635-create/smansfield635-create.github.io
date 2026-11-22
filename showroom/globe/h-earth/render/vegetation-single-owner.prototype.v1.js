@@ -1,6 +1,6 @@
 import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles,planP4RiparianInfill} from './oasis-bank-field.v1.js';
-import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js?rev=sha-e919eeec9d4c';
+import {P6_ECOTONE_ALLOCATION,planP6DryEcotone} from './hillside-bank-ecotone-roots.p6.v1.js?rev=sha-109db7bc3ba4';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';

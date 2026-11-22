@@ -5,7 +5,7 @@
 export const P6_ECOTONE_ALLOCATION=Object.freeze({
  maximumRoots:60000,maximumPackedBytes:960000,maximumTileRoots:1600
 });
-export const P6_ECOTONE_FOOTPRINT=Object.freeze({minX:-82,maxX:80,minZ:-218,maxZ:-108});
+export const P6_ECOTONE_FOOTPRINT=Object.freeze({minX:-160,maxX:80,minZ:-218,maxZ:-108});
 const hash=(x,z,salt)=>{
  let h=Math.imul(x+8192,73856093)^Math.imul(z+8192,19349663)^Math.imul(salt+1,83492791);
  h=Math.imul(h^(h>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);
@@ -71,10 +71,11 @@ export async function planP6DryEcotone({
    }
    // Nonrectilinear cover: deterministic open earth breaks and soft foothill fringe.
    const soilPatch=0.62*hash(cx,cz,16)+0.38*hash(Math.floor(cx/7),Math.floor(cz/7),17);
-   const outer=Math.max(0,cx-54,-70-cx,cz+119,-211-cz);
+   const outer=Math.max(0,cx-54,-145-cx,cz+119,-211-cz);
    const feather=Math.max(0,1-outer/22);
    if(soilPatch<.17||hash(cx,cz,18)>feather){rejected.patch++;continue;}
-   const quota=existing>=8?2:existing>=3?4:8+(hash(cx,cz,19)>.62?2:0);
+   const quota=existing>=8?3:existing>=3?6:
+    18+(hash(cx,cz,19)>.62?6:0)+(cx<-82?4:0);
    let cellAdded=0;
    for(let k=0;k<quota&&admitted<target;k++){
     const x=Math.fround(cx+.10+.80*hash(cx,cz,30+k*3));

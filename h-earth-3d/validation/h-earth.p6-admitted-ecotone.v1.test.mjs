@@ -64,9 +64,15 @@ test('P6 is a physical vegetation addendum; exact owner/page binding is source p
  const page=readFileSync('showroom/globe/h-earth/index.html','utf8');
  for(const s of ['planP6DryEcotone','P6_ECOTONE_ALLOCATION','P6_DRY_GPU_UPLOAD','p6Ecotone','p4Riparian:p4Bank.receipt'])
   assert.ok(owner.includes(s),'missing source boundary: '+s);
- assert.ok(page.includes('vegetation-single-owner.prototype.v1.js?rev=sha-23481d6f5c7a'));
+ assert.ok(page.includes('vegetation-single-owner.prototype.v1.js?rev=sha-cc463b85d541'));
  assert.ok(owner.includes('hillside-bank-ecotone-roots.p6.v1.js?rev=sha-e919eeec9d4c'));
  assert.ok(owner.includes('p6VerifiedBankCorridor'));
+ assert.ok(owner.includes('H_EARTH_P6_FIRST_FAILURE_DIAGNOSTIC_v1'));
+ assert.ok(owner.includes('p6FirstFailure:p6FirstFailureReceipt()'));
+ assert.ok(owner.includes('p6StageTrials!==p6Ecotone.receipt.trials'));
+ for(const stage of ['terrainSupport','terrainSlope','beachUnavailable','beachSand',
+   'renderedWater','geologyWater','plannedWater','unprojection','groundAdmission','accepted'])
+  assert.ok(owner.includes(`p6MarkStage('${stage}',x,z)`),'missing first-failure stage '+stage);
  assert.ok(!owner.includes('P5_HILLSIDE_ECOTONE_END'));
 });
 

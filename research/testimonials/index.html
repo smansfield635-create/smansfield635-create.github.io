@@ -55,13 +55,67 @@ h1{font-size:clamp(2.25rem,6.5vw,5rem);line-height:1.02;letter-spacing:-.055em;m
 .footer{border-top:1px solid var(--line);padding:21px 0 36px;color:#ad929d;font-size:.8rem;display:flex;flex-wrap:wrap;justify-content:space-between;gap:15px}
 .footer a{color:#e4b3c0}
 @media(max-width:640px){.shell{width:calc(100% - 28px)}.topbar{padding:16px 0 10px}.brand{width:100%}main{padding-top:10px}.hero{padding:29px 22px;border-radius:23px}.stats{gap:12px}.stats div{width:100%}.topic-grid{grid-template-columns:1fr}.topic{min-height:90px}.section{margin-top:38px}.group summary{padding:20px}.group .details-body{padding:0 20px 20px}.prose{padding:0 5px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}</style></head>
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* Chapter-first reading: dark reading fields, concise closed summaries, selective depth. */
+.section.prose{max-width:900px;padding:clamp(25px,4vw,48px);border:1px solid rgba(242,162,181,.19);border-radius:25px;background:radial-gradient(ellipse at 5% 0,rgba(86,20,40,.12),transparent 52%),#110a10;box-shadow:0 20px 54px rgba(0,0,0,.18)}
+.section.prose .section-intro{color:#cfb4be;font-size:.94rem;margin-bottom:18px}
+.reading-chapters{display:grid;gap:11px;margin:22px 0}
+.reading-chapters details,.reading-intro,.quiet-details{border:1px solid rgba(233,155,177,.19);background:#190d16;border-radius:17px;overflow:hidden}
+.reading-chapters summary,.reading-intro summary,.quiet-details summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 20px;min-height:66px}
+.reading-chapters summary::-webkit-details-marker,.reading-intro summary::-webkit-details-marker,.quiet-details summary::-webkit-details-marker{display:none}
+.reading-chapters summary::after,.reading-intro summary::after,.quiet-details summary::after{content:"+";font-size:1.35rem;color:#eeaebe;flex-shrink:0}
+.reading-chapters details[open]>summary::after,.reading-intro[open]>summary::after,.quiet-details[open]>summary::after{content:"−"}
+.reading-chapters summary strong,.reading-intro summary strong,.quiet-details summary strong{display:block;color:#ffedf0;line-height:1.3;font-size:1.05rem}
+.reading-chapters summary small,.reading-intro summary small,.quiet-details summary small{display:block;color:#c4a4b0;line-height:1.45;margin-top:5px;font-size:.81rem}
+.chapter-body{background:#0f0910;border-top:1px solid rgba(233,155,177,.13);padding:20px clamp(17px,3vw,28px) 23px}
+.chapter-body p{color:#e7cdd6;line-height:1.77;margin:0 0 17px}
+.chapter-body p:last-child{margin-bottom:0}
+.chapter-body blockquote{margin:24px 0}
+.reading-chapters+.plain-note{margin-top:20px}
+.reading-intro{margin:20px 0 0}
+.group>details{background:linear-gradient(125deg,#29121e,#130b12);border-color:rgba(231,146,169,.22)}
+.group .details-body{background:#0f0910;border-top:1px solid rgba(233,155,177,.15);padding-top:18px}
+.group>details>summary{background:linear-gradient(125deg,#2b1320,#1b0d17)}
+.entries details{background:#110a10;border-color:rgba(229,151,171,.23)}
+.entries details[open]{background:#130b12}
+.entries summary{background:rgba(30,12,22,.24)}
+.topic{background:linear-gradient(125deg,#29121d,#170c13)}
+.topic:hover,.topic[aria-pressed=true]{background:linear-gradient(125deg,#5a2338,#29101d)}
+.matches{background:#110a10}
+.quiet-details{margin:18px 0;background:#140b12}
+.count-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 18px}
+.count-grid p{margin:0!important;padding:12px 15px;border:1px solid rgba(232,159,179,.16);border-radius:10px;background:#1c1019;color:#e8cad2;font-size:.86rem;line-height:1.5}
+.more-button{margin-top:15px;min-height:44px;cursor:pointer;font:inherit;font-size:.83rem;font-weight:750;padding:11px 17px;color:#ffe0e7;background:#4c1b2d;border:1px solid rgba(255,173,192,.48);border-radius:999px}
+.more-button[hidden]{display:none}
+.record-groups{gap:10px}
+.record-group{background:#170c14!important;border-color:rgba(232,159,179,.22)!important}
+.record-group>summary{background:#23101c!important}
+.record-group>summary strong,.record-group>summary small{display:block}
+.record-group>summary small{font-size:.78rem;font-weight:400;margin-top:3px;color:#caaeb7}
+.record-group-body{padding:0 12px 13px}
+.record-group-body details{background:#0d090e!important}
+.company-reader{padding:0!important;margin:10px 0!important;border:1px solid rgba(232,159,179,.17)!important;border-radius:14px;background:#170d15}
+.company-reader>summary{display:flex!important;cursor:pointer;list-style:none;min-height:60px;padding:17px 19px!important;align-items:center!important;background:#1d1019}
+.company-reader>summary strong{font-size:1.04rem!important;color:#ffe5e9}
+.company-reader>summary small{font-size:.83rem!important;line-height:1.45;color:#cbaeb7}
+.company-reader>summary::-webkit-details-marker{display:none}
+.company-reader>summary::after{content:"+";font-size:1.35rem;color:#e5a2b4}
+.company-reader[open]>summary::after{content:"−"}
+.company-reader .company-body{padding:19px;background:#0c090e;border-top:1px solid rgba(231,145,166,.15)}
+.company-reader .company-body p{margin:0 0 14px}
+.company-reader .company-body p:last-child{margin:0}
+.company-reader .company-body .consumer{color:#f0b7c5}
+@media(max-width:640px){.section.prose{padding:25px 19px;border-radius:21px}.count-grid{grid-template-columns:1fr}.chapter-body{padding:18px}.reading-chapters summary{padding:17px}.record-group-body{padding:0 8px 10px}}
+</style></head>
 <body><a class="skip" href="#main">Skip to content</a><header class="topbar shell"><span class="brand">Home Improvement · Independent Consumer Reading</span><nav class="nav" aria-label="Two-page navigation"><a href="/research/industry-context/">Industry Context</a><a href="/research/testimonials/" aria-current="page">100-Customer Study</a></nav></header><main id="main" class="shell">
 <section class="hero" aria-labelledby="title"><p class="eyebrow">First-person field research · Homeowners</p><h1 id="title">What 100 sales taught me about listening.</h1><p class="lead">Every homeowner had a different story. The more I listened, the clearer one lesson became: the most important part of a sale often happens before anyone talks about the product.</p><div class="stats"><div><strong>100</strong><span>sales I studied</span></div><div><strong>87</strong><span>customer notes still available</span></div></div><p class="hero-note">I studied my first 100 sales in the field. Notes numbered 14–100 are preserved here; the first 13 are missing and have not been reconstructed.</p></section>
-<section class="section prose" aria-labelledby="story-title"><p class="eyebrow">The story behind the study</p><h2 id="story-title">Nobody wakes up excited about gutters.</h2><p class="first">They wake up thinking about the house they have worked to build, the repairs they would rather avoid, and the small problems that somehow keep coming back.</p><p>That is what I began to recognize during my first 100 sales in the field. From one home to the next, the circumstances changed. Some homeowners were frustrated with leaves and clogs. Others were dealing with failing screens, damaged wood, or the worry that water might reach the foundation. Some had questions about how a new system would fit their house or look when the work was finished.</p><p>On paper, these might look like different product questions. Across the kitchen table, they were something more personal. What will happen the next time it rains? Am I going to have to deal with this again? Is this the right decision for my home?</p><p>Those questions changed how I thought about my work. I wasn't there just to describe gutters or recite features. I had to understand what the homeowner was actually trying to solve, explain the choices clearly, and give them room to make a decision they could feel good about.</p><blockquote>The lesson wasn't that every homeowner wanted the same thing. It was that every homeowner wanted to be understood.</blockquote><p>I began documenting my sales to better understand my own performance and the concerns I encountered. Looking across the surviving notes, certain subjects kept surfacing: recurring debris, damage and attachments, difficult corners, and the appearance of a finished home.</p><p>This page shares those observations, then gives you a way to meet the people behind them. You can follow a particular concern or browse the customer notes in their original numbered order.</p><div class="plain-note">These records are brief field notes, not full interviews or verbatim customer testimonials. The words in them describe what I recorded, not a controlled test of why a person decided to buy.</div></section>
-<section class="section" id="concerns" aria-labelledby="topics-title"><p class="eyebrow">Explore the questions</p><h2 id="topics-title">What did homeowners worry about?</h2><p class="section-intro">Choose a concern to see the customer notes that mention it. A single homeowner can appear under more than one topic. Tap a selected topic again to close its results.</p><div class="topic-grid" id="topics"><button class="topic" type="button" data-topic="clog" aria-pressed="false"><strong>Debris &amp; clogging</strong><small>Leaves, overflowing gutters and older screens</small></button><button class="topic" type="button" data-topic="attach" aria-pressed="false"><strong>Attachment &amp; damage</strong><small>Loose gutters, fascia and possible water damage</small></button><button class="topic" type="button" data-topic="fit" aria-pressed="false"><strong>Fit &amp; corners</strong><small>Custom angles, caps and the finishing details</small></button><button class="topic" type="button" data-topic="finish" aria-pressed="false"><strong>Finish &amp; appearance</strong><small>Colors and how the improvement suits the house</small></button></div><div class="matches" id="topic-results" hidden><h3 id="topic-results-title"></h3><p id="topic-results-note"></p><div class="entries" id="topic-results-list"></div></div></section>
-<section class="section" id="customers" aria-labelledby="customer-title"><p class="eyebrow">The people behind the lessons</p><h2 id="customer-title">The customers and their stories.</h2><p class="section-intro">You can browse the records directly without choosing a topic. These sections remain separate so the original notes are not confused with customers who also left public feedback.</p><div class="group"><details id="public-reviews"><summary><span><strong>Customers who shared reviews</strong><small>The subset marked as having public reviews, with my short summaries and the recorded notes</small></span></summary><div class="details-body"><div class="entries" id="review-list"></div></div></details><details id="full-notes"><summary><span><strong>The 87 field notes</strong><small>All surviving entries, numbered 14–100, in their recorded order</small></span></summary><div class="details-body"><div class="entries" id="field-list"></div></div></details></div></section>
-<section class="section" id="promises" aria-labelledby="promises-title"><p class="eyebrow">Beyond the product</p><h2 id="promises-title">What does a lasting promise mean?</h2><p class="section-intro">Some conversations raised concerns about clogs, attachments, paint finish, or the small details that make an installation look complete. These concerns also appear in the warranty language associated with the product I was selling. A promise is only useful when a homeowner understands what the written terms actually cover.</p><div class="group"><details><summary><span><strong>Read the warranty topics</strong><small>Four topics referenced in the original study</small></span></summary><div class="details-body"><div class="company"><h3>Paint finish</h3><p>How a finished gutter will look over time.</p></div><div class="company"><h3>Secure attachment</h3><p>Whether the system remains attached where it belongs.</p></div><div class="company"><h3>Keeping debris out</h3><p>The worry of returning clogs and maintenance.</p></div><div class="company"><h3>Ends, corners and caps</h3><p>Protection for details that help complete an installation.</p></div><p class="plain-note">The original records reference a lifetime paint-finish warranty, lifetime no-pullaway/no-detachment warranty, lifetime no-clog warranty, and a two-year end-to-end cap-production warranty. These are historical topic labels, not an interpretation of coverage or a statement about current terms. Consult the actual written warranty.</p></div></details></div></section>
+<section class="section prose" aria-labelledby="story-title"><p class="eyebrow">The story behind the study</p><h2 id="story-title">Nobody wakes up excited about gutters.</h2><p class="first">They wake up thinking about the house they have worked to build, the repairs they would rather avoid, and the small problems that somehow keep coming back.</p><p class="section-intro">Three short chapters tell the story. Open whichever interests you; the customer notes and topic filters follow.</p><div class="reading-chapters">
+<details name="study-chapter"><summary><span><strong>1. What homeowners were experiencing</strong><small>From leaves and clogs to much bigger worries about the home</small></span></summary><div class="chapter-body"><p>That is what I began to recognize during my first 100 sales in the field. From one home to the next, the circumstances changed. Some homeowners were frustrated with leaves and clogs. Others were dealing with failing screens, damaged wood, or the worry that water might reach the foundation. Some had questions about how a new system would fit their house or look when the work was finished.</p><p>On paper, these might look like different product questions. Across the kitchen table, they were something more personal. What will happen the next time it rains? Am I going to have to deal with this again? Is this the right decision for my home?</p></div></details>
+<details name="study-chapter"><summary><span><strong>2. What I began to notice</strong><small>The concerns that appeared across the sales I recorded</small></span></summary><div class="chapter-body"><p>I began documenting my sales to better understand my own performance and the concerns I encountered. Looking across the surviving notes, certain subjects kept surfacing: recurring debris, damage and attachments, difficult corners, and the appearance of a finished home.</p></div></details>
+<details name="study-chapter"><summary><span><strong>3. What 100 sales taught me</strong><small>Why understanding a person matters more than reciting features</small></span></summary><div class="chapter-body"><p>Those questions changed how I thought about my work. I wasn't there just to describe gutters or recite features. I had to understand what the homeowner was actually trying to solve, explain the choices clearly, and give them room to make a decision they could feel good about.</p><blockquote>The lesson wasn't that every homeowner wanted the same thing. It was that every homeowner wanted to be understood.</blockquote><p>This page shares those observations, then gives you a way to meet the people behind them. You can follow a particular concern or browse the customer notes in their original numbered order.</p></div></details>
+</div><div class="plain-note">These records are brief field notes, not full interviews or verbatim customer testimonials. The words in them describe what I recorded, not a controlled test of why a person decided to buy.</div></section><section class="section" id="concerns" aria-labelledby="topics-title"><p class="eyebrow">Explore the questions</p><h2 id="topics-title">What did homeowners worry about?</h2><p class="section-intro">Choose a concern to see the customer notes that mention it. A single homeowner can appear under more than one topic. Tap a selected topic again to close its results.</p><div class="topic-grid" id="topics"><button class="topic" type="button" data-topic="clog" aria-pressed="false"><strong>Debris &amp; clogging</strong><small>Leaves, overflowing gutters and older screens</small></button><button class="topic" type="button" data-topic="attach" aria-pressed="false"><strong>Attachment &amp; damage</strong><small>Loose gutters, fascia and possible water damage</small></button><button class="topic" type="button" data-topic="fit" aria-pressed="false"><strong>Fit &amp; corners</strong><small>Custom angles, caps and the finishing details</small></button><button class="topic" type="button" data-topic="finish" aria-pressed="false"><strong>Finish &amp; appearance</strong><small>Colors and how the improvement suits the house</small></button></div><details class="quiet-details" id="topic-explanation"><summary><span><strong>How often did these subjects appear?</strong><small>A closer look at the surviving notes</small></span></summary><div class="chapter-body"><div id="topic-counts" class="count-grid"></div><p class="plain-note">These counts come from words in the preserved notes. One note may mention several subjects; the counts are not reasons proven to cause a purchase.</p></div></details><div class="matches" id="topic-results" hidden><h3 id="topic-results-title"></h3><p id="topic-results-note"></p><div class="entries" id="topic-results-list"></div><button class="more-button" type="button" id="more-topic-results" hidden aria-expanded="false"></button></div></section>
+<section class="section" id="customers" aria-labelledby="customer-title"><p class="eyebrow">The people behind the lessons</p><h2 id="customer-title">The customers and their stories.</h2><p class="section-intro">You can browse the records directly without choosing a topic. These sections remain separate so the original notes are not confused with customers who also left public feedback.</p><div class="group"><details id="public-reviews"><summary><span><strong>Customers who shared reviews</strong><small>The subset marked as having public reviews, with my short summaries and the recorded notes</small></span></summary><div class="details-body"><div class="entries" id="review-list"></div></div></details><details id="full-notes"><summary><span><strong>The 87 field notes</strong><small>All surviving entries, numbered 14–100, in their recorded order</small></span></summary><div class="details-body"><div class="entries record-groups" id="field-list"></div></div></details></div></section>
+<section class="section" id="promises" aria-labelledby="promises-title"><p class="eyebrow">Beyond the product</p><h2 id="promises-title">What does a lasting promise mean?</h2><p class="section-intro">Some conversations raised concerns about clogs, attachments, paint finish, or the small details that make an installation look complete. These concerns also appear in the warranty language associated with the product I was selling. A promise is only useful when a homeowner understands what the written terms actually cover.</p><div class="group"><details><summary><span><strong>Read the warranty topics</strong><small>Four topics referenced in the original study</small></span></summary><div class="details-body"><div class="company"><h3>Paint finish</h3><p>How a finished gutter will look over time.</p></div><div class="company"><h3>Secure attachment</h3><p>Whether the system remains attached where it belongs.</p></div><div class="company"><h3>Keeping debris out</h3><p>The worry of returning clogs and maintenance.</p></div><div class="company"><h3>Ends, corners and caps</h3><p>Protection for details that help complete an installation.</p></div><div class="count-grid" id="warranty-topic-counts" aria-label="Concern mentions related to warranty topics"></div><p class="plain-note">The original records reference a lifetime paint-finish warranty, lifetime no-pullaway/no-detachment warranty, lifetime no-clog warranty, and a two-year end-to-end cap-production warranty. These are historical topic labels, not an interpretation of coverage or a statement about current terms. Consult the actual written warranty.</p></div></details></div></section>
 <section class="bridge"><p class="eyebrow">See the bigger picture</p><h2>Where does LeafGuard fit into home-improvement innovation?</h2><p>This study describes one seller's first-hand experience. The companion page explores the companies and products that helped change how homeowners approach comfort, protection and maintenance.</p><a class="action" href="/research/industry-context/">Explore the Industry Context</a></section></main><footer class="footer shell"><span>Independent consumer education and first-person field research</span><nav aria-label="Page links"><a href="/research/industry-context/">Industry Context</a> · <a href="/research/testimonials/">100-Customer Study</a></nav></footer><script>var DATA = [
     {id:14,name:"Diana Vandergriff",city:"Chico",note:"60 acres; rural estate",review:false},
     {id:15,name:"Arnold Lawson",city:"Allen",note:"First-time buyers; asked about property insurance",review:false},
@@ -180,20 +234,54 @@ function customerRow(x,mode){
 }
 function fill(target,records,mode){var fragment=document.createDocumentFragment();records.forEach(function(x){fragment.appendChild(customerRow(x,mode));});document.getElementById(target).replaceChildren(fragment);}
 fill("review-list",DATA.filter(function(x){return x.review;}),"review");
-fill("field-list",DATA,"note");
+(function renderGroupedNotes(){
+ var holder=document.getElementById("field-list"),all=document.createDocumentFragment();
+ for(var start=0;start<DATA.length;start+=10){
+  var group=DATA.slice(start,start+10);
+  var panel=document.createElement("details");panel.className="record-group";
+  var title=document.createElement("summary");
+  var label=document.createElement("span"),heading=document.createElement("strong"),hint=document.createElement("small");
+  heading.textContent="Notes "+group[0].id+"–"+group[group.length-1].id;
+  hint.textContent=group.length+" original entries · tap to explore";
+  label.append(heading,hint);title.appendChild(label);
+  var contents=document.createElement("div");contents.className="entries record-group-body";
+  group.forEach(function(customer){contents.appendChild(customerRow(customer,"note"));});
+  panel.append(title,contents);all.appendChild(panel);
+ }
+ holder.replaceChildren(all);
+})();
+var countLabels={clog:"Debris and clogging",attach:"Attachment and damage",fit:"Fit and corners",finish:"Finish and appearance"};
+var totals={};
+Object.keys(topics).forEach(function(key){totals[key]=DATA.filter(function(x){return topics[key].test.test(x.note);}).length;});
+var counts=document.getElementById("topic-counts");
+Object.keys(countLabels).forEach(function(key){
+ var p=document.createElement("p");p.textContent=totals[key]+" notes mention "+countLabels[key].toLowerCase();counts.appendChild(p);
+});
+var warrantyCounts=document.getElementById("warranty-topic-counts");
+[["Paint finish and appearance","finish"],["Secure attachment","attach"],["Clogs and debris","clog"],["Corners and caps","fit"]].forEach(function(pair){
+ var p=document.createElement("p");p.textContent=pair[0]+": "+totals[pair[1]]+" related mentions";warrantyCounts.appendChild(p);
+});
 var results=document.getElementById("topic-results");
 var buttons=Array.prototype.slice.call(document.querySelectorAll("[data-topic]"));
-var active="";
+var more=document.getElementById("more-topic-results");
+var active="",activeMatches=[],showAll=false;
+function paintResults(){
+ fill("topic-results-list",showAll?activeMatches:activeMatches.slice(0,5),"note");
+ more.hidden=activeMatches.length<=5;
+ more.textContent=showAll?"Show fewer customer notes":"Show "+(activeMatches.length-5)+" more matching notes";
+ more.setAttribute("aria-expanded",String(showAll));
+}
+more.addEventListener("click",function(){showAll=!showAll;paintResults();});
 buttons.forEach(function(button){
  button.addEventListener("click",function(){
-  var next=button.dataset.topic; active=(active===next)?"":next;
+  var next=button.dataset.topic;active=(active===next)?"":next;
   buttons.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.topic===active));});
   if(!active){results.hidden=true;return;}
-  var info=topics[active],matches=DATA.filter(function(x){return info.test.test(x.note);});
-  document.getElementById("topic-results-title").textContent=info.name+" · "+matches.length+" matching notes";
-  document.getElementById("topic-results-note").textContent="These are matching words in the surviving notes, not confirmed reasons for purchasing. Select a name to read its note.";
-  fill("topic-results-list",matches,"note");results.hidden=false;
-  results.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"nearest"});
+  var info=topics[active];activeMatches=DATA.filter(function(x){return info.test.test(x.note);});showAll=false;
+  document.getElementById("topic-results-title").textContent=info.name+" · "+activeMatches.length+" matching notes";
+  document.getElementById("topic-results-note").textContent="These are word matches in surviving field notes, not proven reasons for purchasing. Select a name to read the original note.";
+  paintResults();results.hidden=false;
+  results.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
  });
 });
 })();</script></body></html>

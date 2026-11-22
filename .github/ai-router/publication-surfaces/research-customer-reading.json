@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "research-customer-reading",
-  "description": "Paired industry and homeowner field study; exact-head page proof with preserved original records and crumbling-foundations introductory wording.",
+  "description": "Reversible E1/E2 native spatial-rain consumer trial; existing research source and dropdowns protected. Publication requires actual WebGL framebuffer success.",
   "checks": [
     {
       "path": "/research/testimonials/index.html",
@@ -18,7 +18,11 @@
         "id=\"chapter-details\"",
         "id=\"chapter-records\"",
         "name=\"study-chapter\"",
-        "Leaves, overflowing gutters, damaged wood, crumbling foundations, difficult corners: every home brings different questions."
+        "Leaves, overflowing gutters, damaged wood, crumbling foundations, difficult corners: every home brings different questions.",
+        "id=\"field-rain-canvas\"",
+        "createSpatialRainRenderer",
+        "data-native-rain",
+        "NATIVE_RAIN_FRAMEBUFFER_INVALID"
       ],
       "excludes": [
         "The 87 field notes",
@@ -27,7 +31,8 @@
         "Entries 14–100 survive; entries 1–13 are unavailable.",
         "<strong>100</strong><span>organized study entries to explore</span>",
         "class=\"study-chapter\" id=\"chapter-details\" open",
-        "Leaves, overflowing gutters, damaged wood, difficult corners: every home brings different questions."
+        "Leaves, overflowing gutters, damaged wood, difficult corners: every home brings different questions.",
+        "field-study-storm-trial.v1.css"
       ]
     },
     {
@@ -42,6 +47,18 @@
         "For the homeowner:",
         "For the customer:",
         "What my first 100 sales taught me"
+      ]
+    },
+    {
+      "path": "/graphics-engine/rain-lab/render.v1.mjs",
+      "includes": [
+        "createNativeWebGLDevice",
+        "createNativeFramePipeline",
+        "buildRainMesh",
+        "RAIN_FRAGMENT"
+      ],
+      "excludes": [
+        "mockWebGL"
       ]
     }
   ],
@@ -71,8 +88,17 @@
           {
             "type": "exists",
             "selector": "#concerns .topic-grid"
+          },
+          {
+            "type": "exists",
+            "selector": "html[data-native-rain=\"pass\"]"
+          },
+          {
+            "type": "exists",
+            "selector": "#field-rain-canvas"
           }
-        ]
+        ],
+        "timeoutMs": 15000
       },
       {
         "name": "Question filter responds",

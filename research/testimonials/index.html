@@ -126,8 +126,16 @@ h1{font-size:clamp(2.25rem,6.5vw,5rem);line-height:1.02;letter-spacing:-.055em;m
 .study-chapter-body>.section.prose{margin-left:auto;margin-right:auto}
 .study-chapter-body #promises{margin-top:45px}
 @media(max-width:640px){.study-chapters{gap:13px;margin:34px 0 24px}.study-chapter{border-radius:20px}.study-chapter>summary{min-height:82px;padding:20px 19px}.study-chapter-body{padding:0 14px 21px}.study-chapter-body>.section:first-child{margin-top:24px}.study-chapter-body>.section.prose{padding:22px 17px;border-radius:18px}.study-chapter-body #promises{margin-top:36px}}
+
+/* Native spatial-rain publication trial: existing dark background is untouched.
+   Native E1/E2 WebGL geometry lives behind the reader, never inside cards. */
+#field-rain-canvas{position:fixed;inset:0;width:100vw;height:100dvh;display:block;z-index:0;pointer-events:none;user-select:none;touch-action:auto;opacity:0;transition:opacity .6s ease}
+html[data-native-rain="pass"] #field-rain-canvas{opacity:.82}
+#field-rain-canvas[hidden]{display:none!important}
+body>.topbar,body>main,body>footer{position:relative;z-index:1}
+@media(prefers-reduced-motion:reduce){#field-rain-canvas{transition:none}}
 </style></head>
-<body><a class="skip" href="#main">Skip to content</a><header class="topbar shell"><span class="brand">Home Improvement · Independent Consumer Reading</span><nav class="nav" aria-label="Two-page navigation"><a href="/research/industry-context/">Industry Context</a><a href="/research/testimonials/" aria-current="page">Gutter-Protection Notes</a></nav></header><main id="main" class="shell">
+<body><canvas id="field-rain-canvas" aria-hidden="true"></canvas><a class="skip" href="#main">Skip to content</a><header class="topbar shell"><span class="brand">Home Improvement · Independent Consumer Reading</span><nav class="nav" aria-label="Two-page navigation"><a href="/research/industry-context/">Industry Context</a><a href="/research/testimonials/" aria-current="page">Gutter-Protection Notes</a></nav></header><main id="main" class="shell">
 <section class="hero" aria-labelledby="title"><p class="eyebrow">Gutter protection · Homeowner field study</p><h1 id="title">What should you know before choosing gutter protection?</h1><p class="lead">Leaves, overflowing gutters, damaged wood, crumbling foundations, difficult corners: every home brings different questions. Explore the issues that sound familiar and the real-world field notes behind them.</p><div class="stats"><div><strong>100</strong><span>residential sales in the original study</span></div></div><p class="hero-note">Browse recorded customer observations and practical questions to consider during an inspection.</p></section>
 <div class="study-chapters" aria-label="Study sections">
 <details class="study-chapter" id="chapter-questions" name="study-chapter">
@@ -331,4 +339,64 @@ buttons.forEach(function(button){
   results.scrollIntoView({behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
  });
 });
-})();</script></body></html>
+})();</script>
+<script type="module">
+/* Gen3490 bounded consumer trial. Fallback is the existing dark body background. */
+import {createSpatialRainRenderer} from '/graphics-engine/rain-lab/render.v1.mjs';
+const rainCanvas=document.getElementById('field-rain-canvas');
+const root=document.documentElement;
+const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
+let active=true,renderer=null,raf=0,lastFrameAt=-1,scrollAt=-1,startedAt=performance.now();
+root.dataset.nativeRain='pending';
+const fallback=(reason)=>{
+  active=false;
+  if(raf)cancelAnimationFrame(raf);
+  rainCanvas.hidden=true;
+  root.dataset.nativeRain='fallback';
+  root.dataset.nativeRainReason=String(reason||'unavailable').slice(0,100);
+  if(renderer){try{renderer.stop()}catch(_){/* context may already be lost */}}
+};
+function paint(now){
+  if(!active||document.hidden)return;
+  const frame=renderer.render(motion.matches?0:(now-startedAt)/1000);
+  const receipt=renderer.readback();
+  if(frame.executed!==4||receipt.glError!==0||receipt.pixels<1000||receipt.brightest===0)throw Error('NATIVE_RAIN_FRAMEBUFFER_INVALID');
+  if(root.dataset.nativeRain!=='pass'){
+    root.dataset.nativeRain='pass';
+    root.dataset.nativeRainBackend=renderer.backend;
+    root.dataset.nativeRainPasses=String(frame.executed);
+  }
+}
+function tick(now){
+  if(!active||document.hidden)return;
+  try{
+    const budget=matchMedia('(max-width: 760px)').matches?70:45;
+    if((lastFrameAt<0||now-lastFrameAt>=budget)&&
+       (scrollAt<0||now-scrollAt>=180)){
+      paint(now);lastFrameAt=now;
+    }
+    if(!motion.matches)raf=requestAnimationFrame(tick);
+  }catch(error){fallback(error.message)}
+}
+try{
+  renderer=createSpatialRainRenderer({canvas:rainCanvas,seed:7341,maxPixels:180000});
+  raf=requestAnimationFrame(tick);
+}catch(error){fallback(error.message)}
+document.addEventListener('visibilitychange',()=>{
+  if(!active)return;
+  if(raf)cancelAnimationFrame(raf);
+  if(!document.hidden)raf=requestAnimationFrame(tick);
+});
+window.addEventListener('scroll',()=>{scrollAt=performance.now()},{passive:true});
+window.addEventListener('resize',()=>{
+  if(!active)return;
+  if(raf)cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(tick);
+},{passive:true});
+motion.addEventListener('change',()=>{
+  if(!active)return;
+  if(raf)cancelAnimationFrame(raf);
+  raf=requestAnimationFrame(tick);
+});
+window.addEventListener('pagehide',()=>fallback('page-exit'),{once:true});
+</script></body></html>

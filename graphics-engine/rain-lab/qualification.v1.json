@@ -1,0 +1,86 @@
+{
+  "schema": "DGB_SPATIAL_RAIN_ISOLATED_QUALIFICATION_v1",
+  "operationId": "DGB_GRAPHICS_FIELD_STUDY_SPATIAL_RAIN_ISOLATED_LAB_20261122_001",
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 3489,
+    "issue": 7622,
+    "commentId": 7084778001
+  },
+  "sourceBaseline": {
+    "main": "12d257e3b0b712ed39a71e22bbb0b81eedbc9b30",
+    "nativeE1Blob": "044fc3b67468072ce2574e324c371bb18f4fecc8",
+    "nativeE2Blob": "c6a5d4081193d27cb364b1d1507218e7227a19ee",
+    "audraliaWeatherReferenceBlob": "b25e6da17aebffb2eafa36d4d796803d3272f2e1"
+  },
+  "sourceQualification": {
+    "result": "CPU_GEOMETRY_PASS_5_OF_5",
+    "command": "node --test graphics-engine/rain-lab/spatial-rain.v1.test.mjs",
+    "coverage": [
+      "seeded 3D identity and distinct near/mid/far depth bands",
+      "camera parallax depth ratio",
+      "gravity and wind advancing 3D positions",
+      "finite GPU triangle buffers",
+      "invalid input rejection"
+    ],
+    "worldSpaceDrops": 635
+  },
+  "preliminaryLocalRasterization": {
+    "result": "REAL_WEBGL_WITH_NONCANONICAL_E1_E2_API_SHIMS_SMOKE_ONLY",
+    "execution": "headed Chromium + SwiftShader + xvfb using about:blank set_content and JS evaluation",
+    "fullNativeDeviceModulesUsed": false,
+    "gpuWasReal": true,
+    "noMockGLPixels": true,
+    "sourceDifference": "Local E1/E2 test shims implement a subset of the documented interfaces. This evidence is not a canonical exact-branch native-engine qualification.",
+    "configurations": [
+      {
+        "viewport": "390x844",
+        "backend": "WEBGL2",
+        "renderPixels": 329160,
+        "glError": 0,
+        "drawPasses": 4
+      },
+      {
+        "viewport": "1024x768",
+        "backend": "WEBGL2",
+        "renderPixels": 359148,
+        "glError": 0,
+        "drawPasses": 4
+      },
+      {
+        "viewport": "1440x900",
+        "backend": "WEBGL2",
+        "renderPixels": 359292,
+        "glError": 0,
+        "drawPasses": 4
+      },
+      {
+        "viewport": "390x844",
+        "backend": "WEBGL1",
+        "renderPixels": 329160,
+        "glError": 0,
+        "drawPasses": 4
+      }
+    ],
+    "outputImages": "/mnt/data/rain-lab/lab-layout-*-gl*.png on local execution host only; not repository assets or independently reviewed production images",
+    "browserQualificationScriptRunOnExactHead": false,
+    "reason": "Local browser navigation is blocked by browser administration in this environment; independent fixed native qualification remains required."
+  },
+  "visualReview": {
+    "result": "VISUAL_ACCEPTANCE_PENDING",
+    "observation": "Initial captures show depth-varying rainfall over a dark atmospheric background and the three red reading cards; the drops still read as linear streaks in a static capture. Not yet demonstrably photorealistic. Do not publish.",
+    "ownerDispositon": "NOT_REQUESTED",
+    "devicePhysicalInspection": false
+  },
+  "safety": {
+    "liveFieldStudyChanged": false,
+    "acceptedDarkBackgroundPreserved": true,
+    "audraliaSourceChanged": false,
+    "nativeEngineSourceChanged": false,
+    "productionIntegrated": false,
+    "merged": false,
+    "deployed": false
+  },
+  "nextGate": "QUALIFY_EXACT_CANDIDATE_WITH_CANONICAL_E1_E2_REAL_BROWSER_FRAMEBUFFER_THEN_VISUAL_ITERATION",
+  "authorityEffect": "NONE_QUALIFICATION_RECORD_ONLY"
+}

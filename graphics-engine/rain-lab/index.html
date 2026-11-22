@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diamond Gate | Isolated Spatial Rain Lab</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}html{background:#0b090e;overflow-x:clip}
+body{margin:0;color:#fff0ef;min-height:100dvh;background:linear-gradient(180deg,#130b10,#0a070b 58%,#090609)}
+#rain{position:fixed;inset:0;width:100vw;height:100dvh;z-index:0;pointer-events:none;display:block}
+main{position:relative;z-index:1;width:min(92%,800px);margin:0 auto;padding:54px 0 64px}
+h1{font-size:clamp(34px,6vw,58px);letter-spacing:-.04em;line-height:1.08}
+p{font-size:clamp(17px,2.5vw,21px);line-height:1.65;color:#d9cbd0}
+.eyebrow{text-transform:uppercase;letter-spacing:.18em;color:#eab6c7;font-size:13px;font-weight:700}
+.hero,.bridge{border:1px solid #99546f70;border-radius:28px;padding:clamp(24px,5vw,50px);margin:0 0 58px;background:linear-gradient(130deg,#3a1424ed,#160b14ef)}
+.chapter{border:1px solid #90546d80;border-radius:22px;background:linear-gradient(130deg,#2c1321ed,#120a12f0);margin:15px 0;overflow:hidden}
+.chapter>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:25px 22px;cursor:pointer;min-height:105px}
+.chapter>summary::-webkit-details-marker{display:none}
+.chapter>summary::after{content:'+';font-size:30px;color:#e7afbe}.chapter[open]>summary::after{content:'−'}
+.chapter>summary strong{display:block;font-size:clamp(20px,3vw,26px)}
+.chapter>summary small{display:block;font-size:14px;line-height:1.5;color:#d8b9c6;margin-top:8px}
+.chapter-body{padding:8px 25px 28px}.chapter-body p{font-size:16px}
+.chapter-body details{border:1px solid #94577080;border-radius:16px;padding:17px;background:#1b1019}
+.chapter-body summary{cursor:pointer}
+footer{margin-top:60px;border-top:1px solid #ffffff36;padding-top:25px;color:#b9acb0}
+#lab-status{font-size:13px;color:#dcc0ca}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<canvas id="rain" aria-hidden="true"></canvas>
+<main>
+<section class="hero">
+<div class="eyebrow">Off-product engineering candidate · Not the customer site</div>
+<h1>Rain as spatial geometry, not wallpaper.</h1>
+<p>Depth-separated precipitation, camera parallax and finite 3D cloud density from the existing Diamond Gate native rendering interfaces. This experimental scene is not a published consumer effect.</p>
+<p id="lab-status" role="status">Checking native WebGL availability…</p>
+</section>
+<div class="chapters" aria-label="Three preserved reading interactions">
+<details class="chapter" name="lab-chapter"><summary><span><strong>Explore the questions</strong><small>Choose a homeowner concern</small></span></summary><div class="chapter-body"><details><summary>Debris and runoff</summary><p>Where does the gutter overflow in heavy rain?</p></details></div></details>
+<details class="chapter" name="lab-chapter"><summary><span><strong>Explore the details</strong><small>Water, installation and warranty topics</small></span></summary><div class="chapter-body"><details><summary>Foundation drainage</summary><p>Where does runoff collect near the structure?</p></details></div></details>
+<details class="chapter" name="lab-chapter"><summary><span><strong>Recorded experiences</strong><small>Field-note reading interface specimen</small></span></summary><div class="chapter-body"><details><summary>Original notes are protected</summary><p>Actual homeowner records are not copied into this isolated weather lab.</p></details></div></details>
+</div>
+<section class="bridge"><div class="eyebrow">Qualification boundary</div><h2>Atmosphere must earn its place.</h2><p>Actual framebuffer evidence, phone/tablet/desktop visuals and owner acceptance are required before any field-study integration.</p></section>
+<footer>Diamond Gate Graphics Engine · Spatial Rain Laboratory v1</footer>
+</main>
+<script type="module">
+import {createSpatialRainRenderer} from './render.v1.mjs';
+const canvas=document.getElementById('rain'),status=document.getElementById('lab-status');
+const motion=matchMedia('(prefers-reduced-motion:reduce)');
+let renderer,frame=0,active=true;
+try{
+ renderer=createSpatialRainRenderer({canvas,maxPixels:340000});
+ const start=performance.now();
+ function tick(now){
+  if(!active)return;
+  try{renderer.render(motion.matches?0:(now-start)/1000);}
+  catch(e){active=false;renderer.stop();canvas.hidden=true;status.textContent='Dark fallback: '+e.message;return;}
+  if(!motion.matches)frame=requestAnimationFrame(tick);
+ }
+ frame=requestAnimationFrame(tick);
+ status.textContent='Native '+renderer.backend+' · '+renderer.field.dropCount+' world-space drops';
+ document.addEventListener('visibilitychange',()=>{active=!document.hidden;cancelAnimationFrame(frame);if(active)frame=requestAnimationFrame(tick)});
+ motion.addEventListener('change',()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(tick)});
+ window.__DGB_RAIN_LAB__={inspect:()=>renderer.inspect(),readback:()=>renderer.readback(),render:t=>renderer.render(t)};
+}catch(e){canvas.hidden=true;status.textContent='Native WebGL unavailable — original dark background. '+e.message;window.__DGB_RAIN_LAB__={error:e.message};}
+</script></body></html>

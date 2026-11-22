@@ -33161,6 +33161,50 @@
       "scopeHash": "ccf5ec369e5c9840a6edb1971860492c571d196cda7c1ff59a4b5dc43d56d918",
       "state": "ADMITTED_LOCKED"
     },
+    "cd365e8fe75536400ed23b0a14f9fa9f91000283ad4f19b49b9c5e745f5e9fbf": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e7d29452f775ed67a0f0ab5eedf0b056ce051fad",
+          "lockGeneration": 3485,
+          "lockScope": "H_EARTH:P9:NATIVE_UPLAND_ROCK_SOIL_MATS:20261122",
+          "operationId": "H_EARTH_P9_NATIVE_UPLAND_SOIL_ROCK_MAT_REPAIR_20261122_001",
+          "procedureLocatorDigest": "6a477dd78a0419e1010c47345468f2cd856bfcbe6e05d5169b2d7e3c43ea9106",
+          "requestDigest": "45de66d133729f8bd40b71b19c5c654d8be09760556ee9abf6d373550ba6e124",
+          "scopeHash": "cd365e8fe75536400ed23b0a14f9fa9f91000283ad4f19b49b9c5e745f5e9fbf"
+        },
+        "bindingDigest": "1f3e42f24f1c3e56c50a83e448267094c71f0213d5a2ef3dcb30d9c6a0c2cef5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c22641cfcec46136d38add9af27d5599a383e51024c9d6bf886f5a528a977777",
+          "commentId": 7075543894,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44995414910,
+          "workflowSha": "e7d29452f775ed67a0f0ab5eedf0b056ce051fad"
+        },
+        "lineageAnchorCommitSha": "63cd234c0f875104408f1fffe14cf79cd361e1f1",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e7d29452f775ed67a0f0ab5eedf0b056ce051fad",
+      "lockGeneration": 3485,
+      "lockScope": "H_EARTH:P9:NATIVE_UPLAND_ROCK_SOIL_MATS:20261122",
+      "operationId": "H_EARTH_P9_NATIVE_UPLAND_SOIL_ROCK_MAT_REPAIR_20261122_001",
+      "procedureLocatorDigest": "6a477dd78a0419e1010c47345468f2cd856bfcbe6e05d5169b2d7e3c43ea9106",
+      "released": false,
+      "requestDigest": "45de66d133729f8bd40b71b19c5c654d8be09760556ee9abf6d373550ba6e124",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cd365e8fe75536400ed23b0a14f9fa9f91000283ad4f19b49b9c5e745f5e9fbf",
+      "state": "ADMITTED_LOCKED"
+    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -41070,7 +41114,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3484,
+  "lockGeneration": 3485,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

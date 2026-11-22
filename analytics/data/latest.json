@@ -1,14 +1,14 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-22T07:24:13Z",
+  "generatedAt": "2026-11-22T08:26:28Z",
   "window30d": {
-    "start": "2026-10-23T07:24:13Z",
-    "end": "2026-11-22T07:24:13Z"
+    "start": "2026-10-23T08:26:28Z",
+    "end": "2026-11-22T08:26:28Z"
   },
   "daily": [
     {
       "date": "2026-10-24",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-25",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 66
+      "pageLoads": 65
     },
     {
       "date": "2026-11-15",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-22",
-      "pageLoads": 8
+      "pageLoads": 9
     }
   ],
   "summary": {
-    "pageLoads": 1232,
-    "botPageLoads": 763,
-    "nonBotPageLoads": 469
+    "pageLoads": 1272,
+    "botPageLoads": 733,
+    "nonBotPageLoads": 539
   },
   "referrers": [
     {
@@ -162,12 +162,12 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 643,
-      "visits": 643
+      "pageLoads": 593,
+      "visits": 593
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 294,
+      "pageLoads": 284,
       "visits": 218
     },
     {
@@ -181,14 +181,14 @@
       "visits": 80
     },
     {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 70,
-      "visits": 70
-    },
-    {
       "path": "/",
       "pageLoads": 65,
       "visits": 55
+    },
+    {
+      "path": "/nine-summits/universe/",
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/products/education/",

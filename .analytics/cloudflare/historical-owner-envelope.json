@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T07:24:13Z",
+  "generatedAt": "2026-11-22T08:26:28Z",
   "window": {
-    "start": "2026-08-24T07:24:13Z",
-    "end": "2026-11-22T07:24:13Z"
+    "start": "2026-08-24T08:26:28Z",
+    "end": "2026-11-22T08:26:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2782,
-    "visits": 751,
+    "pageLoads": 2902,
+    "visits": 731,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2782,
-        "visits": 751
+        "pageLoads": 2902,
+        "visits": 731
       }
     },
     "byPath": {
@@ -79,15 +79,15 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 511,
-        "visits": 371
+        "pageLoads": 481,
+        "visits": 361
       },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/governance/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 10
       },
       "/laws/categories/structure/boundaries.html": {
@@ -111,12 +111,12 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 40,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
         "pageLoads": 60,
-        "visits": 40
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -139,8 +139,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 20,
-        "visits": 10
+        "pageLoads": 10,
+        "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
@@ -155,23 +155,23 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 61,
+        "pageLoads": 51,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/prelude/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -190,7 +190,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
+      "/build/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -215,7 +215,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 10
       },
       "/products/archcoin/receivable/": {
@@ -231,7 +231,7 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 150,
+        "pageLoads": 260,
         "visits": 70
       },
       "/products/archcoin/allocation/": {
@@ -239,12 +239,12 @@
         "visits": 0
       },
       "/analytics-owner-device/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 30
       },
-      "/products/archcoin/": {
+      "/meet-sean-mansfield/": {
         "pageLoads": 10,
-        "visits": 10
+        "visits": 0
       },
       "/home/": {
         "pageLoads": 10,
@@ -273,16 +273,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2031,
+        "pageLoads": 2171,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 401,
-        "visits": 401
+        "pageLoads": 391,
+        "visits": 391
       },
       "www.google.com": {
-        "pageLoads": 350,
-        "visits": 350
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

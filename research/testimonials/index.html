@@ -359,7 +359,7 @@ const fallback=(reason)=>{
 };
 function paint(now){
   if(!active||document.hidden)return;
-  const frame=renderer.render(motion.matches?0:(now-startedAt)/1000);
+  const frame=renderer.render(motion.matches?0:Math.max(0,(now-startedAt)/1000));
   if(frame.executed!==4)throw Error('NATIVE_RAIN_DRAW_PASSES_INVALID');
   if(!qualifiedOnce){
     // Exact E1/E2 framebuffer readback is required once at first render.

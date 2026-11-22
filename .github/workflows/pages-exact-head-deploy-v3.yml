@@ -317,6 +317,36 @@ jobs:
         if: steps.dedupe.outputs.duplicate != 'true'
         with:
           path: ${{ runner.temp }}/pages-site
+      - name: Wait for unambiguous Pages artifact metadata
+        if: steps.dedupe.outputs.duplicate != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: github-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          # GitHub's deploy-pages artifact lookup can race a just-finalized
+          # upload (actions/deploy-pages#451). Avoid failed-job reruns,
+          # which can create duplicate same-name artifacts.
+          artifact_api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100"
+          for attempt in $(seq 1 18); do
+            response="$(curl --silent --show-error --fail-with-body --max-time 20 -L -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "$artifact_api" || true)"
+            valid="$(printf '%s' "$response" | jq -r --arg name "$ARTIFACT_NAME" '[.artifacts[]? | select(.name==$name and .expired==false and .size_in_bytes>0)] | length' 2>/dev/null || echo 0)"
+            if [ "$valid" = "1" ]; then
+              echo "PAGES_ARTIFACT_UNIQUE_VISIBLE=${ARTIFACT_NAME} attempt=${attempt}"
+              # Let the separate Pages metadata service converge after
+              # Actions REST confirms availability.
+              sleep 20
+              exit 0
+            fi
+            if [ "$valid" != "0" ]; then
+              echo "PAGES_ARTIFACT_AMBIGUOUS name=${ARTIFACT_NAME} matches=${valid}" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "PAGES_ARTIFACT_DISCOVERY_TIMEOUT name=${ARTIFACT_NAME}" >&2
+          exit 1
       - name: Deploy exact-head artifact
         if: steps.dedupe.outputs.duplicate != 'true'
         id: deploy
@@ -449,6 +479,36 @@ jobs:
           name: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/pages-site
 
+      - name: Wait for unambiguous Pages artifact metadata
+        if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_NAME: github-pages-runtime-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # GitHub's deploy-pages artifact lookup can race a just-finalized
+          # upload (actions/deploy-pages#451). Avoid failed-job reruns,
+          # which can create duplicate same-name artifacts.
+          artifact_api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100"
+          for attempt in $(seq 1 18); do
+            response="$(curl --silent --show-error --fail-with-body --max-time 20 -L -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "$artifact_api" || true)"
+            valid="$(printf '%s' "$response" | jq -r --arg name "$ARTIFACT_NAME" '[.artifacts[]? | select(.name==$name and .expired==false and .size_in_bytes>0)] | length' 2>/dev/null || echo 0)"
+            if [ "$valid" = "1" ]; then
+              echo "PAGES_ARTIFACT_UNIQUE_VISIBLE=${ARTIFACT_NAME} attempt=${attempt}"
+              # Let the separate Pages metadata service converge after
+              # Actions REST confirms availability.
+              sleep 20
+              exit 0
+            fi
+            if [ "$valid" != "0" ]; then
+              echo "PAGES_ARTIFACT_AMBIGUOUS name=${ARTIFACT_NAME} matches=${valid}" >&2
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "PAGES_ARTIFACT_DISCOVERY_TIMEOUT name=${ARTIFACT_NAME}" >&2
+          exit 1
       - name: Deploy exact-head artifact with runtime receipt
         if: ${{ steps.dedupe.outputs.duplicate != 'true' && inputs.surface_id == 'audralia' }}
         id: deploy_final

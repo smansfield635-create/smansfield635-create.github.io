@@ -346,7 +346,7 @@ import {createSpatialRainRenderer} from '/graphics-engine/rain-lab/render.v1.mjs
 const rainCanvas=document.getElementById('field-rain-canvas');
 const root=document.documentElement;
 const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
-let active=true,renderer=null,raf=0,lastFrameAt=-1,scrollAt=-1,startedAt=performance.now();
+let active=true,renderer=null,raf=0,lastFrameAt=-1,scrollAt=-1,startedAt=performance.now(),qualifiedOnce=false;
 root.dataset.nativeRain='pending';
 const fallback=(reason)=>{
   active=false;
@@ -354,14 +354,19 @@ const fallback=(reason)=>{
   rainCanvas.hidden=true;
   root.dataset.nativeRain='fallback';
   root.dataset.nativeRainReason=String(reason||'unavailable').slice(0,100);
+  if(reason!=='page-exit')console.error('DGB_NATIVE_RAIN_FALLBACK: '+String(reason));
   if(renderer){try{renderer.stop()}catch(_){/* context may already be lost */}}
 };
 function paint(now){
   if(!active||document.hidden)return;
   const frame=renderer.render(motion.matches?0:(now-startedAt)/1000);
-  const receipt=renderer.readback();
-  if(frame.executed!==4||receipt.glError!==0||receipt.pixels<1000||receipt.brightest===0)throw Error('NATIVE_RAIN_FRAMEBUFFER_INVALID');
-  if(root.dataset.nativeRain!=='pass'){
+  if(frame.executed!==4)throw Error('NATIVE_RAIN_DRAW_PASSES_INVALID');
+  if(!qualifiedOnce){
+    // Exact E1/E2 framebuffer readback is required once at first render.
+    // Repeated synchronous readPixels caused avoidable GPU/CPU stalls.
+    const receipt=renderer.readback();
+    if(receipt.glError!==0||receipt.pixels<1000||receipt.brightest===0)throw Error('NATIVE_RAIN_FRAMEBUFFER_INVALID');
+    qualifiedOnce=true;
     root.dataset.nativeRain='pass';
     root.dataset.nativeRainBackend=renderer.backend;
     root.dataset.nativeRainPasses=String(frame.executed);

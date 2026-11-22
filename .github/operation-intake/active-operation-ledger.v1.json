@@ -37639,6 +37639,50 @@
       "scopeHash": "e9cbe056d00e04292ba7e44fb4bebbd0390f917f0ba1317639bb9d5b5b7c2e1d",
       "state": "ADMITTED_LOCKED"
     },
+    "e9cc0a86e8733ac05dd14d2c52064e9ea0c4772d7112ac5ee4da8eb119f3caa1": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5070e6bd64e68074cab6277f314b9e98802b88cc",
+          "lockGeneration": 3471,
+          "lockScope": "H_EARTH:P6:DRY_CONTACT_FOOTHILL_ADDENDUM:20261121",
+          "operationId": "H_EARTH_P6_DRY_CONTACT_PHYSICAL_GRASS_20261121_001",
+          "procedureLocatorDigest": "d1fabd18be4169f9aeb716b858246d8ce965df29d3b7f5f411d225a8f25ddfce",
+          "requestDigest": "38ad65415a9d33431f28fe369db037a10550cf3727b5a19480007a09e952f080",
+          "scopeHash": "e9cc0a86e8733ac05dd14d2c52064e9ea0c4772d7112ac5ee4da8eb119f3caa1"
+        },
+        "bindingDigest": "8c744f38ba9b4ef6b6a247a578b5de67b4be7f47ed73b578922bdedc456c3ea8",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b507a4dd34892d3deae838a9d27e5e1ceca5c635bf21e62e7e337ca6557c5d19",
+          "commentId": 7072429912,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44973024037,
+          "workflowSha": "5070e6bd64e68074cab6277f314b9e98802b88cc"
+        },
+        "lineageAnchorCommitSha": "0bade68189b8f605d61ed086bb900e773eab98d7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "5070e6bd64e68074cab6277f314b9e98802b88cc",
+      "lockGeneration": 3471,
+      "lockScope": "H_EARTH:P6:DRY_CONTACT_FOOTHILL_ADDENDUM:20261121",
+      "operationId": "H_EARTH_P6_DRY_CONTACT_PHYSICAL_GRASS_20261121_001",
+      "procedureLocatorDigest": "d1fabd18be4169f9aeb716b858246d8ce965df29d3b7f5f411d225a8f25ddfce",
+      "released": false,
+      "requestDigest": "38ad65415a9d33431f28fe369db037a10550cf3727b5a19480007a09e952f080",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e9cc0a86e8733ac05dd14d2c52064e9ea0c4772d7112ac5ee4da8eb119f3caa1",
+      "state": "ADMITTED_LOCKED"
+    },
     "ea02b05040cd1bd3acc980d910818ab8c31cde5ca064c3922b4f2428aae48013": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -40454,7 +40498,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3470,
+  "lockGeneration": 3471,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

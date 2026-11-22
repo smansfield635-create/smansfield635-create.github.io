@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-p5-gen3468-exact-native-chromium-20261121-v1",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "6e20c11db2e405ec288cef60631cb2dcd25b51c5"
   }
 }

@@ -744,6 +744,41 @@ jobs:
                 productMutation:false,releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
               jq -e '.schema=="H_EARTH_GEN3472_P6_DRY_CONTACT_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .candidateHead=="3f1ce343104b5edbb1e1f446061bd8cda9490846" and .p6SourceTestsPassed==4 and .p4ProtectedTestsPassed==3 and .actualBrowserExecution==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            elif [ "$EXACT_TARGET_SHA" = 'b00d146a003283b2b013013bdc3e0403db888add' ]; then
+              # P6 Gen3471 ONE_REPAIR: SHA-exact source/Node22 qualification; all earlier
+              # historical and P4/P5 source applicability branches unchanged.
+              node --version
+              node --check showroom/globe/h-earth/render/hillside-bank-ecotone-roots.p6.v1.js
+              node --check showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js
+              node --check h-earth-3d/validation/h-earth.p6-admitted-ecotone.v1.test.mjs
+              test "$(git hash-object showroom/globe/h-earth/render/hillside-bank-ecotone-roots.p6.v1.js)" = 'e919eeec9d4cb9f5b3745f4951afcc4e819dcbdb'
+              test "$(git hash-object showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js)" = '23481d6f5c7a6861faacf770c223e28d326fce8e'
+              test "$(git hash-object showroom/globe/h-earth/index.html)" = 'ed6b00ed17daafda0688f5e708dbf9839742c8c0'
+              test "$(git hash-object h-earth-3d/validation/h-earth.p6-admitted-ecotone.v1.test.mjs)" = 'a0d7f66293937c47c1ddaf84bd8dcb81926225e2'
+              test "$(git hash-object showroom/globe/h-earth/render/oasis-bank-field.v1.js)" = 'c138e04bf0a52117e8d061812359deab825dad50'
+              test "$(git hash-object h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs)" = '462741f6ad7769d9b143cb6b77ec7b192868c61e'
+              node --test --test-reporter=tap h-earth-3d/validation/h-earth.p6-admitted-ecotone.v1.test.mjs > /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-targeted.tap
+              grep -Fqx -- '# pass 5' /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-targeted.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-targeted.tap
+              node --test --test-reporter=tap --test-name-pattern='^(tile planning retains all root identities in finite immutable upload buffers|forward-return selection uses same immutable tiles and exact root identities|fine selection uses nearest tile boundary rather than tile center)$' h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs > /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-protected.tap
+              grep -Fqx -- '# pass 3' /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-protected.tap
+              grep -Fqx -- '# fail 0' /tmp/h-earth-exact-evidence/p6-gen3471-one-repair-protected.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN3471_P6_ONE_REPAIR_EXACT_SOURCE_BINDING_v1",
+                result:"SOURCE_BOUND_BROWSER_STILL_REQUIRED",candidateHead:$target,
+                productPr:7588,baseP4Head:"aea6cb122c5d3b44079e6b8192acafdb2f2c5b00",
+                newPlannerGitBlob:"e919eeec9d4cb9f5b3745f4951afcc4e819dcbdb",
+                p6OwnerGitBlob:"23481d6f5c7a6861faacf770c223e28d326fce8e",
+                p6PageGitBlob:"ed6b00ed17daafda0688f5e708dbf9839742c8c0",
+                p6TestGitBlob:"a0d7f66293937c47c1ddaf84bd8dcb81926225e2",
+                originalP3Roots:3805291,originalP4AddedRoots:2525,
+                newP6RootsMaximum:60000,p6GpuBytesMaximum:960000,
+                p6SourceTestsPassed:5,p4ProtectedTestsPassed:3,
+                realGroundContactProof:"REQUIRES_NATIVE_WORLD_EXECUTION",
+                actualBrowserExecution:false,ownerVisualAcceptance:false,
+                productMutation:false,releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+              jq -e '.schema=="H_EARTH_GEN3471_P6_ONE_REPAIR_EXACT_SOURCE_BINDING_v1" and .result=="SOURCE_BOUND_BROWSER_STILL_REQUIRED" and .candidateHead=="b00d146a003283b2b013013bdc3e0403db888add" and .p6SourceTestsPassed==5 and .p4ProtectedTestsPassed==3 and .actualBrowserExecution==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null

@@ -29012,6 +29012,50 @@
       "scopeHash": "b15e164d53f8c4b06169de1a8fec61ba016c22a3adabc35fe7f833a5b332eaea",
       "state": "ADMITTED_LOCKED"
     },
+    "b1619492dde7c685075f8ec26485a189804172e13a713987c1f6c300c6e3b1a9": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "903b4351161799d7439eeab5083d1f72a38689bd",
+          "lockGeneration": 3481,
+          "lockScope": "H_EARTH:P7:AUTHENTIC_DRY_SLOPE_MULTIBLADE_GEOMETRY:20261122",
+          "operationId": "H_EARTH_P7_AUTHENTIC_DRY_SLOPE_MULTIBLADE_GEOMETRY_20261122_001",
+          "procedureLocatorDigest": "cebe530515f61c619870dee060a69e9e04be8df6b21750e5a5843eccfad149d9",
+          "requestDigest": "c9263f576f6b6d93093c183f9a71ffc3e7c4c5c646dad4326cd2673f306fbd6b",
+          "scopeHash": "b1619492dde7c685075f8ec26485a189804172e13a713987c1f6c300c6e3b1a9"
+        },
+        "bindingDigest": "ed2c1bf2d79b382732b5034ffd3e3833376212169c7f1d1ca9aef5d777cc4886",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b3e9718656f51488157f08e44166b4122972d4ad3f01495841f14e3c034619a8",
+          "commentId": 7075101078,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7340,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 44992035959,
+          "workflowSha": "903b4351161799d7439eeab5083d1f72a38689bd"
+        },
+        "lineageAnchorCommitSha": "9fb46a2640c4be203c2dc9c71ee8da95539e7e3c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "903b4351161799d7439eeab5083d1f72a38689bd",
+      "lockGeneration": 3481,
+      "lockScope": "H_EARTH:P7:AUTHENTIC_DRY_SLOPE_MULTIBLADE_GEOMETRY:20261122",
+      "operationId": "H_EARTH_P7_AUTHENTIC_DRY_SLOPE_MULTIBLADE_GEOMETRY_20261122_001",
+      "procedureLocatorDigest": "cebe530515f61c619870dee060a69e9e04be8df6b21750e5a5843eccfad149d9",
+      "released": false,
+      "requestDigest": "c9263f576f6b6d93093c183f9a71ffc3e7c4c5c646dad4326cd2673f306fbd6b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b1619492dde7c685075f8ec26485a189804172e13a713987c1f6c300c6e3b1a9",
+      "state": "ADMITTED_LOCKED"
+    },
     "b16b01dbce8913581fea53229740987196bbc7ea6acd1e3b539ee48a9ba9a348": {
       "governingHead": "973410a55eebe895b49b2b551823655ad76a0c1c",
       "lockGeneration": 1572,
@@ -40894,7 +40938,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3480,
+  "lockGeneration": 3481,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

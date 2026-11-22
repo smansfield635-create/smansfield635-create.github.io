@@ -134,9 +134,57 @@ html[data-native-rain="pass"] #field-rain-canvas{opacity:.82}
 #field-rain-canvas[hidden]{display:none!important}
 body>.topbar,body>main,body>footer{position:relative;z-index:1}
 @media(prefers-reduced-motion:reduce){#field-rain-canvas{transition:none}}
+
+/* Customer decision usability refinement: calm native touch states, concise optional
+   inspection prompts and visually distinct questions; no rain-engine changes. */
+:where(a,button,summary){-webkit-tap-highlight-color:rgba(163,55,87,.24)}
+::selection{background:#873453;color:#fff7f8}
+:where(button,summary):focus-visible{outline:2px solid #ffd1da;outline-offset:3px}
+:where(button,summary):active{color:#fff3f5}
+.study-chapter>summary:active,.group>details>summary:active,
+.company-reader>summary:active,.topic:active,.reading-chapters summary:active{
+  background:linear-gradient(125deg,#582139,#2b1220)!important;
+  color:#fff2f5!important
+}
+.inspection-guide{
+  margin:24px 0 0;border:1px solid rgba(237,163,181,.25);border-radius:18px;
+  background:linear-gradient(125deg,#24111c,#140b13);overflow:hidden
+}
+.inspection-guide>summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;min-height:64px;padding:15px 21px
+}
+.inspection-guide>summary::-webkit-details-marker{display:none}
+.inspection-guide>summary::after{content:"+";color:#f0b1c1;font-size:1.5rem;flex-shrink:0}
+.inspection-guide[open]>summary::after{content:"−"}
+.inspection-guide>summary strong{display:block;font-size:1.02rem;line-height:1.3}
+.inspection-guide>summary small{display:block;font-size:.82rem;font-weight:400;color:#d0b3bf;line-height:1.45;margin-top:5px}
+.inspection-guide[open]>summary{background:#331727;border-bottom:1px solid rgba(237,163,181,.22)}
+.inspection-guide-body{padding:18px 22px 22px;background:#100a11}
+.inspection-guide-body ol{padding-left:1.3rem;margin:0;display:grid;gap:11px}
+.inspection-guide-body li{color:#e4d0d6;line-height:1.62;padding-left:4px}
+.inspection-guide-body li::marker{color:#eda5ba;font-weight:800}
+.inspection-guide-body li strong{color:#fff0f2}
+.inspection-guide-body>p{margin:15px 0 0;color:#c4a7b2;font-size:.84rem;line-height:1.55}
+.company-reader .company-body .consumer{
+  padding:13px 15px!important;background:rgba(114,37,65,.22);
+  border-left:3px solid #b85272;border-radius:0 9px 9px 0;
+  line-height:1.64
+}
+.chapter-body .inspection-prompt{
+  padding:13px 15px;margin-top:14px!important;
+  border-left:3px solid #b85272;background:rgba(114,37,65,.22);
+  border-radius:0 9px 9px 0
+}
+@media(max-width:640px){
+  .inspection-guide{margin:18px 0 0;border-radius:15px}
+  .inspection-guide>summary{padding:15px 17px}
+  .inspection-guide-body{padding:17px 18px 19px}
+}
 </style></head>
 <body><canvas id="field-rain-canvas" aria-hidden="true"></canvas><a class="skip" href="#main">Skip to content</a><header class="topbar shell"><span class="brand">Home Improvement · Independent Consumer Reading</span><nav class="nav" aria-label="Two-page navigation"><a href="/research/industry-context/">Industry Context</a><a href="/research/testimonials/" aria-current="page">Gutter-Protection Notes</a></nav></header><main id="main" class="shell">
 <section class="hero" aria-labelledby="title"><p class="eyebrow">Gutter protection · Homeowner field study</p><h1 id="title">What should you know before choosing gutter protection?</h1><p class="lead">Leaves, overflowing gutters, damaged wood, crumbling foundations, difficult corners: every home brings different questions. Explore the issues that sound familiar and the real-world field notes behind them.</p><div class="stats"><div><strong>100</strong><span>residential sales in the original study</span></div></div><p class="hero-note">Browse recorded customer observations and practical questions to consider during an inspection.</p></section>
+<details class="inspection-guide" id="inspection-quickstart"><summary><span><strong>Questions to bring to an inspection</strong><small>Three practical checks; keep exploring the full field notes below</small></span></summary><div class="inspection-guide-body"><ol><li><strong>Where does the rainwater go?</strong> Look for blocked sections, overflow, and signs of water affecting wood or the foundation.</li><li><strong>What needs measuring or repairing?</strong> Ask about fascia condition, corners, downspouts and roofline transitions.</li><li><strong>What will the proposal actually cover?</strong> Confirm installation scope, expected upkeep and written warranty terms.</li></ol><p>Use these as starting questions, not as a substitute for examining your home and reviewing the written proposal.</p></div></details>
 <div class="study-chapters" aria-label="Study sections">
 <details class="study-chapter" id="chapter-questions" name="study-chapter">
 <summary><span><strong>Explore the questions</strong><small>Choose an issue to explore relevant field notes</small></span></summary>
@@ -147,7 +195,7 @@ body>.topbar,body>main,body>footer{position:relative;z-index:1}
 <details class="study-chapter" id="chapter-details" name="study-chapter">
 <summary><span><strong>Explore the details</strong><small>Understand runoff, installation and warranty topics</small></span></summary>
 <div class="study-chapter-body">
-<section class="section prose" aria-labelledby="story-title"><p class="eyebrow">Explore the details</p><h2 id="story-title">A gutter problem rarely stays a gutter problem.</h2><p class="first">An overflowing gutter can become a concern about wood, landscaping, or the foundation. A loose gutter raises another question: is the structure underneath sound enough for a replacement?</p><p class="section-intro">Open whichever question matters to your home. Each chapter provides a few things worth checking during an inspection.</p><div class="reading-chapters"><details name="study-chapter"><summary><span><strong>1. Where does the problem begin?</strong><small>Leaves, blocked gutters, old screens and water runoff</small></span></summary><div class="chapter-body"><p>Some customer notes mention debris, completely clogged gutters and failed screens. Others describe concerns about damage to wood or the foundation.</p><p><strong>Look for:</strong> Where does water go during heavy rain? Is there a recurring clog, or has overflow already affected the fascia, siding, ground or foundation? Will the proposed work address the underlying issue?</p></div></details><details name="study-chapter"><summary><span><strong>2. How will the solution fit this home?</strong><small>Roofline, corners, downspouts, measurements and appearance</small></span></summary><div class="chapter-body"><p>Some notes mention unusual corners, long gutter runs or specific color preferences. These details make each installation different.</p><p><strong>Look for:</strong> How will corners and downspouts be handled? Does damaged wood need attention first? What colors and finishing details will be visible? Where will rainwater discharge?</p></div></details><details name="study-chapter"><summary><span><strong>3. What does lasting protection involve?</strong><small>Maintenance, installation details and written warranty terms</small></span></summary><div class="chapter-body"><p>A useful product explanation should cover installation, realistic maintenance expectations and the written warranty—not just features.</p><p><strong>Look for:</strong> What is covered or excluded? Who performs service? How are clogs, attachment, finish and installation details handled? The written terms, not a verbal description, determine coverage.</p></div></details></div><div class="plain-note">These field-study entries help organize practical questions for a home inspection. They are not a controlled product test or a guarantee of results at another property.</div></section>
+<section class="section prose" aria-labelledby="story-title"><p class="eyebrow">Explore the details</p><h2 id="story-title">A gutter problem rarely stays a gutter problem.</h2><p class="first">An overflowing gutter can become a concern about wood, landscaping, or the foundation. A loose gutter raises another question: is the structure underneath sound enough for a replacement?</p><p class="section-intro">Open whichever question matters to your home. Each chapter provides a few things worth checking during an inspection.</p><div class="reading-chapters"><details name="study-chapter"><summary><span><strong>1. Where does the problem begin?</strong><small>Leaves, blocked gutters, old screens and water runoff</small></span></summary><div class="chapter-body"><p>Some customer notes mention debris, completely clogged gutters and failed screens. Others describe concerns about damage to wood or the foundation.</p><p class="inspection-prompt"><strong>Look for:</strong> Where does water go during heavy rain? Is there a recurring clog, or has overflow already affected the fascia, siding, ground or foundation? Will the proposed work address the underlying issue?</p></div></details><details name="study-chapter"><summary><span><strong>2. How will the solution fit this home?</strong><small>Roofline, corners, downspouts, measurements and appearance</small></span></summary><div class="chapter-body"><p>Some notes mention unusual corners, long gutter runs or specific color preferences. These details make each installation different.</p><p class="inspection-prompt"><strong>Look for:</strong> How will corners and downspouts be handled? Does damaged wood need attention first? What colors and finishing details will be visible? Where will rainwater discharge?</p></div></details><details name="study-chapter"><summary><span><strong>3. What does lasting protection involve?</strong><small>Maintenance, installation details and written warranty terms</small></span></summary><div class="chapter-body"><p>A useful product explanation should cover installation, realistic maintenance expectations and the written warranty—not just features.</p><p class="inspection-prompt"><strong>Look for:</strong> What is covered or excluded? Who performs service? How are clogs, attachment, finish and installation details handled? The written terms, not a verbal description, determine coverage.</p></div></details></div><div class="plain-note">These field-study entries help organize practical questions for a home inspection. They are not a controlled product test or a guarantee of results at another property.</div></section>
 <section class="section" id="promises" aria-labelledby="promises-title"><p class="eyebrow">Beyond the product</p><h2 id="promises-title">What does a lasting promise mean?</h2><p class="section-intro">Warranty wording matters. Explore the protection topics associated with these notes and compare them with the written warranty for any product under consideration.</p><div class="group"><details><summary><span><strong>Read the warranty topics</strong><small>Four topics referenced in the original study</small></span></summary><div class="details-body"><div class="company"><h3>Paint finish</h3><p>How a finished gutter will look over time.</p></div><div class="company"><h3>Secure attachment</h3><p>Whether the system remains attached where it belongs.</p></div><div class="company"><h3>Keeping debris out</h3><p>The worry of returning clogs and maintenance.</p></div><div class="company"><h3>Ends, corners and caps</h3><p>Protection for details that help complete an installation.</p></div><div class="count-grid" id="warranty-topic-counts" aria-label="Concern mentions related to warranty topics"></div><p class="plain-note">The original records reference a lifetime paint-finish warranty, lifetime no-pullaway/no-detachment warranty, lifetime no-clog warranty, and a two-year end-to-end cap-production warranty. These are historical topic labels, not an interpretation of coverage or a statement about current terms. Consult the actual written warranty.</p></div></details></div></section>
 </div>
 </details>

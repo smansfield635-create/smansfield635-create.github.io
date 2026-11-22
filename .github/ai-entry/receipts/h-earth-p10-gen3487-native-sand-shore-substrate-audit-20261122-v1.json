@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-p10-gen3487-native-sand-shore-substrate-audit-20261122-v1",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7611,
+  "requestBranch": "ai-dispatch-request-h-earth-p10-gen3487-native-audit-20261122",
+  "requestCommit": "7f39b9531c86c4e2bc91c569f86eddfbb3a9e392",
+  "requestCommitParent": "a067406e13ff19c3cd5b95cf38a2978cb49ceb7a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a067406e13ff19c3cd5b95cf38a2978cb49ceb7a",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "81a750023f6211fa79b07403538929292741b96e",
+    "route_query": "prototype=single-owner-v1&arrival=approved-four-trees&qualification=bank-view-v1",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html"
+  },
+  "bridgeRunId": "44998614792",
+  "dispatchedRunId": 44998629917,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/44998629917",
+  "dispatchedRunHeadSha": "a067406e13ff19c3cd5b95cf38a2978cb49ceb7a",
+  "dispatchedAt": "2026-11-22T07:31:35.183Z",
+  "resolvedAt": "2026-11-22T07:31:44.465Z"
+}

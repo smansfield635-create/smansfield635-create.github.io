@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "research-customer-reading",
-  "description": "Paired industry and homeowner field study; exact-head page proof with preserved original records.",
+  "description": "Paired industry and homeowner field study; exact-head page proof with preserved original records and crumbling-foundations introductory wording.",
   "checks": [
     {
       "path": "/research/testimonials/index.html",

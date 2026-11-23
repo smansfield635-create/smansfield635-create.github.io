@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T12:32:56Z",
+  "generatedAt": "2026-11-23T13:27:05Z",
   "window": {
-    "start": "2026-08-25T12:32:56Z",
-    "end": "2026-11-23T12:32:56Z"
+    "start": "2026-08-25T13:27:05Z",
+    "end": "2026-11-23T13:27:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2790,
-    "visits": 730,
+    "pageLoads": 2730,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2790,
-        "visits": 730
+        "pageLoads": 2730,
+        "visits": 710
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -47,7 +47,7 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -65,18 +65,6 @@
       "/laws/categories/flow/cycles/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 20,
-        "visits": 10
-      },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -156,6 +144,10 @@
       },
       "/prelude/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -257,16 +249,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2060,
+        "pageLoads": 2020,
         "visits": 0
-      },
-      "(none)": {
-        "pageLoads": 390,
-        "visits": 390
       },
       "www.google.com": {
         "pageLoads": 340,
         "visits": 340
+      },
+      "(none)": {
+        "pageLoads": 370,
+        "visits": 370
       }
     }
   }

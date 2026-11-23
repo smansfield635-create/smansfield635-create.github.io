@@ -1,0 +1,24 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "disposition": "PASS",
+  "governingHead": "2d844d63a244980f416ba491cbbdf797a64c0003",
+  "routes": [
+    {
+      "path": ".github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json",
+      "routeClass": "REGISTERED_PROJECT",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "disposition": "PASS"
+    }
+  ],
+  "sourceProof": {
+    "kind": "MINIMAL_PROJECTION_FROM_CANONICAL_ROUTER_REGISTRY",
+    "registrationPath": ".github/ai-router/router.v1.json",
+    "registrationProjectKey": "routerInfrastructure",
+    "registrationProjectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+    "registeredExactPath": ".github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json",
+    "registrationBlobSha": "3c38a0ff87fb7726c31039ab32ff8159783ed3f9",
+    "registrationGoverningHead": "2d844d63a244980f416ba491cbbdf797a64c0003",
+    "notAnIndependentRouterCliExecution": true,
+    "noMutationAuthorityCreated": true
+  }
+}

@@ -23,10 +23,8 @@
     "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
     "acquisitionCommitSha": "73d80d52c2f081a6ceb8629f6196af235c9376f9",
     "authorityProvenanceBound": true,
-    "committedLedgerBlobSha": "a19cbbd7d8b959051f61c52dea3eea777f42d8ae",
     "contentTransport": "GIT_BLOB_FALLBACK",
     "observedBranchHead": "ac76d3345fec9b35bc94246c7c53d1dbdefe4a56",
-    "observedLedgerBlobSha": "0ffd96acd5e978897b2d66c6f24eaeae6b58bcc1",
     "scopeHash": "c35922f276324f547c7ba87c0e21928e97174aa1148813e7bd2cc4ba0d95681f"
   },
   "sourceProof": {

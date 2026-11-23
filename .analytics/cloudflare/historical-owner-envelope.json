@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T22:25:29Z",
+  "generatedAt": "2026-11-23T23:25:01Z",
   "window": {
-    "start": "2026-08-25T22:25:29Z",
-    "end": "2026-11-23T22:25:29Z"
+    "start": "2026-08-25T23:25:01Z",
+    "end": "2026-11-23T23:25:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -74,6 +74,14 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
+      },
+      "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
@@ -83,14 +91,6 @@
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
-      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -110,6 +110,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
         "visits": 0
@@ -117,10 +121,6 @@
       "/showroom/globe/h-earth/": {
         "pageLoads": 50,
         "visits": 10
-      },
-      "/showroom/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/index.html": {
         "pageLoads": 30,

@@ -1,31 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-23T11:25:38Z",
+  "generatedAt": "2026-11-23T12:32:56Z",
   "window": {
-    "start": "2026-10-24T11:25:38Z",
-    "end": "2026-11-23T11:25:38Z"
+    "start": "2026-10-24T12:32:56Z",
+    "end": "2026-11-23T12:32:56Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 601,
-        "visits": 601
+        "pageLoads": 501,
+        "visits": 501
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 220,
-        "visits": 148
-      },
-      {
-        "value": "/products/education/personal-training/course.html",
-        "pageLoads": 80,
-        "visits": 80
-      },
-      {
-        "value": "/products/education/personal-training/",
-        "pageLoads": 80,
-        "visits": 80
+        "pageLoads": 200,
+        "visits": 128
       },
       {
         "value": "/",
@@ -34,6 +24,16 @@
       },
       {
         "value": "/nine-summits/universe/",
+        "pageLoads": 50,
+        "visits": 50
+      },
+      {
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 50,
+        "visits": 50
+      },
+      {
+        "value": "/products/education/personal-training/",
         "pageLoads": 50,
         "visits": 50
       },
@@ -59,21 +59,6 @@
       },
       {
         "value": "/preflight/app/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/earth/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/about/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/characters/",
         "pageLoads": 10,
         "visits": 10
       },

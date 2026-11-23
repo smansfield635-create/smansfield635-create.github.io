@@ -1,0 +1,96 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "sculpt-lab",
+  "description": "Off-product neutral native four-view Sculpt Lab; source-adopted Gen3496, versioned import-map cache identity, owner-private original only through local file selection. Does not assert accepted rabbit art.",
+  "checks": [
+    {
+      "path": "/graphics-engine/sculpt-lab/index.html",
+      "includes": [
+        "Diamond Gate | Native Multiview Sculpt Lab V1",
+        "Four actual 3D views of one editable mesh",
+        "id=\"hero\"",
+        "id=\"side\"",
+        "id=\"front\"",
+        "id=\"rear\"",
+        "<script type=\"importmap\">",
+        "dgb.native-sculpt-session.v1.mjs?asset=255ce35aa72a16b297d8c150ce452436cfee0d1d",
+        "dgb.native-sculpt-browser.v1.mjs?asset=1054a89fdf3334f26d3a61a9c50f19a1ee04b6a8",
+        "window.__dgbSculptLab",
+        "The original M1.3 ZIP remains on this device."
+      ],
+      "excludes": [
+        "https://drive.google.com/file/d/19hkrfnEsL84neg8aTbmhkBkOlx5O00s3"
+      ]
+    },
+    {
+      "path": "/assets/engine/dgb.native-sculpt-browser.v1.mjs",
+      "includes": [
+        "createNativeSculptStudio",
+        "makeNeutralSculptRegionFixture",
+        "./dgb.native-sculpt-session.v1.mjs",
+        "createNativeWebGLDevice"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/assets/engine/dgb.native-sculpt-session.v1.mjs",
+      "includes": [
+        "CONSERVATIVE_AABB_SWEEP_UNCHANGED_NARROWPHASE",
+        "QUALIFIED_SOURCE_DELTA_ALL_AFFECTED_PAIRS",
+        "createM13OriginalSource"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/graphics-engine/sculpt-lab/",
+    "timeoutMs": 45000,
+    "readySelector": "#status",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/graphics-engine/sculpt-lab/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Neutral four-view WebGL startup",
+        "action": {
+          "type": "click",
+          "selector": "#returnNeutral"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#status",
+            "value": "Vertices 273"
+          },
+          {
+            "type": "textContains",
+            "selector": "#status",
+            "value": "Active views 4"
+          },
+          {
+            "type": "exists",
+            "selector": "#hero"
+          },
+          {
+            "type": "exists",
+            "selector": "#side"
+          },
+          {
+            "type": "exists",
+            "selector": "#front"
+          },
+          {
+            "type": "exists",
+            "selector": "#rear"
+          }
+        ],
+        "timeoutMs": 15000
+      }
+    ]
+  }
+}

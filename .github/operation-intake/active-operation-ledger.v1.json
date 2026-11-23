@@ -31730,6 +31730,50 @@
       "scopeHash": "c34755b261101ccb14c297b683ce460042b326d56ec693c470964f51dc5d942d",
       "state": "ADMITTED_LOCKED"
     },
+    "c35922f276324f547c7ba87c0e21928e97174aa1148813e7bd2cc4ba0d95681f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "89c513b4a103769f4b56edbc87c9e942d01a7fb0",
+          "lockGeneration": 3493,
+          "lockScope": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING",
+          "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
+          "procedureLocatorDigest": "b97c4ff74530d43b7c3e3cd9ca77045f5d3a673d0b1dfeb4970a8be288b4a9ef",
+          "requestDigest": "091a25d27136ea8639b94c8f4499147ac2ddaad169db26e502fe1c7b25e44912",
+          "scopeHash": "c35922f276324f547c7ba87c0e21928e97174aa1148813e7bd2cc4ba0d95681f"
+        },
+        "bindingDigest": "61e148bf0eaa50e02014a540f31e71592f641674beb46424a5dc81d80a97cf79",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d9285f32bc504f13fcc73998a6ee89001057ee85ed0f4e0d1d99988ac894ddf1",
+          "commentId": 7088860993,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 45092512142,
+          "workflowSha": "89c513b4a103769f4b56edbc87c9e942d01a7fb0"
+        },
+        "lineageAnchorCommitSha": "ac76d3345fec9b35bc94246c7c53d1dbdefe4a56",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "89c513b4a103769f4b56edbc87c9e942d01a7fb0",
+      "lockGeneration": 3493,
+      "lockScope": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING",
+      "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
+      "procedureLocatorDigest": "b97c4ff74530d43b7c3e3cd9ca77045f5d3a673d0b1dfeb4970a8be288b4a9ef",
+      "released": false,
+      "requestDigest": "091a25d27136ea8639b94c8f4499147ac2ddaad169db26e502fe1c7b25e44912",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c35922f276324f547c7ba87c0e21928e97174aa1148813e7bd2cc4ba0d95681f",
+      "state": "ADMITTED_LOCKED"
+    },
     "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5": {
       "governingHead": "74e48531e73fa2de687ba6b42777891f28e5a9ba",
       "lockGeneration": 1516,
@@ -41422,7 +41466,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3492,
+  "lockGeneration": 3493,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

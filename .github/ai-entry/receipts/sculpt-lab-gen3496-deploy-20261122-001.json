@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "sculpt-lab-gen3496-deploy-20261122-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7644,
+  "requestBranch": "ai-dispatch-request-sculpt-lab-deploy-20261122-001",
+  "requestCommit": "7d57b0f12902a38744950c941d66945a08ffadf9",
+  "requestCommitParent": "8ae2cf594c908001bfbe49f5fd2be35e516611e7",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "8ae2cf594c908001bfbe49f5fd2be35e516611e7",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8ae2cf594c908001bfbe49f5fd2be35e516611e7",
+    "surface_id": "sculpt-lab"
+  },
+  "bridgeRunId": "45101663864",
+  "dispatchedRunId": 45101677588,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/45101677588",
+  "dispatchedRunHeadSha": "8ae2cf594c908001bfbe49f5fd2be35e516611e7",
+  "dispatchedAt": "2026-11-23T02:41:50.680Z",
+  "resolvedAt": "2026-11-23T02:41:55.805Z"
+}

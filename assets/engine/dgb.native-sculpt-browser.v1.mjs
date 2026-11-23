@@ -376,6 +376,8 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
   let session=createSculptSession(fixture),fixtureSource=fixture,sourceMetadata=null;
   let uv=originalSource?null:makeSculptUvHandoff(session.getPositions(),session.getTriangles(),fixture.uvs??null);
   const originalRender=originalSource?sourceGeometry(originalSource,session.getPositions(),session.getNormals()):null;
+  let activeOriginalRender=originalRender,activeOriginalEye=originalSource?.eye??null;
+  let presentedOriginalPose=originalSource?.originalPose??null;
   let stages=[],selectedFace=null;
   if(Math.max(...session.getTriangles())>65535)throw new Error('WEBGL1_NEUTRAL_FIXTURE_INDEX_LIMIT');
   let disposed=false,failed=false,active=null;const views=[];const listeners=[];
@@ -417,10 +419,11 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
         const ep=device.createProgram(originalEyeShaders(be));
         const eyeMesh=device.createMesh({vertexCount:e.positions.length/3,attributes:[
           {name:'aPosition',size:3,data:e.positions,dynamic:true},
-          {name:'aNormal',size:3,data:e.normals},
-          {name:'aColor',size:3,data:e.colors},
-          {name:'aFade',size:1,data:e.fade}
+          {name:'aNormal',size:3,data:e.normals,dynamic:true},
+          {name:'aColor',size:3,data:e.colors,dynamic:true},
+          {name:'aFade',size:1,data:e.fade,dynamic:true}
         ]});
+        view.eyeMesh=eyeMesh;
         const enode=scene.createNode();
         scene.setRenderable(enode,{program:ep,mesh:eyeMesh,pass:'OPAQUE',
           cull:'NONE',bounds:{center:[0,0,0],radius:3}});
@@ -440,6 +443,53 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
       pipeline.endFrame({presentToCanvas:true});
     }
     return {views:views.length,revision:session.state().revision};
+  }
+  // Playback presents a protected original pose through existing E1 dynamic buffers.
+  // Four existing contexts, meshes, cameras and atlas identities are retained.
+  // No topology/UV edits or private original bytes are published.
+  function presentOriginalPose(nextFixture){
+    assertReady();
+    if(!originalSource)throw new Error('M13_ORIGINAL_SOURCE_NOT_LOADED');
+    const next=nextFixture?.sourceRender;
+    if(next?.readOnlyOriginal!==true||!Number.isInteger(next.originalPose)||
+        next.originalPose<0||next.originalPose>=64||
+        next.atlasWidth!==originalSource.atlasWidth||next.atlasHeight!==originalSource.atlasHeight||
+        next.atlasPixels!==originalSource.atlasPixels||
+        !(next.renderToMaster instanceof Uint32Array)||
+        !(next.renderTriangles instanceof Uint16Array)||!(next.uvs instanceof Float32Array))
+      throw new Error('M13_ANIMATION_SOURCE_IDENTITY_REJECTED');
+    const identical=(a,b)=>a.length===b.length&&a.every((value,index)=>value===b[index]);
+    if(!identical(next.renderToMaster,originalSource.renderToMaster)||
+        !identical(next.renderTriangles,originalSource.renderTriangles)||
+        !identical(next.uvs,originalSource.uvs))
+      throw new Error('M13_ANIMATION_TOPOLOGY_OR_UV_CHANGED');
+    const eye=next.eye,oldEye=activeOriginalEye;
+    const attributes=['positions','normals','colors','fade'];
+    if(!eye||!oldEye||attributes.some(name=>
+        !(eye[name] instanceof Float32Array)||eye[name].length!==oldEye[name].length))
+      throw new Error('M13_ANIMATION_EYE_IDENTITY_REJECTED');
+    const candidate=createSculptSession(nextFixture);
+    const geometry=sourceGeometry(next,candidate.getPositions(),candidate.getNormals());
+    const update=(render,eyes)=>{
+      for(const view of views){
+        view.device.updateMeshAttribute(view.mesh,'aPosition',render.positions);
+        view.device.updateMeshAttribute(view.mesh,'aNormal',render.normals);
+        if(!view.eyeMesh)throw new Error('M13_ANIMATION_EYE_MESH_MISSING');
+        for(const [attribute,key] of [['aPosition','positions'],['aNormal','normals'],
+              ['aColor','colors'],['aFade','fade']])
+          view.device.updateMeshAttribute(view.eyeMesh,attribute,eyes[key]);
+      }
+    };
+    try{update(geometry,eye);drawAll();}
+    catch(error){
+      try{update(activeOriginalRender,oldEye);drawAll();}
+      catch(rollbackError){failed=true;status('Original pose rollback uncertain; studio quarantined.');}
+      throw error;
+    }
+    session=candidate;fixtureSource=nextFixture;
+    activeOriginalRender=geometry;activeOriginalEye=eye;presentedOriginalPose=next.originalPose;
+    status('Protected original pose '+presentedOriginalPose+' presented on all four views.');
+    return presentedOriginalPose;
   }
   function updateAll(){assertReady();
     if(originalSource)return drawAll(); // Original M1.3 is a viewing reference, never an editable GPU candidate.
@@ -621,6 +671,7 @@ export function createNativeSculptStudio({canvases,controls,fixture=makeNeutralS
     saveState:()=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');return serializeSculptStudioState(session,stages,sourceMetadata);},
     loadState:text=>{if(originalSource)throw new Error('M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN');referenceImports.cancel();const restored=restoreSculptStudioState(text,fixture);return adoptTopology(restored.session,restored.uv,restored.stages,restored.fixture,restored.source);},
     views:()=>views.map(v=>Object.freeze({name:v.name,backend:v.device.backend,width:v.canvas.width,height:v.canvas.height})),
-    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:originalSource?.originalPose??null,originalAtlasMapped:Boolean(originalSource)}),
+    presentOriginalPose,
+    status:()=>Object.freeze({...session.state(),failed,disposed,views:views.length,topologyDepth:stages.length,selectedFace,originalM13ReadOnly:Boolean(originalSource),originalPose:presentedOriginalPose,originalAtlasMapped:Boolean(originalSource)}),
     dispose(){if(disposed)return;referenceImports.cancel();releaseSculptStudioResources(views,listeners);disposed=true;}});
 }

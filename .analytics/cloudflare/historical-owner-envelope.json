@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T04:30:02Z",
+  "generatedAt": "2026-11-23T05:27:48Z",
   "window": {
-    "start": "2026-08-25T04:30:02Z",
-    "end": "2026-11-23T04:30:02Z"
+    "start": "2026-08-25T05:27:48Z",
+    "end": "2026-11-23T05:27:48Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2790,
-    "visits": 730,
+    "pageLoads": 2780,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2790,
-        "visits": 730
+        "pageLoads": 2780,
+        "visits": 710
       }
     },
     "byPath": {
@@ -34,13 +34,13 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 80,
-        "visits": 10
-      },
       "/laws/categories/reality/measure.html": {
         "pageLoads": 30,
         "visits": 0
+      },
+      "/showroom/globe/audralia/": {
+        "pageLoads": 80,
+        "visits": 10
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
@@ -59,8 +59,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 480,
-        "visits": 360
+        "pageLoads": 460,
+        "visits": 350
       },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 10,
@@ -98,9 +98,9 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+      "/products/": {
+        "pageLoads": 50,
+        "visits": 10
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -138,8 +138,12 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/characters/": {
+        "pageLoads": 40,
+        "visits": 20
+      },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/index.html": {
@@ -198,16 +202,12 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/products/": {
-        "pageLoads": 30,
-        "visits": 10
+      "/products/archcoin/receivable/": {
+        "pageLoads": 50,
+        "visits": 0
       },
       "/evidence/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/archcoin/receivable/": {
-        "pageLoads": 50,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -257,16 +257,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2060,
+        "pageLoads": 2070,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 390,
-        "visits": 390
+        "pageLoads": 380,
+        "visits": 380
       },
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 330,
+        "visits": 330
       }
     }
   }

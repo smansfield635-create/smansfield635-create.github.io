@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T00:47:37Z",
+  "generatedAt": "2026-11-23T01:25:03Z",
   "window": {
-    "start": "2026-08-25T00:47:37Z",
-    "end": "2026-11-23T00:47:37Z"
+    "start": "2026-08-25T01:25:03Z",
+    "end": "2026-11-23T01:25:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2790,
-    "visits": 730,
+    "pageLoads": 2640,
+    "visits": 700,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2790,
-        "visits": 730
+        "pageLoads": 2640,
+        "visits": 700
       }
     },
     "byPath": {
@@ -35,8 +35,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 80,
-        "visits": 10
+        "pageLoads": 90,
+        "visits": 0
       },
       "/laws/categories/reality/measure.html": {
         "pageLoads": 30,
@@ -47,7 +47,7 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/instruments/": {
@@ -59,11 +59,11 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 480,
+        "pageLoads": 490,
         "visits": 360
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/governance/": {
@@ -78,16 +78,12 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/integrity/accountability/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/test/reverse-audit/": {
-        "pageLoads": 20,
+      "/laws/categories/reality/evidence.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
@@ -108,7 +104,7 @@
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
-        "visits": 20
+        "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
@@ -119,8 +115,8 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 20,
+        "visits": 10
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
@@ -139,7 +135,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 10
       },
       "/index.html": {
@@ -187,44 +183,44 @@
         "visits": 0
       },
       "/campaigns/rob/": {
-        "pageLoads": 10,
+        "pageLoads": 30,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
+        "pageLoads": 50,
         "visits": 30
       },
       "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 30,
-        "visits": 10
-      },
-      "/evidence/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/archcoin/receivable/": {
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
+      "/products/archcoin/receivable/": {
+        "pageLoads": 30,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
+      "/products/archcoin/payable/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/products/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/products/archcoin/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/products/archcoin/contract/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
+        "pageLoads": 130,
+        "visits": 60
       },
       "/analytics-owner-device/": {
-        "pageLoads": 30,
-        "visits": 30
+        "pageLoads": 10,
+        "visits": 10
       },
       "/meet-sean-mansfield/": {
         "pageLoads": 10,
@@ -257,12 +253,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2060,
+        "pageLoads": 1940,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 390,
-        "visits": 390
+        "pageLoads": 360,
+        "visits": 360
       },
       "www.google.com": {
         "pageLoads": 340,

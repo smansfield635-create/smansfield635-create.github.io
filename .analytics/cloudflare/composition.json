@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-23T00:47:37Z",
+  "generatedAt": "2026-11-23T01:25:03Z",
   "window": {
-    "start": "2026-10-24T00:47:37Z",
-    "end": "2026-11-23T00:47:37Z"
+    "start": "2026-10-24T01:25:03Z",
+    "end": "2026-11-23T01:25:03Z"
   },
   "dimensions": {
     "requestPath": [
@@ -278,24 +278,24 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1198,
-        "visits": 1177
+        "pageLoads": 1278,
+        "visits": 1257
       },
       {
         "value": "routing-apis",
-        "pageLoads": 74,
+        "pageLoads": 84,
         "visits": 0
       }
     ],
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1252,
-        "visits": 1177
+        "pageLoads": 1292,
+        "visits": 1207
       },
       {
         "value": "cache",
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       }
     ],
@@ -309,8 +309,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1272,
-        "visits": 1177
+        "pageLoads": 1302,
+        "visits": 1207
       }
     ]
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T09:30:51Z",
+  "generatedAt": "2026-11-23T10:25:04Z",
   "window": {
-    "start": "2026-08-25T09:30:51Z",
-    "end": "2026-11-23T09:30:51Z"
+    "start": "2026-08-25T10:25:04Z",
+    "end": "2026-11-23T10:25:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,13 +34,13 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/reality/measure.html": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/globe/audralia/": {
         "pageLoads": 80,
         "visits": 10
+      },
+      "/laws/categories/reality/measure.html": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,

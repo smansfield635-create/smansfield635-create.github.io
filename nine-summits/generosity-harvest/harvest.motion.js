@@ -382,7 +382,7 @@ function buildWorld(){
   }
   // Real distant sky-dome triangles, not an image, sprite, backdrop texture or
   // screenshot plane. Depth means these never obscure nearer scene geometry.
-  ellipsoid([0,-18,-12],145,115,145,[.77,.64,.65],15,30,4);
+  ellipsoid([0,-18,-12],145,115,145,[.64,.74,.84],15,30,4);
   ellipsoid([-53,33,-94],3.6,3.6,3.6,[1.0,.86,.57],9,14,5);
   return {positions:new Float32Array(positions),normals:new Float32Array(normals),colors:new Float32Array(colors),roles:new Float32Array(roles),triangleCount:positions.length/9};
 }
@@ -457,19 +457,119 @@ function createPrivateRabbit(device,library,scene,data){
   function frame(i){const k=clamp(Math.round(i),0,16);device.updateMeshAttribute(mesh,'aPosition',data.frames[k]);device.updateMeshAttribute(mesh,'aNormal',data.normalFrames[k]);}
   return {material,mesh,node,frame,descriptor:'PRIVATE_IN_MEMORY_A4_ONLY_UNVERIFIED_ART'};
 }
-export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,onStatus=()=>{}}={}){
+// Protected M1.3 V10 read-only renderer. All private vertex/eye/coat arrays arrive in RAM only.
+// Exact 49-frame M1.3 body, coat and historical v2-eye-derived bilateral review
+// data are supplied in RAM and never inserted into the public repository.
+function privateV4EyeShaders(backend){
+  const two=backend==='WEBGL2',head=two?'#version 300 es\n':'',a=two?'in':'attribute',vary=two?'out':'varying',inside=two?'in':'varying',out=two?'out vec4 outColor;':'',write=two?'outColor':'gl_FragColor';
+  return {vertexSource:head+a+' vec3 aPosition;'+a+' vec3 aNormal;'+a+' vec3 aColor;'+a+' float aFade;uniform mat4 uMVP;'+vary+' vec3 vNormal;'+vary+' vec3 vColor;'+vary+' float vFade;void main(){vNormal=aNormal;vColor=aColor;vFade=aFade;gl_Position=uMVP*vec4(aPosition,1.0);}',
+    fragmentSource:head+'precision mediump float;'+inside+' vec3 vNormal;'+inside+' vec3 vColor;'+inside+' float vFade;'+out+'void main(){vec3 N=normalize(vNormal);vec3 L=normalize(vec3(-.35,.9,.65));float diff=.65+.35*max(dot(N,L),0.0);float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.0),22.0);'+write+'=vec4(vColor*diff+vec3(spec*vFade),1.0);}'};
+}
+function createPrivateM1349(device,library,scene,data,directEyes){
+  const schema='PRIVATE_A4_M13_V9_180_FRAME_C1_SINGLE_REPAIR';
+  if(!data||data.schema!==schema)throw Error('PRIVATE_M13_V5_SCHEMA_REQUIRED');
+  const N=180,V=1409,E=7584,each=V*3,eacheye=E*3;
+  const assertTyped=(x,T,count,tag)=>{
+    if(!(x instanceof T)||x.length!==count)throw Error('PRIVATE_M13_V5_'+tag+'_INVALID');
+    if(T===Float32Array && Array.from(x).some(v=>!Number.isFinite(v)))throw Error('PRIVATE_M13_V5_'+tag+'_NONFINITE');
+  };
+  for(const [name,count] of [['bodyPositions',N*each],['bodyNormals',N*each],['eyePositions',N*eacheye],['eyeNormals',N*eacheye],['eyeColors',eacheye],['eyeFade',E],['uvs',V*2]])
+    assertTyped(data[name],Float32Array,count,name);
+  assertTyped(data.indices,Uint16Array,2264*3,'indices');
+  if(Array.from(data.indices).some(x=>x>=V))throw Error('PRIVATE_M13_V5_INDEX_RANGE');
+  assertTyped(data.atlas,Uint8Array,256*256*4,'atlas');
+  const coat=library.createTexture2D({width:256,height:256,pixels:data.atlas,filter:'LINEAR'});
+  const material=library.createMaterial({kind:'TEXTURED',texture:coat,baseColor:[1,1,1,1]});
+  assertTyped(data.stanceTransforms,Float32Array,N*7,'stanceTransforms');
+
+  const SHADOW_V=243, SHADOW_IDX=420*3;
+  assertTyped(data.shadowPositions,Float32Array,N*SHADOW_V*3,'shadowPositions');
+  assertTyped(data.shadowOpacity,Float32Array,N*SHADOW_V,'shadowOpacity');
+  assertTyped(data.shadowIndices,Uint16Array,SHADOW_IDX,'shadowIndices');
+  if(Array.from(data.shadowIndices).some(v=>v>=SHADOW_V))throw Error('PRIVATE_M13_V6_SHADOW_INDEX_OUT_OF_RANGE');
+  if(Array.from(data.shadowOpacity).some(v=>v<0||v>.220001))throw Error('PRIVATE_M13_V6_SHADOW_OPACITY_RANGE');
+  const p=data.bodyPositions.subarray(0,each),n=data.bodyNormals.subarray(0,each);
+  const bodyMesh=device.createMesh({vertexCount:V,indices:data.indices,attributes:[
+    {name:'aPosition',size:3,data:p,dynamic:true},
+    {name:'aNormal',size:3,data:n,dynamic:true},
+    {name:'aUV',size:2,data:data.uvs}
+  ]});
+  const range=bounds(p),height=range.hi[1]-range.lo[1];
+  if(height<.05||height>3)throw Error('PRIVATE_M13_V5_BODY_EXTENT_INVALID');
+  const scale=2.15/height,footX=pathAt(7.6)+5.2,footZ=7.6,footY=ground(footX,footZ);
+  // Camera-aligned *fixed* world orientation: local return -X projects
+  // screen-left at unchanged Gen3442 camera yaw .54. The rabbit's authored
+  // dynamic body yaw and source-to-source forward-to-left trajectory are retained.
+  const yaw=.54,rotation=[0,Math.sin(yaw/2),0,Math.cos(yaw/2)];
+  const node=scene.createNode({position:[footX-range.center[0]*scale,footY-range.lo[1]*scale,footZ-range.center[2]*scale],rotation,scale:[scale,scale,scale]});
+  const initial=library.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID,cameraPosition:[16.1,7.5,22.3]});
+  scene.setRenderable(node,{mesh:bodyMesh,program:initial.program,pass:'OPAQUE',cull:'NONE',bounds:{center:range.center,radius:range.radius+3}});
+  const eyeP=data.eyePositions.subarray(0,eacheye),eyeN=data.eyeNormals.subarray(0,eacheye),eyeProgram=device.createProgram(privateV4EyeShaders(device.backend));
+  const eyeMesh=device.createMesh({vertexCount:E,attributes:[
+    {name:'aPosition',size:3,data:eyeP,dynamic:true},
+    {name:'aNormal',size:3,data:eyeN,dynamic:true},
+    {name:'aColor',size:3,data:data.eyeColors},
+    {name:'aFade',size:1,data:data.eyeFade}
+  ]});
+  const eyeNode=scene.createNode({parent:node});
+  scene.setRenderable(eyeNode,{mesh:eyeMesh,program:eyeProgram,pass:'OPAQUE',cull:'NONE',bounds:{center:range.center,radius:range.radius+3}});
+  directEyes.set(eyeMesh,eyeProgram);
+
+  const shadowProgram=device.createProgram(privateV6PawShadowShaders(device.backend));
+  const shadowMesh=device.createMesh({vertexCount:SHADOW_V,indices:data.shadowIndices,attributes:[
+    {name:'aPosition',size:3,data:data.shadowPositions.subarray(0,SHADOW_V*3),dynamic:true},
+    {name:'aOpacity',size:1,data:data.shadowOpacity.subarray(0,SHADOW_V),dynamic:true}
+  ]});
+  const shadowNode=scene.createNode();
+  // This node is NOT parented to the rabbit: each world-space contact contour
+  // explicitly follows the exact same triangulated terrain as the held scene.
+  scene.setRenderable(shadowNode,{mesh:shadowMesh,program:shadowProgram,pass:'TRANSPARENT',cull:'NONE',bounds:{center:[7.8,0,7.4],radius:7}});
+  directEyes.set(shadowMesh,shadowProgram);
+
+  function frame(i){
+    if(!Number.isInteger(i)||i<0||i>=N)throw Error('PRIVATE_M13_V5_FRAME_RANGE');
+    const bp=data.bodyPositions.subarray(i*each,(i+1)*each),bn=data.bodyNormals.subarray(i*each,(i+1)*each),
+      ep=data.eyePositions.subarray(i*eacheye,(i+1)*eacheye),en=data.eyeNormals.subarray(i*eacheye,(i+1)*eacheye);
+    device.updateMeshAttribute(bodyMesh,'aPosition',bp);
+    device.updateMeshAttribute(bodyMesh,'aNormal',bn);
+    device.updateMeshAttribute(eyeMesh,'aPosition',ep);
+    device.updateMeshAttribute(eyeMesh,'aNormal',en);
+
+    device.updateMeshAttribute(shadowMesh,'aPosition',data.shadowPositions.subarray(i*SHADOW_V*3,(i+1)*SHADOW_V*3));
+    device.updateMeshAttribute(shadowMesh,'aOpacity',data.shadowOpacity.subarray(i*SHADOW_V,(i+1)*SHADOW_V));
+
+    // Original E3 native scene and all authored source/body/eye vertices are
+    // unchanged. A separately computed terrain support-plane transform moves
+    // the entire articulated assembly rigidly, including the parented eyes.
+    const st=data.stanceTransforms.subarray(i*7,i*7+7);
+    scene.setTransform(node,{position:[st[0],st[1],st[2]],rotation:[st[3],st[4],st[5],st[6]]});
+  }
+  frame(0);
+  return {mesh:bodyMesh,material,node,eyeNode,eyeMesh,shadowNode,shadowMesh,frame,frameCount:N,
+    scale,worldAnchor:[footX,footY,footZ],orientationYaw:yaw,
+    eyeSource:'exact historical eye-only V2 + mirror-derived second candidate',artisticStatus:'HOLD'};
+}
+
+
+// V9 owner-private C1 one-repair trial only. Artistic/heuristic contact cue; NOT a real shadow map or pressure measurement.
+function privateV6PawShadowShaders(backend){
+ const two=backend==='WEBGL2',head=two?'#version 300 es\n':'',a=two?'in':'attribute',vary=two?'out':'varying',inside=two?'in':'varying',out=two?'out vec4 outColor;':'',write=two?'outColor':'gl_FragColor';
+ return {vertexSource:head+a+' vec3 aPosition;'+a+' float aOpacity;uniform mat4 uMVP;'+vary+' float vOpacity;void main(){vOpacity=aOpacity;gl_Position=uMVP*vec4(aPosition,1.0);}',
+ fragmentSource:head+'precision mediump float;'+inside+' float vOpacity;'+out+'void main(){'+write+'=vec4(.13,.115,.085,clamp(vOpacity,0.0,.22));}'};
+}
+export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,onStatus=()=>{},illustrationMode=false}={}){
   if(!canvas||typeof canvas.getContext!=='function'||!['AUTO','WEBGL1','WEBGL2'].includes(backend)||typeof onStatus!=='function')
     throw new TypeError('HARVEST_OPTIONS_INVALID');
   let device;
   if(backend==='AUTO'){try{device=createNativeWebGLDevice(canvas,{backend:'WEBGL2'});}catch{device=createNativeWebGLDevice(canvas,{backend:'WEBGL1'});}}
   else device=createNativeWebGLDevice(canvas,{backend});
   const pipeline=createNativeFramePipeline(device),scene=createNativeSpatialScene(),library=createNativeMaterialLibrary(device);
-  const cameraPosition=[16.1,7.5,22.3];
-  const yaw=.54,pitch=-.18;
+  const cameraPosition=[14.8,5.9,19.1];
+  const yaw=.54,pitch=-.12;
   const cameraRotation=[Math.sin(pitch/2)*Math.cos(yaw/2),Math.cos(pitch/2)*Math.sin(yaw/2),-Math.sin(pitch/2)*Math.sin(yaw/2),Math.cos(pitch/2)*Math.cos(yaw/2)];
-  const camera=scene.createCamera({position:cameraPosition,rotation:cameraRotation,fovY:.76,near:.1,far:260,aspect:16/9});
-  const materials=new Map(),renderMaterials=new Map();
-  const batches=buildPastoral();
+  const camera=scene.createCamera({position:cameraPosition,rotation:cameraRotation,fovY:.73,near:.1,far:260,aspect:16/9});
+  const materials=new Map(),renderMaterials=new Map(),privateV4DirectEyes=new Map();
+  const batches=illustrationMode?new Map():buildPastoral();
   for(const [key,b] of batches){
     if(!b.i.length)continue;
     if(b.p.length/3>65535)throw Error('HARVEST_BATCH_WEBGL1_VERTEX_BUDGET_EXCEEDED_'+key);
@@ -491,7 +591,7 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
   }
   // Separate first-party native bird meshes; reversible motion never writes world source.
   const birds=[];
-  for(let k=0;k<3;k++){
+  for(let k=0;k<(illustrationMode?0:3);k++){
     const g=geometryBuilder(),size=.25+k*.06;
     g.tri('wings',[0,0,0],[-size,.09,-.11],[-size*1.75,.02,.14]);
     g.tri('wings',[0,0,0],[size,.09,-.11],[size*1.75,.02,.14]);
@@ -520,8 +620,14 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
   function render(){
     if(disposed)return;
     const view=scene.collect(camera);
-    pipeline.beginFrame({clear:{color:[.88,.70,.57,1],depth:1},depthMode:'TEST_WRITE',cull:'NONE'});
+    pipeline.beginFrame({clear:{color:illustrationMode?[0,0,0,0]:[.65,.75,.84,1],depth:1},depthMode:'TEST_WRITE',cull:'NONE'});
     for(const cmd of view.commands){
+      const direct=privateV4DirectEyes.get(cmd.mesh);
+      if(direct){
+        pipeline.submit({mesh:cmd.mesh,program:direct,first:cmd.first,count:cmd.count,pass:cmd.pass,cull:cmd.cull,depthKey:cmd.depthKey,
+          beforeDraw:(context,handle)=>{const loc=context.getUniformLocation(handle,'uMVP');if(loc===null)throw Error('PRIVATE_V4_EYE_MVP_UNIFORM_MISSING');context.uniformMatrix4fv(loc,false,cmd.modelViewProjection);}});
+        continue;
+      }
       const material=renderMaterials.get(cmd.mesh);
       if(!material)throw Error('HARVEST_MATERIAL_BINDING_MISSING');
       const draw=library.makeDrawBinding(material,{modelMatrix:cmd.modelMatrix,modelViewProjection:cmd.modelViewProjection,cameraPosition});
@@ -533,13 +639,15 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
   function tick(now){
     if(disposed||!playing)return;
     const dt=last?Math.min(80,now-last):0;last=now;time+=dt;
+    const loopPhase=(time%7500)*TAU/7500;
     for(let k=0;k<birds.length;k++){
-      const v=Math.sin(time*.0011+k*1.2);
-      scene.setTransform(birds[k],{position:[-4.5+k*1.05+time*.00008,4+k*.32+v*.11,-14-k*.5],
+      const v=Math.sin(loopPhase+k*1.2);
+      const drift=.12*Math.sin(loopPhase+k*.54)-.12*Math.sin(k*.54);
+      scene.setTransform(birds[k],{position:[-4.5+k*1.05+drift,4+k*.32+v*.11,-14-k*.5],
         rotation:[0,0,Math.sin(v*.18),Math.cos(v*.18)]});
     }
     if(rabbit){
-      const next=Math.floor(time/135)%17;
+      const next=rabbit.frameCount===180?Math.floor(time/(1000/24))%180:Math.floor(time/135)%17;
       if(next!==frameNo){rabbit.frame(next);frameNo=next;}
     }
     render();raf=requestAnimationFrame(tick);
@@ -553,9 +661,127 @@ export function createHarvestScene(canvas,{backend='AUTO',reducedMotion=false,on
     frameNo=0;render();report();
     return 'PRIVATE_A4_IN_MEMORY_BOUND_ARTISTIC_C1_HOLD';
   }
+  function attachPrivateM13V4(data){
+    if(disposed||rabbit)throw Error('HARVEST_PRIVATE_BINDING_NOT_AVAILABLE');
+    const attachment=createPrivateM1349(device,library,scene,data,privateV4DirectEyes);
+    rabbit=attachment;materials.set(attachment.node,attachment.material);renderMaterials.set(attachment.mesh,attachment.material);
+    frameNo=0;render();report();
+    return Object.freeze({status:'PRIVATE_V9_DERIVED_C1_SINGLE_REPAIR_UNACCEPTED',scale:attachment.scale,
+      anchor:attachment.worldAnchor,orientationYaw:attachment.orientationYaw,eyes:2,frames:180});
+  }
+  function drawPrivateM13V4Frame(i){
+    if(disposed||!rabbit||rabbit.frameCount!==180)throw Error('PRIVATE_M13_V5_NOT_ATTACHED');
+    rabbit.frame(i);frameNo=i;
+    // Private deterministic manual review: apply existing native bird motion at
+    // the frame's 24 fps timestamp, equivalent to the original tick law.
+    // Distinct environmental instants do not imply 180 distinct rabbit rig poses.
+    const loopPhase=(i%180)*TAU/180;
+    for(let k=0;k<birds.length;k++){
+      const v=Math.sin(loopPhase+k*1.2);
+      const drift=.12*Math.sin(loopPhase+k*.54)-.12*Math.sin(k*.54);
+      scene.setTransform(birds[k],{position:[-4.5+k*1.05+drift,4+k*.32+v*.11,-14-k*.5],
+        rotation:[0,0,Math.sin(v*.18),Math.cos(v*.18)]});
+    }
+    render();
+    return Object.freeze({frame:i,renderCount,backend:device.backend,eyes:2,orientationYaw:rabbit.orientationYaw});
+  }
+
+  function setPrivateContactShadowVisible(enabled){
+    if(disposed||!rabbit||!rabbit.shadowNode||typeof enabled!=='boolean')throw Error('PRIVATE_M13_V6_SHADOW_VISIBILITY_INVALID');
+    scene.setVisibility(rabbit.shadowNode,enabled);render();return {visible:enabled,backend:device.backend,renderCount};
+  }
   function dispose(){if(disposed)return;pause();disposed=true;scene.dispose();library.dispose();device.dispose();}
   report();
-  return Object.freeze({backend:device.backend,resize,render,pause,play,attachPrivateA4,dispose,
+  return Object.freeze({backend:device.backend,resize,render,pause,play,attachPrivateA4,attachPrivateM13V4,drawPrivateM13V4Frame,setPrivateContactShadowVisible,dispose,
     status:()=>Object.freeze({backend:device.backend,playing,frames:renderCount,privateRabbitAttached:Boolean(rabbit),
-      artisticAcceptance:'HOLD',sceneType:'NATIVE_PASTORAL_CONSTRUCTION_CANDIDATE',publicationAuthorized:false})});
+      artisticAcceptance:'HOLD',sceneType:illustrationMode?'SOURCE_ART_HYBRID_NATIVE_CHARACTER_V10':'NATIVE_PASTORAL_V9_C1_DERIVED_TRIAL',publicationAuthorized:false})});
+}
+
+
+/* PRIVATE_URL_BACKED_INTEGRATION_ONLY: bounded SHA256 asset loader; NOT a release. */
+/**
+ * Harvest A4 V10: PRIVATE preintegration loader.
+ * Does not grant artist acceptance, public hosting, upload, merge or publication.
+ * Decodes exactly the author-preserved V9 buffers, after verifying every byte digest.
+ * The caller must supply an authorized private readBytes(fileName) function.
+ */
+const VECTOR_REQUIREMENTS=Object.freeze([
+  ['bodyPositions','body_positions.f32','Float32Array',760860],
+  ['bodyNormals','body_normals.f32','Float32Array',760860],
+  ['eyePositions','eye_positions.f32','Float32Array',4095360],
+  ['eyeNormals','eye_normals.f32','Float32Array',4095360],
+  ['eyeColors','eye_colors.f32','Float32Array',22752],
+  ['eyeFade','eye_fade.f32','Float32Array',7584],
+  ['uvs','body_uv.f32','Float32Array',2818],
+  ['indices','body_indices.u16','Uint16Array',6792],
+  ['atlas','coat_rgba8.bin','Uint8Array',262144],
+  ['stanceTransforms','stance_node_180x7.f32','Float32Array',1260],
+  ['shadowPositions','shadow_positions_180.f32','Float32Array',131220],
+  ['shadowOpacity','shadow_alpha_180.f32','Float32Array',43740],
+  ['shadowIndices','shadow_indices.u16','Uint16Array',1260],
+]);
+
+function check(ok, reason) { if (!ok) throw new Error('HARVEST_V10_'+reason); }
+function expectedBytes(type,n) { return n*({Float32Array:4,Uint16Array:2,Uint8Array:1}[type]); }
+function byteView(value) {
+  if (value instanceof ArrayBuffer) return new Uint8Array(value);
+  if (ArrayBuffer.isView(value)) return new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
+  throw new Error('HARVEST_V10_READ_BYTES_TYPE');
+}
+async function sha256(bytes){
+  const hash=await crypto.subtle.digest('SHA-256',bytes);
+  return Array.from(new Uint8Array(hash),x=>x.toString(16).padStart(2,'0')).join('');
+}
+function validateManifest(m){
+  check(m && m.schema==='HARVEST_A4_V10_SOURCE_ART_PRIVATE_ASSET_MANIFEST_V1','SCHEMA');
+  check(m.scope==='PRIVATE_PREINTEGRATION_NO_PUBLIC_ASSET_RELEASE','SCOPE');
+  check(m.sourceHead==='12e04206407aae29334b33bccd6c86a38679a9fa','SOURCE_HEAD');
+  check(m.ownerArtisticDisposition==='PENDING_C1_HOLD','C1_NOT_HOLD');
+  check(m.publicAssetReleaseAllowed===false && m.mergeAllowed===false && m.publicationAllowed===false,'UNAUTHORIZED_RELEASE');
+  check(m.frameCount===180 && m.fps===24 && m.durationSeconds===7.5,'FRAME_CONTRACT');
+  check(m.art?.file==='approved_harvest_backdrop_UNMODIFIED_PRIVATE.png' && m.art.width===1672 && m.art.height===941 && Number.isInteger(m.art.bytes) && m.art.bytes>0,'ART_IDENTITY');
+  check(Array.isArray(m.buffers) && m.buffers.length===VECTOR_REQUIREMENTS.length,'BUFFER_COUNT');
+  for(let i=0;i<VECTOR_REQUIREMENTS.length;i++){
+    const r=m.buffers[i],e=VECTOR_REQUIREMENTS[i];
+    check(r?.key===e[0]&&r?.file===e[1]&&r?.type===e[2]&&r?.length===e[3]&&r?.bytes===expectedBytes(e[2],e[3]),'BUFFER_LAYOUT_'+e[0]);
+    check(/^[a-f0-9]{64}$/.test(r.sha256),'BUFFER_DIGEST_FORMAT_'+e[0]);
+  }
+  check(/^[a-f0-9]{64}$/.test(m.art.sha256),'ART_DIGEST_FORMAT');
+}
+export async function loadHarvestV10PrivateAssets(manifest,readBytes){
+  validateManifest(manifest);
+  check(typeof readBytes==='function','READER_REQUIRED');
+  const assetData={schema:'PRIVATE_A4_M13_V9_180_FRAME_C1_SINGLE_REPAIR'};
+  for(const item of manifest.buffers){
+    const bytes=byteView(await readBytes(item.file));
+    check(bytes.byteLength===item.bytes,'BYTE_LENGTH_'+item.key);
+    check((await sha256(bytes))===item.sha256,'HASH_'+item.key);
+    const clone=bytes.slice();
+    const t=item.type==='Uint8Array'?new Uint8Array(clone.buffer)
+      :item.type==='Uint16Array'?new Uint16Array(clone.buffer)
+      :new Float32Array(clone.buffer);
+    check(t.length===item.length,'ARRAY_LENGTH_'+item.key);
+    if(item.type==='Float32Array'){
+      for(let i=0;i<t.length;i++)check(Number.isFinite(t[i]),'NONFINITE_'+item.key+'_'+i);
+    }
+    assetData[item.key]=t;
+  }
+  const art=byteView(await readBytes(manifest.art.file));
+  check(art.byteLength===manifest.art.bytes,'ART_BYTES');
+  check((await sha256(art))===manifest.art.sha256,'ART_HASH');
+  check(art.length>32 && art[0]===137 && art[1]===80 && art[2]===78 && art[3]===71,'ART_NOT_PNG');
+  const dv=new DataView(art.buffer,art.byteOffset,art.byteLength);
+  check(dv.getUint32(16)===manifest.art.width && dv.getUint32(20)===manifest.art.height,'ART_DIMENSIONS');
+  return Object.freeze({assets:assetData,approvedIllustrationPNG:art.slice(),sourceHead:manifest.sourceHead,frameCount:180,ownerC1:'HOLD'});
+}
+
+/** A URL-backed reader only; no publication or hosting authority is implied. */
+export function authorizedPrivateFetchReader(base,fetchImpl=fetch){
+  check(typeof base==='string' && base.startsWith('/') && !base.includes('..') && base.endsWith('/'),'PRIVATE_BASE_REQUIRED');
+  return async(file)=>{
+    check(/^[a-zA-Z0-9._-]+$/.test(file),'UNSAFE_FILE_NAME');
+    const r=await fetchImpl(base+file,{credentials:'same-origin',cache:'no-store',redirect:'error'});
+    check(r.ok,'ASSET_UNAVAILABLE_'+file);
+    return new Uint8Array(await r.arrayBuffer());
+  };
 }

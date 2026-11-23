@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-23T20:25:23Z",
+  "generatedAt": "2026-11-23T21:25:04Z",
   "window": {
-    "start": "2026-10-24T20:25:23Z",
-    "end": "2026-11-23T20:25:23Z"
+    "start": "2026-10-24T21:25:04Z",
+    "end": "2026-11-23T21:25:04Z"
   },
   "dimensions": {
     "requestPath": [
@@ -78,12 +78,12 @@
         "visits": 0
       },
       {
-        "value": "/products/archcoin/payable/overview/",
+        "value": "/products/archcoin/allocation/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/products/archcoin/allocation/",
+        "value": "/products/archcoin/payable/overview/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -121,8 +121,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1099,
-        "visits": 1099
+        "pageLoads": 1109,
+        "visits": 1109
       },
       {
         "value": "diamondgatebridge.com",
@@ -148,8 +148,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1192,
-        "visits": 1099
+        "pageLoads": 1182,
+        "visits": 1089
       },
       {
         "value": "CN",
@@ -157,14 +157,19 @@
         "visits": 20
       },
       {
-        "value": "CA",
-        "pageLoads": 11,
-        "visits": 11
-      },
-      {
         "value": "BR",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "SG",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "CA",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "deviceType": [

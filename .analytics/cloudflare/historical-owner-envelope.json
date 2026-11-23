@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-23T20:25:23Z",
+  "generatedAt": "2026-11-23T21:25:04Z",
   "window": {
-    "start": "2026-08-25T20:25:23Z",
-    "end": "2026-11-23T20:25:23Z"
+    "start": "2026-08-25T21:25:04Z",
+    "end": "2026-11-23T21:25:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2690,
+    "pageLoads": 2680,
     "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2690,
+        "pageLoads": 2680,
         "visits": 730
       }
     },
@@ -90,13 +90,13 @@
         "pageLoads": 50,
         "visits": 10
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -142,8 +142,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/prelude/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -152,14 +160,6 @@
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 460,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/build/": {
@@ -237,15 +237,11 @@
       "/prototypes/abc-roofing/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/about-this-underdog/": {
-        "pageLoads": 10,
-        "visits": 0
       }
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1960,
+        "pageLoads": 1950,
         "visits": 0
       },
       "(none)": {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-22T23:24:18Z",
+  "generatedAt": "2026-11-23T00:47:37Z",
   "window": {
-    "start": "2026-08-24T23:24:18Z",
-    "end": "2026-11-22T23:24:18Z"
+    "start": "2026-08-25T00:47:37Z",
+    "end": "2026-11-23T00:47:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,23 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2860,
+    "pageLoads": 2790,
     "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2860,
+        "pageLoads": 2790,
         "visits": 730
       }
     },
     "byPath": {
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 90,
-        "visits": 10
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
         "visits": 0
@@ -41,6 +33,10 @@
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
+      },
+      "/showroom/globe/audralia/": {
+        "pageLoads": 80,
+        "visits": 10
       },
       "/laws/categories/reality/measure.html": {
         "pageLoads": 30,
@@ -52,10 +48,6 @@
       },
       "/laws/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -122,16 +114,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -162,19 +154,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -265,7 +257,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2130,
+        "pageLoads": 2060,
         "visits": 0
       },
       "(none)": {

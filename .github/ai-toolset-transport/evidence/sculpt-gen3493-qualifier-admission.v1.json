@@ -1,0 +1,43 @@
+{
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "result": "ADMITTED_AND_LOCKED",
+  "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "operationStarted": true,
+  "workflowExecutionAuthorized": true,
+  "branchCreationAuthorized": true,
+  "implementationInferenceAuthorized": false,
+  "repositoryWritesAuthorized": true,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "errorCode": null,
+  "field": null,
+  "sourceDocument": null,
+  "procedureLocatorDigest": "b97c4ff74530d43b7c3e3cd9ca77045f5d3a673d0b1dfeb4970a8be288b4a9ef",
+  "requestDigest": "091a25d27136ea8639b94c8f4499147ac2ddaad169db26e502fe1c7b25e44912",
+  "lock": {
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "lockAcquired": true,
+    "lockGeneration": 3493,
+    "lockScope": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING",
+    "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
+    "acquisitionCommitSha": "73d80d52c2f081a6ceb8629f6196af235c9376f9",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "a19cbbd7d8b959051f61c52dea3eea777f42d8ae",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "observedBranchHead": "ac76d3345fec9b35bc94246c7c53d1dbdefe4a56",
+    "observedLedgerBlobSha": "0ffd96acd5e978897b2d66c6f24eaeae6b58bcc1",
+    "scopeHash": "c35922f276324f547c7ba87c0e21928e97174aa1148813e7bd2cc4ba0d95681f"
+  },
+  "sourceProof": {
+    "kind": "PROJECTION_OF_AUTHENTIC_CANONICAL_GITHUB_ACTIONS_ADMISSION",
+    "sourceWorkflowRun": 45092512142,
+    "sourceArtifactId": 14780824962,
+    "sourceArtifactName": "canonical-operation-intake-transport-45092512142-1",
+    "sourceArtifactFile": "canonical-intake-transport-receipt.json",
+    "sourceCommentId": 7088868106,
+    "sourceCommentUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7108#issuecomment-7088868106",
+    "sourceAcquisitionCommit": "73d80d52c2f081a6ceb8629f6196af235c9376f9",
+    "noIndependentAdmissionInvented": true
+  }
+}

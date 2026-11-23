@@ -510,3 +510,93 @@ test('original intersecting reference is viewable only if every master is frozen
   assert.throws(()=>createSculptSession({positions,triangles,regions,protectedVertices:[0,1,2,3,4],
     sourceGuards:{readOnlyOriginalBaseline:true}}),/M13_ORIGINAL_READONLY_FULL_PROTECTION_REQUIRED/);
 });
+
+
+// S4-safe incremental validation: public synthetic source only. No private character bytes.
+const twoSheets=()=>({positions:new Float32Array([-2,-2,0,2,-2,0,0,2,0,-.35,-.35,.3,.35,-.35,.3,0,.35,.3]),triangles:new Uint16Array([0,1,2,3,4,5]),regions:['A','A','A','B','B','B']});
+const open=()=>createSculptSession(twoSheets());
+const stroke=(s,dz,radius=1.5)=>{const h=s.pick([0,0,2],[0,0,-1]);s.beginStroke(h,{region:'B',radius});return s.applyStroke({mode:'ORGANIC_GRAB',delta:[0,0,dz]});};
+test('changed-versus-immutable sheet collision is rejected atomically, not silently fast-passed',()=>{
+ const s=open(),before=s.serialize();
+ assert.throws(()=>stroke(s,-.35),/SELF_INTERSECTION/);
+ assert.equal(s.serialize(),before);assert.equal(s.state().undoDepth,0);assert.equal(s.state().active,false);
+});
+test('lawful edit is source-relative safe and full geometry recheck agrees with incremental',()=>{
+ const f=twoSheets(),s=open(),source=s.getPositions();
+ assert(stroke(s,-.15));s.endStroke();
+ const r=s.getLastEditValidation();assert.equal(r.method,'QUALIFIED_SOURCE_DELTA_ALL_AFFECTED_PAIRS');
+ assert.equal(r.originalSourceVerified,true);assert(r.candidateChecks>0);
+ assert.equal(verifySculptGeometry(s.getPositions(),f.triangles).triangleCount,2);
+ assert.equal(verifySculptSourceRelative(source,s.getPositions(),f.triangles).sourceRelativePass,true);
+});
+test('two consecutive edits compare all ever-changed faces against original baseline',()=>{
+ const s=open();assert(stroke(s,-.15));s.endStroke();
+ const h=s.pick([0,0,2],[0,0,-1]);s.beginStroke(h,{region:'B',radius:1.5});
+ assert.throws(()=>s.applyStroke({mode:'ORGANIC_GRAB',delta:[0,0,-.2]}),/SELF_INTERSECTION|SCULPT_SOURCE_AREA_GUARD_REJECTED/);
+ assert.equal(s.state().active,false);assert.equal(s.state().undoDepth,1);
+ assert(s.undo());
+});
+test('normal or area collapse still rejects and rolls back, preserving prior error contract',()=>{
+ const positions=new Float32Array([-1,-1,0,0,-1,0,1,-1,0,-1,0,0,0,0,0,1,0,0,-1,1,0,0,1,0,1,1,0]);
+ const triangles=new Uint16Array([0,1,4,0,4,3,1,2,5,1,5,4,3,4,7,3,7,6,4,5,8,4,8,7]);
+ const regions=['back','back','back','back','shoulder','back','back','back','back'];
+ const protectedVertices=[0,1,2,3,5,6,7,8];
+ const s=createSculptSession({positions,triangles,regions,protectedVertices,sourceGuards:{maxAreaRatio:1.0000001}});
+ const before=s.serialize(),h=s.pick([0,0,3],[0,0,-1]);
+ s.beginStroke(h,{region:'shoulder',fieldRadii:[1,1,1]});
+ assert.throws(()=>s.applyStroke({mode:'ORGANIC_INFLATE',amount:.3}),/SCULPT_SOURCE_AREA_GUARD_REJECTED/);
+ assert.equal(s.serialize(),before);assert.equal(s.state().undoDepth,0);
+});
+test('read-only source does not gain editable collision trust',()=>{
+ const f=twoSheets();const regions=Array(6).fill('ORIGINAL_PROTECTED');
+ const s=createSculptSession({...f,regions,protectedVertices:[0,1,2,3,4,5],sourceGuards:{readOnlyOriginalBaseline:true}});
+ assert.equal(s.getLastEditValidation(),null);
+ assert.throws(()=>s.beginStroke({position:[0,0,0],normal:[0,0,1],vertexIds:[0,1,2]}),/M13_ORIGINAL_REFERENCE_EDIT_FORBIDDEN/);
+});
+
+
+// Source-scale synthetic 2D sheet. Mesh uses the same ~16,000 triangle count as
+// the original owner-private S4 without publishing or embedding any animal data.
+const syntheticLargeSheet=()=>{
+  const cols=96,rows=85,p=[],t=[];
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)p.push(x*.05,y*.05,0);
+  for(let y=0;y<rows-1;y++)for(let x=0;x<cols-1;x++){
+    const a=y*cols+x,b=a+1,c=a+cols,d=c+1;
+    t.push(a,b,d,a,d,c);
+  }
+  return {positions:new Float32Array(p),triangles:new Uint32Array(t),
+    regions:Array(cols*rows).fill('body'),protectedVertices:[0,cols-1,(rows-1)*cols]};
+};
+test('source-sized first-party synthetic sheet validates with no unsafe skip',()=>{
+  const a=syntheticLargeSheet();
+  const r=verifySculptGeometry(a.positions,a.triangles);
+  assert.equal(r.triangleCount,15960);
+  assert.equal(r.intersectionStats.method,'CONSERVATIVE_AABB_SWEEP_UNCHANGED_NARROWPHASE');
+  const session=createSculptSession(a);
+  assert.equal(session.verify().editableMeshSafetyQualified,true);
+});
+test('source-sized synthetic mesh rejects a new coplanar intersecting patch',()=>{
+  const a=syntheticLargeSheet(),vertices=a.positions.length/3;
+  const p=new Float32Array(a.positions.length+9);p.set(a.positions);
+  p.set([.1,.1,0,.15,.1,0,.1,.15,0],a.positions.length);
+  const t=new Uint32Array(a.triangles.length+3);t.set(a.triangles);
+  t.set([vertices,vertices+1,vertices+2],a.triangles.length);
+  assert.throws(()=>verifySculptGeometry(p,t),/SELF_INTERSECTION/);
+});
+test('source-sized synthetic mesh detects a deliberately transverse crossing',()=>{
+  const a=syntheticLargeSheet(),vertices=a.positions.length/3;
+  const p=new Float32Array(a.positions.length+9);p.set(a.positions);
+  p.set([.1,.1,-.1,.15,.1,.1,.1,.15,.1],a.positions.length);
+  const t=new Uint32Array(a.triangles.length+3);t.set(a.triangles);
+  t.set([vertices,vertices+1,vertices+2],a.triangles.length);
+  assert.throws(()=>verifySculptGeometry(p,t),/SELF_INTERSECTION/);
+});
+test('pathological overlap volume must fail closed on bounded broadphase budget',()=>{
+  const n=5000,p=new Float32Array(n*9),t=new Uint32Array(n*3);
+  for(let i=0;i<n;i++){
+    const z=i*.01;
+    p.set([0,0,z,1,0,z,0,1,z],i*9);
+    t.set([3*i,3*i+1,3*i+2],i*3);
+  }
+  assert.throws(()=>verifySculptGeometry(p,t),/SELF_INTERSECTION_BROADPHASE_BUDGET_EXCEEDED/);
+});

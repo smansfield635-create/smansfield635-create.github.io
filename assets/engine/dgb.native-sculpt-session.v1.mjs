@@ -118,22 +118,38 @@ export function verifySculptGeometry(positions,triangles,{checkSelfIntersection=
       if(edges.get(e)>2)throw new Error('NONMANIFOLD_EDGE');
     }
   }
-  // Compare even vertex-adjacent faces: a shared vertex allows touching, not
-  // a noncoplanar penetration elsewhere inside the triangles.
+  // A conservative AABB sweep broad phase makes genuine source-sized animals
+  // testable without changing the existing narrow-phase contact predicate.
+  // +1e-10 tolerance exactly matches trianglesIntersect's own broad bound.
+  // Retain even vertex/edge-adjacent candidates: adjacency is NOT immunity.
+  let intersectionStats=null;
   if(checkSelfIntersection){
-    const faces=idx.length/3;
-    if(faces>3500)throw new RangeError('SELF_INTERSECTION_BUDGET_EXCEEDED');
-    for(let i=0;i<faces;i++){
-      const a=[idx[3*i],idx[3*i+1],idx[3*i+2]];
-      for(let j=i+1;j<faces;j++){
-        const b=[idx[3*j],idx[3*j+1],idx[3*j+2]];
-        // Index adjacency alone does not excuse two coplanar face interiors
-        // occupying the same area. Ordinary edge/vertex contact remains legal.
-        if(trianglesIntersect(...a.map(k=>pos(v,k)),...b.map(k=>pos(v,k))))throw new Error('SELF_INTERSECTION');
-      }
+    const epsilon=1e-10, faces=idx.length/3, boxes=new Array(faces);
+    for(let f=0;f<faces;f++){
+      const a=pos(v,idx[3*f]),b=pos(v,idx[3*f+1]),c=pos(v,idx[3*f+2]);
+      boxes[f]={id:f,lo:[Math.min(a[0],b[0],c[0]),Math.min(a[1],b[1],c[1]),Math.min(a[2],b[2],c[2])],
+        hi:[Math.max(a[0],b[0],c[0]),Math.max(a[1],b[1],c[1]),Math.max(a[2],b[2],c[2])]};
     }
+    boxes.sort((a,b)=>a.lo[0]-b.lo[0]||a.id-b.id);
+    let active=[],candidateChecks=0,exactPairs=0;
+    for(const box of boxes){
+      // Dropping only completely separated X intervals never drops a contact.
+      active=active.filter(old=>old.hi[0]>=box.lo[0]-epsilon);
+      for(const old of active){
+        if(++candidateChecks>12000000)throw new RangeError('SELF_INTERSECTION_BROADPHASE_BUDGET_EXCEEDED');
+        if(old.hi[1]<box.lo[1]-epsilon||box.hi[1]<old.lo[1]-epsilon||
+           old.hi[2]<box.lo[2]-epsilon||box.hi[2]<old.lo[2]-epsilon)continue;
+        if(++exactPairs>2000000)throw new RangeError('SELF_INTERSECTION_NARROWPHASE_BUDGET_EXCEEDED');
+        const ai=[idx[3*old.id],idx[3*old.id+1],idx[3*old.id+2]];
+        const bi=[idx[3*box.id],idx[3*box.id+1],idx[3*box.id+2]];
+        if(trianglesIntersect(...ai.map(k=>pos(v,k)),...bi.map(k=>pos(v,k))))
+          throw new Error('SELF_INTERSECTION');
+      }
+      active.push(box);
+    }
+    intersectionStats=Object.freeze({method:'CONSERVATIVE_AABB_SWEEP_UNCHANGED_NARROWPHASE',candidateChecks,exactPairs});
   }
-  return Object.freeze({vertexCount:n,triangleCount:idx.length/3,openBoundaryEdges:[...edges.values()].filter(x=>x===1).length,minDoubleArea});
+  return Object.freeze({vertexCount:n,triangleCount:idx.length/3,openBoundaryEdges:[...edges.values()].filter(x=>x===1).length,minDoubleArea,intersectionStats});
 }
 /** Fixed-topology source-relative quality. This is stricter than manifoldness:
  * M1.6 showed that valid indexed triangles may rotate or inflate excessively. */
@@ -292,6 +308,114 @@ export function sculptScreenRay({x,y,width,height,viewProjection}){
   function unproject(z){const p=[ndc[0],ndc[1],z,1],r=Array.from({length:4},(_,i)=>m[i]*p[0]+m[i+4]*p[1]+m[i+8]*p[2]+m[i+12]*p[3]);if(Math.abs(r[3])<1e-12)throw new Error('SCREEN_RAY_INVALID');return r.slice(0,3).map(x=>x/r[3]);}
   const a=unproject(-1),b=unproject(1);return {origin:a,direction:norm(sub(b,a))};
 }
+/** Source-custodied incremental collision preflight: built ONLY after a complete
+ * exhaustive-narrowphase qualified entry check. The immutable original source
+ * is the comparison baseline; all faces that differ from it are rechecked
+ * against every potentially intersecting unchanged face and each other.
+ * This does not exempt incident triangles, existing UV/source guards, or
+ * full source admission, and never relaxes the original trianglesIntersect.
+ * The index is not exported and therefore cannot accept a forged trust token.
+ */
+function createQualifiedSculptEditIndex(reference,faces,sourceGuards){
+  const count=reference.length/3,faceCount=faces.length/3;
+  const incident=Array.from({length:count},()=>[]),sourceBoxes=new Array(faceCount);
+  const boxFor=(p,f)=>{
+    const a=pos(p,faces[3*f]),b=pos(p,faces[3*f+1]),c=pos(p,faces[3*f+2]);
+    return {id:f,lo:[Math.min(a[0],b[0],c[0]),Math.min(a[1],b[1],c[1]),Math.min(a[2],b[2],c[2])],
+      hi:[Math.max(a[0],b[0],c[0]),Math.max(a[1],b[1],c[1]),Math.max(a[2],b[2],c[2])]};
+  };
+  for(let f=0;f<faceCount;f++){
+    sourceBoxes[f]=boxFor(reference,f);
+    for(let k=0;k<3;k++)incident[faces[3*f+k]].push(f);
+  }
+  // A BVH over source-verified immutable triangles removes O(changedFaces * allFaces)
+  // scans. Each node contains a conservative union AABB and source face IDs.
+  // Nothing mutable is indexed, and an edited face is ALWAYS re-boxed separately.
+  function makeNode(items){
+    const lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];
+    for(const b of items)for(let k=0;k<3;k++){
+      lo[k]=Math.min(lo[k],b.lo[k]);hi[k]=Math.max(hi[k],b.hi[k]);}
+    if(items.length<=12)return {lo,hi,items};
+    const range=hi.map((x,k)=>x-lo[k]),axis=range.indexOf(Math.max(...range));
+    items.sort((a,b)=>((a.lo[axis]+a.hi[axis])-(b.lo[axis]+b.hi[axis]))||a.id-b.id);
+    const mid=items.length>>>1;
+    return {lo,hi,left:makeNode(items.slice(0,mid)),right:makeNode(items.slice(mid))};
+  }
+  const tree=makeNode(sourceBoxes.slice()),eps=1e-10;
+  const sourceNormals=new Float64Array(faceCount*3),sourceAreas=new Float64Array(faceCount);
+  for(let f=0;f<faceCount;f++){
+    const a=pos(reference,faces[3*f]),b=pos(reference,faces[3*f+1]),c=pos(reference,faces[3*f+2]);
+    const n=cross(sub(b,a),sub(c,a));sourceNormals.set(n,3*f);
+    sourceAreas[f]=Math.hypot(...n);
+  }
+  const minCos=sourceGuards.minNormalCosine??0.2,minRatio=sourceGuards.minAreaRatio??0.5,
+    maxRatio=sourceGuards.maxAreaRatio??2;
+  const protectedVertices=[...sourceGuards.protectedVertices];
+  const overlaps=(a,b)=>a.hi[0]>=b.lo[0]-eps&&b.hi[0]>=a.lo[0]-eps&&
+    a.hi[1]>=b.lo[1]-eps&&b.hi[1]>=a.lo[1]-eps&&
+    a.hi[2]>=b.lo[2]-eps&&b.hi[2]>=a.lo[2]-eps;
+  const intersect=(p,i,j)=>{
+    const ids=[faces[3*i],faces[3*i+1],faces[3*i+2]],other=[faces[3*j],faces[3*j+1],faces[3*j+2]];
+    return trianglesIntersect(...ids.map(k=>pos(p,k)),...other.map(k=>pos(p,k)));
+  };
+  return function validateQualifiedEdit(candidate){
+    const flags=new Uint8Array(faceCount),changed=[];
+    for(let i=0;i<count;i++)if(candidate[3*i]!==reference[3*i]||
+        candidate[3*i+1]!==reference[3*i+1]||candidate[3*i+2]!==reference[3*i+2]){
+      if(!finite(candidate[3*i])||!finite(candidate[3*i+1])||!finite(candidate[3*i+2]))throw new TypeError('POSITIONS_INVALID');
+      for(const f of incident[i])if(!flags[f]){flags[f]=1;changed.push(f);}
+    }
+    // The original full source passed index/area/manifold checks. Triangles,
+    // UV/master and region IDs are immutable within this fixed-topology session.
+    // Only faces incident on a source-different vertex can become degenerate,
+    // reverse, change area or intersect a previously safe face. Validate every
+    // such face against the EXACT original reference and frozen guards.
+    for(const id of protectedVertices)for(let k=0;k<3;k++)
+      if(candidate[3*id+k]!==reference[3*id+k])throw Error('SCULPT_PROTECTED_SOURCE_CHANGED');
+    const boxes=[];
+    for(const f of changed){
+      const ai=faces[3*f],bi=faces[3*f+1],ci=faces[3*f+2];
+      const a=pos(candidate,ai),b=pos(candidate,bi),c=pos(candidate,ci);
+      if(![...a,...b,...c].every(finite))throw new TypeError('POSITIONS_INVALID');
+      const n=cross(sub(b,a),sub(c,a)),area=Math.hypot(...n);
+      if(!finite(area)||area<1e-8)throw new Error('DEGENERATE_TRIANGLE');
+      const refNorm=[sourceNormals[3*f],sourceNormals[3*f+1],sourceNormals[3*f+2]];
+      const srcArea=sourceAreas[f];
+      const cosine=dot(refNorm,n)/(srcArea*area),ratio=area/srcArea;
+      if(cosine<minCos)throw new Error('SCULPT_SOURCE_NORMAL_GUARD_REJECTED');
+      if(ratio<minRatio||ratio>maxRatio)throw new Error('SCULPT_SOURCE_AREA_GUARD_REJECTED');
+      boxes.push(boxFor(candidate,f));
+    }
+    let candidateChecks=0,exactPairs=0;
+    const guard=()=>{if(++candidateChecks>12000000)
+      throw new RangeError('SELF_INTERSECTION_INCREMENTAL_BROADPHASE_BUDGET_EXCEEDED');};
+    const exact=(i,j)=>{if(++exactPairs>2000000)
+      throw new RangeError('SELF_INTERSECTION_INCREMENTAL_NARROWPHASE_BUDGET_EXCEEDED');
+      if(intersect(candidate,i,j))throw new Error('SELF_INTERSECTION');};
+    for(const box of boxes){
+      // Query only conservative source-BVH nodes overlapping the edited AABB.
+      // An immutable original face that changed is excluded; changed/changed
+      // intersections are tested with BOTH current boxes below.
+      const stack=[tree];
+      while(stack.length){
+        const node=stack.pop();guard();
+        if(!overlaps(box,node))continue;
+        if(node.items){for(const old of node.items){
+          if(flags[old.id])continue;
+          guard();
+          if(overlaps(box,old))exact(box.id,old.id);
+        }} else {stack.push(node.left,node.right);}
+      }
+    }
+    // Both displaced faces must be checked against their CURRENT positions.
+    for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){
+      guard();if(overlaps(boxes[i],boxes[j]))exact(boxes[i].id,boxes[j].id);
+    }
+    return Object.freeze({method:'QUALIFIED_SOURCE_DELTA_ALL_AFFECTED_PAIRS',
+      touchedFaces:changed.length,candidateChecks,exactPairs,originalSourceVerified:true});
+  };
+}
+
 export function createSculptSession({positions,triangles,regions,protectedVertices=[],maxHistory=40,sourceGuards={}}={}){
   let current=floatPositions(positions);const faces=intTriangles(triangles),count=current.length/3;
   if(!Array.isArray(regions)||regions.length!==count||regions.some(x=>typeof x!=='string'||!x))throw new TypeError('REGION_IDS_REQUIRED');
@@ -305,7 +429,10 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
     throw new Error('M13_ORIGINAL_READONLY_FULL_PROTECTION_REQUIRED');
   const reference=new Float32Array(current),guardOptions={...sourceGuards,protectedVertices:[...frozen]};
   verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal});
-  verifySculptSourceRelative(reference,current,faces,guardOptions);let active=null,revision=0;
+  verifySculptSourceRelative(reference,current,faces,guardOptions);
+  // A read-only original cannot receive any trusted editable-session token.
+  const validateEdit=readOnlyOriginal?null:createQualifiedSculptEditIndex(reference,faces,guardOptions);
+  let latestEditValidation=null,active=null,revision=0;
   function pick(origin,direction){
     v3(origin,'PICK_ORIGIN');v3(direction,'PICK_DIRECTION');const ray=norm(direction);let best=null;
     for(let k=0;k<faces.length;k+=3){const ids=[faces[k],faces[k+1],faces[k+2]],h=hitTriangle(origin,ray,...ids.map(i=>pos(current,i)));
@@ -353,22 +480,26 @@ export function createSculptSession({positions,triangles,regions,protectedVertic
       for(let j=0;j<3;j++)candidate[3*i+j]+=shift[j]*active.strength*w;
     }
     try{
-      verifySculptGeometry(candidate,faces);
-      verifySculptSourceRelative(reference,candidate,faces,guardOptions);
-    }catch(e){current=new Float32Array(active.before);active=null;throw e;}
+      // This closure is available only after fully checked original source
+      // admission. It validates all affected structural/source-relative faces
+      // and every potentially intersecting pair; all unaffected baseline faces
+      // remain exact immutable copies of the originally qualified source.
+      latestEditValidation=validateEdit(candidate);
+    }catch(e){current=new Float32Array(active.before);active=null;latestEditValidation=null;throw e;}
     current=candidate;active.changed=true;revision++;return true;
   }
   function endStroke(){if(!active)throw new Error('NO_ACTIVE_STROKE');const state=active;active=null;
     if(state.changed){undo.push(state.before);if(undo.length>maxHistory)undo.shift();redo.length=0;}
     return Object.freeze({changed:state.changed,revision});}
-  function cancelStroke(){if(!active)return false;current=active.before;active=null;revision++;return true;}
-  function undoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!undo.length)return false;redo.push(current);current=undo.pop();revision++;return true;}
-  function redoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!redo.length)return false;undo.push(current);current=redo.pop();revision++;return true;}
+  function cancelStroke(){if(!active)return false;current=active.before;active=null;latestEditValidation=null;revision++;return true;}
+  function undoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!undo.length)return false;redo.push(current);current=undo.pop();latestEditValidation=null;revision++;return true;}
+  function redoStroke(){if(active)throw new Error('STROKE_ACTIVE');if(!redo.length)return false;undo.push(current);current=redo.pop();latestEditValidation=null;revision++;return true;}
   function serialize(){if(active)throw new Error('STROKE_ACTIVE');return JSON.stringify({schema:'DGB_NATIVE_SCULPT_MESH_V1',positions:[...current],triangles:[...faces],regions:originalRegions,protectedVertices:[...frozen].sort((a,b)=>a-b)});}
   function restore(text){if(active)throw new Error('STROKE_ACTIVE');let obj;try{obj=JSON.parse(text);}catch{throw new TypeError('SCULPT_SAVE_JSON_INVALID');}
     if(obj?.schema!=='DGB_NATIVE_SCULPT_MESH_V1'||!Array.isArray(obj.positions)||!Array.isArray(obj.triangles)||JSON.stringify(obj.triangles)!==JSON.stringify([...faces])||JSON.stringify(obj.regions)!==JSON.stringify(originalRegions)||JSON.stringify(obj.protectedVertices)!==JSON.stringify([...frozen].sort((a,b)=>a-b)))throw new Error('SCULPT_SAVE_IDENTITY_MISMATCH');
-    const restored=new Float32Array(obj.positions);verifySculptGeometry(restored,faces,{checkSelfIntersection:!readOnlyOriginal});verifySculptSourceRelative(reference,restored,faces,guardOptions);current=restored;undo.length=0;redo.length=0;revision++;return true;}
+    const restored=new Float32Array(obj.positions);verifySculptGeometry(restored,faces,{checkSelfIntersection:!readOnlyOriginal});verifySculptSourceRelative(reference,restored,faces,guardOptions);current=restored;undo.length=0;redo.length=0;latestEditValidation=null;revision++;return true;}
   return Object.freeze({pick,beginStroke,applyStroke,endStroke,cancelStroke,undo:undoStroke,redo:redoStroke,serialize,restore,
+    getLastEditValidation:()=>latestEditValidation,
     getPositions:()=>new Float32Array(current),getTriangles:()=>new Uint32Array(faces),getRegions:()=>[...originalRegions],
     getNormals:()=>computeSculptNormals(current,faces),verify:()=>Object.freeze({...verifySculptGeometry(current,faces,{checkSelfIntersection:!readOnlyOriginal}),sourceRelative:verifySculptSourceRelative(reference,current,faces,guardOptions),originalReferenceSelfIntersectionNotAdjudicated:readOnlyOriginal,editableMeshSafetyQualified:!readOnlyOriginal}),
     state:()=>Object.freeze({revision,active:Boolean(active),undoDepth:undo.length,redoDepth:redo.length,vertices:count,triangles:faces.length/3,originalReferenceReadOnly:readOnlyOriginal})});

@@ -1,39 +1,39 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-23T14:27:04Z",
+  "generatedAt": "2026-11-23T15:26:13Z",
   "window": {
-    "start": "2026-10-24T14:27:04Z",
-    "end": "2026-11-23T14:27:04Z"
+    "start": "2026-10-24T15:26:13Z",
+    "end": "2026-11-23T15:26:13Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 601,
-        "visits": 601
+        "pageLoads": 611,
+        "visits": 611
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 260,
-        "visits": 168
+        "pageLoads": 220,
+        "visits": 148
       },
       {
         "value": "/products/education/personal-training/course.html",
-        "pageLoads": 100,
-        "visits": 100
-      },
-      {
-        "value": "/",
-        "pageLoads": 72,
-        "visits": 62
-      },
-      {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 70,
-        "visits": 70
+        "pageLoads": 80,
+        "visits": 80
       },
       {
         "value": "/products/education/personal-training/",
+        "pageLoads": 80,
+        "visits": 80
+      },
+      {
+        "value": "/",
+        "pageLoads": 62,
+        "visits": 52
+      },
+      {
+        "value": "/nine-summits/universe/",
         "pageLoads": 50,
         "visits": 50
       },
@@ -41,11 +41,6 @@
         "value": "/products/education/",
         "pageLoads": 20,
         "visits": 20
-      },
-      {
-        "value": "/door/",
-        "pageLoads": 20,
-        "visits": 0
       },
       {
         "value": "/graphics-engine/sculpt-lab/",
@@ -58,7 +53,7 @@
         "visits": 13
       },
       {
-        "value": "/governance-bridge/",
+        "value": "/showroom/globe/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -68,19 +63,24 @@
         "visits": 10
       },
       {
-        "value": "/campaigns/wave/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },
       {
-        "value": "/laws/test/",
+        "value": "/about/",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "/characters/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 10,
+        "visits": 0
       },
       {
         "value": "/products/archcoin/payable/overview/",

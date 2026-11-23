@@ -1,14 +1,14 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-23T14:27:04Z",
+  "generatedAt": "2026-11-23T15:26:13Z",
   "window30d": {
-    "start": "2026-10-24T14:27:04Z",
-    "end": "2026-11-23T14:27:04Z"
+    "start": "2026-10-24T15:26:13Z",
+    "end": "2026-11-23T15:26:13Z"
   },
   "daily": [
     {
       "date": "2026-10-25",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-10-26",
@@ -16,31 +16,31 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-29",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 50
+      "pageLoads": 10
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 70
+      "pageLoads": 10
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 30
+      "pageLoads": 50
     },
     {
       "date": "2026-11-03",
@@ -48,15 +48,15 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 130
+      "pageLoads": 170
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-11-07",
@@ -68,7 +68,7 @@
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 60
+      "pageLoads": 10
     },
     {
       "date": "2026-11-10",
@@ -76,23 +76,23 @@
     },
     {
       "date": "2026-11-11",
-      "pageLoads": 30
+      "pageLoads": 50
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 40
+      "pageLoads": 20
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 42
+      "pageLoads": 21
     },
     {
       "date": "2026-11-16",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-23",
-      "pageLoads": 36
+      "pageLoads": 37
     }
   ],
   "summary": {
@@ -162,31 +162,31 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 601,
-      "visits": 601
+      "pageLoads": 611,
+      "visits": 611
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 260,
-      "visits": 168
+      "pageLoads": 220,
+      "visits": 148
     },
     {
       "path": "/products/education/personal-training/course.html",
-      "pageLoads": 100,
-      "visits": 100
-    },
-    {
-      "path": "/",
-      "pageLoads": 72,
-      "visits": 62
-    },
-    {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 70,
-      "visits": 70
+      "pageLoads": 80,
+      "visits": 80
     },
     {
       "path": "/products/education/personal-training/",
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
+      "path": "/",
+      "pageLoads": 62,
+      "visits": 52
+    },
+    {
+      "path": "/nine-summits/universe/",
       "pageLoads": 50,
       "visits": 50
     },
@@ -196,9 +196,9 @@
       "visits": 20
     },
     {
-      "path": "/door/",
-      "pageLoads": 20,
-      "visits": 0
+      "path": "/graphics-engine/sculpt-lab/",
+      "pageLoads": 14,
+      "visits": 14
     }
   ],
   "ownerMeasurement": {

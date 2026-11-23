@@ -1,22 +1,26 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "sculpt-lab",
-  "description": "Off-product neutral native four-view Sculpt Lab; source-adopted Gen3496, versioned import-map cache identity, owner-private original only through local file selection. Does not assert accepted rabbit art.",
+  "description": "Protected original M1.3 rabbit 64-pose playback on existing native four-view Sculpt Lab, with neutral technical fallback. Original ZIP remains owner-private and local-file selected; no artistic/Harvest animation acceptance.",
   "checks": [
     {
       "path": "/graphics-engine/sculpt-lab/index.html",
       "includes": [
-        "Diamond Gate | Native Multiview Sculpt Lab V1",
-        "Four actual 3D views of one editable mesh",
+        "Diamond Gate | Rabbit Motion Review",
+        "Original rabbit · motion preview",
         "id=\"hero\"",
         "id=\"side\"",
         "id=\"front\"",
         "id=\"rear\"",
         "<script type=\"importmap\">",
         "dgb.native-sculpt-session.v1.mjs?asset=255ce35aa72a16b297d8c150ce452436cfee0d1d",
-        "dgb.native-sculpt-browser.v1.mjs?asset=1054a89fdf3334f26d3a61a9c50f19a1ee04b6a8",
+        "dgb.native-sculpt-browser.v1.mjs?asset=81eec73f2cb90a0ea9797f9c2b6f6614eca1f3b3",
         "window.__dgbSculptLab",
-        "The original M1.3 ZIP remains on this device."
+        "No original ZIP has been loaded or verified.",
+        "id=\"m13Play\"",
+        "id=\"m13Timeline\"",
+        "id=\"m13Rest\"",
+        "id=\"m13Hop\""
       ],
       "excludes": [
         "https://drive.google.com/file/d/19hkrfnEsL84neg8aTbmhkBkOlx5O00s3"

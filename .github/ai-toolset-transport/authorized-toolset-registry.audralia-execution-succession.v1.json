@@ -2339,6 +2339,144 @@
       "continuationRule": "REQUIRES_GEN3456_WEST_FUNCTIONAL_SOURCE_REVIEW_AND_NATIVE_NODE22_QUALIFICATION_AND_SEPARATE_TOOLSET_ADOPTION_BEFORE_ACTIVE_EXECUTION; RETURN_RESULT_TO_HELD_PR7550",
       "terminationRule": "READONLY_EXACT_HEAD_HARVEST_WEBGL12_PUBLIC_SOURCE_QUALIFICATION_ONLY_NO_PRIVATE_RABBIT_NO_HARVEST_MERGE_DEPLOYMENT_RELEASE_ARTISTIC_ACCEPTANCE",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "DGB_GRAPHICS_GEN3492_SIX_CASE_BROWSER_QUALIFICATION_DESCRIPTOR_V1",
+      "operationId": "DGB_GRAPHICS_S4_GEN3492_BROWSER_QUALIFIER_TOOLING_20261122_001",
+      "operationClass": "DGB_GRAPHICS_GEN3492_FIXED_EXACT_HEAD_SIX_CASE_BROWSER_READONLY_QUALIFICATION",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "DGB_GRAPHICS_GEN3492_FIXED_SIX_CASE_BROWSER_QUALIFIER_V1",
+      "exactToolingHead": "2c7ca8e3393eb4263cac84755773acf5e6e5fdff",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "tools/ai-room-transport"
+        ],
+        "sparseIndexEntryLimitExclusive": 2000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "tools/ai-room-transport/dgb-graphics-gen3492-served-webgl12.v1.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [
+          {
+            "argument": "--candidate-head",
+            "inputField": "candidateHead"
+          },
+          {
+            "argument": "--execution-holder",
+            "inputField": "executionHolder"
+          }
+        ],
+        "outputArgumentBindings": [
+          {
+            "argument": "--output",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          },
+          {
+            "argument": "--manifest-output",
+            "runtimeValue": "COMMAND_MANIFEST_ARTIFACT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": false
+      },
+      "canonicalInputSchema": {
+        "schemaId": "DGB_GRAPHICS_GEN3492_SIX_CASE_BROWSER_INPUT_v1",
+        "required": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "allowed": [
+          "candidateHead",
+          "executionHolder"
+        ],
+        "properties": {
+          "candidateHead": {
+            "type": "string",
+            "const": "6e0b65be1d870c0edc1a3ff5cfd6d009aca45080"
+          },
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "GEN3492_SIX_CASE_BROWSER_RECEIPT_v1",
+        "required": [
+          "schema",
+          "operationId",
+          "candidateHead",
+          "governingHead",
+          "executionHolder",
+          "status",
+          "cases",
+          "sourceMutationPerformed",
+          "productMutationPerformed",
+          "workflowMutationPerformed",
+          "branchCreated",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed",
+          "publicationPerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "FULL_GIT_HISTORY",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "allowedMutationPaths": [],
+      "prohibitedPaths": [
+        "assets/",
+        "graphics-engine/",
+        "showroom/",
+        "characters/",
+        "h-earth-3d/",
+        "products/",
+        "nine-summits/",
+        "OWNER_PRIVATE_S4_OR_M13_RABBIT_ASSET"
+      ],
+      "prohibitedSideEffects": [
+        "SOURCE_MUTATION",
+        "PRODUCT_MUTATION",
+        "WORKFLOW_MUTATION",
+        "BRANCH_CREATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "PUBLICATION",
+        "ARBITRARY_COMMAND",
+        "WEBGL_ENGINE_MUTATION",
+        "RABBIT_SOURCE_MUTATION",
+        "PRIVATE_ASSET_UPLOAD",
+        "OWNER_VISUAL_ACCEPTANCE_IN_CI"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "successDisposition": "RETURN_EXACT_GEN3492_WEBGL1_AND_WEBGL2_DESKTOP_TABLET_PHONE_HTTP_SCREENSHOTS_NO_PRODUCT_CHANGE",
+      "failureDispositions": {
+        "COMMAND_EXECUTED_AND_FAILED": "RETURN_FIRST_EXACT_BROWSER_OR_SOURCE_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "RETURN_EXACT_TRANSPORT_BINDING",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "AFTER_SEPARATE_GEN3493_TOOLING_REVIEW_AND_ADOPTION_EXECUTE_FIXED_GEN3492_BROWSER_QUALIFIER; PRESERVE_PRODUCT_PR7637_DRAFT",
+      "terminationRule": "READONLY_GEN3492_PUBLIC_NEUTRAL_SIX_CASE_QUALIFICATION_ONLY_NO_RABBIT_PRIVATE_ART_NO_MERGE_OR_RELEASE",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

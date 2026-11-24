@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-24T08:29:20Z",
+  "generatedAt": "2026-11-24T09:27:13Z",
   "window": {
-    "start": "2026-10-25T08:29:20Z",
-    "end": "2026-11-24T08:29:20Z"
+    "start": "2026-10-25T09:27:13Z",
+    "end": "2026-11-24T09:27:13Z"
   },
   "dimensions": {
     "requestPath": [
@@ -58,17 +58,17 @@
         "visits": 10
       },
       {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/about/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/characters/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -153,8 +153,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1122,
-        "visits": 1049
+        "pageLoads": 1182,
+        "visits": 1089
       },
       {
         "value": "CN",

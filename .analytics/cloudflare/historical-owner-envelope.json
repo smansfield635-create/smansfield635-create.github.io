@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T08:29:20Z",
+  "generatedAt": "2026-11-24T09:27:13Z",
   "window": {
-    "start": "2026-08-26T08:29:20Z",
-    "end": "2026-11-24T08:29:20Z"
+    "start": "2026-08-26T09:27:13Z",
+    "end": "2026-11-24T09:27:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2580,
-    "visits": 730,
+    "pageLoads": 2510,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2580,
-        "visits": 730
+        "pageLoads": 2510,
+        "visits": 710
       }
     },
     "byPath": {
@@ -63,15 +63,15 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
-        "visits": 360
+        "pageLoads": 450,
+        "visits": 350
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
@@ -87,7 +87,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 50,
+        "pageLoads": 30,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -191,8 +191,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
+        "pageLoads": 240,
+        "visits": 60
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -233,16 +233,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1850,
+        "pageLoads": 1800,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 390,
-        "visits": 390
+        "pageLoads": 380,
+        "visits": 380
       },
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 330,
+        "visits": 330
       }
     }
   }

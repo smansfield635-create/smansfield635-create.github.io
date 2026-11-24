@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T07:25:56Z",
+  "generatedAt": "2026-11-24T08:29:20Z",
   "window": {
-    "start": "2026-08-26T07:25:56Z",
-    "end": "2026-11-24T07:25:56Z"
+    "start": "2026-08-26T08:29:20Z",
+    "end": "2026-11-24T08:29:20Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,11 +18,11 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 2580,
-    "visits": 720,
+    "visits": 730,
     "byDevice": {
       "tablet": {
         "pageLoads": 2580,
-        "visits": 720
+        "visits": 730
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 460,
+        "pageLoads": 470,
         "visits": 360
       },
       "/evidence/agentic-frontier/": {
@@ -71,8 +71,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 70,
-        "visits": 20
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -233,12 +233,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1860,
+        "pageLoads": 1850,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 380,
-        "visits": 380
+        "pageLoads": 390,
+        "visits": 390
       },
       "www.google.com": {
         "pageLoads": 340,

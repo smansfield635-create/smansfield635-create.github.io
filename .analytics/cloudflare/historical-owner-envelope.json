@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T06:34:53Z",
+  "generatedAt": "2026-11-24T07:25:56Z",
   "window": {
-    "start": "2026-08-26T06:34:53Z",
-    "end": "2026-11-24T06:34:53Z"
+    "start": "2026-08-26T07:25:56Z",
+    "end": "2026-11-24T07:25:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,11 +18,11 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 2580,
-    "visits": 730,
+    "visits": 720,
     "byDevice": {
       "tablet": {
         "pageLoads": 2580,
-        "visits": 730
+        "visits": 720
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
+        "pageLoads": 460,
         "visits": 360
       },
       "/evidence/agentic-frontier/": {
@@ -71,8 +71,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 70,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -162,13 +162,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -233,12 +233,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1850,
+        "pageLoads": 1860,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 390,
-        "visits": 390
+        "pageLoads": 380,
+        "visits": 380
       },
       "www.google.com": {
         "pageLoads": 340,

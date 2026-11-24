@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-24T05:26:08Z",
+  "generatedAt": "2026-11-24T06:34:53Z",
   "window": {
-    "start": "2026-10-25T05:26:08Z",
-    "end": "2026-11-24T05:26:08Z"
+    "start": "2026-10-25T06:34:53Z",
+    "end": "2026-11-24T06:34:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -126,8 +126,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1079,
-        "visits": 1079
+        "pageLoads": 1089,
+        "visits": 1089
       },
       {
         "value": "diamondgatebridge.com",
@@ -145,6 +145,11 @@
         "visits": 10
       },
       {
+        "value": "www.google.com",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "m.facebook.com",
         "pageLoads": 1,
         "visits": 1
@@ -153,7 +158,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1182,
+        "pageLoads": 1212,
         "visits": 1089
       },
       {
@@ -170,29 +175,29 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1102,
-        "visits": 1019
+        "pageLoads": 1062,
+        "visits": 969
       },
       {
         "value": "mobile",
-        "pageLoads": 111,
-        "visits": 101
+        "pageLoads": 101,
+        "visits": 91
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 709,
-        "visits": 709
+        "pageLoads": 719,
+        "visits": 719
       },
       {
         "value": "Chrome",
-        "pageLoads": 212,
-        "visits": 200
+        "pageLoads": 232,
+        "visits": 210
       },
       {
         "value": "Firefox",
-        "pageLoads": 77,
+        "pageLoads": 87,
         "visits": 43
       },
       {
@@ -201,14 +206,19 @@
         "visits": 77
       },
       {
+        "value": "Unknown",
+        "pageLoads": 51,
+        "visits": 41
+      },
+      {
         "value": "Edge",
-        "pageLoads": 71,
+        "pageLoads": 51,
         "visits": 35
       },
       {
-        "value": "Unknown",
-        "pageLoads": 61,
-        "visits": 51
+        "value": "SamsungInternet",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "MobileSafari",
@@ -234,18 +244,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 789,
-        "visits": 789
+        "pageLoads": 769,
+        "visits": 769
       },
       {
         "value": "Windows",
-        "pageLoads": 239,
-        "visits": 157
+        "pageLoads": 229,
+        "visits": 147
       },
       {
         "value": "Android",
-        "pageLoads": 77,
-        "visits": 77
+        "pageLoads": 67,
+        "visits": 67
       },
       {
         "value": "Unknown",
@@ -266,20 +276,20 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 710,
-        "visits": 709
+        "pageLoads": 760,
+        "visits": 759
       },
       {
         "value": "0",
-        "pageLoads": 503,
-        "visits": 411
+        "pageLoads": 463,
+        "visits": 391
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1141,
-        "visits": 1120
+        "pageLoads": 1161,
+        "visits": 1140
       },
       {
         "value": "routing-apis",
@@ -290,27 +300,27 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1193,
-        "visits": 1120
+        "pageLoads": 1223,
+        "visits": 1150
       },
       {
         "value": "cache",
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       }
     ],
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1213,
-        "visits": 1120
+        "pageLoads": 1233,
+        "visits": 1150
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1213,
-        "visits": 1120
+        "pageLoads": 1143,
+        "visits": 1040
       }
     ]
   }

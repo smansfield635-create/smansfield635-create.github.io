@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T05:26:08Z",
+  "generatedAt": "2026-11-24T06:34:53Z",
   "window": {
-    "start": "2026-08-26T05:26:08Z",
-    "end": "2026-11-24T05:26:08Z"
+    "start": "2026-08-26T06:34:53Z",
+    "end": "2026-11-24T06:34:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,10 @@
       }
     },
     "byPath": {
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/": {
         "pageLoads": 10,
         "visits": 0
@@ -42,10 +46,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
         "visits": 0
@@ -58,13 +58,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 470,
-        "visits": 360
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 470,
+        "visits": 360
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,

@@ -1,30 +1,30 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-24T03:28:57Z",
+  "generatedAt": "2026-11-24T04:27:06Z",
   "window30d": {
-    "start": "2026-10-25T03:28:57Z",
-    "end": "2026-11-24T03:28:57Z"
+    "start": "2026-10-25T04:27:06Z",
+    "end": "2026-11-24T04:27:06Z"
   },
   "daily": [
     {
       "date": "2026-10-26",
-      "pageLoads": 10
+      "pageLoads": 60
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 30
+      "pageLoads": 10
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-29",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 70
+      "pageLoads": 40
     },
     {
       "date": "2026-10-31",
@@ -36,7 +36,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 20
+      "pageLoads": 50
     },
     {
       "date": "2026-11-03",
@@ -44,7 +44,7 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-05",
@@ -52,47 +52,47 @@
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 40
+      "pageLoads": 10
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 50
+      "pageLoads": 60
     },
     {
       "date": "2026-11-08",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-11-09",
-      "pageLoads": 30
+      "pageLoads": 10
     },
     {
       "date": "2026-11-10",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-11-11",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 40
+      "pageLoads": 20
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 35
+      "pageLoads": 24
     },
     {
       "date": "2026-11-17",
@@ -112,7 +112,7 @@
     },
     {
       "date": "2026-11-21",
-      "pageLoads": 47
+      "pageLoads": 48
     },
     {
       "date": "2026-11-22",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-24",
-      "pageLoads": 3
+      "pageLoads": 4
     }
   ],
   "summary": {
-    "pageLoads": 1233,
-    "botPageLoads": 720,
+    "pageLoads": 1223,
+    "botPageLoads": 710,
     "nonBotPageLoads": 513
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1158,
-      "visits": 1158
+      "pageLoads": 1089,
+      "visits": 1089
     },
     {
       "host": "diamondgatebridge.com",
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 638,
-      "visits": 638
+      "pageLoads": 599,
+      "visits": 599
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 230,
-      "visits": 148
+      "pageLoads": 210,
+      "visits": 138
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -176,29 +176,29 @@
       "visits": 80
     },
     {
+      "path": "/products/education/personal-training/",
+      "pageLoads": 80,
+      "visits": 80
+    },
+    {
       "path": "/",
-      "pageLoads": 70,
-      "visits": 60
+      "pageLoads": 60,
+      "visits": 50
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 60,
-      "visits": 60
+      "pageLoads": 50,
+      "visits": 50
     },
     {
-      "path": "/products/education/personal-training/",
-      "pageLoads": 40,
-      "visits": 40
-    },
-    {
-      "path": "/showroom/globe/earth/",
+      "path": "/products/education/",
       "pageLoads": 20,
       "visits": 20
     },
     {
-      "path": "/door/",
-      "pageLoads": 20,
-      "visits": 0
+      "path": "/graphics-engine/sculpt-lab/",
+      "pageLoads": 14,
+      "visits": 14
     }
   ],
   "ownerMeasurement": {

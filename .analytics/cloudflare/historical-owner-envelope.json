@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T03:28:57Z",
+  "generatedAt": "2026-11-24T04:27:06Z",
   "window": {
-    "start": "2026-08-26T03:28:57Z",
-    "end": "2026-11-24T03:28:57Z"
+    "start": "2026-08-26T04:27:06Z",
+    "end": "2026-11-24T04:27:06Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2590,
+    "pageLoads": 2580,
     "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2590,
+        "pageLoads": 2580,
         "visits": 730
       }
     },
     "byPath": {
-      "/laws/categories/reality/measure.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
@@ -86,6 +82,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/globe/audralia/": {
         "pageLoads": 50,
         "visits": 10
@@ -104,10 +104,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -142,16 +138,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
+        "visits": 0
+      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/showroom/story/timeline/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
@@ -236,13 +232,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 1860,
-        "visits": 0
-      },
       "(none)": {
         "pageLoads": 390,
         "visits": 390
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 1850,
+        "visits": 0
       },
       "www.google.com": {
         "pageLoads": 340,

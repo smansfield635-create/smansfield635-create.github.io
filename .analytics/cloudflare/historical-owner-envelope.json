@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T12:32:02Z",
+  "generatedAt": "2026-11-24T13:24:19Z",
   "window": {
-    "start": "2026-08-26T12:32:02Z",
-    "end": "2026-11-24T12:32:02Z"
+    "start": "2026-08-26T13:24:19Z",
+    "end": "2026-11-24T13:24:19Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2580,
-    "visits": 730,
+    "pageLoads": 2550,
+    "visits": 660,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2580,
-        "visits": 730
+        "pageLoads": 2550,
+        "visits": 660
       }
     },
     "byPath": {
@@ -63,23 +63,27 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
-        "visits": 360
+        "pageLoads": 440,
+        "visits": 340
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+      "/products/": {
+        "pageLoads": 50,
+        "visits": 10
+      },
+      "/campaigns/wave/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 250,
         "visits": 20
       },
       "/door/": {
@@ -102,10 +106,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 10,
         "visits": 0
@@ -114,8 +114,12 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/characters/": {
+        "pageLoads": 40,
+        "visits": 20
+      },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 10
       },
       "/index.html": {
@@ -159,7 +163,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
@@ -173,10 +177,6 @@
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 30,
-        "visits": 10
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
@@ -211,15 +211,15 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 90,
+        "visits": 80
       },
       "/analytics/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/governance-bridge/governance/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -233,16 +233,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1850,
+        "pageLoads": 1890,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 390,
-        "visits": 390
-      },
-      "www.google.com": {
         "pageLoads": 340,
         "visits": 340
+      },
+      "www.google.com": {
+        "pageLoads": 320,
+        "visits": 320
       }
     }
   }

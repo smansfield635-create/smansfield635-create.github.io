@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-24T13:24:19Z",
+  "generatedAt": "2026-11-24T14:25:48Z",
   "window30d": {
-    "start": "2026-10-25T13:24:19Z",
-    "end": "2026-11-24T13:24:19Z"
+    "start": "2026-10-25T14:25:48Z",
+    "end": "2026-11-24T14:25:48Z"
   },
   "daily": [
     {
@@ -12,15 +12,15 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-29",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-30",
@@ -44,11 +44,11 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 80
+      "pageLoads": 70
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 130
+      "pageLoads": 170
     },
     {
       "date": "2026-11-06",
@@ -88,11 +88,11 @@
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 36
+      "pageLoads": 25
     },
     {
       "date": "2026-11-17",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-24",
-      "pageLoads": 13
+      "pageLoads": 14
     }
   ],
   "summary": {
-    "pageLoads": 1214,
-    "botPageLoads": 621,
-    "nonBotPageLoads": 593
+    "pageLoads": 1194,
+    "botPageLoads": 691,
+    "nonBotPageLoads": 503
   },
   "referrers": [
     {
@@ -167,8 +167,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 190,
-      "visits": 138
+      "pageLoads": 200,
+      "visits": 128
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -191,14 +191,14 @@
       "visits": 50
     },
     {
+      "path": "/products/education/",
+      "pageLoads": 20,
+      "visits": 20
+    },
+    {
       "path": "/graphics-engine/sculpt-lab/",
       "pageLoads": 14,
       "visits": 14
-    },
-    {
-      "path": "/research/testimonials/",
-      "pageLoads": 13,
-      "visits": 13
     }
   ],
   "ownerMeasurement": {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T04:27:06Z",
+  "generatedAt": "2026-11-24T05:26:08Z",
   "window": {
-    "start": "2026-08-26T04:27:06Z",
-    "end": "2026-11-24T04:27:06Z"
+    "start": "2026-08-26T05:26:08Z",
+    "end": "2026-11-24T05:26:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,10 @@
       }
     },
     "byPath": {
+      "/laws/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/governance/": {
         "pageLoads": 20,
         "visits": 10
@@ -40,10 +44,6 @@
       },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
@@ -178,12 +178,12 @@
         "pageLoads": 30,
         "visits": 10
       },
-      "/evidence/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -232,13 +232,13 @@
       }
     },
     "byReferer": {
-      "(none)": {
-        "pageLoads": 390,
-        "visits": 390
-      },
       "diamondgatebridge.com": {
         "pageLoads": 1850,
         "visits": 0
+      },
+      "(none)": {
+        "pageLoads": 390,
+        "visits": 390
       },
       "www.google.com": {
         "pageLoads": 340,

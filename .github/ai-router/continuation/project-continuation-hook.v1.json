@@ -66,16 +66,21 @@
     "NINE_SUMMITS_GENEROSITY_HARVEST": {
       "state": "HELD_EXACT_DRAFT_CANDIDATE_QUALIFICATION_PENDING",
       "branch": "harvest-gen3442-native-consumer-20261120",
-      "head": "12e04206407aae29334b33bccd6c86a38679a9fa",
+      "head": "e8a432f060a9507f7cd448d5238f0c91d2c5f913",
       "candidatePullRequest": 7550,
       "qualifierPullRequest": 7551,
       "projectEntrypoint": ".github/ai-router/projects/nine-summits-generosity-harvest/entrypoint.v1.json",
       "currentIndexIssue": 7163,
-      "nextAction": "AFTER_DIAGNOSTIC_HOLD_RELEASE_AND_SEPARATE_CANONICAL_ADMISSION_REBIND_EXISTING_FIXED_BROWSER_QUALIFIER_TO_REVALIDATED_EXACT_CANDIDATE_THEN_RUN_REAL_SIX_CASE_WEBGL_QUALIFICATION",
-      "stopCondition": "NO_HARVEST_PRODUCT_QUALIFICATION_SOURCE_EDIT_MERGE_OR_PUBLICATION_DURING_DIAGNOSTIC_HOLD",
+      "nextAction": "AFTER_EXPLICIT_DIAGNOSTIC_HOLD_RELEASE_RESUME_OWNER_SELECTED_PRIVATE_SINGLE_HOP_FROM_EXACT_ISSUE_7163_COMMENT_7141910617_WITHOUT_RECONSTRUCTION",
+      "stopCondition": "NO_HARVEST_PRODUCT_EXECUTION_QUALIFICATION_PRODUCT_SOURCE_EDIT_MERGE_OR_PUBLICATION_DURING_DIAGNOSTIC_HOLD",
       "revalidateAtUse": true,
       "rebuildByDefault": false,
-      "authorityEffect": "NONE_ADMINISTRATIVE_CONTINUATION_DISCOVERY_ONLY"
+      "authorityEffect": "NONE_ADMINISTRATIVE_CONTINUATION_DISCOVERY_ONLY",
+      "currentCheckpointComment": 7141910617,
+      "latestQualifierGeneration": 3456,
+      "latestQualifierBoundCandidate": "12e04206407aae29334b33bccd6c86a38679a9fa",
+      "checkpointRetrieval": "EXACT_CURRENT_COMMENT_AND_DIRECT_METADATA_ONLY_HISTORY_ON_NAMED_MISSING_BINDING",
+      "privateArtifactLocatorPublic": false
     }
   },
   "dynamicProjects": {

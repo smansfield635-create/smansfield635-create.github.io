@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T14:25:48Z",
+  "generatedAt": "2026-11-24T16:26:55Z",
   "window": {
-    "start": "2026-08-26T14:25:48Z",
-    "end": "2026-11-24T14:25:48Z"
+    "start": "2026-08-26T16:26:55Z",
+    "end": "2026-11-24T16:26:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2420,
-    "visits": 690,
+    "pageLoads": 2410,
+    "visits": 620,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2420,
-        "visits": 690
+        "pageLoads": 2410,
+        "visits": 620
       }
     },
     "byPath": {
@@ -35,11 +35,7 @@
         "visits": 0
       },
       "/governance/": {
-        "pageLoads": 30,
-        "visits": 10
-      },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 10
       },
       "/laws/categories/reality/": {
@@ -58,15 +54,11 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/": {
-        "pageLoads": 380,
-        "visits": 290
+        "pageLoads": 470,
+        "visits": 360
       },
-      "/laws/categories/integrity/consistency/": {
+      "/laws/research/evidence-and-sources/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -74,24 +66,32 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/products/": {
-        "pageLoads": 50,
-        "visits": 10
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 20,
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
-        "visits": 20
+      "/characters/": {
+        "pageLoads": 50,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/archcoin/": {
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 190,
+        "visits": 20
+      },
+      "/about/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -99,20 +99,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 10
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
       },
       "/showroom/": {
         "pageLoads": 10,
@@ -121,10 +109,6 @@
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 50,
@@ -142,12 +126,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 300,
+        "pageLoads": 450,
         "visits": 0
       },
       "/showroom/story/invitation/": {
@@ -155,10 +143,6 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/nine-summits/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -174,33 +158,37 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/": {
+      "/products/": {
         "pageLoads": 30,
-        "visits": 0
+        "visits": 10
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 10,
         "visits": 0
       },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 20,
+        "visits": 10
+      },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
+      },
       "/products/archcoin/contract/": {
         "pageLoads": 40,
         "visits": 0
-      },
-      "/products/education/": {
-        "pageLoads": 270,
-        "visits": 80
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -215,12 +203,12 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 10,
+        "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 160,
-        "visits": 130
+        "pageLoads": 70,
+        "visits": 40
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -241,20 +229,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1730,
+        "pageLoads": 1790,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 400,
-        "visits": 400
-      },
-      "www.google.com": {
         "pageLoads": 280,
         "visits": 280
       },
-      "com.google.android.googlequicksearchbox": {
-        "pageLoads": 10,
-        "visits": 10
+      "www.google.com": {
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

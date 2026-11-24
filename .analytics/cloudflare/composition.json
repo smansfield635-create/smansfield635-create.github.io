@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-24T00:40:32Z",
+  "generatedAt": "2026-11-24T01:25:25Z",
   "window": {
-    "start": "2026-10-25T00:40:32Z",
-    "end": "2026-11-24T00:40:32Z"
+    "start": "2026-10-25T01:25:25Z",
+    "end": "2026-11-24T01:25:25Z"
   },
   "dimensions": {
     "requestPath": [
@@ -29,8 +29,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 70,
-        "visits": 60
+        "pageLoads": 60,
+        "visits": 50
       },
       {
         "value": "/nine-summits/universe/",
@@ -121,8 +121,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1109,
-        "visits": 1109
+        "pageLoads": 1099,
+        "visits": 1099
       },
       {
         "value": "diamondgatebridge.com",
@@ -160,18 +160,13 @@
         "value": "CA",
         "pageLoads": 11,
         "visits": 11
-      },
-      {
-        "value": "BR",
-        "pageLoads": 10,
-        "visits": 10
       }
     ],
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1132,
-        "visits": 1049
+        "pageLoads": 1122,
+        "visits": 1039
       },
       {
         "value": "mobile",
@@ -187,8 +182,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 222,
-        "visits": 210
+        "pageLoads": 212,
+        "visits": 200
       },
       {
         "value": "Edge",
@@ -254,8 +249,8 @@
       },
       {
         "value": "MacOSX",
-        "pageLoads": 52,
-        "visits": 52
+        "pageLoads": 42,
+        "visits": 42
       },
       {
         "value": "iOS",
@@ -271,15 +266,15 @@
       },
       {
         "value": "0",
-        "pageLoads": 522,
-        "visits": 430
+        "pageLoads": 512,
+        "visits": 420
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1171,
-        "visits": 1150
+        "pageLoads": 1161,
+        "visits": 1140
       },
       {
         "value": "routing-apis",
@@ -290,8 +285,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1223,
-        "visits": 1150
+        "pageLoads": 1213,
+        "visits": 1140
       },
       {
         "value": "cache",
@@ -302,15 +297,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1243,
-        "visits": 1150
+        "pageLoads": 1233,
+        "visits": 1140
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1243,
-        "visits": 1150
+        "pageLoads": 1233,
+        "visits": 1140
       }
     ]
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-24T00:40:32Z",
+  "generatedAt": "2026-11-24T01:25:25Z",
   "window": {
-    "start": "2026-08-26T00:40:32Z",
-    "end": "2026-11-24T00:40:32Z"
+    "start": "2026-08-26T01:25:25Z",
+    "end": "2026-11-24T01:25:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2460,
-    "visits": 680,
+    "pageLoads": 2590,
+    "visits": 730,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2460,
-        "visits": 680
+        "pageLoads": 2590,
+        "visits": 730
       }
     },
     "byPath": {
@@ -42,11 +42,11 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/flow/cycles/": {
-        "pageLoads": 10,
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
         "visits": 0
       },
-      "/laws/research/findings-and-boundaries/": {
+      "/laws/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -63,8 +63,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 460,
-        "visits": 330
+        "pageLoads": 470,
+        "visits": 360
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 10,
@@ -75,36 +75,36 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 50,
-        "visits": 20
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
       },
-      "/nine-summits-of-love/": {
+      "/showroom/globe/audralia/": {
+        "pageLoads": 50,
+        "visits": 10
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/archcoin/": {
-        "pageLoads": 20,
-        "visits": 10
-      },
       "/about/": {
         "pageLoads": 40,
-        "visits": 10
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/door/": {
         "pageLoads": 20,
@@ -133,10 +133,6 @@
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 30,
-        "visits": 10
       },
       "/prelude/": {
         "pageLoads": 20,
@@ -182,6 +178,10 @@
         "pageLoads": 30,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 30,
+        "visits": 10
+      },
       "/evidence/": {
         "pageLoads": 10,
         "visits": 0
@@ -199,19 +199,15 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 120,
-        "visits": 60
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 30
       },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+      "/meet-sean-mansfield/": {
         "pageLoads": 10,
-        "visits": 10
-      },
-      "/analytics/": {
-        "pageLoads": 80,
         "visits": 0
       },
       "/home/": {
@@ -226,6 +222,14 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/analytics/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/prototypes/abc-roofing/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -233,16 +237,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1780,
+        "pageLoads": 1860,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 390,
+        "visits": 390
       },
       "www.google.com": {
-        "pageLoads": 310,
-        "visits": 310
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

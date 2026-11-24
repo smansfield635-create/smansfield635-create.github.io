@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-24T17:24:51Z",
+  "generatedAt": "2026-11-24T18:26:29Z",
   "window": {
-    "start": "2026-10-25T17:24:51Z",
-    "end": "2026-11-24T17:24:51Z"
+    "start": "2026-10-25T18:26:29Z",
+    "end": "2026-11-24T18:26:29Z"
   },
   "dimensions": {
     "requestPath": [
@@ -18,12 +18,12 @@
         "visits": 128
       },
       {
-        "value": "/products/education/personal-training/",
+        "value": "/products/education/personal-training/course.html",
         "pageLoads": 80,
         "visits": 80
       },
       {
-        "value": "/products/education/personal-training/course.html",
+        "value": "/products/education/personal-training/",
         "pageLoads": 80,
         "visits": 80
       },
@@ -153,8 +153,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1163,
-        "visits": 1070
+        "pageLoads": 1173,
+        "visits": 1080
       },
       {
         "value": "CN",
@@ -170,13 +170,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1083,
-        "visits": 1000
+        "pageLoads": 1053,
+        "visits": 940
       },
       {
         "value": "mobile",
-        "pageLoads": 111,
-        "visits": 101
+        "pageLoads": 101,
+        "visits": 91
       }
     ],
     "userAgentBrowser": [
@@ -187,8 +187,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 212,
-        "visits": 200
+        "pageLoads": 192,
+        "visits": 180
       },
       {
         "value": "Firefox",
@@ -196,14 +196,14 @@
         "visits": 43
       },
       {
-        "value": "ChromeMobile",
-        "pageLoads": 77,
-        "visits": 77
-      },
-      {
         "value": "Edge",
         "pageLoads": 71,
         "visits": 35
+      },
+      {
+        "value": "ChromeMobile",
+        "pageLoads": 67,
+        "visits": 67
       },
       {
         "value": "Unknown",
@@ -234,13 +234,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 770,
-        "visits": 770
+        "pageLoads": 730,
+        "visits": 730
       },
       {
         "value": "Windows",
-        "pageLoads": 239,
-        "visits": 157
+        "pageLoads": 279,
+        "visits": 187
       },
       {
         "value": "Android",
@@ -249,13 +249,13 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 62,
-        "visits": 51
+        "pageLoads": 52,
+        "visits": 41
       },
       {
         "value": "MacOSX",
-        "pageLoads": 42,
-        "visits": 42
+        "pageLoads": 52,
+        "visits": 52
       },
       {
         "value": "iOS",

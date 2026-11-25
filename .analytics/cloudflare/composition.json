@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-25T06:36:00Z",
+  "generatedAt": "2026-11-25T07:26:08Z",
   "window": {
-    "start": "2026-10-26T06:36:00Z",
-    "end": "2026-11-25T06:36:00Z"
+    "start": "2026-10-26T07:26:08Z",
+    "end": "2026-11-25T07:26:08Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 205,
-        "visits": 126
+        "pageLoads": 204,
+        "visits": 125
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -121,6 +121,11 @@
         "value": "/showroom/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/laws/",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "refererHost": [
@@ -158,13 +163,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1172,
-        "visits": 1072
+        "pageLoads": 1171,
+        "visits": 1071
       },
       {
         "value": "CN",
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 21,
+        "visits": 21
       },
       {
         "value": "CA",
@@ -175,20 +180,20 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1091,
-        "visits": 1001
+        "pageLoads": 1090,
+        "visits": 1000
       },
       {
         "value": "mobile",
-        "pageLoads": 112,
-        "visits": 102
+        "pageLoads": 113,
+        "visits": 103
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 681,
-        "visits": 681
+        "pageLoads": 680,
+        "visits": 680
       },
       {
         "value": "Chrome",
@@ -202,8 +207,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 78,
-        "visits": 78
+        "pageLoads": 79,
+        "visits": 79
       },
       {
         "value": "Firefox",
@@ -239,8 +244,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 760,
-        "visits": 760
+        "pageLoads": 759,
+        "visits": 759
       },
       {
         "value": "Windows",
@@ -264,20 +269,20 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 4,
-        "visits": 4
+        "pageLoads": 5,
+        "visits": 5
       }
     ],
     "bot": [
       {
         "value": "1",
-        "pageLoads": 682,
-        "visits": 681
+        "pageLoads": 681,
+        "visits": 680
       },
       {
         "value": "0",
-        "pageLoads": 521,
-        "visits": 422
+        "pageLoads": 522,
+        "visits": 423
       }
     ],
     "navigationType": [
@@ -314,8 +319,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1123,
-        "visits": 1023
+        "pageLoads": 1203,
+        "visits": 1103
       }
     ]
   }

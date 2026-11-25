@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-25T06:36:00Z",
+  "generatedAt": "2026-11-25T07:26:08Z",
   "window30d": {
-    "start": "2026-10-26T06:36:00Z",
-    "end": "2026-11-25T06:36:00Z"
+    "start": "2026-10-26T07:26:08Z",
+    "end": "2026-11-25T07:26:08Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 71
+      "pageLoads": 69
     },
     {
       "date": "2026-11-18",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-25",
-      "pageLoads": 7
+      "pageLoads": 9
     }
   ],
   "summary": {
     "pageLoads": 1203,
-    "botPageLoads": 682,
-    "nonBotPageLoads": 521
+    "botPageLoads": 681,
+    "nonBotPageLoads": 522
   },
   "referrers": [
     {
@@ -172,8 +172,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 205,
-      "visits": 126
+      "pageLoads": 204,
+      "visits": 125
     },
     {
       "path": "/products/education/personal-training/course.html",

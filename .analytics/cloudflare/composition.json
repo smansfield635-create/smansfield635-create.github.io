@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-25T10:25:34Z",
+  "generatedAt": "2026-11-25T11:26:12Z",
   "window": {
-    "start": "2026-10-26T10:25:34Z",
-    "end": "2026-11-25T10:25:34Z"
+    "start": "2026-10-26T11:26:12Z",
+    "end": "2026-11-25T11:26:12Z"
   },
   "dimensions": {
     "requestPath": [
@@ -29,8 +29,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 75,
-        "visits": 65
+        "pageLoads": 74,
+        "visits": 64
       },
       {
         "value": "/nine-summits/universe/",
@@ -185,11 +185,6 @@
         "visits": 10
       },
       {
-        "value": "m.facebook.com",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "www.google.com",
         "pageLoads": 1,
         "visits": 1
@@ -198,8 +193,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1161,
-        "visits": 1061
+        "pageLoads": 1160,
+        "visits": 1060
       },
       {
         "value": "CN",
@@ -220,8 +215,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 121,
-        "visits": 111
+        "pageLoads": 120,
+        "visits": 110
       }
     ],
     "userAgentBrowser": [
@@ -257,8 +252,8 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 3,
-        "visits": 3
+        "pageLoads": 2,
+        "visits": 2
       },
       {
         "value": "Safari",
@@ -304,8 +299,8 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 5,
-        "visits": 5
+        "pageLoads": 4,
+        "visits": 4
       }
     ],
     "bot": [
@@ -316,15 +311,15 @@
       },
       {
         "value": "0",
-        "pageLoads": 530,
-        "visits": 431
+        "pageLoads": 529,
+        "visits": 430
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1122,
-        "visits": 1101
+        "pageLoads": 1121,
+        "visits": 1100
       },
       {
         "value": "routing-apis",
@@ -335,8 +330,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1181,
-        "visits": 1101
+        "pageLoads": 1180,
+        "visits": 1100
       },
       {
         "value": "cache",
@@ -347,15 +342,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1201,
-        "visits": 1101
+        "pageLoads": 1200,
+        "visits": 1100
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1201,
-        "visits": 1101
+        "pageLoads": 1200,
+        "visits": 1100
       }
     ]
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-25T18:27:26Z",
+  "generatedAt": "2026-11-25T19:24:16Z",
   "window30d": {
-    "start": "2026-10-26T18:27:26Z",
-    "end": "2026-11-25T18:27:26Z"
+    "start": "2026-10-26T19:24:16Z",
+    "end": "2026-11-25T19:24:16Z"
   },
   "daily": [
     {
@@ -40,11 +40,11 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 100
+      "pageLoads": 70
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 130
+      "pageLoads": 170
     },
     {
       "date": "2026-11-06",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 56
+      "pageLoads": 55
     },
     {
       "date": "2026-11-18",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-25",
-      "pageLoads": 34
+      "pageLoads": 36
     }
   ],
   "summary": {
-    "pageLoads": 1125,
-    "botPageLoads": 660,
-    "nonBotPageLoads": 465
+    "pageLoads": 1186,
+    "botPageLoads": 670,
+    "nonBotPageLoads": 516
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1036,
-      "visits": 1036
+      "pageLoads": 1057,
+      "visits": 1057
     },
     {
       "host": "diamondgatebridge.com",
@@ -166,12 +166,12 @@
       "visits": 124
     },
     {
-      "path": "/products/education/personal-training/course.html",
+      "path": "/products/education/personal-training/",
       "pageLoads": 80,
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/",
+      "path": "/products/education/personal-training/course.html",
       "pageLoads": 80,
       "visits": 80
     },

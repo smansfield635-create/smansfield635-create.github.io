@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-25T15:26:07Z",
+  "generatedAt": "2026-11-25T16:28:32Z",
   "window": {
-    "start": "2026-10-26T15:26:07Z",
-    "end": "2026-11-25T15:26:07Z"
+    "start": "2026-10-26T16:28:32Z",
+    "end": "2026-11-25T16:28:32Z"
   },
   "dimensions": {
     "requestPath": [
@@ -210,35 +210,30 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1100,
-        "visits": 1010
+        "pageLoads": 1053,
+        "visits": 963
       },
       {
         "value": "mobile",
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 100
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 670,
-        "visits": 670
+        "pageLoads": 598,
+        "visits": 598
       },
       {
         "value": "Chrome",
-        "pageLoads": 213,
-        "visits": 201
+        "pageLoads": 193,
+        "visits": 191
       },
       {
         "value": "Edge",
-        "pageLoads": 92,
+        "pageLoads": 102,
         "visits": 48
-      },
-      {
-        "value": "ChromeMobile",
-        "pageLoads": 79,
-        "visits": 79
       },
       {
         "value": "Firefox",
@@ -246,14 +241,14 @@
         "visits": 39
       },
       {
-        "value": "Unknown",
+        "value": "ChromeMobile",
         "pageLoads": 69,
-        "visits": 59
+        "visits": 69
       },
       {
-        "value": "MobileSafari",
-        "pageLoads": 2,
-        "visits": 2
+        "value": "Unknown",
+        "pageLoads": 59,
+        "visits": 49
       },
       {
         "value": "Safari",
@@ -269,18 +264,23 @@
         "value": "MobileSafariWebview",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "MobileSafari",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 749,
-        "visits": 749
+        "pageLoads": 669,
+        "visits": 669
       },
       {
         "value": "Windows",
-        "pageLoads": 257,
-        "visits": 168
+        "pageLoads": 247,
+        "visits": 158
       },
       {
         "value": "Android",
@@ -288,14 +288,14 @@
         "visits": 78
       },
       {
-        "value": "Unknown",
-        "pageLoads": 70,
-        "visits": 59
-      },
-      {
         "value": "MacOSX",
         "pageLoads": 42,
         "visits": 42
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 30,
+        "visits": 29
       },
       {
         "value": "iOS",

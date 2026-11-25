@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T21:24:47Z",
+  "generatedAt": "2026-11-25T22:25:27Z",
   "window": {
-    "start": "2026-08-27T21:24:47Z",
-    "end": "2026-11-25T21:24:47Z"
+    "start": "2026-08-27T22:25:27Z",
+    "end": "2026-11-25T22:25:27Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -158,16 +158,16 @@
         "pageLoads": 40,
         "visits": 30
       },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
+      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
       },
       "/evidence/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
         "visits": 0
       },
       "/products/archcoin/receivable/": {

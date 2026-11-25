@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T20:25:16Z",
+  "generatedAt": "2026-11-25T21:24:47Z",
   "window": {
-    "start": "2026-08-27T20:25:16Z",
-    "end": "2026-11-25T20:25:16Z"
+    "start": "2026-08-27T21:24:47Z",
+    "end": "2026-11-25T21:24:47Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -110,6 +110,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
@@ -118,24 +122,20 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
-        "visits": 0
-      },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/reality/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {

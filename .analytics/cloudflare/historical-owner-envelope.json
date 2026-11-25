@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T12:32:19Z",
+  "generatedAt": "2026-11-25T13:27:00Z",
   "window": {
-    "start": "2026-08-27T12:32:19Z",
-    "end": "2026-11-25T12:32:19Z"
+    "start": "2026-08-27T13:27:00Z",
+    "end": "2026-11-25T13:27:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2520,
-    "visits": 710,
+    "pageLoads": 2540,
+    "visits": 760,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2520,
-        "visits": 710
+        "pageLoads": 2540,
+        "visits": 760
       }
     },
     "byPath": {
@@ -43,8 +43,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
-        "visits": 360
+        "pageLoads": 550,
+        "visits": 440
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
@@ -67,7 +67,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 50,
+        "pageLoads": 30,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -179,8 +179,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
+        "pageLoads": 230,
+        "visits": 50
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -193,10 +193,6 @@
       "/meet-sean-mansfield/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/home/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/governance-bridge/": {
         "pageLoads": 150,
@@ -221,16 +217,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1810,
+        "pageLoads": 1780,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 410,
+        "visits": 410
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 350,
+        "visits": 350
       }
     }
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-25T03:29:13Z",
+  "generatedAt": "2026-11-25T04:28:22Z",
   "window30d": {
-    "start": "2026-10-26T03:29:13Z",
-    "end": "2026-11-25T03:29:13Z"
+    "start": "2026-10-26T04:28:22Z",
+    "end": "2026-11-25T04:28:22Z"
   },
   "daily": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 50
+      "pageLoads": 10
     },
     {
       "date": "2026-11-01",
-      "pageLoads": 40
+      "pageLoads": 10
     },
     {
       "date": "2026-11-02",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 61
+      "pageLoads": 69
     },
     {
       "date": "2026-11-18",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-25",
-      "pageLoads": 4
+      "pageLoads": 5
     }
   ],
   "summary": {
-    "pageLoads": 1190,
+    "pageLoads": 1199,
     "botPageLoads": 676,
-    "nonBotPageLoads": 514
+    "nonBotPageLoads": 523
   },
   "referrers": [
     {
@@ -145,8 +145,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 29,
-      "visits": 29
+      "pageLoads": 38,
+      "visits": 38
     },
     {
       "host": "www.facebook.com",
@@ -167,12 +167,12 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 600,
-      "visits": 600
+      "pageLoads": 570,
+      "visits": 570
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 179,
+      "pageLoads": 199,
       "visits": 120
     },
     {
@@ -187,8 +187,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 67,
-      "visits": 57
+      "pageLoads": 76,
+      "visits": 66
     },
     {
       "path": "/nine-summits/universe/",

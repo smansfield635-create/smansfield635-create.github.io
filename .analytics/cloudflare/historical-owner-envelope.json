@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T13:27:00Z",
+  "generatedAt": "2026-11-25T14:25:50Z",
   "window": {
-    "start": "2026-08-27T13:27:00Z",
-    "end": "2026-11-25T13:27:00Z"
+    "start": "2026-08-27T14:25:50Z",
+    "end": "2026-11-25T14:25:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2540,
-    "visits": 760,
+    "pageLoads": 2550,
+    "visits": 720,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2540,
-        "visits": 760
+        "pageLoads": 2550,
+        "visits": 720
       }
     },
     "byPath": {
@@ -43,18 +43,22 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 550,
-        "visits": 440
+        "pageLoads": 460,
+        "visits": 350
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 70,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -67,7 +71,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -79,10 +83,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -179,8 +179,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 230,
-        "visits": 50
+        "pageLoads": 270,
+        "visits": 80
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -194,9 +194,13 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 160,
+        "visits": 130
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -217,16 +221,20 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1780,
+        "pageLoads": 1830,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 410,
-        "visits": 410
+        "pageLoads": 340,
+        "visits": 340
       },
       "(none)": {
-        "pageLoads": 350,
-        "visits": 350
+        "pageLoads": 370,
+        "visits": 370
+      },
+      "com.google.android.googlequicksearchbox": {
+        "pageLoads": 10,
+        "visits": 10
       }
     }
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T02:30:33Z",
+  "generatedAt": "2026-11-25T03:29:13Z",
   "window": {
-    "start": "2026-08-27T02:30:33Z",
-    "end": "2026-11-25T02:30:33Z"
+    "start": "2026-08-27T03:29:13Z",
+    "end": "2026-11-25T03:29:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -210,12 +210,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

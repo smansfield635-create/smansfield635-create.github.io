@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T15:25:38Z",
+  "generatedAt": "2026-11-26T16:26:50Z",
   "window": {
-    "start": "2026-08-28T15:25:38Z",
-    "end": "2026-11-26T15:25:38Z"
+    "start": "2026-08-28T16:26:50Z",
+    "end": "2026-11-26T16:26:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2730,
-    "visits": 700,
+    "pageLoads": 2520,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2730,
-        "visits": 700
+        "pageLoads": 2520,
+        "visits": 710
       }
     },
     "byPath": {
@@ -38,23 +38,31 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/": {
+        "pageLoads": 470,
+        "visits": 360
+      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/": {
-        "pageLoads": 450,
-        "visits": 350
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 150,
+        "pageLoads": 60,
         "visits": 30
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -67,7 +75,7 @@
         "visits": 20
       },
       "/about/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -78,14 +86,6 @@
         "pageLoads": 50,
         "visits": 10
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 10,
         "visits": 0
@@ -95,11 +95,11 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 140,
+        "pageLoads": 50,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -111,7 +111,15 @@
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 110,
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -142,13 +150,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 40,
+        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -213,12 +221,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2030,
+        "pageLoads": 1810,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 330,
-        "visits": 330
+        "pageLoads": 340,
+        "visits": 340
       },
       "(none)": {
         "pageLoads": 370,

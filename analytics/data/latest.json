@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-26T10:25:51Z",
+  "generatedAt": "2026-11-26T11:25:56Z",
   "window30d": {
-    "start": "2026-10-27T10:25:51Z",
-    "end": "2026-11-26T10:25:51Z"
+    "start": "2026-10-27T11:25:56Z",
+    "end": "2026-11-26T11:25:56Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-18",
-      "pageLoads": 33
+      "pageLoads": 32
     },
     {
       "date": "2026-11-19",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-26",
-      "pageLoads": 10
+      "pageLoads": 11
     }
   ],
   "summary": {

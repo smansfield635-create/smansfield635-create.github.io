@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T00:44:15Z",
+  "generatedAt": "2026-11-26T01:25:30Z",
   "window": {
-    "start": "2026-08-28T00:44:15Z",
-    "end": "2026-11-26T00:44:15Z"
+    "start": "2026-08-28T01:25:30Z",
+    "end": "2026-11-26T01:25:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2450,
+    "pageLoads": 2520,
     "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2450,
+        "pageLoads": 2520,
         "visits": 710
       }
     },
@@ -39,7 +39,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 460,
+        "pageLoads": 470,
         "visits": 360
       },
       "/laws/research/evidence-and-sources/": {
@@ -83,7 +83,7 @@
         "visits": 0
       },
       "/door/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -122,8 +122,20 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 450,
+        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
@@ -209,7 +221,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1740,
+        "pageLoads": 1810,
         "visits": 0
       },
       "www.google.com": {

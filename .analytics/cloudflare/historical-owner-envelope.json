@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T13:25:29Z",
+  "generatedAt": "2026-11-26T14:25:41Z",
   "window": {
-    "start": "2026-08-28T13:25:29Z",
-    "end": "2026-11-26T13:25:29Z"
+    "start": "2026-08-28T14:25:41Z",
+    "end": "2026-11-26T14:25:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2520,
+    "pageLoads": 2610,
     "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2520,
+        "pageLoads": 2610,
         "visits": 710
       }
     },
@@ -58,6 +58,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
@@ -82,10 +86,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 10,
         "visits": 0
@@ -95,7 +95,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 140,
         "visits": 10
       },
       "/index.html": {
@@ -221,7 +221,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1810,
+        "pageLoads": 1900,
         "visits": 0
       },
       "www.google.com": {

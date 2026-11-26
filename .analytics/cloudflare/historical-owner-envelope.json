@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-25T23:25:15Z",
+  "generatedAt": "2026-11-26T00:44:15Z",
   "window": {
-    "start": "2026-08-27T23:25:15Z",
-    "end": "2026-11-25T23:25:15Z"
+    "start": "2026-08-28T00:44:15Z",
+    "end": "2026-11-26T00:44:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2520,
+    "pageLoads": 2450,
     "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2520,
+        "pageLoads": 2450,
         "visits": 710
       }
     },
@@ -39,7 +39,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
+        "pageLoads": 460,
         "visits": 360
       },
       "/laws/research/evidence-and-sources/": {
@@ -70,6 +70,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
@@ -78,12 +82,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/about/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/door/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/": {
@@ -110,10 +110,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
@@ -122,20 +118,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
+        "pageLoads": 450,
         "visits": 0
       },
       "/build/": {
@@ -221,7 +209,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1810,
+        "pageLoads": 1740,
         "visits": 0
       },
       "www.google.com": {

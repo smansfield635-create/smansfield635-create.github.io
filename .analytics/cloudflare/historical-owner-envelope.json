@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T06:36:24Z",
+  "generatedAt": "2026-11-26T07:27:42Z",
   "window": {
-    "start": "2026-08-28T06:36:24Z",
-    "end": "2026-11-26T06:36:24Z"
+    "start": "2026-08-28T07:27:42Z",
+    "end": "2026-11-26T07:27:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2520,
-    "visits": 710,
+    "pageLoads": 2440,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2520,
-        "visits": 710
+        "pageLoads": 2440,
+        "visits": 670
       }
     },
     "byPath": {
@@ -43,19 +43,11 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 470,
-        "visits": 360
+        "pageLoads": 430,
+        "visits": 330
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
-      "/characters/": {
         "pageLoads": 60,
-        "visits": 30
-      },
-      "/characters/legacy-dossiers.html": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
@@ -93,6 +85,10 @@
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 40,
+        "visits": 20
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 50,
@@ -150,13 +146,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -221,16 +217,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1810,
+        "pageLoads": 1770,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 310,
+        "visits": 310
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 360,
+        "visits": 360
       }
     }
   }

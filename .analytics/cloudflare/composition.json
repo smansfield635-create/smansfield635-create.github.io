@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-26T12:32:23Z",
+  "generatedAt": "2026-11-26T13:25:29Z",
   "window": {
-    "start": "2026-10-27T12:32:23Z",
-    "end": "2026-11-26T12:32:23Z"
+    "start": "2026-10-27T13:25:29Z",
+    "end": "2026-11-26T13:25:29Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 550,
-        "visits": 550
+        "pageLoads": 526,
+        "visits": 526
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 55,
-        "visits": 55
+        "pageLoads": 54,
+        "visits": 54
       },
       {
         "value": "/nine-summits/universe/",
@@ -103,36 +103,6 @@
         "visits": 3
       },
       {
-        "value": "/products/five-flags/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/prototypes/abc-roofing/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/coherence-diagnostic/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/laws/scientific-law/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/door/canonical-object.html",
         "pageLoads": 1,
         "visits": 0
@@ -148,7 +118,27 @@
         "visits": 1
       },
       {
+        "value": "/products/five-flags/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/prototypes/abc-roofing/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/site-guide/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/showroom/globe/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -156,13 +146,23 @@
         "value": "/laws/",
         "pageLoads": 1,
         "visits": 1
+      },
+      {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/scientific-law/",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1027,
-        "visits": 1027
+        "pageLoads": 1017,
+        "visits": 1017
       },
       {
         "value": "diamondgatebridge.com",
@@ -183,13 +183,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1119,
-        "visits": 1029
+        "pageLoads": 1135,
+        "visits": 1045
       },
       {
         "value": "CN",
-        "pageLoads": 26,
-        "visits": 26
+        "pageLoads": 19,
+        "visits": 19
       },
       {
         "value": "CA",
@@ -264,13 +264,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 728,
-        "visits": 728
+        "pageLoads": 718,
+        "visits": 718
       },
       {
         "value": "Windows",
-        "pageLoads": 247,
-        "visits": 158
+        "pageLoads": 237,
+        "visits": 148
       },
       {
         "value": "Android",
@@ -296,13 +296,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 660,
-        "visits": 659
+        "pageLoads": 650,
+        "visits": 649
       },
       {
         "value": "0",
         "pageLoads": 506,
-        "visits": 397
+        "visits": 417
       }
     ],
     "navigationType": [

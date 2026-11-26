@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T04:27:12Z",
+  "generatedAt": "2026-11-26T05:26:28Z",
   "window": {
-    "start": "2026-08-28T04:27:12Z",
-    "end": "2026-11-26T04:27:12Z"
+    "start": "2026-08-28T05:26:28Z",
+    "end": "2026-11-26T05:26:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -166,12 +166,12 @@
         "pageLoads": 30,
         "visits": 10
       },
-      "/evidence/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/contract/": {

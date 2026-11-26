@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T01:25:30Z",
+  "generatedAt": "2026-11-26T02:29:37Z",
   "window": {
-    "start": "2026-08-28T01:25:30Z",
-    "end": "2026-11-26T01:25:30Z"
+    "start": "2026-08-28T02:29:37Z",
+    "end": "2026-11-26T02:29:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -178,13 +178,13 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,

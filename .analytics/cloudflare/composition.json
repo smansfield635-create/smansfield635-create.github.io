@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-27T08:28:24Z",
+  "generatedAt": "2026-11-27T09:27:26Z",
   "window": {
-    "start": "2026-10-28T08:28:24Z",
-    "end": "2026-11-27T08:28:24Z"
+    "start": "2026-10-28T09:27:26Z",
+    "end": "2026-11-27T09:27:26Z"
   },
   "dimensions": {
     "requestPath": [
@@ -53,17 +53,17 @@
         "visits": 10
       },
       {
+        "value": "/showroom/globe/earth/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/about/",
         "pageLoads": 10,
         "visits": 10
       },
       {
         "value": "/characters/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/showroom/globe/earth/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -113,17 +113,17 @@
         "visits": 2
       },
       {
-        "value": "/coherence-diagnostic/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/nine-summits-of-love/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/showroom/globe/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "/coherence-diagnostic/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -143,12 +143,12 @@
         "visits": 1
       },
       {
-        "value": "/laws/",
+        "value": "/site-guide/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/site-guide/",
+        "value": "/laws/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -286,13 +286,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 643,
-        "visits": 643
+        "pageLoads": 675,
+        "visits": 675
       },
       {
         "value": "0",
-        "pageLoads": 445,
-        "visits": 380
+        "pageLoads": 506,
+        "visits": 411
       }
     ],
     "navigationType": [
@@ -310,8 +310,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1131,
-        "visits": 1046
+        "pageLoads": 1171,
+        "visits": 1086
       },
       {
         "value": "cache",

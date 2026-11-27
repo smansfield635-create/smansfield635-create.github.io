@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T06:36:44Z",
+  "generatedAt": "2026-11-27T07:26:45Z",
   "window": {
-    "start": "2026-08-29T06:36:44Z",
-    "end": "2026-11-27T06:36:44Z"
+    "start": "2026-08-29T07:26:45Z",
+    "end": "2026-11-27T07:26:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2420,
-    "visits": 710,
+    "pageLoads": 2400,
+    "visits": 700,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2420,
-        "visits": 710
+        "pageLoads": 2400,
+        "visits": 700
       }
     },
     "byPath": {
@@ -79,7 +79,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 10
       },
       "/index.html": {
@@ -134,13 +134,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -194,10 +194,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/prototypes/abc-roofing/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -209,12 +205,12 @@
         "visits": 340
       },
       "diamondgatebridge.com": {
-        "pageLoads": 1710,
+        "pageLoads": 1700,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 360,
+        "visits": 360
       }
     }
   }

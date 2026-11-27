@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T15:25:41Z",
+  "generatedAt": "2026-11-27T16:25:35Z",
   "window": {
-    "start": "2026-08-29T15:25:41Z",
-    "end": "2026-11-27T15:25:41Z"
+    "start": "2026-08-29T16:25:35Z",
+    "end": "2026-11-27T16:25:35Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,26 +17,34 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2290,
+    "pageLoads": 2420,
     "visits": 700,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2290,
+        "pageLoads": 2420,
         "visits": 700
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 460,
-        "visits": 360
+        "pageLoads": 440,
+        "visits": 340
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 0
       },
       "/characters/": {
+        "pageLoads": 80,
+        "visits": 40
+      },
+      "/showroom/globe/h-earth/": {
         "pageLoads": 60,
-        "visits": 30
+        "visits": 10
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -62,10 +70,6 @@
         "pageLoads": 50,
         "visits": 10
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
@@ -77,10 +81,6 @@
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 60,
-        "visits": 10
       },
       "/index.html": {
         "pageLoads": 30,
@@ -134,13 +134,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 40,
+        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -151,20 +151,24 @@
         "visits": 10
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/archcoin/payable/": {
-        "pageLoads": 20,
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 170,
-        "visits": 60
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -201,16 +205,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 320,
+        "visits": 320
       },
       "diamondgatebridge.com": {
-        "pageLoads": 1590,
+        "pageLoads": 1720,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 360,
-        "visits": 360
+        "pageLoads": 380,
+        "visits": 380
       }
     }
   }

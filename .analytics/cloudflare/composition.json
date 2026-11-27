@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-27T14:25:36Z",
+  "generatedAt": "2026-11-27T15:25:41Z",
   "window": {
-    "start": "2026-10-28T14:25:36Z",
-    "end": "2026-11-27T14:25:36Z"
+    "start": "2026-10-28T15:25:41Z",
+    "end": "2026-11-27T15:25:41Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 591,
-        "visits": 591
+        "pageLoads": 631,
+        "visits": 631
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 197,
-        "visits": 112
+        "pageLoads": 177,
+        "visits": 92
       },
       {
         "value": "/products/education/personal-training/course.html",
@@ -161,8 +161,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1058,
-        "visits": 1058
+        "pageLoads": 1048,
+        "visits": 1048
       },
       {
         "value": "diamondgatebridge.com",
@@ -183,8 +183,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1154,
-        "visits": 1059
+        "pageLoads": 1144,
+        "visits": 1049
       },
       {
         "value": "CN",
@@ -200,8 +200,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1083,
-        "visits": 988
+        "pageLoads": 1073,
+        "visits": 978
       },
       {
         "value": "mobile",
@@ -212,8 +212,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 685,
-        "visits": 685
+        "pageLoads": 675,
+        "visits": 675
       },
       {
         "value": "Chrome",
@@ -254,8 +254,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 763,
-        "visits": 763
+        "pageLoads": 753,
+        "visits": 753
       },
       {
         "value": "Windows",
@@ -286,8 +286,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 685,
-        "visits": 685
+        "pageLoads": 675,
+        "visits": 675
       },
       {
         "value": "0",
@@ -298,8 +298,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1106,
-        "visits": 1096
+        "pageLoads": 1096,
+        "visits": 1086
       },
       {
         "value": "routing-apis",
@@ -310,8 +310,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1181,
-        "visits": 1096
+        "pageLoads": 1171,
+        "visits": 1086
       },
       {
         "value": "cache",
@@ -322,15 +322,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1191,
-        "visits": 1096
+        "pageLoads": 1181,
+        "visits": 1086
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1191,
-        "visits": 1096
+        "pageLoads": 1181,
+        "visits": 1086
       }
     ]
   }

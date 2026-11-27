@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-27T21:25:32Z",
+  "generatedAt": "2026-11-27T22:25:02Z",
   "window30d": {
-    "start": "2026-10-28T21:25:32Z",
-    "end": "2026-11-27T21:25:32Z"
+    "start": "2026-10-28T22:25:02Z",
+    "end": "2026-11-27T22:25:02Z"
   },
   "daily": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 70
+      "pageLoads": 50
     },
     {
       "date": "2026-11-05",
@@ -64,15 +64,15 @@
     },
     {
       "date": "2026-11-12",
-      "pageLoads": 20
-    },
-    {
-      "date": "2026-11-13",
       "pageLoads": 30
     },
     {
+      "date": "2026-11-13",
+      "pageLoads": 40
+    },
+    {
       "date": "2026-11-14",
-      "pageLoads": 70
+      "pageLoads": 60
     },
     {
       "date": "2026-11-15",
@@ -80,11 +80,11 @@
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 10
+      "pageLoads": 40
     },
     {
       "date": "2026-11-17",
-      "pageLoads": 50
+      "pageLoads": 40
     },
     {
       "date": "2026-11-18",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-19",
-      "pageLoads": 32
+      "pageLoads": 31
     },
     {
       "date": "2026-11-20",
@@ -128,25 +128,25 @@
     }
   ],
   "summary": {
-    "pageLoads": 1190,
-    "botPageLoads": 685,
+    "pageLoads": 1189,
+    "botPageLoads": 684,
     "nonBotPageLoads": 505
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1057,
-      "visits": 1057
+      "pageLoads": 1096,
+      "visits": 1096
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 95,
+      "pageLoads": 85,
       "visits": 0
     },
     {
       "host": "bing.com",
-      "pageLoads": 37,
-      "visits": 37
+      "pageLoads": 27,
+      "visits": 27
     },
     {
       "host": "www.google.com",
@@ -157,13 +157,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 591,
-      "visits": 591
+      "pageLoads": 610,
+      "visits": 610
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 197,
-      "visits": 112
+      "pageLoads": 187,
+      "visits": 102
+    },
+    {
+      "path": "/nine-summits/universe/",
+      "pageLoads": 80,
+      "visits": 80
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -181,19 +186,14 @@
       "visits": 54
     },
     {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 50,
-      "visits": 50
+      "path": "/showroom/globe/earth/",
+      "pageLoads": 20,
+      "visits": 20
     },
     {
       "path": "/graphics-engine/sculpt-lab/",
       "pageLoads": 14,
       "visits": 14
-    },
-    {
-      "path": "/research/testimonials/",
-      "pageLoads": 13,
-      "visits": 13
     }
   ],
   "ownerMeasurement": {

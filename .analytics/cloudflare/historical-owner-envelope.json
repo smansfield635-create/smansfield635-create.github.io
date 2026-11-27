@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T04:27:58Z",
+  "generatedAt": "2026-11-27T05:27:04Z",
   "window": {
-    "start": "2026-08-29T04:27:58Z",
-    "end": "2026-11-27T04:27:58Z"
+    "start": "2026-08-29T05:27:04Z",
+    "end": "2026-11-27T05:27:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,22 +17,26 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2380,
-    "visits": 670,
+    "pageLoads": 2430,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2380,
-        "visits": 670
+        "pageLoads": 2430,
+        "visits": 710
       }
     },
     "byPath": {
+      "/": {
+        "pageLoads": 460,
+        "visits": 360
+      },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
-      },
-      "/": {
-        "pageLoads": 420,
-        "visits": 320
       },
       "/characters/": {
         "pageLoads": 60,
@@ -150,12 +154,12 @@
         "pageLoads": 30,
         "visits": 10
       },
-      "/evidence/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -204,13 +208,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 1710,
-        "visits": 0
-      },
       "www.google.com": {
-        "pageLoads": 300,
-        "visits": 300
+        "pageLoads": 340,
+        "visits": 340
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 1720,
+        "visits": 0
       },
       "(none)": {
         "pageLoads": 370,

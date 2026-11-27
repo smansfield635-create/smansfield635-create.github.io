@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T17:25:08Z",
+  "generatedAt": "2026-11-27T18:27:42Z",
   "window": {
-    "start": "2026-08-29T17:25:08Z",
-    "end": "2026-11-27T17:25:08Z"
+    "start": "2026-08-29T18:27:42Z",
+    "end": "2026-11-27T18:27:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -74,6 +74,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 50,
+        "visits": 10
+      },
       "/showroom/": {
         "pageLoads": 10,
         "visits": 0
@@ -81,10 +85,6 @@
       "/index.html": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
-        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -186,12 +186,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

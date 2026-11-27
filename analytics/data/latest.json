@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-27T17:25:08Z",
+  "generatedAt": "2026-11-27T18:27:42Z",
   "window30d": {
-    "start": "2026-10-28T17:25:08Z",
-    "end": "2026-11-27T17:25:08Z"
+    "start": "2026-10-28T18:27:42Z",
+    "end": "2026-11-27T18:27:42Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-19",
-      "pageLoads": 27
+      "pageLoads": 26
     },
     {
       "date": "2026-11-20",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-27",
-      "pageLoads": 17
+      "pageLoads": 18
     }
   ],
   "summary": {
@@ -166,12 +166,12 @@
       "visits": 112
     },
     {
-      "path": "/products/education/personal-training/",
+      "path": "/products/education/personal-training/course.html",
       "pageLoads": 80,
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/course.html",
+      "path": "/products/education/personal-training/",
       "pageLoads": 80,
       "visits": 80
     },

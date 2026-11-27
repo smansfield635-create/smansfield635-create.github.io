@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-27T10:25:25Z",
+  "generatedAt": "2026-11-27T11:26:02Z",
   "window30d": {
-    "start": "2026-10-28T10:25:25Z",
-    "end": "2026-11-27T10:25:25Z"
+    "start": "2026-10-28T11:26:02Z",
+    "end": "2026-11-27T11:26:02Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-19",
-      "pageLoads": 24
+      "pageLoads": 23
     },
     {
       "date": "2026-11-20",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-27",
-      "pageLoads": 10
+      "pageLoads": 11
     }
   ],
   "summary": {
@@ -135,23 +135,18 @@
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1058,
-      "visits": 1058
+      "pageLoads": 1048,
+      "visits": 1048
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 105,
+      "pageLoads": 95,
       "visits": 0
     },
     {
       "host": "bing.com",
-      "pageLoads": 47,
-      "visits": 47
-    },
-    {
-      "host": "github.com",
-      "pageLoads": 10,
-      "visits": 10
+      "pageLoads": 37,
+      "visits": 37
     },
     {
       "host": "www.google.com",
@@ -162,12 +157,12 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 621,
-      "visits": 621
+      "pageLoads": 581,
+      "visits": 581
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 167,
+      "pageLoads": 197,
       "visits": 112
     },
     {

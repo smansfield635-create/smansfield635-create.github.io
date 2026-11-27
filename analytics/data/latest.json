@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-27T18:27:42Z",
+  "generatedAt": "2026-11-27T19:24:42Z",
   "window30d": {
-    "start": "2026-10-28T18:27:42Z",
-    "end": "2026-11-27T18:27:42Z"
+    "start": "2026-10-28T19:24:42Z",
+    "end": "2026-11-27T19:24:42Z"
   },
   "daily": [
     {
@@ -40,11 +40,11 @@
     },
     {
       "date": "2026-11-06",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-11-08",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-19",
-      "pageLoads": 26
+      "pageLoads": 35
     },
     {
       "date": "2026-11-20",
@@ -100,7 +100,7 @@
     },
     {
       "date": "2026-11-21",
-      "pageLoads": 48
+      "pageLoads": 47
     },
     {
       "date": "2026-11-22",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-27",
-      "pageLoads": 18
+      "pageLoads": 19
     }
   ],
   "summary": {
-    "pageLoads": 1181,
-    "botPageLoads": 675,
+    "pageLoads": 1191,
+    "botPageLoads": 685,
     "nonBotPageLoads": 506
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1048,
-      "visits": 1048
+      "pageLoads": 1058,
+      "visits": 1058
     },
     {
       "host": "diamondgatebridge.com",
@@ -157,8 +157,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 581,
-      "visits": 581
+      "pageLoads": 571,
+      "visits": 571
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -166,9 +166,9 @@
       "visits": 112
     },
     {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 80,
-      "visits": 80
+      "path": "/",
+      "pageLoads": 85,
+      "visits": 75
     },
     {
       "path": "/products/education/personal-training/",
@@ -176,24 +176,24 @@
       "visits": 80
     },
     {
-      "path": "/",
-      "pageLoads": 55,
-      "visits": 55
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 80,
+      "visits": 80
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 50,
-      "visits": 50
+      "pageLoads": 60,
+      "visits": 60
+    },
+    {
+      "path": "/door/",
+      "pageLoads": 20,
+      "visits": 0
     },
     {
       "path": "/graphics-engine/sculpt-lab/",
       "pageLoads": 14,
       "visits": 14
-    },
-    {
-      "path": "/research/testimonials/",
-      "pageLoads": 13,
-      "visits": 13
     }
   ],
   "ownerMeasurement": {

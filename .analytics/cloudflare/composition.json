@@ -1,20 +1,20 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-27T09:27:26Z",
+  "generatedAt": "2026-11-27T10:25:25Z",
   "window": {
-    "start": "2026-10-28T09:27:26Z",
-    "end": "2026-11-27T09:27:26Z"
+    "start": "2026-10-28T10:25:25Z",
+    "end": "2026-11-27T10:25:25Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 581,
-        "visits": 581
+        "pageLoads": 621,
+        "visits": 621
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 197,
+        "pageLoads": 167,
         "visits": 112
       },
       {
@@ -161,18 +161,23 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1048,
-        "visits": 1048
+        "pageLoads": 1058,
+        "visits": 1058
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 95,
+        "pageLoads": 105,
         "visits": 0
       },
       {
         "value": "bing.com",
-        "pageLoads": 37,
-        "visits": 37
+        "pageLoads": 47,
+        "visits": 47
+      },
+      {
+        "value": "github.com",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "www.google.com",

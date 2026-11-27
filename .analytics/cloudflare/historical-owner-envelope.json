@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T07:26:45Z",
+  "generatedAt": "2026-11-27T08:28:24Z",
   "window": {
-    "start": "2026-08-29T07:26:45Z",
-    "end": "2026-11-27T07:26:45Z"
+    "start": "2026-08-29T08:28:24Z",
+    "end": "2026-11-27T08:28:24Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2400,
-    "visits": 700,
+    "pageLoads": 2330,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2400,
-        "visits": 700
+        "pageLoads": 2330,
+        "visits": 670
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 460,
-        "visits": 360
+        "pageLoads": 450,
+        "visits": 340
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 230,
         "visits": 20
       },
       "/door/": {
@@ -51,7 +51,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -79,8 +79,8 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 40,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 0
       },
       "/index.html": {
         "pageLoads": 30,
@@ -151,24 +151,20 @@
         "visits": 10
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 50,
+        "pageLoads": 30,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
+      "/products/archcoin/payable/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 240,
+        "visits": 60
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -194,23 +190,23 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/about-this-underdog/": {
+      "/prototypes/abc-roofing/": {
         "pageLoads": 10,
-        "visits": 0
+        "visits": 10
       }
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
+        "pageLoads": 330,
+        "visits": 330
       },
       "diamondgatebridge.com": {
-        "pageLoads": 1700,
+        "pageLoads": 1660,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 360,
-        "visits": 360
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

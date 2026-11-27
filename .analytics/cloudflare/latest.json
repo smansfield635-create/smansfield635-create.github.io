@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-11-27T07:26:45Z",
+  "generatedAt": "2026-11-27T08:28:24Z",
   "window": {
-    "start": "2026-08-29T07:26:45Z",
-    "end": "2026-11-27T07:26:45Z"
+    "start": "2026-08-29T08:28:24Z",
+    "end": "2026-11-27T08:28:24Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -11,12 +11,6 @@
       "accountTag": "832a0c759fbdc46553494f572a0e534b",
       "chunks": 90,
       "pages": [
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-29T07:00:00Z"
-          }
-        },
         {
           "count": 10,
           "dimensions": {
@@ -422,19 +416,13 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-06T12:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
             "datetimeHour": "2026-09-06T18:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-06T19:00:00Z"
+            "datetimeHour": "2026-09-06T20:00:00Z"
           }
         },
         {
@@ -444,15 +432,9 @@
           }
         },
         {
-          "count": 40,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-06T22:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-09-07T00:00:00Z"
           }
         },
         {
@@ -2882,12 +2864,6 @@
         {
           "count": 1,
           "dimensions": {
-            "datetimeHour": "2026-11-19T07:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
             "datetimeHour": "2026-11-19T08:00:00Z"
           }
         },
@@ -3969,6 +3945,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-11-27T06:00:00Z"
+          }
+        },
+        {
+          "count": 1,
+          "dimensions": {
+            "datetimeHour": "2026-11-27T07:00:00Z"
           }
         }
       ]

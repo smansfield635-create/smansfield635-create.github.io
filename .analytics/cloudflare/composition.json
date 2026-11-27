@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-27T07:26:45Z",
+  "generatedAt": "2026-11-27T08:28:24Z",
   "window": {
-    "start": "2026-10-28T07:26:45Z",
-    "end": "2026-11-27T07:26:45Z"
+    "start": "2026-10-28T08:28:24Z",
+    "end": "2026-11-27T08:28:24Z"
   },
   "dimensions": {
     "requestPath": [
@@ -113,17 +113,17 @@
         "visits": 2
       },
       {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/nine-summits-of-love/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/coherence-diagnostic/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -286,13 +286,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 675,
-        "visits": 675
+        "pageLoads": 643,
+        "visits": 643
       },
       {
         "value": "0",
-        "pageLoads": 506,
-        "visits": 411
+        "pageLoads": 445,
+        "visits": 380
       }
     ],
     "navigationType": [
@@ -310,8 +310,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1171,
-        "visits": 1086
+        "pageLoads": 1131,
+        "visits": 1046
       },
       {
         "value": "cache",

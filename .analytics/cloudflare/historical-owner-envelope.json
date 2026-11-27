@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T11:26:02Z",
+  "generatedAt": "2026-11-27T12:32:07Z",
   "window": {
-    "start": "2026-08-29T11:26:02Z",
-    "end": "2026-11-27T11:26:02Z"
+    "start": "2026-08-29T12:32:07Z",
+    "end": "2026-11-27T12:32:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2420,
-    "visits": 710,
+    "pageLoads": 2430,
+    "visits": 700,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2420,
-        "visits": 710
+        "pageLoads": 2430,
+        "visits": 700
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 460,
-        "visits": 360
+        "pageLoads": 450,
+        "visits": 350
       },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 230,
         "visits": 20
       },
       "/door/": {
@@ -51,7 +51,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -209,12 +209,12 @@
         "visits": 340
       },
       "diamondgatebridge.com": {
-        "pageLoads": 1710,
+        "pageLoads": 1730,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 360,
+        "visits": 360
       }
     }
   }

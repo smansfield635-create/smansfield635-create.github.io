@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-27T11:26:02Z",
+  "generatedAt": "2026-11-27T12:32:07Z",
   "window": {
-    "start": "2026-10-28T11:26:02Z",
-    "end": "2026-11-27T11:26:02Z"
+    "start": "2026-10-28T12:32:07Z",
+    "end": "2026-11-27T12:32:07Z"
   },
   "dimensions": {
     "requestPath": [
@@ -161,8 +161,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1048,
-        "visits": 1048
+        "pageLoads": 1037,
+        "visits": 1037
       },
       {
         "value": "diamondgatebridge.com",
@@ -171,8 +171,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 37,
-        "visits": 37
+        "pageLoads": 42,
+        "visits": 42
       },
       {
         "value": "www.google.com",
@@ -212,13 +212,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 675,
-        "visits": 675
+        "pageLoads": 745,
+        "visits": 745
       },
       {
         "value": "Chrome",
-        "pageLoads": 200,
-        "visits": 189
+        "pageLoads": 190,
+        "visits": 179
       },
       {
         "value": "Edge",
@@ -227,8 +227,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 79,
-        "visits": 79
+        "pageLoads": 89,
+        "visits": 89
       },
       {
         "value": "Firefox",
@@ -254,8 +254,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 753,
-        "visits": 753
+        "pageLoads": 773,
+        "visits": 773
       },
       {
         "value": "Windows",
@@ -286,13 +286,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 675,
-        "visits": 675
+        "pageLoads": 635,
+        "visits": 635
       },
       {
         "value": "0",
-        "pageLoads": 506,
-        "visits": 411
+        "pageLoads": 566,
+        "visits": 441
       }
     ],
     "navigationType": [

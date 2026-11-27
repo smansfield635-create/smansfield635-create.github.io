@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-26T23:24:08Z",
+  "generatedAt": "2026-11-27T00:45:22Z",
   "window": {
-    "start": "2026-08-28T23:24:08Z",
-    "end": "2026-11-26T23:24:08Z"
+    "start": "2026-08-29T00:45:22Z",
+    "end": "2026-11-27T00:45:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2450,
-    "visits": 720,
+    "pageLoads": 2440,
+    "visits": 710,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2450,
-        "visits": 720
+        "pageLoads": 2440,
+        "visits": 710
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 480,
-        "visits": 350
+        "pageLoads": 470,
+        "visits": 360
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 10,
@@ -51,11 +51,15 @@
         "visits": 20
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 40,
+        "pageLoads": 50,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/about/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -66,12 +70,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/about/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/door/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -83,11 +83,11 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -98,15 +98,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/governance/": {
+      "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 470,
-        "visits": 0
-      },
-      "/explore/frontier/": {
+      "/governance/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -114,8 +110,20 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
@@ -163,8 +171,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 270,
-        "visits": 80
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -175,8 +183,8 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 10,
+        "visits": 10
       },
       "/governance-bridge/": {
         "pageLoads": 150,
@@ -209,8 +217,8 @@
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 380,
-        "visits": 380
+        "pageLoads": 370,
+        "visits": 370
       }
     }
   }

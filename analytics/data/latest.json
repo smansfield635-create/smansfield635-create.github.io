@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-26T23:24:08Z",
+  "generatedAt": "2026-11-27T00:45:22Z",
   "window30d": {
-    "start": "2026-10-27T23:24:08Z",
-    "end": "2026-11-26T23:24:08Z"
+    "start": "2026-10-28T00:45:22Z",
+    "end": "2026-11-27T00:45:22Z"
   },
   "daily": [
-    {
-      "date": "2026-10-28",
-      "pageLoads": 20
-    },
     {
       "date": "2026-10-29",
       "pageLoads": 40
@@ -72,19 +68,19 @@
     },
     {
       "date": "2026-11-13",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-11-14",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-11-15",
-      "pageLoads": 20
+      "pageLoads": 30
     },
     {
       "date": "2026-11-16",
-      "pageLoads": 40
+      "pageLoads": 10
     },
     {
       "date": "2026-11-17",
@@ -92,11 +88,11 @@
     },
     {
       "date": "2026-11-18",
-      "pageLoads": 43
+      "pageLoads": 40
     },
     {
       "date": "2026-11-19",
-      "pageLoads": 31
+      "pageLoads": 30
     },
     {
       "date": "2026-11-20",
@@ -124,29 +120,33 @@
     },
     {
       "date": "2026-11-26",
-      "pageLoads": 24
+      "pageLoads": 25
+    },
+    {
+      "date": "2026-11-27",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 1200,
-    "botPageLoads": 688,
-    "nonBotPageLoads": 512
+    "pageLoads": 1177,
+    "botPageLoads": 668,
+    "nonBotPageLoads": 509
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1044,
-      "visits": 1044
+      "pageLoads": 1042,
+      "visits": 1042
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 78,
+      "pageLoads": 97,
       "visits": 0
     },
     {
       "host": "bing.com",
-      "pageLoads": 27,
-      "visits": 27
+      "pageLoads": 37,
+      "visits": 37
     },
     {
       "host": "www.google.com",
@@ -157,13 +157,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 581,
-      "visits": 581
+      "pageLoads": 571,
+      "visits": 571
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 205,
-      "visits": 118
+      "pageLoads": 202,
+      "visits": 116
     },
     {
       "path": "/products/education/personal-training/course.html",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 65,
-      "visits": 65
+      "pageLoads": 55,
+      "visits": 55
     },
     {
       "path": "/nine-summits/universe/",

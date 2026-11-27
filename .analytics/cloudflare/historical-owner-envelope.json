@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T03:28:01Z",
+  "generatedAt": "2026-11-27T04:27:58Z",
   "window": {
-    "start": "2026-08-29T03:28:01Z",
-    "end": "2026-11-27T03:28:01Z"
+    "start": "2026-08-29T04:27:58Z",
+    "end": "2026-11-27T04:27:58Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,26 +17,22 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2430,
-    "visits": 710,
+    "pageLoads": 2380,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2430,
-        "visits": 710
+        "pageLoads": 2380,
+        "visits": 670
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 460,
-        "visits": 360
-      },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 420,
+        "visits": 320
       },
       "/characters/": {
         "pageLoads": 60,
@@ -49,6 +45,10 @@
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
+      },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 50,
@@ -68,10 +68,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -110,6 +106,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
+        "visits": 0
+      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
@@ -120,10 +120,6 @@
       },
       "/laws/categories/reality/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
@@ -208,13 +204,13 @@
       }
     },
     "byReferer": {
-      "www.google.com": {
-        "pageLoads": 340,
-        "visits": 340
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 1720,
+        "pageLoads": 1710,
         "visits": 0
+      },
+      "www.google.com": {
+        "pageLoads": 300,
+        "visits": 300
       },
       "(none)": {
         "pageLoads": 370,

@@ -1,6 +1,6 @@
 import {authenticateAssets} from './integrity.mjs';
 import {loadArticulatedSource} from './articulated-hop.private.mjs';
-import {mountPreview} from './preview.mjs?v=harvest-fullbleed-20261128-v3';
+import {mountPreview} from './preview.mjs?v=harvest-landscape-20261128-v4';
 const view=document.querySelector('#view'),play=document.querySelector('#play'),reset=document.querySelector('#reset'),status=document.querySelector('#status');
 function closed(){view.style.visibility='hidden';play.disabled=reset.disabled=true;status.textContent='Harvest unavailable — asset validation or graphics initialization failed. Reload to retry.';}
 const encounter=document.documentElement.classList.contains('harvest-encounter');

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T00:42:16Z",
+  "generatedAt": "2026-11-28T01:25:31Z",
   "window": {
-    "start": "2026-08-30T00:42:16Z",
-    "end": "2026-11-28T00:42:16Z"
+    "start": "2026-08-30T01:25:31Z",
+    "end": "2026-11-28T01:25:31Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2380,
-    "visits": 670,
+    "pageLoads": 2280,
+    "visits": 600,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2380,
-        "visits": 670
+        "pageLoads": 2280,
+        "visits": 600
       }
     },
     "byPath": {
@@ -30,45 +30,41 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 420,
-        "visits": 320
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
-      },
-      "/showroom/globe/audralia/": {
+      "/products/": {
         "pageLoads": 50,
         "visits": 10
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/campaigns/wave/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 280,
+        "visits": 10
+      },
+      "/nine-summits-of-love/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/products/archcoin/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
         "pageLoads": 20,
-        "visits": 0
+        "visits": 10
+      },
+      "/": {
+        "pageLoads": 330,
+        "visits": 260
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 20
       },
       "/showroom/": {
         "pageLoads": 10,
@@ -79,7 +75,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/index.html": {
@@ -94,43 +90,31 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
+      "/governance/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {
+        "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 420,
+        "visits": 0
+      },
+      "/explore/frontier/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 20,
-        "visits": 0
+      "/showroom/globe/audralia/": {
+        "pageLoads": 60,
+        "visits": 10
       },
-      "/showroom/globe/h-earth/diagnostic/": {
+      "/nine-summits/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -145,10 +129,6 @@
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 30,
-        "visits": 10
       },
       "/evidence/": {
         "pageLoads": 10,
@@ -205,16 +185,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1710,
+        "pageLoads": 1680,
         "visits": 0
       },
-      "www.google.com": {
-        "pageLoads": 300,
-        "visits": 300
-      },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 360,
+        "visits": 360
+      },
+      "www.google.com": {
+        "pageLoads": 240,
+        "visits": 240
       }
     }
   }

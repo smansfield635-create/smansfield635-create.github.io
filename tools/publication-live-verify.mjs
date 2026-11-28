@@ -131,7 +131,8 @@ export const runDeclaredInteractions=async(page,interactions)=>{
       }),{timeout},interaction.assertions);
       results.push({name:interaction.name,action:interaction.action.type,ok:true,elapsedMs:Date.now()-started});
     }catch(error){
-      results.push({name:interaction.name,action:interaction.action.type,ok:false,elapsedMs:Date.now()-started,error:String(error?.stack||error)});
+      const harvestState=await page.evaluate(()=>{const stage=document.querySelector('#harvest-stage');if(!stage)return null;const frame=stage.querySelector('iframe'),doc=frame?.contentDocument,view=doc?.querySelector('#view');return {stage:document.querySelector('#universe-scene')?.dataset.stage,arrival:stage.dataset.state,playing:stage.dataset.playing??null,sceneNote:document.querySelector('#scene-note')?.textContent,visible:stage.getBoundingClientRect().toJSON(),frame:frame?.getBoundingClientRect().toJSON(),childStatus:doc?.querySelector('#status')?.textContent,childView: view?.getBoundingClientRect().toJSON(),childMode:doc?.documentElement.className,readback:globalThis.DGB_UNIVERSE?.readback?.()};}).catch(()=>null);
+      results.push({name:interaction.name,action:interaction.action.type,ok:false,elapsedMs:Date.now()-started,error:String(error?.stack||error),...(harvestState?{harvestState}:{})});
     }
   }
   return results;

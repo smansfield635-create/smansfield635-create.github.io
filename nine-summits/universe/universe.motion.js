@@ -104,7 +104,7 @@ const joyOverlay=$('#joy-world'), joyHud=$('#joy-world-hud');
 const loveOverlay=$('#love-world'),loveHud=$('#love-world-hud');
 
 const harvestStage=$('#harvest-stage'),harvestToggle=$('#harvest-motion-toggle');
-let harvestFrame=null,harvestPaused=false;
+let harvestFrame=null,harvestPaused=false,harvestFlightStarted=0,harvestFlightOrigin=0;
 const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-arrival-20261128-v1';
 function sendHarvestState(){
  if(!harvestFrame||harvestStage.dataset.state!=='ready')return;
@@ -195,7 +195,7 @@ function choose(index,scroll=true){
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
 }
 function returnToAll(){
-  if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';sendHarvestState();peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
+  if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';if(selected===1){harvestFlightStarted=performance.now();harvestFlightOrigin=flight;}sendHarvestState();peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
     stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');balanceOverlay.classList.remove('is-visible');balanceOverlay.setAttribute('aria-hidden','true');canopyOverlay.classList.remove('is-visible');canopyOverlay.setAttribute('aria-hidden','true');highlandsOverlay.classList.remove('is-visible');highlandsOverlay.setAttribute('aria-hidden','true');opalOverlay.classList.remove('is-visible');opalOverlay.setAttribute('aria-hidden','true');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');updateMotionControl();requestFrame();return;}
   stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
@@ -233,7 +233,7 @@ $('#balance-return').addEventListener('click',returnToAll);
 $('#canopy-return').addEventListener('click',returnToAll);
 $('#highlands-return').addEventListener('click',returnToAll);
 $('#opal-return').addEventListener('click',returnToAll);
-function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';releaseHarvest();prepareHarvest();scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit II — Generosity';status.textContent='Traveling toward The Harvest.';updateMotionControl();requestFrame();}
+function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';harvestFlightStarted=performance.now();harvestFlightOrigin=0;releaseHarvest();prepareHarvest();scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit II — Generosity';status.textContent='Traveling toward The Harvest.';updateMotionControl();requestFrame();}
 function startHighlandsFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!highlandsGL){try{setupHighlandsWorld();}catch(error){console.error('Humility world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Quiet Highlands are unavailable. Read the complete Dignity teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit V — Humility';status.textContent='Traveling toward The Quiet Highlands.';updateMotionControl();requestFrame();}
 function startOpalFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!opalGL){try{setupOpalWorld();}catch(error){console.error('Opal Passage world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Opal Passage is unavailable. Read the complete Free Will teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit IX — Purity';status.textContent='Traveling toward The Opal Passage.';updateMotionControl();requestFrame();}
 
@@ -2221,7 +2221,8 @@ function render(time){
   if(orbitActive){orbitSpeed+=(ORBIT_RADIANS_PER_SECOND-orbitSpeed)*(1-Math.exp(-P.GESTURE.settleSpeed*dt));orbitPhase=(orbitPhase+orbitSpeed*dt)%(Math.PI*200);}else orbitSpeed=0;
   const settle=reduced?1:1-Math.exp(-P.GESTURE.settleSpeed*dt);
   const flightStep=reduced?1:Math.min(1,dt/.95);
-  if(selected===0||selected===1||selected===2||selected===3||selected===4||selected===5){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
+  if(selected===1){const delta=flightTarget-harvestFlightOrigin;const elapsed=Math.max(0,(time-harvestFlightStarted)/1000);flight=reduced?flightTarget:harvestFlightOrigin+Math.sign(delta)*Math.min(Math.abs(delta),elapsed/3.4);}
+  else if(selected===0||selected===2||selected===3||selected===4||selected===5){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
   else flight+=(flightTarget-flight)*flightStep;
   if(Math.abs(flight-flightTarget)<.0006)flight=flightTarget;
   const smooth=flight*flight*(3-2*flight);
@@ -2340,6 +2341,8 @@ function render(time){
     const saved=wasOpal?opalFocusReturn:wasJoy?joyFocusReturn:wasLove?loveFocusReturn:wasStability?stabilityFocusReturn:wasEmber?emberFocusReturn:wasBalance?balanceFocusReturn:wasCanopy?canopyFocusReturn:wasHighlands?highlandsFocusReturn:peaceFocusReturn;const restore=saved?.isConnected?saved:(labels[wasOpal?8:wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:wasBalance?5:wasCanopy?6:wasHighlands?7:4]||document.querySelector(`[data-summit="${wasOpal?8:wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:wasBalance?5:wasCanopy?6:wasHighlands?7:4}"]`));
     peaceFocusReturn=null;joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;balanceFocusReturn=null;canopyFocusReturn=null;highlandsFocusReturn=null;opalFocusReturn=null;restore?.focus({preventScroll:true});
   }
+  // An opaque Harvest encounter owns its own renderer; do not draw the hidden orbit.
+  if(selected===1&&flightStage==='encounter'){zoom=targetZoom;offset=targetOffset.slice();lastTime=0;return;}
   zoom+=(targetZoom-zoom)*settle;offset=offset.map((v,i)=>v+(targetOffset[i]-v)*settle);
   const moving=Math.abs(zoom-targetZoom)>.0001||offset.some((v,i)=>Math.abs(v-targetOffset[i])>.0001);
   if(!moving){zoom=targetZoom;offset=targetOffset.slice();}

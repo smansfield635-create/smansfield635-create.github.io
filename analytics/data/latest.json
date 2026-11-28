@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-28T16:25:25Z",
+  "generatedAt": "2026-11-28T17:24:54Z",
   "window30d": {
-    "start": "2026-10-29T16:25:25Z",
-    "end": "2026-11-28T16:25:25Z"
+    "start": "2026-10-29T17:24:54Z",
+    "end": "2026-11-28T17:24:54Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-11-20",
-      "pageLoads": 15
+      "pageLoads": 14
     },
     {
       "date": "2026-11-21",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-28",
-      "pageLoads": 34
+      "pageLoads": 44
     }
   ],
   "summary": {
-    "pageLoads": 1199,
+    "pageLoads": 1208,
     "botPageLoads": 698,
-    "nonBotPageLoads": 501
+    "nonBotPageLoads": 510
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1058,
-      "visits": 1058
+      "pageLoads": 1066,
+      "visits": 1066
     },
     {
       "host": "diamondgatebridge.com",
@@ -145,8 +145,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 37,
-      "visits": 37
+      "pageLoads": 38,
+      "visits": 38
     },
     {
       "host": "www.google.com",
@@ -166,12 +166,12 @@
       "visits": 112
     },
     {
-      "path": "/products/education/personal-training/course.html",
+      "path": "/products/education/personal-training/",
       "pageLoads": 80,
       "visits": 80
     },
     {
-      "path": "/products/education/personal-training/",
+      "path": "/products/education/personal-training/course.html",
       "pageLoads": 80,
       "visits": 80
     },
@@ -186,14 +186,14 @@
       "visits": 55
     },
     {
+      "path": "/nine-summits/generosity-harvest/",
+      "pageLoads": 17,
+      "visits": 12
+    },
+    {
       "path": "/graphics-engine/sculpt-lab/",
       "pageLoads": 14,
       "visits": 14
-    },
-    {
-      "path": "/research/testimonials/",
-      "pageLoads": 13,
-      "visits": 13
     }
   ],
   "ownerMeasurement": {

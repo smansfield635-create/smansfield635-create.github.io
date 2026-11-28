@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "harvest-gen3500-preflight-f52cf7d5",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7650,
+  "requestBranch": "ai-dispatch-request-harvest-gen3500-preflight-f52cf7d5",
+  "requestCommit": "7b1daaffcccf54c31ec00672767358b0e7b8c688",
+  "requestCommitParent": "f5df56044e4f426ec12361e4d96f2e5220ac5976",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "f5df56044e4f426ec12361e4d96f2e5220ac5976",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "f52cf7d51202fb1adb547d3aa25465a59a661edf",
+    "surface_id": "generosity-harvest"
+  },
+  "bridgeRunId": "46112078213",
+  "dispatchedRunId": 46112089690,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/46112089690",
+  "dispatchedRunHeadSha": "f5df56044e4f426ec12361e4d96f2e5220ac5976",
+  "dispatchedAt": "2026-11-28T05:26:02.720Z",
+  "resolvedAt": "2026-11-28T05:26:06.368Z"
+}

@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "harvest-cycle-publish-db29e936",
+  "requestId": "harvest-cycle-publish-db29e936-corrected",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "db29e936fee96389585a96bfe6eb521f03a07e65",
     "surface_id": "generosity-harvest"
   }
 }

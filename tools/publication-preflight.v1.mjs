@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import crypto from 'node:crypto';
+import https from 'node:https';
 import {spawn,spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
@@ -277,7 +278,7 @@ export async function buildPayload({repoRoot=REPO_ROOT,targetSha,surfaceId,stage
 }
 function run(cmd,args,env=process.env){return new Promise((resolve,reject)=>{const child=spawn(cmd,args,{stdio:'inherit',env});child.on('error',reject);child.on('exit',code=>code===0?resolve():reject(new Error(`COMMAND_FAILED:${cmd}:${code}`)));});}
 
-export async function waitForLocalHttpServer({url,server,timeoutMs=15000,pollMs=100}){
+export async function waitForLocalHttpServer({url,server,timeoutMs=15000,pollMs=100,ca}){
   if(!url||!server)throw new Error('LOCAL_PREFLIGHT_SERVER_WAIT_ARGUMENT_MISSING');
   const deadline=Date.now()+timeoutMs;
   let spawnError=null;
@@ -288,7 +289,7 @@ export async function waitForLocalHttpServer({url,server,timeoutMs=15000,pollMs=
     if(server.exitCode!==null)throw new Error(`LOCAL_PREFLIGHT_SERVER_EXITED:${server.exitCode}`);
     try{
       const remaining=Math.max(1,deadline-Date.now());
-      const response=await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(Math.min(1000,remaining))});
+      const response=ca?await trustedLocalRequest(url,ca,Math.min(1000,remaining)):await fetch(url,{redirect:'manual',signal:AbortSignal.timeout(Math.min(1000,remaining))});
       if(response.ok){await response.body?.cancel();return;}
       lastFailure=`HTTP_${response.status}`;
       await response.body?.cancel();
@@ -325,20 +326,57 @@ function verificationTargets({repoRoot,manifestPath,manifest}){
   }
   return targets;
 }
+// Harvest's integrity contract requires HTTPS, including in preflight. A fresh
+// local trust root is restricted to the child verifier's environment, never the host.
+function trustedLocalRequest(url,ca,timeout){
+  return new Promise((resolve,reject)=>{
+    const request=https.get(url,{ca,timeout},response=>{
+      response.resume();resolve({ok:response.statusCode===200,status:response.statusCode,body:null});
+    });
+    request.on('timeout',()=>request.destroy(new Error('LOCAL_TLS_TIMEOUT')));
+    request.on('error',reject);
+  });
+}
+function checkedCommand(command,args,env=process.env){
+  const result=spawnSync(command,args,{env,encoding:'utf8',timeout:15000});
+  if(result.error||result.status!==0)throw new Error(`LOCAL_TLS_SETUP_FAILED:${command}:${result.error?.message||result.stderr||result.status}`);
+}
+export function createLocalPublicationServer({stage,port,surfaceId}){
+  if(surfaceId!=='generosity-harvest'){
+    const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
+    return {server,base:`http://127.0.0.1:${port}`,env:process.env,cleanup:()=>{}};
+  }
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'harvest-preflight-tls-'));
+  try{
+    const root=path.join(directory,'root.pem'),rootKey=path.join(directory,'root.key');
+    const leaf=path.join(directory,'leaf.pem'),key=path.join(directory,'leaf.key'),csr=path.join(directory,'leaf.csr');
+    const home=path.join(directory,'home'),db=path.join(home,'.pki/nssdb'),ext=path.join(directory,'leaf.ext');
+    fs.mkdirSync(db,{recursive:true,mode:0o700});
+    const env={...process.env,HOME:home,XDG_CONFIG_HOME:path.join(home,'.config'),NODE_EXTRA_CA_CERTS:root};
+    checkedCommand('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-sha256','-days','1','-subj','/CN=Harvest Local Preflight Root','-addext','basicConstraints=critical,CA:TRUE','-addext','keyUsage=critical,keyCertSign,cRLSign','-keyout',rootKey,'-out',root]);
+    checkedCommand('openssl',['req','-new','-newkey','rsa:2048','-nodes','-subj','/CN=127.0.0.1','-keyout',key,'-out',csr]);
+    fs.writeFileSync(ext,'basicConstraints=critical,CA:FALSE\nkeyUsage=critical,digitalSignature,keyEncipherment\nextendedKeyUsage=serverAuth\nsubjectAltName=IP:127.0.0.1,DNS:localhost\n');
+    checkedCommand('openssl',['x509','-req','-in',csr,'-CA',root,'-CAkey',rootKey,'-CAcreateserial','-days','1','-sha256','-extfile',ext,'-out',leaf]);
+    checkedCommand('certutil',['-N','--empty-password','-d',`sql:${db}`],env);
+    checkedCommand('certutil',['-A','-d',`sql:${db}`,'-n','Harvest Local Preflight Root','-t','C,,','-i',root],env);
+    const script='import http.server,ssl,sys,functools; p,stage,cert,key=sys.argv[1:]; server=http.server.ThreadingHTTPServer(("127.0.0.1",int(p)),functools.partial(http.server.SimpleHTTPRequestHandler,directory=stage)); ctx=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER); ctx.load_cert_chain(cert,key); server.socket=ctx.wrap_socket(server.socket,server_side=True); server.serve_forever()';
+    const server=spawn('python3',['-c',script,String(port),stage,leaf,key],{stdio:'ignore',env});
+    return {server,base:`https://127.0.0.1:${port}`,env,ca:fs.readFileSync(root),cleanup:()=>fs.rmSync(directory,{recursive:true,force:true})};
+  }catch(error){fs.rmSync(directory,{recursive:true,force:true});throw error;}
+}
 async function verifyLocal({repoRoot=REPO_ROOT,stage,manifestPath,manifest}){
   const port=18000+Math.floor(Math.random()*1000);
-  const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
-  const base=`http://127.0.0.1:${port}`;
+  const local=createLocalPublicationServer({stage,port,surfaceId:manifest.surfaceId});
   try{
-    await waitForLocalHttpServer({url:`${base}/${RELEASE_MARKER}`,server});
+    await waitForLocalHttpServer({url:`${local.base}/${RELEASE_MARKER}`,server:local.server,ca:local.ca});
     for(const target of verificationTargets({repoRoot,manifestPath,manifest})){
-      await run(process.execPath,['tools/publication-live-verify.mjs','static',base,target.manifestPath]);
+      await run(process.execPath,['tools/publication-live-verify.mjs','static',local.base,target.manifestPath],local.env);
       if(target.manifest.runtime?.enabled===true){
         if(!process.env.CHROME_PATH)throw new Error(`CHROME_PATH_REQUIRED_FOR_RUNTIME_PREFLIGHT:${target.surfaceId}`);
-        await run(process.execPath,['tools/publication-live-verify.mjs','runtime',base,target.manifestPath],process.env);
+        await run(process.execPath,['tools/publication-live-verify.mjs','runtime',local.base,target.manifestPath],local.env);
       }
     }
-  }finally{await stopChild(server);}
+  }finally{try{await stopChild(local.server);}finally{local.cleanup();}}
 }
 function parse(argv){const out={};for(let i=0;i<argv.length;i++){const k=argv[i];if(!k.startsWith('--'))throw new Error(`UNKNOWN_ARGUMENT:${k}`);const key=k.slice(2);const value=argv[++i];if(value===undefined)throw new Error(`MISSING_ARGUMENT_VALUE:${key}`);out[key]=value;}return out;}
 

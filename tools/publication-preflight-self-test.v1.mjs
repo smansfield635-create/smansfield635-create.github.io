@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 import {createServer} from 'node:net';
-import {buildPayload,sha256,validateSha,validateSurfaceId,waitForLocalHttpServer} from './publication-preflight.v1.mjs';
+import {buildPayload,sha256,validateSha,validateSurfaceId,waitForLocalHttpServer,createLocalPublicationServer} from './publication-preflight.v1.mjs';
 
 const checks=[];
 const check=(name,ok,detail=null)=>{checks.push({name,ok:Boolean(ok),detail});if(!ok)throw new Error(`SELF_TEST_FAILED:${name}${detail?':'+detail:''}`);};
@@ -119,6 +119,21 @@ try{
   try{await waitForLocalHttpServer({url:'http://127.0.0.1:1/',server:earlyExit,timeoutMs:2000,pollMs:25});}
   catch(error){earlyExitRejected=String(error).includes('LOCAL_PREFLIGHT_SERVER_EXITED:7');}
   check('local-server-early-exit-rejected',earlyExitRejected);
+  const tlsReservation=createServer();await listen(tlsReservation);const tlsPort=tlsReservation.address().port;await close(tlsReservation);
+  const tls=createLocalPublicationServer({stage,port:tlsPort,surfaceId:'generosity-harvest'});
+  try{
+    check('harvest-preflight-https',tls.base.startsWith('https://'));
+    await waitForLocalHttpServer({url:`${tls.base}/demo/`,server:tls.server,ca:tls.ca});
+    check('harvest-local-root-trusted',true);
+    let rejected=false;try{await fetch(`${tls.base}/demo/`);}catch{rejected=true;}
+    check('harvest-local-root-not-global',rejected);
+    check('harvest-child-root-isolated',tls.env.HOME!==process.env.HOME&&fs.existsSync(tls.env.NODE_EXTRA_CA_CERTS));
+    check('harvest-certificate-verification-not-disabled',tls.env.NODE_TLS_REJECT_UNAUTHORIZED!=='0');
+  }finally{
+    if(tls.server.exitCode===null){const exited=new Promise(resolve=>tls.server.once('exit',resolve));tls.server.kill('SIGTERM');await exited;}
+    tls.cleanup();
+  }
+  check('harvest-local-trust-removed',!fs.existsSync(tls.env.HOME));
 }finally{fs.rmSync(tmp,{recursive:true,force:true});}
 
 const receipt={schema:'PUBLICATION_FAST_PREFLIGHT_SELF_TEST_RECEIPT_v1',result:'PASS_CLOSED',checkCount:checks.length,checks,deploymentPerformed:false};

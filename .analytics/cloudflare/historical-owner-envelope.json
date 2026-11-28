@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-27T23:24:46Z",
+  "generatedAt": "2026-11-28T00:42:16Z",
   "window": {
-    "start": "2026-08-29T23:24:46Z",
-    "end": "2026-11-27T23:24:46Z"
+    "start": "2026-08-30T00:42:16Z",
+    "end": "2026-11-28T00:42:16Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2390,
-    "visits": 680,
+    "pageLoads": 2380,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2390,
-        "visits": 680
+        "pageLoads": 2380,
+        "visits": 670
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 430,
-        "visits": 330
+        "pageLoads": 420,
+        "visits": 320
       },
       "/characters/": {
         "pageLoads": 60,
@@ -54,16 +54,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -94,10 +94,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
@@ -106,11 +102,15 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -209,8 +209,8 @@
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 310,
-        "visits": 310
+        "pageLoads": 300,
+        "visits": 300
       },
       "(none)": {
         "pageLoads": 370,

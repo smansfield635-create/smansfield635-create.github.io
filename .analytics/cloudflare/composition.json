@@ -1,26 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-28T15:25:24Z",
+  "generatedAt": "2026-11-28T16:25:25Z",
   "window": {
-    "start": "2026-10-29T15:25:24Z",
-    "end": "2026-11-28T15:25:24Z"
+    "start": "2026-10-29T16:25:25Z",
+    "end": "2026-11-28T16:25:25Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 612,
-        "visits": 612
+        "pageLoads": 592,
+        "visits": 592
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 177,
-        "visits": 82
+        "pageLoads": 197,
+        "visits": 112
       },
       {
         "value": "/products/education/personal-training/course.html",
-        "pageLoads": 100,
-        "visits": 100
+        "pageLoads": 80,
+        "visits": 80
+      },
+      {
+        "value": "/products/education/personal-training/",
+        "pageLoads": 80,
+        "visits": 80
       },
       {
         "value": "/",
@@ -29,13 +34,8 @@
       },
       {
         "value": "/nine-summits/universe/",
-        "pageLoads": 50,
-        "visits": 50
-      },
-      {
-        "value": "/products/education/personal-training/",
-        "pageLoads": 50,
-        "visits": 50
+        "pageLoads": 55,
+        "visits": 55
       },
       {
         "value": "/graphics-engine/sculpt-lab/",
@@ -88,6 +88,11 @@
         "visits": 8
       },
       {
+        "value": "/nine-summits/generosity-harvest/",
+        "pageLoads": 8,
+        "visits": 3
+      },
+      {
         "value": "/governance-bridge/governance/",
         "pageLoads": 5,
         "visits": 5
@@ -133,11 +138,6 @@
         "visits": 2
       },
       {
-        "value": "/nine-summits/generosity-harvest/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/methods/",
         "pageLoads": 1,
         "visits": 1
@@ -171,23 +171,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1041,
-        "visits": 1041
+        "pageLoads": 1058,
+        "visits": 1058
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 106,
+        "pageLoads": 101,
         "visits": 0
       },
       {
         "value": "bing.com",
-        "pageLoads": 47,
-        "visits": 47
-      },
-      {
-        "value": "github.com",
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 37,
+        "visits": 37
       },
       {
         "value": "www.google.com",
@@ -198,8 +193,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1180,
-        "visits": 1084
+        "pageLoads": 1172,
+        "visits": 1071
       },
       {
         "value": "CN",
@@ -215,8 +210,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1117,
-        "visits": 1032
+        "pageLoads": 1097,
+        "visits": 997
       },
       {
         "value": "mobile",
@@ -227,8 +222,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 708,
-        "visits": 708
+        "pageLoads": 698,
+        "visits": 693
       },
       {
         "value": "Chrome",
@@ -269,8 +264,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 787,
-        "visits": 787
+        "pageLoads": 777,
+        "visits": 772
       },
       {
         "value": "Windows",
@@ -301,8 +296,8 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 688,
-        "visits": 688
+        "pageLoads": 698,
+        "visits": 693
       },
       {
         "value": "0",
@@ -313,8 +308,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1104,
-        "visits": 1093
+        "pageLoads": 1114,
+        "visits": 1098
       },
       {
         "value": "routing-apis",
@@ -325,8 +320,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1178,
-        "visits": 1092
+        "pageLoads": 1188,
+        "visits": 1097
       },
       {
         "value": "cache",
@@ -337,15 +332,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1189,
-        "visits": 1093
+        "pageLoads": 1199,
+        "visits": 1098
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1189,
-        "visits": 1093
+        "pageLoads": 1199,
+        "visits": 1098
       }
     ]
   }

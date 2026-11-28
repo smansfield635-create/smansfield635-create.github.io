@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T17:24:54Z",
+  "generatedAt": "2026-11-28T18:27:08Z",
   "window": {
-    "start": "2026-08-30T17:24:54Z",
-    "end": "2026-11-28T17:24:54Z"
+    "start": "2026-08-30T18:27:08Z",
+    "end": "2026-11-28T18:27:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2340,
-    "visits": 660,
+    "pageLoads": 2370,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2340,
-        "visits": 660
+        "pageLoads": 2370,
+        "visits": 670
       }
     },
     "byPath": {
@@ -39,7 +39,7 @@
         "visits": 20
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 10
       },
       "/characters/": {
@@ -74,6 +74,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 50,
+        "visits": 10
+      },
       "/showroom/": {
         "pageLoads": 10,
         "visits": 0
@@ -81,10 +85,6 @@
       "/index.html": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
-        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -167,8 +167,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 250,
-        "visits": 60
+        "pageLoads": 260,
+        "visits": 70
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -186,12 +186,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -209,12 +209,12 @@
         "visits": 300
       },
       "diamondgatebridge.com": {
-        "pageLoads": 1680,
+        "pageLoads": 1700,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 360,
-        "visits": 360
+        "pageLoads": 370,
+        "visits": 370
       }
     }
   }

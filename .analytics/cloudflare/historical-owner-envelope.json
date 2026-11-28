@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T18:27:08Z",
+  "generatedAt": "2026-11-28T19:25:23Z",
   "window": {
-    "start": "2026-08-30T18:27:08Z",
-    "end": "2026-11-28T18:27:08Z"
+    "start": "2026-08-30T19:25:23Z",
+    "end": "2026-11-28T19:25:23Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -42,13 +42,13 @@
         "pageLoads": 50,
         "visits": 10
       },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
-      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -142,13 +142,13 @@
         "pageLoads": 40,
         "visits": 30
       },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 30,
         "visits": 10
+      },
+      "/products/on-your-side-ai/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,

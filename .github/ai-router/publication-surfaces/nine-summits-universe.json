@@ -19,7 +19,9 @@
         "harvest-teaching-body",
         "harvest-reflection-toggle"
       ],
-      "excludes": []
+      "excludes": [
+        "id=\"harvest-motion-toggle\""
+      ]
     },
     {
       "path": "/nine-summits/universe/universe.motion.js",
@@ -47,7 +49,7 @@
       "path": "/nine-summits/generosity-harvest/index.html",
       "includes": [
         "harvest-encounter",
-        "boot.mjs?v=harvest-landscape-20261128-v4",
+        "boot.mjs?v=harvest-clean-20261128-v5",
         "width:max(100cqw,177.6833156217cqh)",
         "138.593cqh"
       ],
@@ -64,7 +66,7 @@
     {
       "path": "/nine-summits/generosity-harvest/preview.mjs",
       "includes": [
-        "cycle.mjs?v=harvest-landscape-20261128-v4"
+        "cycle.mjs?v=harvest-clean-20261128-v5"
       ],
       "excludes": []
     }
@@ -194,43 +196,6 @@
             "type": "attributeEquals",
             "selector": "#love-world-hud",
             "name": "data-collapsed",
-            "value": "true"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Pause Harvest from quiet visitor control",
-        "action": {
-          "type": "click",
-          "selector": "#harvest-motion-toggle"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "#harvest-stage",
-            "name": "data-playing",
-            "value": "false"
-          },
-          {
-            "type": "textContains",
-            "selector": "#harvest-motion-toggle",
-            "value": "Resume motion"
-          }
-        ],
-        "timeoutMs": 5000
-      },
-      {
-        "name": "Resume Harvest",
-        "action": {
-          "type": "click",
-          "selector": "#harvest-motion-toggle"
-        },
-        "assertions": [
-          {
-            "type": "attributeEquals",
-            "selector": "#harvest-stage",
-            "name": "data-playing",
             "value": "true"
           }
         ],

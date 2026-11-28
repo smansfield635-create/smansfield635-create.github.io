@@ -1,5 +1,5 @@
 // Private V10 composition control. Source and art are authenticated by the caller before binding.
-import {createCycle,DURATION} from './cycle.mjs?v=harvest-landscape-20261128-v4';
+import {createCycle,DURATION} from './cycle.mjs?v=harvest-clean-20261128-v5';
 import {createHarvestScene} from './harvest.motion.js';
 export async function mountPreview({source,artBytes,backend='AUTO',placement,recording=false}){
  const view=document.querySelector('#view'),canvas=view.querySelector('canvas'),art=view.querySelector('img'),button=document.querySelector('#play'),reset=document.querySelector('#reset');

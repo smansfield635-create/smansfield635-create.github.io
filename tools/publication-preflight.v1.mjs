@@ -342,7 +342,7 @@ function checkedCommand(command,args,env=process.env){
   if(result.error||result.status!==0)throw new Error(`LOCAL_TLS_SETUP_FAILED:${command}:${result.error?.message||result.stderr||result.status}`);
 }
 export function createLocalPublicationServer({stage,port,surfaceId}){
-  if(surfaceId!=='generosity-harvest'){
+  if(surfaceId!=='generosity-harvest'&&surfaceId!=='nine-summits-universe'){
     const server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
     return {server,base:`http://127.0.0.1:${port}`,env:process.env,cleanup:()=>{}};
   }

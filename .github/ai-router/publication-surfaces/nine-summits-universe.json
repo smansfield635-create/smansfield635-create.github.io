@@ -147,9 +147,15 @@
             "type": "textContains",
             "selector": "#scene-note",
             "value": "The Harvest"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#harvest-stage",
+            "name": "data-playing",
+            "value": "true"
           }
         ],
-        "timeoutMs": 30000
+        "timeoutMs": 15000
       },
       {
         "name": "Pause Harvest from quiet visitor control",

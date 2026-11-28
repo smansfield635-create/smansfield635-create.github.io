@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T04:26:25Z",
+  "generatedAt": "2026-11-28T05:25:46Z",
   "window": {
-    "start": "2026-08-30T04:26:25Z",
-    "end": "2026-11-28T04:26:25Z"
+    "start": "2026-08-30T05:25:46Z",
+    "end": "2026-11-28T05:25:46Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2380,
-    "visits": 670,
+    "pageLoads": 2260,
+    "visits": 660,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2380,
-        "visits": 670
+        "pageLoads": 2260,
+        "visits": 660
       }
     },
     "byPath": {
@@ -31,11 +31,11 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 420,
-        "visits": 320
+        "pageLoads": 410,
+        "visits": 330
       },
       "/characters/": {
-        "pageLoads": 60,
+        "pageLoads": 70,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 210,
         "visits": 20
       },
       "/door/": {
@@ -51,15 +51,15 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -79,11 +79,11 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 50,
-        "visits": 10
+        "pageLoads": 30,
+        "visits": 0
       },
       "/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -95,7 +95,7 @@
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/governance/": {
@@ -107,7 +107,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
+        "pageLoads": 320,
         "visits": 0
       },
       "/showroom/story/invitation/": {
@@ -122,8 +122,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/build/": {
+      "/nine-summits/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
@@ -150,12 +154,12 @@
         "pageLoads": 30,
         "visits": 10
       },
-      "/evidence/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/contract/": {
@@ -194,10 +198,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/prototypes/abc-roofing/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -205,16 +205,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1710,
+        "pageLoads": 1600,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 300,
-        "visits": 300
+        "pageLoads": 320,
+        "visits": 320
       },
       "(none)": {
-        "pageLoads": 370,
-        "visits": 370
+        "pageLoads": 340,
+        "visits": 340
       }
     }
   }

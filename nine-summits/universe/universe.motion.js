@@ -108,7 +108,7 @@ let harvestFrame=null,harvestPaused=false,harvestFlightStarted=0,harvestFlightOr
 const harvestReflection=$('#harvest-reflection-toggle');
 function setHarvestReflection(collapsed){loveHud.dataset.collapsed=String(collapsed);harvestReflection.setAttribute('aria-expanded',String(!collapsed));harvestReflection.textContent=collapsed?'Show reflection':'View landscape';}
 harvestReflection.addEventListener('click',()=>setHarvestReflection(loveHud.dataset.collapsed!=='true'));
-const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-fullbleed-20261128-v3';
+const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-landscape-20261128-v4';
 function sendHarvestState(){
  if(!harvestFrame||harvestStage.dataset.state!=='ready')return;
  const active=selected===1&&flightStage==='encounter'&&!harvestPaused&&!reduced&&!document.hidden;
@@ -118,7 +118,7 @@ function sendHarvestState(){
 }
 function prepareHarvest(){
  if(harvestFrame)return;
- harvestPaused=false;harvestToggle.hidden=true;setHarvestReflection(false);harvestStage.dataset.state='loading';
+ harvestPaused=false;harvestToggle.hidden=true;setHarvestReflection(true);harvestStage.dataset.state='loading';
  const frame=document.createElement('iframe');frame.title='Harvest landscape with the animated rabbit';frame.tabIndex=-1;frame.setAttribute('aria-hidden','true');frame.src=harvestURL;harvestFrame=frame;harvestStage.appendChild(frame);
 }
 function releaseHarvest(){
@@ -2309,7 +2309,7 @@ function render(time){
   }
   if(selected===1&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';loveOverlay.classList.add('is-visible');loveOverlay.setAttribute('aria-hidden','false');loveOverlay.style.opacity='1';loveOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-love');
-    $('#scene-note').textContent='Generosity → Love · The Harvest';status.textContent='Arrived at Summit II, Generosity.';loveHud.focus({preventScroll:true});sendHarvestState();
+    $('#scene-note').textContent='Generosity → Love · The Harvest';status.textContent='Arrived at Summit II, Generosity.';harvestReflection.focus({preventScroll:true});sendHarvestState();
   }
   if(selected===8&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';opalOverlay.classList.add('is-visible');opalOverlay.setAttribute('aria-hidden','false');opalOverlay.style.opacity='1';opalOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-opal');

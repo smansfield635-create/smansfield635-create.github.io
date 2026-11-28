@@ -47,8 +47,9 @@
       "path": "/nine-summits/generosity-harvest/index.html",
       "includes": [
         "harvest-encounter",
-        "boot.mjs?v=harvest-fullbleed-20261128-v3",
-        "width:max(100cqw,177.6833156217cqh)"
+        "boot.mjs?v=harvest-landscape-20261128-v4",
+        "width:max(100cqw,177.6833156217cqh)",
+        "138.593cqh"
       ],
       "excludes": []
     },
@@ -63,7 +64,7 @@
     {
       "path": "/nine-summits/generosity-harvest/preview.mjs",
       "includes": [
-        "cycle.mjs?v=harvest-fullbleed-20261128-v3"
+        "cycle.mjs?v=harvest-landscape-20261128-v4"
       ],
       "excludes": []
     }
@@ -156,17 +157,7 @@
             "selector": "#harvest-stage",
             "name": "data-playing",
             "value": "true"
-          }
-        ],
-        "timeoutMs": 15000
-      },
-      {
-        "name": "Reveal the unobstructed full-screen Harvest",
-        "action": {
-          "type": "click",
-          "selector": "#harvest-reflection-toggle"
-        },
-        "assertions": [
+          },
           {
             "type": "attributeEquals",
             "selector": "#love-world-hud",
@@ -174,10 +165,10 @@
             "value": "true"
           }
         ],
-        "timeoutMs": 5000
+        "timeoutMs": 15000
       },
       {
-        "name": "Restore the overlaid reflection",
+        "name": "Open compact Harvest reflection",
         "action": {
           "type": "click",
           "selector": "#harvest-reflection-toggle"
@@ -188,6 +179,22 @@
             "selector": "#love-world-hud",
             "name": "data-collapsed",
             "value": "false"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Restore landscape-first Harvest",
+        "action": {
+          "type": "click",
+          "selector": "#harvest-reflection-toggle"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#love-world-hud",
+            "name": "data-collapsed",
+            "value": "true"
           }
         ],
         "timeoutMs": 5000

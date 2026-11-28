@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T03:26:53Z",
+  "generatedAt": "2026-11-28T04:26:25Z",
   "window": {
-    "start": "2026-08-30T03:26:53Z",
-    "end": "2026-11-28T03:26:53Z"
+    "start": "2026-08-30T04:26:25Z",
+    "end": "2026-11-28T04:26:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -46,6 +46,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/globe/audralia/": {
         "pageLoads": 50,
         "visits": 10
@@ -64,10 +68,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/": {
@@ -106,6 +106,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 460,
+        "visits": 0
+      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
@@ -116,10 +120,6 @@
       },
       "/laws/categories/reality/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 460,
         "visits": 0
       },
       "/build/": {

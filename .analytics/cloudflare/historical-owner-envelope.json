@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-28T02:27:58Z",
+  "generatedAt": "2026-11-28T03:26:53Z",
   "window": {
-    "start": "2026-08-30T02:27:58Z",
-    "end": "2026-11-28T02:27:58Z"
+    "start": "2026-08-30T03:26:53Z",
+    "end": "2026-11-28T03:26:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,37 +17,33 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 2190,
-    "visits": 700,
+    "pageLoads": 2380,
+    "visits": 670,
     "byDevice": {
       "tablet": {
-        "pageLoads": 2190,
-        "visits": 700
+        "pageLoads": 2380,
+        "visits": 670
       }
     },
     "byPath": {
       "/evidence/agentic-frontier/": {
-        "pageLoads": 40,
+        "pageLoads": 70,
         "visits": 0
       },
       "/": {
-        "pageLoads": 380,
-        "visits": 310
+        "pageLoads": 420,
+        "visits": 320
       },
       "/characters/": {
-        "pageLoads": 80,
-        "visits": 40
-      },
-      "/showroom/globe/h-earth/": {
         "pageLoads": 60,
-        "visits": 10
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 240,
+        "pageLoads": 220,
         "visits": 20
       },
       "/showroom/globe/audralia/": {
@@ -59,7 +55,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -82,6 +78,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 50,
+        "visits": 10
+      },
       "/index.html": {
         "pageLoads": 30,
         "visits": 0
@@ -90,16 +90,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/governance/": {
@@ -123,10 +119,18 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 280,
+        "pageLoads": 460,
         "visits": 0
       },
-      "/nine-summits/": {
+      "/build/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -143,32 +147,28 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 20,
-        "visits": 0
+        "pageLoads": 30,
+        "visits": 10
       },
       "/evidence/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 0
-      },
-      "/products/archcoin/payable/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/products/archcoin/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/products/archcoin/contract/": {
-        "pageLoads": 10,
+        "pageLoads": 40,
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 240,
+        "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -178,21 +178,25 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/analytics/": {
-        "pageLoads": 90,
-        "visits": 0
-      },
       "/home/": {
         "pageLoads": 10,
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 190,
-        "visits": 160
+        "pageLoads": 150,
+        "visits": 120
+      },
+      "/analytics/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/prototypes/abc-roofing/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/about-this-underdog/": {
         "pageLoads": 10,
@@ -201,20 +205,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 1490,
+        "pageLoads": 1710,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 290,
-        "visits": 290
+        "pageLoads": 300,
+        "visits": 300
       },
       "(none)": {
-        "pageLoads": 400,
-        "visits": 400
-      },
-      "com.google.android.googlequicksearchbox": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 370,
+        "visits": 370
       }
     }
   }

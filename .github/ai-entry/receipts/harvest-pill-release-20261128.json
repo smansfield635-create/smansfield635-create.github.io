@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "harvest-pill-release-20261128",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7671,
+  "requestBranch": "ai-dispatch-request-harvest-pill-release-20261128",
+  "requestCommit": "33ac6d1f0b864779579bc05a1ba060e5386871c6",
+  "requestCommitParent": "2b271c9f9d4023f1f189b9c2a7288cdf8df53996",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "2b271c9f9d4023f1f189b9c2a7288cdf8df53996",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2b271c9f9d4023f1f189b9c2a7288cdf8df53996",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "46164490580",
+  "dispatchedRunId": 46164506261,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/46164506261",
+  "dispatchedRunHeadSha": "2b271c9f9d4023f1f189b9c2a7288cdf8df53996",
+  "dispatchedAt": "2026-11-28T16:19:08.266Z",
+  "resolvedAt": "2026-11-28T16:19:12.169Z"
+}

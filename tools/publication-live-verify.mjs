@@ -129,7 +129,22 @@ export const runDeclaredInteractions=async(page,interactions)=>{
         if(assertion.type==='textContains')return String(element.textContent||'').includes(assertion.value);
         return false;
       }),{timeout},interaction.assertions);
-      results.push({name:interaction.name,action:interaction.action.type,ok:true,elapsedMs:Date.now()-started});
+      let harvestLayout;
+      if(interaction.name==='Switch to Generosity and Love'){
+        harvestLayout=await page.evaluate(()=>{
+          const stage=document.querySelector('#harvest-stage'),world=document.querySelector('#love-world'),hud=document.querySelector('#love-world-hud'),frame=stage?.querySelector('iframe'),doc=frame?.contentDocument,view=doc?.querySelector('#view');
+          if(!stage||!world||!hud||!frame||!view)return {ok:false,reason:'MISSING_LAYOUT'};
+          const r=stage.getBoundingClientRect(),w=world.getBoundingClientRect(),f=frame.getBoundingClientRect(),c=view.getBoundingClientRect(),h=hud.getBoundingClientRect(),eps=2;
+          const fills=(a,b)=>Math.abs(a.left-b.left)<=eps&&Math.abs(a.top-b.top)<=eps&&Math.abs(a.width-b.width)<=eps&&Math.abs(a.height-b.height)<=eps;
+          const cover=c.left<=eps&&c.top<=eps&&c.right>=f.width-eps&&c.bottom>=f.height-eps;
+          const fixedAspect=Math.abs(c.width/c.height-1672/941)<.005;
+          const overlay=getComputedStyle(hud).position==='absolute'&&h.left>=w.left-eps&&h.right<=w.right+eps&&h.top>=w.top-eps&&h.bottom<=w.bottom+eps;
+          const hidden=doc.defaultView.getComputedStyle(doc.querySelector('.controls')).display==='none';
+          return {ok:fills(r,w)&&fills(f,r)&&cover&&fixedAspect&&overlay&&hidden,stage:r.toJSON(),world:w.toJSON(),frame:f.toJSON(),composition:c.toJSON(),reflection:h.toJSON(),cover,fixedAspect,overlay,hidden};
+        });
+        if(!harvestLayout.ok)throw Error('HARVEST_FULL_BLEED_LAYOUT_FAILED '+JSON.stringify(harvestLayout));
+      }
+      results.push({name:interaction.name,action:interaction.action.type,ok:true,elapsedMs:Date.now()-started,...(harvestLayout?{harvestLayout}:{})});
     }catch(error){
       const harvestState=await page.evaluate(()=>{const stage=document.querySelector('#harvest-stage');if(!stage)return null;const frame=stage.querySelector('iframe'),doc=frame?.contentDocument,view=doc?.querySelector('#view');return {stage:document.querySelector('#universe-scene')?.dataset.stage,arrival:stage.dataset.state,playing:stage.dataset.playing??null,sceneNote:document.querySelector('#scene-note')?.textContent,visible:stage.getBoundingClientRect().toJSON(),frame:frame?.getBoundingClientRect().toJSON(),childStatus:doc?.querySelector('#status')?.textContent,childView: view?.getBoundingClientRect().toJSON(),childMode:doc?.documentElement.className,readback:globalThis.DGB_UNIVERSE?.readback?.()};}).catch(()=>null);
       results.push({name:interaction.name,action:interaction.action.type,ok:false,elapsedMs:Date.now()-started,error:String(error?.stack||error),...(harvestState?{harvestState}:{})});

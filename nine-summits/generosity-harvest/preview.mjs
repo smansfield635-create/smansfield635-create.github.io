@@ -1,12 +1,12 @@
 // Private V10 composition control. Source and art are authenticated by the caller before binding.
-import {createCycle,DURATION} from './cycle.mjs?v=harvest-arrival-20261128-v1';
+import {createCycle,DURATION} from './cycle.mjs?v=harvest-fullbleed-20261128-v3';
 import {createHarvestScene} from './harvest.motion.js';
 export async function mountPreview({source,artBytes,backend='AUTO',placement,recording=false}){
  const view=document.querySelector('#view'),canvas=view.querySelector('canvas'),art=view.querySelector('img'),button=document.querySelector('#play'),reset=document.querySelector('#reset');
  const media=matchMedia('(prefers-reduced-motion: reduce)');
  art.src=URL.createObjectURL(new Blob([artBytes],{type:'image/png'}));await art.decode();if(art.naturalWidth!==1672||art.naturalHeight!==941)throw Error('ART_DIMENSIONS');
  const scene=createHarvestScene(canvas,{backend,reducedMotion:true,illustrationMode:true});
- const size=()=>{let r=view.getBoundingClientRect();scene.resize(r.width,r.height,1)};size();const cycle=createCycle(source);let cycleTime=0;const bound=scene.attachPrivateArticulated284({...source,sampleHop:()=>cycle.sample(cycleTime)},placement);
+ const size=()=>{if(document.documentElement.classList.contains('harvest-encounter')){scene.resize(1672,941,1);return;}let r=view.getBoundingClientRect();scene.resize(r.width,r.height,1)};size();const cycle=createCycle(source);let cycleTime=0;const bound=scene.attachPrivateArticulated284({...source,sampleHop:()=>cycle.sample(cycleTime)},placement);
  const gl=canvas.getContext(scene.backend==='WEBGL2'?'webgl2':'webgl');let t=0,playing=false,raf=0,start=0,last=null;
  const draw=(v)=>{t=Math.max(0,Math.min(DURATION,v));cycleTime=t;last=scene.drawArticulated284(0);return last};
  const pause=()=>{playing=false;cancelAnimationFrame(raf);raf=0;button.textContent='Play cycle'};

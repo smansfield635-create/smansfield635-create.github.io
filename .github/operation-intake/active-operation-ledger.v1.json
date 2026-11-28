@@ -6918,66 +6918,6 @@
       "scopeHash": "30bf3b9ff1ed061d13ccae838119127b35c1b7031ba4b8b4fede42c76e87464b",
       "state": "ADMITTED_LOCKED"
     },
-    "30dc95bbce4efc983b1ed4ba009fd1cf5bb4ed311f580ba135308a47089a03d2": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "33bbb7b5c03376ed9807868bc2ff64e72a793b32",
-          "lockGeneration": 3498,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
-          "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_RELIABILITY_SUCCESSOR_20261124_001",
-          "procedureLocatorDigest": "c073d514f26f29c5209b57ab30d447803ff43bc31f7da57969c713703b34c99c",
-          "requestDigest": "b26822e4dc6970191e22423bbafddefe2571236c2a7f6c3bbcd03db0b98af71d",
-          "scopeHash": "30dc95bbce4efc983b1ed4ba009fd1cf5bb4ed311f580ba135308a47089a03d2"
-        },
-        "bindingDigest": "81a2823b27428a11c92148b84a3f257e023bcdae39bba8249b03599b9d5aa01a",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "1f0d8cf2798bc220cbb853f4e68a4a0a28fe5adcf82a2030633724329292fa20",
-          "commentId": 7142381505,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 7163,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 45472343330,
-          "workflowSha": "33bbb7b5c03376ed9807868bc2ff64e72a793b32"
-        },
-        "lineageAnchorCommitSha": "9206e3288bd1b15cd69fd9699e1e3b46df2fb738",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "33bbb7b5c03376ed9807868bc2ff64e72a793b32",
-      "lockGeneration": 3498,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
-      "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_RELIABILITY_SUCCESSOR_20261124_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "8d049982082cf554f65f2f3f82f27609294d4ff8",
-        "lockGeneration": 3454,
-        "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
-        "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_BOUNDED_REPAIR_20261120_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7055778938",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7055785434",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7553#issuecomment-7142290631",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7141910617"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "HARVEST_CONTINUATION_RELIABILITY_3454_SUCCESSOR_20261124_001"
-      },
-      "procedureLocatorDigest": "c073d514f26f29c5209b57ab30d447803ff43bc31f7da57969c713703b34c99c",
-      "released": false,
-      "requestDigest": "b26822e4dc6970191e22423bbafddefe2571236c2a7f6c3bbcd03db0b98af71d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "30dc95bbce4efc983b1ed4ba009fd1cf5bb4ed311f580ba135308a47089a03d2",
-      "state": "ADMITTED_LOCKED"
-    },
     "31c93406b0637e4b31505e4a2ee6c1382f38319bc0494384950aee243b637317": {
       "governingHead": "40990c093d80228517bbb71be0d981776771f7ce",
       "lockGeneration": 1725,
@@ -115371,6 +115311,67 @@
       "requestDigest": "fd19c99974200d3bcac7cc704a2dbca805d080deff480b37fe704df5557c9061",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "f6af4afe58352f295cdd6b4d21c222e7e20fc92e13f3bc23c2e98b95f263e714",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "33bbb7b5c03376ed9807868bc2ff64e72a793b32",
+          "lockGeneration": 3498,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
+          "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_RELIABILITY_SUCCESSOR_20261124_001",
+          "procedureLocatorDigest": "c073d514f26f29c5209b57ab30d447803ff43bc31f7da57969c713703b34c99c",
+          "requestDigest": "b26822e4dc6970191e22423bbafddefe2571236c2a7f6c3bbcd03db0b98af71d",
+          "scopeHash": "30dc95bbce4efc983b1ed4ba009fd1cf5bb4ed311f580ba135308a47089a03d2"
+        },
+        "bindingDigest": "81a2823b27428a11c92148b84a3f257e023bcdae39bba8249b03599b9d5aa01a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1f0d8cf2798bc220cbb853f4e68a4a0a28fe5adcf82a2030633724329292fa20",
+          "commentId": 7142381505,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 7163,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 45472343330,
+          "workflowSha": "33bbb7b5c03376ed9807868bc2ff64e72a793b32"
+        },
+        "lineageAnchorCommitSha": "9206e3288bd1b15cd69fd9699e1e3b46df2fb738",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "33bbb7b5c03376ed9807868bc2ff64e72a793b32",
+      "lockGeneration": 3498,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
+      "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_RELIABILITY_SUCCESSOR_20261124_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8d049982082cf554f65f2f3f82f27609294d4ff8",
+        "lockGeneration": 3454,
+        "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:HARVEST_CONTINUATION_BOUNDING:20261120:V1",
+        "operationId": "REPOSITORY_AI_HARVEST_CONTINUATION_BOUNDED_REPAIR_20261120_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7055778938",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7055785434",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7553#issuecomment-7142290631",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/7163#issuecomment-7141910617"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "HARVEST_CONTINUATION_RELIABILITY_3454_SUCCESSOR_20261124_001"
+      },
+      "procedureLocatorDigest": "c073d514f26f29c5209b57ab30d447803ff43bc31f7da57969c713703b34c99c",
+      "released": true,
+      "requestDigest": "b26822e4dc6970191e22423bbafddefe2571236c2a7f6c3bbcd03db0b98af71d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "30dc95bbce4efc983b1ed4ba009fd1cf5bb4ed311f580ba135308a47089a03d2",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
     }

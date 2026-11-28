@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Generosity Harvest — Native Construction Candidate</title>
+<style>
+  :root {font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color:#233529; background:#f2efe6}
+  * {box-sizing:border-box}
+  body {margin:0;min-height:100svh}
+  .page {max-width:1510px;margin:0 auto;padding:clamp(12px,2.8vw,34px)}
+  header {display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 16px}
+  .overline {margin:0;color:#647461;font-size:.77rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700}
+  h1 {font: 500 clamp(1.65rem,3.7vw,3.3rem)/1.1 Georgia,serif;letter-spacing:-.025em;margin:6px 0 0}
+  .label {font-size:.78rem;color:#5a665c}
+  .view {position:relative;overflow:hidden;background:linear-gradient(#bbd5cb 0%,#e8dac0 55%,#628569 100%);border-radius:8px;
+    box-shadow:0 5px 22px #283b3020}
+  canvas {display:block;width:100%;height:auto;aspect-ratio:1672 / 941;outline-offset:-3px}
+  canvas:focus-visible {outline:3px solid #274c3a}
+  .pending {position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;color:#304b40;
+    background:#d6e0cf;font-size:clamp(.83rem,2vw,1.1rem);text-align:center;padding:24px}
+  .pending[hidden] {display:none}
+  .tools {display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:14px}
+  .controls {display:flex;align-items:center;flex-wrap:wrap;gap:10px}
+  button {border:1px solid #4c6657;color:#244735;background:#fffdf8;border-radius:5px;
+    min-height:44px;padding:8px 18px;font:600 .9rem system-ui;cursor:pointer}
+  button:hover {background:#e4eee3}
+  button:focus-visible {outline:3px solid #557b62;outline-offset:3px}
+  button:disabled {cursor:not-allowed;opacity:.55}
+  .state {font:.79rem/1.5 ui-monospace,Consolas,monospace;color:#4e6658}
+  .scope {margin:19px 0 0;border-top:1px solid #cbd5c8;padding-top:14px;display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;color:#526456;font-size:.84rem}
+  .scope p {margin:0}
+  .scope strong {color:#274a35}
+  @media(max-width:700px){
+    .page {padding:12px}
+    .view {border-radius:5px}
+    .scope {grid-template-columns:1fr;gap:8px}
+    .tools {align-items:flex-start}
+    header {margin-bottom:12px}
+  }
+
+  .owner-controls {display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+  .owner-controls label {font-size:.84rem;font-weight:600}
+  .owner-controls input[type=file]{display:block;max-width:240px;font:inherit}
+  .owner-controls input[type=range]{width:min(190px,45vw);accent-color:#426d50}
+  .view.rabbit-zoom canvas{transform:scale(2.05);transform-origin:51% 80%}
+  .private-notice{margin:8px 0 0;font-size:.78rem;color:#526456}
+  @media(max-width:700px){.owner-controls{width:100%}}
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div>
+      <p class="overline">Nine Summits · Generosity</p>
+      <h1>Generosity Harvest</h1>
+    </div>
+    <span class="label">Gen3442 · HELD construction candidate · not published</span>
+  </header>
+  <section class="view" aria-label="Native three-dimensional Generosity Harvest scene">
+    <canvas id="harvest" width="1280" height="720" tabindex="0" role="img"
+      aria-label="Three-dimensional pastoral environment with a bridge, water, flowering orchard, woodland paths and birds."></canvas>
+    <div class="pending" id="pending" role="status" aria-live="polite">Initializing first-party native WebGL scene…</div>
+  </section>
+  <div class="tools">
+    <div class="controls">
+      <button id="motion" type="button" disabled aria-pressed="false">Pause motion</button>
+      <button id="still" type="button" disabled>Render still</button>
+      <div class="owner-controls">
+        <label>Original V10 owner-private ZIP
+          <input id="privateV10" type="file" accept=".zip,application/zip" aria-label="Choose original private Harvest V10 ZIP">
+        </label>
+        <button id="focusRabbit" type="button" disabled aria-pressed="false">Rabbit close-up</button>
+        <label for="rabbitTimeline">Frame <output id="rabbitFrame">0</output> / 179
+          <input id="rabbitTimeline" type="range" min="0" max="179" value="0" step="1" disabled>
+        </label>
+      </div>
+    </div>
+    <output id="status" class="state" aria-live="polite">Not yet qualified</output>
+  </div>
+  <p class="private-notice">Private source stays on this device. No upload or publication occurs. This is an unreleased original-rabbit review.</p>
+  <section class="scope" aria-label="Evidence and acceptance boundaries">
+    <p><strong>Source boundary.</strong> This is a 3D spatial construction, not the owner-approved original 1672×941 illustration. The original pastoral artwork, coat and rabbit geometry remain private and unchanged. The original M1.3 180-frame rabbit, coat and eyes are loaded only after local ZIP verification. The older 17-frame private A4 adapter remains intact.</p>
+    <p><strong>Acceptance boundary.</strong> Artistic C1 remains HOLD. Real original-archive browser/device qualification, contact/landing realism, exact-two-path router PASS and independent artistic acceptance remain separate checks. This candidate carries no activation, merge or publication authority.</p>
+  </section>
+</main>
+<script type="module">
+import {createHarvestScene,loadHarvestV10PrivateAssets} from './harvest.motion.js';
+const canvas=document.getElementById('harvest');
+const pending=document.getElementById('pending');
+const motion=document.getElementById('motion');
+const still=document.getElementById('still');
+const status=document.getElementById('status');
+const archive=document.getElementById('privateV10'),focus=document.getElementById('focusRabbit');
+const timeline=document.getElementById('rabbitTimeline'),frameLabel=document.getElementById('rabbitFrame');
+const view=document.querySelector('.view');
+window.__harvestReview={ready:false,published:false,ownerC1:'HOLD'};
+const prefersReduced=matchMedia('(prefers-reduced-motion: reduce)');
+const query=new URLSearchParams(location.search);
+const requested=query.get('backend');
+const backend=requested==='WEBGL1'||requested==='WEBGL2'?requested:'AUTO';
+let scene=null,autoPaused=false;
+
+const V10_PREFIX='nine-summits/generosity-harvest/private-assets/';
+const V10_MANIFEST_SHA='4d91a8d0582a5e4a99ca0ac3e1631f4e94588489671eb693762b227791a131db';
+// Read only owner-selected in-memory ZIP members. No private fetch, upload, or persistence.
+async function loadOwnerOriginalZIP(file){
+  if(!file||file.size<1000||file.size>40000000)throw Error('V10_ARCHIVE_SIZE_INVALID');
+  const bytes=new Uint8Array(await file.arrayBuffer()),v=new DataView(bytes.buffer);
+  const u16=i=>v.getUint16(i,true),u32=i=>v.getUint32(i,true);
+  let eocd=-1;
+  for(let i=bytes.length-22;i>=Math.max(0,bytes.length-65557);i--)
+    if(u32(i)===0x06054b50){eocd=i;break;}
+  if(eocd<0)throw Error('V10_ARCHIVE_DIRECTORY_MISSING');
+  const count=u16(eocd+10);let cursor=u32(eocd+16),total=0;
+  const entries=new Map(),decoder=new TextDecoder('utf-8',{fatal:true});
+  if(count<14||count>400)throw Error('V10_ARCHIVE_COUNT_INVALID');
+  for(let k=0;k<count;k++){
+    if(cursor+46>bytes.length||u32(cursor)!==0x02014b50)throw Error('V10_CENTRAL_DIRECTORY_INVALID');
+    const len=u16(cursor+28),extra=u16(cursor+30),note=u16(cursor+32);
+    if(cursor+46+len+extra+note>bytes.length)throw Error('V10_CENTRAL_MEMBER_TRUNCATED');
+    const name=decoder.decode(bytes.subarray(cursor+46,cursor+46+len));
+    if(name.startsWith(V10_PREFIX)){
+      if(!/^[a-zA-Z0-9._-]+$/.test(name.slice(V10_PREFIX.length))||entries.has(name))
+        throw Error('V10_PRIVATE_MEMBER_NAME_INVALID');
+      const method=u16(cursor+10),flags=u16(cursor+8),compressed=u32(cursor+20),plain=u32(cursor+24),local=u32(cursor+42);
+      if((flags&1)||method!==8||compressed>18000000||plain>18000000||local+30>bytes.length||
+          u32(local)!==0x04034b50)throw Error('V10_PRIVATE_COMPRESSION_INVALID');
+      total+=plain;if(total>50000000)throw Error('V10_PRIVATE_TOTAL_LIMIT');
+      const start=local+30+u16(local+26)+u16(local+28);
+      if(start+compressed>bytes.length)throw Error('V10_PRIVATE_MEMBER_TRUNCATED');
+      entries.set(name,{start,compressed,plain});
+    }
+    cursor+=46+len+extra+note;
+  }
+  async function read(name){
+    if(!/^[a-zA-Z0-9._-]+$/.test(name))throw Error('V10_UNSAFE_MEMBER');
+    const entry=entries.get(V10_PREFIX+name);
+    if(!entry)throw Error('V10_PRIVATE_MEMBER_MISSING:'+name);
+    const compressed=bytes.subarray(entry.start,entry.start+entry.compressed);
+    const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    const out=new Uint8Array(await new Response(stream).arrayBuffer());
+    if(out.byteLength!==entry.plain)throw Error('V10_PRIVATE_MEMBER_LENGTH_MISMATCH:'+name);
+    return out;
+  }
+  const raw=await read('harvest-v10-private-asset-manifest.json');
+  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',raw)),
+    x=>x.toString(16).padStart(2,'0')).join('');
+  if(digest!==V10_MANIFEST_SHA)throw Error('V10_PRIVATE_MANIFEST_SHA_MISMATCH');
+  return {manifest:JSON.parse(decoder.decode(raw)),read};
+}
+
+try {
+  scene=createHarvestScene(canvas,{backend,reducedMotion:prefersReduced.matches,onStatus:s=>{
+    status.textContent=s.backend+' · frames '+s.frames+' · rabbit '+(s.privateRabbitAttached?'private in-memory':'not loaded')+' · C1 HOLD';
+    motion.setAttribute('aria-pressed',String(s.playing));
+    motion.textContent=s.playing?'Pause motion':'Play motion';
+  }});
+  function size(){
+    if(!scene)return;
+    const r=view.getBoundingClientRect();
+    if(r.width>0&&r.height>0)scene.resize(r.width,r.height,Math.min(devicePixelRatio||1,2));
+  }
+  if(typeof ResizeObserver!=='undefined'){new ResizeObserver(size).observe(canvas);}
+  else addEventListener('resize',size,{passive:true});
+  size();
+  motion.disabled=false;still.disabled=false;
+
+  archive.addEventListener('change',async event=>{
+    const file=event.target.files?.[0];event.target.value='';if(!file||window.__harvestReview.ready)return;
+    scene.pause();archive.disabled=true;status.textContent='Verifying private original V10…';
+    try{
+      const {manifest,read}=await loadOwnerOriginalZIP(file);
+      const packet=await loadHarvestV10PrivateAssets(manifest,read);
+      if(packet.frameCount!==180||packet.ownerC1!=='HOLD')throw Error('V10_PRIVATE_CONTRACT_INVALID');
+      const attachment=scene.attachPrivateM13V4(packet.assets);
+      scene.drawPrivateM13V4Frame(0);
+      timeline.disabled=false;focus.disabled=false;
+      if(matchMedia('(max-width:700px)').matches){
+        view.classList.add('rabbit-zoom');focus.setAttribute('aria-pressed','true');
+        focus.textContent='Full landscape';
+      }
+      status.textContent=scene.backend+' · original 180 frames · verified coat and eyes · C1 HOLD';
+      window.__harvestReview={ready:true,error:null,published:false,ownerC1:'HOLD',
+        backend:scene.backend,frames:180,attachment:attachment.status,
+        draw:i=>scene.drawPrivateM13V4Frame(i),inspect:()=>scene.status()};
+    }catch(error){
+      scene.pause();
+      status.textContent='Original ZIP rejected: '+String(error?.message||error)+'. Reload before retry.';
+      window.__harvestReview.error=String(error?.message||error);
+    }finally{archive.disabled=Boolean(window.__harvestReview.ready);}
+  });
+  timeline.addEventListener('input',()=>{
+    if(!window.__harvestReview.ready)return;
+    scene.pause();const i=Number(timeline.value);
+    scene.drawPrivateM13V4Frame(i);frameLabel.value=String(i);
+  });
+  focus.addEventListener('click',()=>{
+    if(!window.__harvestReview.ready)return;
+    const enabled=view.classList.toggle('rabbit-zoom');
+    focus.setAttribute('aria-pressed',String(enabled));
+    focus.textContent=enabled?'Full landscape':'Rabbit close-up';
+  });
+
+  motion.addEventListener('click',()=>scene.status().playing?scene.pause():scene.play());
+  still.addEventListener('click',()=>{scene.pause();scene.render();});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){autoPaused=scene.status().playing;scene.pause();}
+    else if(autoPaused&&!prefersReduced.matches){autoPaused=false;scene.play();}
+  });
+  prefersReduced.addEventListener?.('change',e=>{if(e.matches)scene.pause();});
+  pending.hidden=true;
+  if(!prefersReduced.matches)scene.play();
+} catch(error) {
+  pending.textContent='Native WebGL scene unavailable on this device. No fallback artwork substituted.';
+  status.textContent='CONSTRUCTION_CANDIDATE_NOT_RENDERED: '+String(error?.message||error);
+  console.error('Harvest source-candidate initialization',error);
+}
+</script>
+</body>
+</html>

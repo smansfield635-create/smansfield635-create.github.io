@@ -1,13 +1,13 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "generosity-harvest",
-  "description": "Owner-approved Harvest artwork and original articulated rabbit, with authenticated five-asset delivery and explicit hop controls.",
+  "description": "Owner-approved Harvest artwork and original articulated rabbit, with authenticated five-asset delivery and continuous cycle controls.",
   "checks": [
     {
       "path": "/nine-summits/generosity-harvest/",
       "includes": [
         "Original V10 illustration with native articulated rabbit",
-        "Play hop",
+        "Play cycle",
         "Starting pose",
         "./boot.mjs",
         "Character attribution"
@@ -63,7 +63,7 @@
     "failOnPageErrors": true,
     "interactions": [
       {
-        "name": "Play finite hop",
+        "name": "Start continuous cycle",
         "action": {
           "type": "click",
           "selector": "#play"
@@ -72,10 +72,40 @@
           {
             "type": "textContains",
             "selector": "#play",
-            "value": "Replay hop"
+            "value": "Pause"
           }
         ],
-        "timeoutMs": 10000
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Pause continuous cycle",
+        "action": {
+          "type": "click",
+          "selector": "#play"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#play",
+            "value": "Play cycle"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Resume continuous cycle",
+        "action": {
+          "type": "click",
+          "selector": "#play"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#play",
+            "value": "Pause"
+          }
+        ],
+        "timeoutMs": 5000
       },
       {
         "name": "Reset to starting pose",
@@ -87,7 +117,7 @@
           {
             "type": "textContains",
             "selector": "#play",
-            "value": "Play hop"
+            "value": "Play cycle"
           }
         ],
         "timeoutMs": 5000

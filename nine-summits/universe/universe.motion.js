@@ -105,7 +105,10 @@ const loveOverlay=$('#love-world'),loveHud=$('#love-world-hud');
 
 const harvestStage=$('#harvest-stage'),harvestToggle=$('#harvest-motion-toggle');
 let harvestFrame=null,harvestPaused=false,harvestFlightStarted=0,harvestFlightOrigin=0;
-const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-arrival-20261128-v1';
+const harvestReflection=$('#harvest-reflection-toggle');
+function setHarvestReflection(collapsed){loveHud.dataset.collapsed=String(collapsed);harvestReflection.setAttribute('aria-expanded',String(!collapsed));harvestReflection.textContent=collapsed?'Show reflection':'View landscape';}
+harvestReflection.addEventListener('click',()=>setHarvestReflection(loveHud.dataset.collapsed!=='true'));
+const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-fullbleed-20261128-v3';
 function sendHarvestState(){
  if(!harvestFrame||harvestStage.dataset.state!=='ready')return;
  const active=selected===1&&flightStage==='encounter'&&!harvestPaused&&!reduced&&!document.hidden;
@@ -115,7 +118,7 @@ function sendHarvestState(){
 }
 function prepareHarvest(){
  if(harvestFrame)return;
- harvestPaused=false;harvestToggle.hidden=true;harvestStage.dataset.state='loading';
+ harvestPaused=false;harvestToggle.hidden=true;setHarvestReflection(false);harvestStage.dataset.state='loading';
  const frame=document.createElement('iframe');frame.title='Harvest landscape with the animated rabbit';frame.tabIndex=-1;frame.setAttribute('aria-hidden','true');frame.src=harvestURL;harvestFrame=frame;harvestStage.appendChild(frame);
 }
 function releaseHarvest(){

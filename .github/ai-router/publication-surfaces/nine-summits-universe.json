@@ -15,7 +15,9 @@
         "Choose love.",
         "id=\"summit-teaching\"",
         "id=\"harvest-stage\"",
-        "THE HARVEST · 02"
+        "THE HARVEST · 02",
+        "harvest-teaching-body",
+        "harvest-reflection-toggle"
       ],
       "excludes": []
     },
@@ -45,7 +47,8 @@
       "path": "/nine-summits/generosity-harvest/index.html",
       "includes": [
         "harvest-encounter",
-        "boot.mjs?v=harvest-arrival-20261128-v1"
+        "boot.mjs?v=harvest-fullbleed-20261128-v3",
+        "width:max(100cqw,177.6833156217cqh)"
       ],
       "excludes": []
     },
@@ -60,7 +63,7 @@
     {
       "path": "/nine-summits/generosity-harvest/preview.mjs",
       "includes": [
-        "cycle.mjs?v=harvest-arrival-20261128-v1"
+        "cycle.mjs?v=harvest-fullbleed-20261128-v3"
       ],
       "excludes": []
     }
@@ -156,6 +159,38 @@
           }
         ],
         "timeoutMs": 15000
+      },
+      {
+        "name": "Reveal the unobstructed full-screen Harvest",
+        "action": {
+          "type": "click",
+          "selector": "#harvest-reflection-toggle"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#love-world-hud",
+            "name": "data-collapsed",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Restore the overlaid reflection",
+        "action": {
+          "type": "click",
+          "selector": "#harvest-reflection-toggle"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#love-world-hud",
+            "name": "data-collapsed",
+            "value": "false"
+          }
+        ],
+        "timeoutMs": 5000
       },
       {
         "name": "Pause Harvest from quiet visitor control",

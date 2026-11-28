@@ -1,0 +1,40 @@
+{
+  "schema": "HARVEST_284_PREPUBLICATION_ASSET_MANIFEST_v1",
+  "candidate": "repair003-owner-KEEP",
+  "acceptedAnimationSha256": "9970917c3286e074413d156b10281f55e9bafb7edfb6dd7a965d09fa77955add",
+  "artSha256": "781e76003713549ab63a91e5afbd09fbed5d0fddb13ac6f359b413eadcdcc2e5",
+  "durationSeconds": 1.4,
+  "authoredKnots": 169,
+  "placement": {
+    "x": 7.5,
+    "z": 6.6,
+    "clearanceOffset": -0.025639505594445198
+  },
+  "files": {
+    "art.png": {
+      "bytes": 3047640,
+      "sha256": "781e76003713549ab63a91e5afbd09fbed5d0fddb13ac6f359b413eadcdcc2e5",
+      "mime": "image/png"
+    },
+    "hop-poses.json": {
+      "bytes": 826091,
+      "sha256": "9970917c3286e074413d156b10281f55e9bafb7edfb6dd7a965d09fa77955add",
+      "mime": "application/json"
+    },
+    "source/scene.gltf": {
+      "bytes": 130989,
+      "sha256": "116b73de03f0e824a54c487c041288f524bc648fd9ad0ea58796141d75bcb7b3",
+      "mime": "model/gltf+json"
+    },
+    "source/scene.bin": {
+      "bytes": 153936,
+      "sha256": "afed65fc2d3e67f8be6435b9b564e3b4f119382ade9d5d56c3cf3a818d2e6ae8",
+      "mime": "application/octet-stream"
+    },
+    "source/textures/Main_baseColor.png": {
+      "bytes": 97737,
+      "sha256": "332b224e83894c131c7357765e750f2c5fdaf1e349d48482ac08bcabc3d8a23d",
+      "mime": "image/png"
+    }
+  }
+}

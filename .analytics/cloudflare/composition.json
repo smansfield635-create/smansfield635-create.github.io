@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-28T06:34:03Z",
+  "generatedAt": "2026-11-28T07:25:29Z",
   "window": {
-    "start": "2026-10-29T06:34:03Z",
-    "end": "2026-11-28T06:34:03Z"
+    "start": "2026-10-29T07:25:29Z",
+    "end": "2026-11-28T07:25:29Z"
   },
   "dimensions": {
     "requestPath": [
@@ -148,12 +148,12 @@
         "visits": 1
       },
       {
-        "value": "/site-guide/",
+        "value": "/laws/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/laws/",
+        "value": "/site-guide/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -337,8 +337,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1185,
-        "visits": 1089
+        "pageLoads": 1285,
+        "visits": 1199
       }
     ],
     "siteTag": [

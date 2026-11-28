@@ -1,0 +1,6 @@
+Rabbit Rigged — FourthGreen (https://sketchfab.com/FourthGreen)
+Source: https://sketchfab.com/3d-models/rabbit-rigged-e7213589744d436b9d96e2dbb31198a5
+License: CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+Changes: construction284 authored animation, native articulated consumer, scene placement and lighting. Original source geometry and coat texture preserved.
+
+Background artwork: AI-generated using ChatGPT/OpenAI image generation; owner-approved composition, with a localized clean-plate repair for the animated rabbit.

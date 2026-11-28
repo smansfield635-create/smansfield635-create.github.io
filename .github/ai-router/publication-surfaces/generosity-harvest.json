@@ -1,0 +1,97 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "generosity-harvest",
+  "description": "Owner-approved Harvest artwork and original articulated rabbit, with authenticated five-asset delivery and explicit hop controls.",
+  "checks": [
+    {
+      "path": "/nine-summits/generosity-harvest/",
+      "includes": [
+        "Original V10 illustration with native articulated rabbit",
+        "Play hop",
+        "Starting pose",
+        "./boot.mjs",
+        "Character attribution"
+      ],
+      "excludes": [
+        "http-equiv=\"refresh\""
+      ]
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/asset-manifest.json",
+      "includes": [
+        "repair003-owner-KEEP",
+        "9970917c3286e074413d156b10281f55e9bafb7edfb6dd7a965d09fa77955add",
+        "781e76003713549ab63a91e5afbd09fbed5d0fddb13ac6f359b413eadcdcc2e5"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/integrity.mjs",
+      "includes": [
+        "HTTPS_BASE_REQUIRED",
+        "SECURE_SAME_ORIGIN_REQUIRED",
+        "MANIFEST_HASH",
+        "ASSET_LAYOUT"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/ATTRIBUTION.txt",
+      "includes": [
+        "FourthGreen",
+        "CC BY 4.0",
+        "AI-generated"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/nine-summits/generosity-harvest/",
+    "timeoutMs": 90000,
+    "readySelector": "#play:not([disabled])",
+    "readyAttribute": {
+      "selector": "#view",
+      "name": "style",
+      "contains": "visible"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/nine-summits/generosity-harvest/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "Play finite hop",
+        "action": {
+          "type": "click",
+          "selector": "#play"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#play",
+            "value": "Replay hop"
+          }
+        ],
+        "timeoutMs": 10000
+      },
+      {
+        "name": "Reset to starting pose",
+        "action": {
+          "type": "click",
+          "selector": "#reset"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#play",
+            "value": "Play hop"
+          }
+        ],
+        "timeoutMs": 5000
+      }
+    ]
+  }
+}

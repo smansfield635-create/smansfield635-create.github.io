@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "harvest-universe-publish-8ff39745",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7662,
+  "requestBranch": "ai-dispatch-request-harvest-universe-publish-8ff39745",
+  "requestCommit": "b6336d302a8a78024d5bf6a484c3c0a71b59e202",
+  "requestCommitParent": "8ff39745c705cce290a8f5a21a4e4085526e8c89",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "8ff39745c705cce290a8f5a21a4e4085526e8c89",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8ff39745c705cce290a8f5a21a4e4085526e8c89",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "46161223059",
+  "dispatchedRunId": 46161235769,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/46161235769",
+  "dispatchedRunHeadSha": "8ff39745c705cce290a8f5a21a4e4085526e8c89",
+  "dispatchedAt": "2026-11-28T15:42:01.769Z",
+  "resolvedAt": "2026-11-28T15:42:05.723Z"
+}

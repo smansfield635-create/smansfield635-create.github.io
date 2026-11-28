@@ -136,13 +136,17 @@ export const runDeclaredInteractions=async(page,interactions)=>{
           if(!stage||!world||!hud||!frame||!view)return {ok:false,reason:'MISSING_LAYOUT'};
           const r=stage.getBoundingClientRect(),w=world.getBoundingClientRect(),f=frame.getBoundingClientRect(),c=view.getBoundingClientRect(),h=hud.getBoundingClientRect(),eps=2;
           const fills=(a,b)=>Math.abs(a.left-b.left)<=eps&&Math.abs(a.top-b.top)<=eps&&Math.abs(a.width-b.width)<=eps&&Math.abs(a.height-b.height)<=eps;
-          const portrait=f.width<=f.height;const cover=c.left<=eps&&c.right>=f.width-eps&&c.bottom>=f.height-eps&&(portrait?c.height>=.77*f.height&&c.height<=.81*f.height:c.top<=eps);const backdrop=portrait?doc.defaultView.getComputedStyle(doc.querySelector('main')).backgroundImage.includes('art.png'):true;const compact=h.height<=.18*w.height&&hud.dataset.collapsed==='true';
+          const portrait=f.width<=f.height;const cover=c.left<=eps&&c.right>=f.width-eps&&c.bottom>=f.height-eps&&(portrait?c.height>=.77*f.height&&c.height<=.81*f.height:c.top<=eps);const sky=doc.defaultView.getComputedStyle(doc.querySelector('main'),'::before');const backdrop=portrait?sky.backgroundImage.includes('art.png')&&sky.filter==='none':true;const compact=h.height<=.12*w.height&&hud.dataset.collapsed==='true'&&!document.querySelector('#harvest-motion-toggle');
           const fixedAspect=Math.abs(c.width/c.height-1672/941)<.005;
           const overlay=getComputedStyle(hud).position==='absolute'&&h.left>=w.left-eps&&h.right<=w.right+eps&&h.top>=w.top-eps&&h.bottom<=w.bottom+eps;
           const hidden=doc.defaultView.getComputedStyle(doc.querySelector('.controls')).display==='none';
           return {ok:fills(r,w)&&fills(f,r)&&cover&&backdrop&&compact&&fixedAspect&&overlay&&hidden,stage:r.toJSON(),world:w.toJSON(),frame:f.toJSON(),composition:c.toJSON(),reflection:h.toJSON(),cover,backdrop,compact,fixedAspect,overlay,hidden};
         });
         if(!harvestLayout.ok)throw Error('HARVEST_FULL_BLEED_LAYOUT_FAILED '+JSON.stringify(harvestLayout));
+      }
+      if(interaction.name==='Open compact Harvest reflection'){
+        const expanded=await page.evaluate(()=>{const hud=document.querySelector('#love-world-hud'),b=hud.getBoundingClientRect(),links=[...hud.querySelectorAll('button,a')].filter(el=>el.getClientRects().length);return links.every(el=>{const r=el.getBoundingClientRect();return r.top>=b.top-1&&r.bottom<=b.bottom+1&&r.left>=b.left-1&&r.right<=b.right+1;});});
+        if(!expanded)throw Error('HARVEST_REFLECTION_CONTROLS_CLIPPED');
       }
       results.push({name:interaction.name,action:interaction.action.type,ok:true,elapsedMs:Date.now()-started,...(harvestLayout?{harvestLayout}:{})});
     }catch(error){

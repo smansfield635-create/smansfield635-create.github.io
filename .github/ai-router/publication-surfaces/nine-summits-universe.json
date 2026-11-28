@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "nine-summits-universe",
-  "description": "Nine Summits Universe live source smoke: nine teaching relationships plus book-first Gratitude selection. These assertions do not certify artistic quality or the complete journey.",
+  "description": "Nine Summits Universe: nine teaching relationships, book-first Gratitude selection, and accepted Harvest arrival with automatic motion and return.",
   "checks": [
     {
       "path": "/nine-summits/universe/index.html",
@@ -13,7 +13,9 @@
         "data-summit=\"8\"",
         "One choice. One path.",
         "Choose love.",
-        "id=\"summit-teaching\""
+        "id=\"summit-teaching\"",
+        "id=\"harvest-stage\"",
+        "THE HARVEST · 02"
       ],
       "excludes": []
     },
@@ -24,7 +26,9 @@
         "admitHEarthPrimitiveBatch",
         "Gratitude begins with seeing.",
         "DGB_UNIVERSE",
-        "const teachings"
+        "const teachings",
+        "harvest-activity-v1",
+        "Generosity → Love · The Harvest"
       ],
       "excludes": []
     },
@@ -34,6 +38,29 @@
         "DGB_COMPASS_ORBIT_PHYSICS",
         "constellationReleaseQuaternionAt",
         "releaseParameters"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/index.html",
+      "includes": [
+        "harvest-encounter",
+        "boot.mjs?v=harvest-arrival-20261128-v1"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/boot.mjs",
+      "includes": [
+        "harvest-ready-v1",
+        "harvest-activity-v1"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/nine-summits/generosity-harvest/preview.mjs",
+      "includes": [
+        "cycle.mjs?v=harvest-arrival-20261128-v1"
       ],
       "excludes": []
     }
@@ -114,15 +141,66 @@
         "assertions": [
           {
             "type": "exists",
-            "selector": "#universe-scene[data-stage='approach'], #universe-scene[data-stage='encounter']"
+            "selector": "#universe-scene[data-stage='encounter'] #harvest-stage[data-state='ready']"
           },
           {
             "type": "textContains",
             "selector": "#scene-note",
-            "value": "Generosity"
+            "value": "The Harvest"
           }
         ],
-        "timeoutMs": 7500
+        "timeoutMs": 30000
+      },
+      {
+        "name": "Pause Harvest from quiet visitor control",
+        "action": {
+          "type": "click",
+          "selector": "#harvest-motion-toggle"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#harvest-stage",
+            "name": "data-playing",
+            "value": "false"
+          },
+          {
+            "type": "textContains",
+            "selector": "#harvest-motion-toggle",
+            "value": "Resume motion"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Resume Harvest",
+        "action": {
+          "type": "click",
+          "selector": "#harvest-motion-toggle"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#harvest-stage",
+            "name": "data-playing",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Return to the universe",
+        "action": {
+          "type": "click",
+          "selector": "#love-return"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#universe-scene[data-stage='arrival'] #harvest-stage[data-state='idle']"
+          }
+        ],
+        "timeoutMs": 15000
       }
     ]
   }

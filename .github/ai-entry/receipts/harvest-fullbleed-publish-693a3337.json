@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "harvest-fullbleed-publish-693a3337",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7664,
+  "requestBranch": "ai-dispatch-request-harvest-fullbleed-publish-693a3337",
+  "requestCommit": "921db34a926c380e06b7a44c883867b644f64ddc",
+  "requestCommitParent": "693a3337901cded234a055e04e4aa035c925af0b",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "693a3337901cded234a055e04e4aa035c925af0b",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "693a3337901cded234a055e04e4aa035c925af0b",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "46161869039",
+  "dispatchedRunId": 46161886487,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/46161886487",
+  "dispatchedRunHeadSha": "693a3337901cded234a055e04e4aa035c925af0b",
+  "dispatchedAt": "2026-11-28T15:49:29.208Z",
+  "resolvedAt": "2026-11-28T15:49:35.575Z"
+}

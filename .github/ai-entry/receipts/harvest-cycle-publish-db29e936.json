@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "harvest-cycle-publish-db29e936",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7655,
+  "requestBranch": "ai-dispatch-request-harvest-cycle-publish-db29e936",
+  "requestCommit": "3e2bf9f5fc3c1337e311038a39efd204a576d36b",
+  "currentMainSha": "db29e936fee96389585a96bfe6eb521f03a07e65",
+  "bridgeRunId": "46159411820",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-11-28T15:21:16.777Z"
+}

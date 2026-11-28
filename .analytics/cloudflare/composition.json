@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-28T07:25:29Z",
+  "generatedAt": "2026-11-28T08:27:30Z",
   "window": {
-    "start": "2026-10-29T07:25:29Z",
-    "end": "2026-11-28T07:25:29Z"
+    "start": "2026-10-29T08:27:30Z",
+    "end": "2026-11-28T08:27:30Z"
   },
   "dimensions": {
     "requestPath": [
@@ -113,17 +113,17 @@
         "visits": 2
       },
       {
+        "value": "/coherence-diagnostic/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/nine-summits-of-love/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/coherence-diagnostic/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -337,8 +337,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1285,
-        "visits": 1199
+        "pageLoads": 1185,
+        "visits": 1089
       }
     ],
     "siteTag": [

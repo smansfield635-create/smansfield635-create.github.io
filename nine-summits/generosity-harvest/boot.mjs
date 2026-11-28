@@ -1,6 +1,8 @@
 import {authenticateAssets} from './integrity.mjs';
 import {loadArticulatedSource} from './articulated-hop.private.mjs';
-import {mountPreview} from './preview.mjs';
+import {mountPreview} from './preview.mjs?v=harvest-arrival-20261128-v1';
 const view=document.querySelector('#view'),play=document.querySelector('#play'),reset=document.querySelector('#reset'),status=document.querySelector('#status');
 function closed(){view.style.visibility='hidden';play.disabled=reset.disabled=true;status.textContent='Harvest unavailable — asset validation or graphics initialization failed. Reload to retry.';}
-try{const a=await authenticateAssets(new URL('./',location.href));const source=await loadArticulatedSource(a.fetchVerified);await mountPreview({source,artBytes:a.artBytes,placement:a.placement});view.style.visibility='visible';play.disabled=reset.disabled=false;status.textContent='Ready';}catch(error){closed();console.error('HARVEST_STARTUP_FAILED',error);}
+const encounter=document.documentElement.classList.contains('harvest-encounter');
+const parentMessage=(data)=>{if(encounter)parent.postMessage(data,location.origin);};
+try{const a=await authenticateAssets(new URL('./',location.href));const source=await loadArticulatedSource(a.fetchVerified);const player=await mountPreview({source,artBytes:a.artBytes,placement:a.placement});view.style.visibility='visible';play.disabled=reset.disabled=false;status.textContent='Ready';if(encounter){const reduced=matchMedia('(prefers-reduced-motion: reduce)');let active=false;const sync=()=>{if(active&&!reduced.matches&&!document.hidden)player.play();else player.pause();parentMessage({type:'harvest-playing-v1',playing:player.inspect().playing});};window.addEventListener('message',event=>{if(event.origin===location.origin&&event.source===parent&&event.data?.type==='harvest-activity-v1'){active=Boolean(event.data.active);sync();}});document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);parentMessage({type:'harvest-ready-v1'});}}catch(error){closed();parentMessage({type:'harvest-unavailable-v1'});console.error('HARVEST_STARTUP_FAILED '+String(error?.message||error));}

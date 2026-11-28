@@ -102,6 +102,41 @@ const $=s=>document.querySelector(s);
 const peaceOverlay=$('#peace-encounter');
 const joyOverlay=$('#joy-world'), joyHud=$('#joy-world-hud');
 const loveOverlay=$('#love-world'),loveHud=$('#love-world-hud');
+
+const harvestStage=$('#harvest-stage'),harvestToggle=$('#harvest-motion-toggle');
+let harvestFrame=null,harvestPaused=false;
+const harvestURL='/nine-summits/generosity-harvest/?experience=universe&v=harvest-arrival-20261128-v1';
+function sendHarvestState(){
+ if(!harvestFrame||harvestStage.dataset.state!=='ready')return;
+ const active=selected===1&&flightStage==='encounter'&&!harvestPaused&&!reduced&&!document.hidden;
+ harvestFrame.contentWindow?.postMessage({type:'harvest-activity-v1',active},location.origin);
+ harvestToggle.hidden=reduced||selected!==1||flightStage!=='encounter';
+ harvestToggle.textContent=harvestPaused?'Resume motion':'Pause motion';
+}
+function prepareHarvest(){
+ if(harvestFrame)return;
+ harvestPaused=false;harvestToggle.hidden=true;harvestStage.dataset.state='loading';
+ const frame=document.createElement('iframe');frame.title='Harvest landscape with the animated rabbit';frame.tabIndex=-1;frame.setAttribute('aria-hidden','true');frame.src=harvestURL;harvestFrame=frame;harvestStage.appendChild(frame);
+}
+function releaseHarvest(){
+ if(harvestFrame){harvestFrame.contentWindow?.postMessage({type:'harvest-activity-v1',active:false},location.origin);harvestFrame.remove();harvestFrame=null;}
+ harvestStage.dataset.state='idle';delete harvestStage.dataset.playing;harvestPaused=false;harvestToggle.hidden=true;
+}
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||!harvestFrame||event.source!==harvestFrame.contentWindow)return;
+ if(event.data?.type==='harvest-ready-v1'){
+   harvestStage.dataset.state='ready';sendHarvestState();
+ }else if(event.data?.type==='harvest-unavailable-v1'){
+   harvestStage.dataset.state='unavailable';harvestToggle.hidden=true;
+   if(selected===1)status.textContent='The Harvest artwork is available; motion could not initialize.';
+ }else if(event.data?.type==='harvest-playing-v1'){
+   harvestStage.dataset.playing=String(Boolean(event.data.playing));
+ }
+});
+harvestToggle.addEventListener('click',()=>{harvestPaused=!harvestPaused;sendHarvestState();});
+document.addEventListener('visibilitychange',sendHarvestState);
+media.addEventListener('change',()=>{if(media.matches)harvestPaused=false;queueMicrotask(sendHarvestState);});
+
 const stabilityOverlay=$('#stability-world'),stabilityHud=$('#stability-world-hud');
 const emberOverlay=$('#ember-world'),emberHud=$('#ember-world-hud');
 const balanceOverlay=$('#balance-world'),balanceHud=$('#balance-world-hud');
@@ -122,7 +157,7 @@ function choose(index,scroll=true){
     flight=0;flightTarget=0;cameraZ=9;flightStage='arrival';
     peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
     joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');
-    loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
+    loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');releaseHarvest();
     stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');balanceOverlay.classList.remove('is-visible');balanceOverlay.setAttribute('aria-hidden','true');canopyOverlay.classList.remove('is-visible');canopyOverlay.setAttribute('aria-hidden','true');highlandsOverlay.classList.remove('is-visible');highlandsOverlay.setAttribute('aria-hidden','true');opalOverlay.classList.remove('is-visible');opalOverlay.setAttribute('aria-hidden','true');
     document.documentElement.classList.remove('universe-joy','universe-love','universe-stability','universe-ember','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;balanceFocusReturn=null;canopyFocusReturn=null;highlandsFocusReturn=null;opalFocusReturn=null;
     scene.dataset.stage='arrival';document.documentElement.classList.remove('universe-encounter','universe-approaching');
@@ -160,7 +195,7 @@ function choose(index,scroll=true){
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
 }
 function returnToAll(){
-  if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
+  if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';sendHarvestState();peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
     stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');balanceOverlay.classList.remove('is-visible');balanceOverlay.setAttribute('aria-hidden','true');canopyOverlay.classList.remove('is-visible');canopyOverlay.setAttribute('aria-hidden','true');highlandsOverlay.classList.remove('is-visible');highlandsOverlay.setAttribute('aria-hidden','true');opalOverlay.classList.remove('is-visible');opalOverlay.setAttribute('aria-hidden','true');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');updateMotionControl();requestFrame();return;}
   stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
@@ -198,7 +233,7 @@ $('#balance-return').addEventListener('click',returnToAll);
 $('#canopy-return').addEventListener('click',returnToAll);
 $('#highlands-return').addEventListener('click',returnToAll);
 $('#opal-return').addEventListener('click',returnToAll);
-function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!loveGL){try{setupLoveWorld();}catch(error){console.error('Generosity world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Living Constellation is unavailable. Read the complete Love teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit II — Generosity';status.textContent='Traveling toward the Living Constellation.';updateMotionControl();requestFrame();}
+function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';releaseHarvest();prepareHarvest();scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit II — Generosity';status.textContent='Traveling toward The Harvest.';updateMotionControl();requestFrame();}
 function startHighlandsFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!highlandsGL){try{setupHighlandsWorld();}catch(error){console.error('Humility world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Quiet Highlands are unavailable. Read the complete Dignity teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit V — Humility';status.textContent='Traveling toward The Quiet Highlands.';updateMotionControl();requestFrame();}
 function startOpalFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!opalGL){try{setupOpalWorld();}catch(error){console.error('Opal Passage world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Opal Passage is unavailable. Read the complete Free Will teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit IX — Purity';status.textContent='Traveling toward The Opal Passage.';updateMotionControl();requestFrame();}
 
@@ -2248,7 +2283,7 @@ function render(time){
     loveOverlay.classList.add('is-visible');loveOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
     loveOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
     loveOverlay.style.pointerEvents=flightStage==='encounter'?'auto':'none';
-    drawLoveWorld(reduced?0:universeClock);
+    // The accepted Harvest renderer runs only in its isolated same-origin encounter.
   }else if(selected===1&&flight<=.55){loveOverlay.style.opacity='0';loveOverlay.style.pointerEvents='none';}
   if(false&&selected===0&&flight>.55){
     joyOverlay.classList.add('is-visible');joyOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
@@ -2270,7 +2305,7 @@ function render(time){
   }
   if(selected===1&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';loveOverlay.classList.add('is-visible');loveOverlay.setAttribute('aria-hidden','false');loveOverlay.style.opacity='1';loveOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-love');
-    $('#scene-note').textContent='Generosity → Love · The Living Constellation';status.textContent='Arrived at Summit II, Generosity.';loveHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Generosity → Love · The Harvest';status.textContent='Arrived at Summit II, Generosity.';loveHud.focus({preventScroll:true});sendHarvestState();
   }
   if(selected===8&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';opalOverlay.classList.add('is-visible');opalOverlay.setAttribute('aria-hidden','false');opalOverlay.style.opacity='1';opalOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-opal');
@@ -2297,7 +2332,7 @@ function render(time){
   }
   if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&flight===0&&flightStage==='return'){
     const wasOpal=selected===8,wasJoy=selected===0,wasLove=selected===1,wasStability=selected===2,wasEmber=selected===3,wasBalance=selected===5,wasCanopy=selected===6,wasHighlands=selected===7;
-    selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
+    releaseHarvest();selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
     scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching','universe-encounter','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');peaceOverlay.classList.remove('is-visible');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';balanceOverlay.classList.remove('is-visible');balanceOverlay.style.opacity='0';balanceOverlay.style.pointerEvents='none';canopyOverlay.classList.remove('is-visible');canopyOverlay.style.opacity='0';canopyOverlay.style.pointerEvents='none';highlandsOverlay.classList.remove('is-visible');highlandsOverlay.style.opacity='0';highlandsOverlay.style.pointerEvents='none';opalOverlay.classList.remove('is-visible');opalOverlay.style.opacity='0';opalOverlay.style.pointerEvents='none';joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';emberOverlay.classList.remove('is-visible');emberOverlay.style.opacity='0';
     labels.forEach(el=>el.setAttribute('aria-pressed','false'));
     $('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine';
@@ -2400,6 +2435,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,planetIdentityLayer:{slot:4,summit:'Gratitude',planet:'GOLDEN_LAGOON_ARCHIPELAGO_PLANET_V1',environment:'GOLDEN_LAGOON_ENTERED_GEN3034_UNCHANGED',contrast:'ENTITLEMENT_FUTURE_ONLY'},gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,planetIdentityLayer:{slot:4,summit:'Gratitude',planet:'GOLDEN_LAGOON_ARCHIPELAGO_PLANET_V1',environment:'GOLDEN_LAGOON_ENTERED_GEN3034_UNCHANGED',contrast:'ENTITLEMENT_FUTURE_ONLY'},gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:harvestStage.dataset.state==='ready',world02GLError:null,world02HarvestState:harvestStage.dataset.state,world02HarvestPlaying:harvestStage.dataset.playing==='true',world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
 }
 init().catch(fallback);
